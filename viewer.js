@@ -123,7 +123,8 @@ window.Viewer = (() => {
   // a paged reader (PDF or Flipbook): steps are pages or spreads, label(i) names the place for the child
   // save/load turn a step into what's stored (e.g. a page number) and back
   // onFinish replaces the well-done card (stories open their quiz instead)
-  function pages({ steps, key, likes, xp = 0, start = 0, label, onShow, onFinish, save = (i) => i, load = (v) => v }) {
+  // canNext(step) can hold the child on a step until it's done (tracing, an activity)
+  function pages({ steps, key, likes, xp = 0, start = 0, label, onShow, onFinish, canNext, save = (i) => i, load = (v) => v }) {
     const q = new URLSearchParams(location.search);
     let timeLeft = q.get('demo') === 'timeup' ? 4 : 35 * 60;
     const raw = { get() { try { return +localStorage.getItem(key) || 0; } catch { return 0; } }, set(v) { try { localStorage.setItem(key, String(v)); } catch {} } };
@@ -137,7 +138,7 @@ window.Viewer = (() => {
       at = Math.max(0, Math.min(steps - 1, i));
       store.set(at); onShow(at, dir);
     }
-    const next = () => { if (stopped) return; at < steps - 1 ? go(at + 1, 1) : finish(); };
+    const next = () => { if (stopped || (canNext && !canNext(at))) return; at < steps - 1 ? go(at + 1, 1) : finish(); };
     const prev = () => { if (!stopped && at > 0) go(at - 1, -1); };
 
     function finish() {

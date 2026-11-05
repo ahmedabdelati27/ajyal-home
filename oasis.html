@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>واحة الحروف · أجيال الصالحية</title>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --sand: #FFF4DE; --go: #2E8B2A; --go-deep: #1F6A1C; --gold: #E0B000; --gold-deep: #A87800; --line: #6B3A1E; --leaf: #5BC236; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); font-weight: 500; }
+img { display: block; max-width: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* drawn at 1440 wide like the forest board, then scaled to the window */
+#wrap { position: relative; width: 100%; overflow: hidden; }
+#page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: top left; }
+
+/* hero: the storybook oasis, fading into the sand */
+.hero { position: relative; height: 500px; background: url(img/letters/oasis-hero.jpg) center 70% / cover; }
+.hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 150px; background: linear-gradient(rgba(255,244,222,0), var(--sand) 92%); pointer-events: none; }
+.bar { position: absolute; z-index: 3; top: 20px; left: 32px; right: 32px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #E8CFA6; white-space: nowrap; }
+.pill img { width: 30px; height: 30px; margin: -4px 0; }
+.stats { display: flex; gap: 10px; }
+.isle { position: absolute; z-index: 2; left: 70px; top: 54px; width: 380px; animation: float 4.5s ease-in-out infinite; }
+@keyframes float { 50% { translate: 0 -8px; } }
+.say { position: absolute; z-index: 3; left: 420px; top: 96px; max-width: 250px; margin: 0; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--gold); }
+.say::before { content: ''; position: absolute; left: -16px; bottom: 18px; border: 12px solid transparent; border-right-color: var(--paper); border-left: 0; }
+.head { position: absolute; z-index: 3; right: 80px; top: 104px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.head h1 { margin: 0; font-size: 78px; font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--gold-deep), 3px 0 0 var(--gold-deep), -3px 0 0 var(--gold-deep), 0 -3px 0 var(--gold-deep), 3px 3px 0 var(--gold-deep), -3px 3px 0 var(--gold-deep), 3px -3px 0 var(--gold-deep), -3px -3px 0 var(--gold-deep); }
+.head p { margin: 0; font-size: 22px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 4px 18px; }
+/* two switches: the language, then letters or numbers */
+.switches { display: flex; gap: 14px; margin-top: 6px; }
+.seg { display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 4px 0 #E8CFA6; }
+.seg button { height: 46px; padding: 0 20px; border: 3px solid transparent; border-radius: 999px; background: none; font-weight: 800; font-size: 18px; }
+.seg button[aria-pressed="true"] { background: linear-gradient(#F4823F, #D6531E); color: var(--paper); border-color: var(--line); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+.seg button[lang="en"] { font-family: system-ui, sans-serif; }
+
+main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px; display: flex; flex-direction: column; gap: 30px; }
+
+/* continue learning */
+.cont { display: flex; align-items: center; gap: 22px; background: var(--paper); border-radius: 32px; padding: 16px 16px 16px 24px; box-shadow: 0 6px 0 #EED6B0; }
+.cont .tile { width: 112px; height: 112px; flex-shrink: 0; font-size: 72px; }
+.cont .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.cont h2 { margin: 0; font-size: 16px; font-weight: 800; color: var(--gold-deep); }
+.cont b { font-size: 30px; font-weight: 800; line-height: 1.15; }
+.cont small { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.meter { width: 220px; height: 12px; border-radius: 999px; background: #F2E6D2; overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--leaf); }
+.go { display: inline-flex; align-items: center; gap: 10px; height: 64px; padding: 0 30px; border-radius: 999px; background: var(--go); color: var(--paper); text-decoration: none; font-weight: 800; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); flex-shrink: 0; }
+
+/* the journey: one sand stone per letter or number */
+.trail h2 { margin: 0; display: flex; align-items: center; justify-content: space-between; font-size: 30px; font-weight: 800; }
+.trail h2 small { font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+.legend { display: flex; gap: 18px; margin: 8px 0 16px; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 18px; height: 18px; border-radius: 6px; }
+.grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 18px; }
+.tile { position: relative; aspect-ratio: 1; border: 0; border-radius: 30px; background: linear-gradient(#FFFBF2, #F7E7C6); box-shadow: inset 0 -6px 0 rgba(168,120,0,.12), 0 6px 0 #E3C893; display: flex; align-items: center; justify-content: center; font-size: 84px; font-weight: 800; line-height: 1; color: #8A5A1E; text-decoration: none; transition: transform .2s; }
+.tile:hover { transform: translateY(-5px) rotate(-1.5deg); }
+.tile[lang="en"] { font-family: system-ui, sans-serif; font-weight: 800; }
+.tile.done { background: linear-gradient(#F3FCEB, #D9F2C7); color: #2E7D32; box-shadow: inset 0 -6px 0 rgba(46,125,50,.12), 0 6px 0 #A9D98E; }
+.tile.now { background: linear-gradient(#FFF3C4, #FFD978); color: #8A4F00; box-shadow: 0 0 0 5px #F7B347, 0 6px 0 #C98A1E, 0 0 30px rgba(247,179,71,.8); animation: glow 2s ease-in-out infinite; }
+@keyframes glow { 50% { box-shadow: 0 0 0 5px #F7B347, 0 6px 0 #C98A1E, 0 0 6px rgba(247,179,71,.4); } }
+.stars { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 2px; }
+.stars svg { width: 22px; height: 22px; }
+.stars svg.off path { fill: #E3D8C2; stroke: #CDBF9F; }
+.badge { position: absolute; top: -10px; left: -8px; width: 46px; height: 46px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 rgba(58,35,24,.2); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.badge img { width: 54px; height: 54px; object-fit: cover; object-position: 30% 35%; }
+.tick { position: absolute; top: -8px; left: -8px; width: 34px; height: 34px; border-radius: 50%; background: #4CB944; border: 3px solid var(--paper); display: flex; align-items: center; justify-content: center; }
+.tick svg { width: 18px; height: 18px; }
+
+.toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: rgba(58,35,24,.9); color: var(--paper); border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: 16px; z-index: 40; opacity: 0; transition: opacity .25s; pointer-events: none; text-align: center; }
+.toast.show { opacity: 1; }
+
+/* dock: the same game bar as the map */
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a:hover { background: rgba(255,255,255,.25); }
+.dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+@media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
+@media (prefers-reduced-motion: reduce) { .isle, .tile.now { animation: none; } .tile { transition: none; } }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats">
+      <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+      <span class="pill" title="أيام متتالية"><img src="img/forest/I-07.png" alt="">5</span>
+      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">12</span>
+    </div>
+  </div>
+  <img class="isle" src="img/letters.png" alt="الجمل جمّول في واحة الحروف">
+  <p class="say" id="say">أهلاً يا يوسف! أي حرف نتعلّم اليوم؟</p>
+  <div class="head">
+    <h1>واحة الحروف</h1>
+    <p>تعلّم الحروف والأرقام مع الجمل جمّول</p>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="اللغة" id="lang">
+        <button type="button" data-v="ar" aria-pressed="true">العربية</button>
+        <button type="button" data-v="en" lang="en" aria-pressed="false">English</button>
+      </div>
+      <div class="seg" role="group" aria-label="ماذا تتعلّم" id="kind">
+        <button type="button" data-v="l" aria-pressed="true">الحروف</button>
+        <button type="button" data-v="n" aria-pressed="false">الأرقام</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="cont" aria-labelledby="cont-t" id="cont"></section>
+  <section class="trail" aria-labelledby="trail-t">
+    <h2><span id="trail-t"></span><small id="done-count"></small></h2>
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:#D9F2C7"></i>أكملته</span>
+      <span><i style="background:#FFD978"></i>أتعلّمه الآن</span>
+      <span><i style="background:#F7E7C6"></i>لم أبدأ بعد</span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // the admin sets the order; states per child: '' not started, 'now' learning (several can be), a star count when done; last = the item the child reached last
+  const SETS = {
+    'ar-l': { title: 'حروف اللغة العربية', unit: 'حرف', items: 'ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي'.split(' '), state: { 'ا': 3, 'ب': 'now', 'ج': 'now' }, last: 'ب' },
+    'ar-n': { title: 'الأرقام بالعربية', unit: 'رقم', items: '١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩ ١٠'.split(' '), state: { '١': 3, '٢': 2, '٣': 'now' }, last: '٣' },
+    'en-l': { title: 'English letters', unit: 'حرف', items: 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z'.split(' '), state: {} },
+    'en-n': { title: 'English numbers', unit: 'رقم', items: '1 2 3 4 5 6 7 8 9 10'.split(' '), state: {} }
+  };
+  // items that have a full learning journey in the prototype
+  const LEARN = { 'ب': 'learn.html?k=l&id=ب', '٣': 'learn.html?k=n&id=٣' };
+  const NAME = { 'ب': 'حرف الباء', '٣': 'رقم ثلاثة' };
+  let lang = 'ar', kind = 'l';
+
+  const star = (on) => `<svg class="${on ? '' : 'off'}" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="#FFC93C" stroke="#E0A01E" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+  const tick = '<span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>';
+
+  function render() {
+    const set = SETS[`${lang}-${kind}`];
+    $('trail-t').textContent = set.title;
+    $('grid').dir = lang === 'en' ? 'ltr' : 'rtl'; // English reads left to right
+    const done = set.items.filter((x) => typeof set.state[x] === 'number').length;
+    $('done-count').textContent = `أكملت ${done} من ${set.items.length}`;
+    $('grid').innerHTML = set.items.map((x) => {
+      const s = set.state[x], cls = s === 'now' ? 'now' : typeof s === 'number' ? 'done' : '';
+      const label = `${set.unit} ${x}، ${cls === 'done' ? `مكتمل بـ ${s} نجوم` : cls === 'now' ? 'جاري التعلم' : 'لم يبدأ'}`;
+      return `<a class="tile ${cls}" href="${LEARN[x] || '#'}" ${lang === 'en' ? 'lang="en"' : ''} aria-label="${label}">${x}
+        ${cls === 'done' ? tick + `<span class="stars">${[0, 1, 2].map((i) => star(i < s)).join('')}</span>` : ''}
+        ${cls === 'now' ? '<span class="badge" aria-hidden="true"><img src="img/letters.png" alt=""></span>' : ''}</a>`;
+    }).join('');
+    // the last letter or number the child reached, so they can carry on
+    const now = set.last;
+    $('cont').hidden = !now;
+    if (now) $('cont').innerHTML = `<span class="tile now" aria-hidden="true">${now}</span>
+      <div class="txt"><h2 id="cont-t">أكمل من حيث توقفت</h2><b>${NAME[now] || now}</b>
+      <small>الخطوة 4 من 6: التتبّع <span class="meter" style="--p:50%"><i></i></span></small></div>
+      <a class="go" href="${LEARN[now] || '#'}&resume=1">أكمل التعلّم <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></a>`;
+    $('say').textContent = kind === 'l' ? 'أهلاً يا يوسف! أي حرف نتعلّم اليوم؟' : 'أهلاً يا يوسف! هيا نعدّ معاً!';
+    fit();
+  }
+
+  const seg = (id, set) => $(id).addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    $(id).querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    set(b.dataset.v); render();
+  });
+  seg('lang', (v) => { lang = v; });
+  seg('kind', (v) => { kind = v; });
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
+  $('grid').addEventListener('click', (e) => {
+    const t = e.target.closest('.tile'); if (!t || t.getAttribute('href') !== '#') return;
+    e.preventDefault(); toast('في النموذج: جرّب حرف الباء أو رقم ثلاثة');
+  });
+
+  // the board is drawn at 1440 wide; scale it to the window like the forest
+  const page = $('page'), wrap = $('wrap');
+  function fit() {
+    const k = Math.min(innerWidth / 1440, 1.5);
+    const x = Math.max(0, (innerWidth - 1440 * k) / 2);
+    page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    wrap.style.height = page.offsetHeight * k + 'px';
+  }
+  addEventListener('resize', fit);
+  render();
+})();
+</script>
+</body>
+</html>

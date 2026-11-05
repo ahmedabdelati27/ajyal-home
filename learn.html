@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>واحة الحروف · أجيال الصالحية</title>
+<link rel="stylesheet" href="viewer.css">
+<style>
+.bg { background-image: url(img/letters/oasis-hero.jpg); background-position: center 70%; }
+@media (max-aspect-ratio: 4 / 5) { .bg { background-image: url(img/letters/oasis-hero.jpg); background-position: 30% 70%; } }
+.mini { width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(#FFF3C4, #FFD978); color: #8A4F00; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800; box-shadow: 0 4px 0 #C98A1E; }
+
+/* the camel helps on the side, the lesson card holds one step at a time */
+.stage { min-height: 0; display: flex; align-items: center; justify-content: center; gap: 24px; }
+.helper { position: relative; flex-shrink: 0; width: 230px; align-self: flex-end; margin-bottom: 4vh; }
+.helper img { width: 100%; animation: bob 4s ease-in-out infinite; }
+@keyframes bob { 50% { translate: 0 -6px; } }
+.tip { position: absolute; bottom: 92%; left: 4%; right: -30%; margin: 0; background: var(--paper); border-radius: 22px; padding: 12px 16px 14px; font-size: 19px; font-weight: 800; line-height: 1.4; box-shadow: 0 5px 0 #E0B000; }
+.tip::after { content: ''; position: absolute; top: 100%; left: 40%; border: 12px solid transparent; border-top-color: var(--paper); }
+.lesson { position: relative; width: min(820px, 100%); max-height: 100%; display: flex; flex-direction: column; gap: 14px; background: #FFFBF2; border-radius: 36px; padding: 20px 26px 22px; box-shadow: 0 8px 0 rgba(58,35,24,.16), 0 24px 40px rgba(0,0,0,.14); overflow: hidden; }
+.steps { display: flex; justify-content: space-between; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.steps li { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 14px; font-weight: 800; color: #B7A88F; }
+.steps button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: #EFE3CC; color: #9C8A6C; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center; }
+.steps button:disabled { cursor: default; }
+.steps li.passed { color: #2E7D32; } .steps li.passed button { background: #4CB944; color: var(--paper); }
+.steps li.at { color: var(--ink); } .steps li.at button { background: linear-gradient(#FFD98C, #F7B347); color: var(--line); box-shadow: 0 0 0 4px rgba(247,179,71,.35); }
+.body { flex: 1; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; }
+.body.in { animation: in .3s ease-out both; }
+@keyframes in { from { opacity: 0; transform: translateX(calc(var(--dir) * 24px)); } to { opacity: 1; transform: none; } }
+.nav { display: flex; justify-content: space-between; gap: 12px; }
+.nav .btn:disabled { opacity: .45; cursor: default; }
+.nav [hidden] { display: none; }
+
+/* step: the shape */
+.big { width: 260px; height: 260px; border-radius: 48px; background: linear-gradient(#FFF3C4, #FFD978); box-shadow: inset 0 -10px 0 rgba(201,138,30,.25), 0 8px 0 #C98A1E; display: flex; align-items: center; justify-content: center; font-size: 190px; font-weight: 800; line-height: 1; color: #8A4F00; animation: pop .5s ease-out; }
+@keyframes pop { 0% { transform: scale(.6); } 70% { transform: scale(1.06); } 100% { transform: none; } }
+.cap { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 800; }
+.hear { width: 50px; height: 50px; border: 0; border-radius: 50%; background: #E3F2F8; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hear svg { width: 28px; height: 28px; }
+/* step: the example */
+.obj { display: block; width: 240px; height: 240px; border-radius: 36px; overflow: hidden; background: #FBF1DE; box-shadow: 0 6px 0 #E3C893; }
+.obj img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); }
+.word { margin: 0; font-size: 46px; font-weight: 800; }
+.word b { color: #D6531E; }
+.count { display: flex; gap: 18px; }
+.count button { position: relative; width: 150px; height: 150px; padding: 0; border: 0; border-radius: 30px; overflow: hidden; background: #FBF1DE; box-shadow: 0 6px 0 #E3C893; transition: transform .15s; }
+.count button:hover { transform: translateY(-3px); }
+.count img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); }
+.count b { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border-radius: 50%; background: #F4823F; color: var(--paper); font-size: 26px; font-weight: 800; display: flex; align-items: center; justify-content: center; animation: pop .35s ease-out; }
+/* step: listen */
+.speak { width: 170px; height: 170px; border: 6px solid var(--line); border-radius: 50%; background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 4px 0 rgba(255,255,255,.55), 0 7px 0 var(--line); display: flex; align-items: center; justify-content: center; }
+.speak svg { width: 84px; height: 84px; }
+.speak.on { animation: beat .6s ease-in-out infinite; }
+@keyframes beat { 50% { transform: scale(1.07); } }
+.said { margin: 0; font-size: 22px; font-weight: 800; color: var(--ink-soft); }
+.said b { font-size: 40px; color: #8A4F00; }
+/* step: trace */
+.trace { position: relative; width: min(340px, 52vh); aspect-ratio: 1; border-radius: 36px; background: #FFFDF6; box-shadow: inset 0 0 0 4px #F0E2C4; touch-action: none; }
+.trace canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 36px; }
+.trace .ink { cursor: crosshair; }
+.tools { display: flex; align-items: center; gap: 14px; }
+.tools .meter { width: 200px; height: 14px; border-radius: 999px; background: #EFE3CC; overflow: hidden; }
+.tools .meter i { display: block; height: 100%; width: var(--p, 0%); border-radius: 999px; background: var(--leaf); transition: width .3s; }
+.tools .btn { height: 46px; padding: 0 18px; font-size: 17px; }
+/* step: activity */
+.q { margin: 0; font-size: 28px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.picks { display: flex; gap: 16px; }
+.pick { position: relative; padding: 10px; border: 4px solid transparent; border-radius: 28px; background: var(--paper); box-shadow: 0 6px 0 #E3C893; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; font-weight: 800; transition: transform .15s; }
+.pick:hover:not(:disabled) { transform: translateY(-3px); }
+.pick .obj { width: 150px; height: 150px; border-radius: 22px; box-shadow: none; }
+.pick .grp { display: grid; grid-template-columns: repeat(2, 64px); gap: 6px; min-height: 134px; align-content: center; }
+.pick .grp img { width: 64px; height: 64px; border-radius: 14px; object-fit: cover; transform: scale(1.1); }
+.pick.right { border-color: var(--leaf); background: #ECF9E4; }
+.pick.wrong { border-color: #F0436B; animation: shake .35s; }
+@keyframes shake { 25% { translate: -6px 0; } 75% { translate: 6px 0; } }
+.fb { min-height: 28px; margin: 0; font-size: 20px; font-weight: 800; }
+.fb.ok { color: var(--go); } .fb.no { color: #C9372C; }
+/* step: result */
+.stars { display: flex; gap: 10px; }
+.stars svg { width: 76px; height: 76px; animation: pop .5s ease-out both; }
+.stars svg:nth-child(2) { animation-delay: .15s; } .stars svg:nth-child(3) { animation-delay: .3s; }
+.stars svg.off path { fill: #EADBC4; stroke: #D6C2A2; }
+.won { margin: 0; font-size: 34px; font-weight: 800; color: var(--go); }
+.gains { display: flex; gap: 10px; }
+.gain { display: inline-flex; align-items: center; gap: 8px; height: 50px; padding: 0 18px 0 10px; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-weight: 800; font-size: 18px; }
+.gain img { width: 36px; height: 36px; }
+/* a little celebration */
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: 40%; left: 50%; width: 12px; height: 16px; border-radius: 3px; animation: fly 1.1s ease-out forwards; }
+@keyframes fly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
+
+.resume { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; background: rgba(60,40,10,.35); }
+.resume[hidden] { display: none; }
+.resume > div { margin: 0 12px; background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
+.resume p b { color: var(--go); }
+.resume .btns { margin: 0; }
+.stop .card h2 { color: #C46A00; }
+
+@media (max-width: 760px) {
+  .stage { flex-direction: column-reverse; justify-content: flex-start; gap: 8px; }
+  .helper { width: 110px; align-self: flex-start; margin: 0; display: flex; align-items: center; }
+  .tip { position: static; margin-inline-start: 8px; width: calc(100vw - 150px); font-size: 15px; padding: 8px 12px; }
+  .tip::after { display: none; }
+  .helper { flex-direction: row; width: auto; } .helper img { width: 90px; }
+  .lesson { padding: 14px 14px 16px; border-radius: 28px; gap: 10px; }
+  .steps li span { display: none; }
+  .steps button { width: 34px; height: 34px; font-size: 15px; }
+  .body { min-height: 0; }
+  .big { width: 180px; height: 180px; font-size: 130px; border-radius: 36px; }
+  .obj { width: 180px; height: 180px; }
+  .word { font-size: 36px; }
+  .count { gap: 8px; } .count button { width: 96px; height: 96px; border-radius: 22px; }
+  .speak { width: 130px; height: 130px; } .speak svg { width: 64px; height: 64px; }
+  .q { font-size: 21px; }
+  .picks { gap: 8px; } .pick { padding: 6px; border-radius: 20px; font-size: 14px; }
+  .pick .obj { width: 88px; height: 88px; }
+  .pick .grp { grid-template-columns: repeat(2, 38px); min-height: 82px; } .pick .grp img { width: 38px; height: 38px; }
+  .tools .meter { width: 110px; }
+  .stars svg { width: 56px; height: 56px; }
+  .won { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) { .helper img, .big, .speak.on, .confetti i { animation: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="oasis.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>واحة الحروف</span></a>
+    <div class="ttl"><span class="mini" id="mini" aria-hidden="true"></span><h1 id="title"></h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <div class="helper" aria-live="polite"><img src="img/letters.png" alt=""><p class="tip" id="tip"></p></div>
+    <section class="lesson" id="lesson" aria-labelledby="title">
+      <ol class="steps" id="steps"></ol>
+      <div class="body" id="body"></div>
+      <div class="nav">
+        <button class="btn soft" id="prev" type="button">السابق</button>
+        <button class="btn go" id="next" type="button">التالي</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">خطوة الشكل</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button">أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button">من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/letters.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">خطوة الشكل</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  const q = new URLSearchParams(location.search);
+  // in production every letter or number comes from the admin: shape, example, pronunciation file,
+  // tracing model and a simple activity, in the order the admin sets
+  const DATA = {
+    'ب': { kind: 'l', name: 'حرف الباء', glyph: 'ب', say: 'باء', example: { img: 'obj-01', first: 'بـ', rest: 'طّة', say: 'بَطّة' },
+      act: { q: 'أيّ صورة تبدأ بحرف الباء؟', opts: [{ img: 'obj-03', name: 'سمكة' }, { img: 'obj-02', name: 'برتقالة' }, { img: 'obj-04', name: 'قطة' }], a: 1 }, next: 'حرف التاء' },
+    '٣': { kind: 'n', name: 'رقم ثلاثة', glyph: '٣', say: 'ثلاثة', count: 3, example: { img: 'obj-05', say: 'ثلاث تفاحات' },
+      act: { q: 'أيّ مجموعة فيها ثلاثة بالونات؟', groups: [2, 4, 3], img: 'obj-06', a: 2 }, next: 'رقم أربعة' }
+  };
+  const item = DATA[q.get('id')] || DATA['ب'];
+  const NUM = ['واحد', 'اثنان', 'ثلاثة', 'أربعة'], DIG = ['١', '٢', '٣', '٤'];
+  const STEPS = ['الشكل', 'المثال', 'اسمع', 'تتبّع', 'نشاط', 'النتيجة'];
+  const TIPS = item.kind === 'l'
+    ? ['هذا حرف الباء! انظر إلى شكله جيداً.', 'بَطّة تبدأ بحرف الباء!', 'اضغط على السمّاعة واستمع، ثم قلها معي!', 'تتبّع الحرف بإصبعك على الخط المنقّط.', 'فكّر جيداً واختر الصورة الصحيحة.', 'رائع! أنت بطل الحروف.']
+    : ['هذا رقم ثلاثة! انظر إلى شكله جيداً.', 'اضغط على كل تفاحة لنعدّ معاً.', 'اضغط على السمّاعة واستمع، ثم قلها معي!', 'تتبّع الرقم بإصبعك على الخط المنقّط.', 'عُدّ البالونات واختر المجموعة الصحيحة.', 'رائع! أنت بطل الأرقام.'];
+  $('title').textContent = item.name; $('mini').textContent = item.glyph;
+  document.title = `${item.name} · واحة الحروف`;
+
+  let traced = 0, spill = 0, tries = 0, solved = false, counted = 0, reached = 0, strokes = 0, helped = false;
+  const XP = 20; // given once, when the whole journey is complete (gamification settings)
+  const ear = (say) => `<button class="hear" type="button" data-say="${say}" aria-label="استمع"><svg viewBox="0 0 24 24" fill="none" stroke="#1D6FA8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#1D6FA8"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></button>`;
+  const star = (on) => `<svg class="${on ? '' : 'off'}" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="#FFC93C" stroke="#E0A01E" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+
+  // ---- each step
+  const BODY = [
+    () => `<div class="big">${item.glyph}</div><p class="cap">هذا ${item.name} ${ear(item.say)}</p>`,
+    () => item.kind === 'l'
+      ? `<span class="obj"><img src="img/letters/${item.example.img}.jpg" alt="بطة"></span><p class="word"><b>${item.example.first}</b>${item.example.rest} ${ear(item.example.say)}</p>`
+      : `<div class="count">${Array.from({ length: item.count }, (_, i) => `<button type="button" data-n="${i}" aria-label="تفاحة ${i + 1}"><img src="img/letters/${item.example.img}.jpg" alt=""></button>`).join('')}</div><p class="said" id="counted">اضغط على التفاحات</p>`,
+    () => `<button class="speak" id="speak" type="button" aria-label="استمع إلى النطق"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#6B3A1E"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><p class="said">اضغط لتسمع: <b>${item.say}</b></p>`,
+    () => `<div class="trace" id="trace"><canvas class="guide"></canvas><canvas class="ink"></canvas></div><div class="tools"><span class="meter" aria-hidden="true"><i id="cover"></i></span><button class="btn soft" id="wipe" type="button">امسح وحاول مرة أخرى</button></div>`,
+    () => `<p class="q">${item.act.q} ${ear(item.act.q)}</p><div class="picks">${item.kind === 'l'
+      ? item.act.opts.map((o, i) => `<button class="pick" type="button" data-a="${i}"><span class="obj"><img src="img/letters/${o.img}.jpg" alt=""></span>${o.name}</button>`).join('')
+      : item.act.groups.map((g, i) => `<button class="pick" type="button" data-a="${i}" aria-label="مجموعة"><span class="grp">${`<img src="img/letters/${item.act.img}.jpg" alt="">`.repeat(g)}</span></button>`).join('')}</div><p class="fb" id="fb" aria-live="polite"></p>`,
+    () => {
+      const tStars = traced >= 0.8 && spill < 0.45 ? 3 : traced >= 0.6 ? 2 : 1, aStars = tries <= 1 ? 3 : tries === 2 ? 2 : 1;
+      const stars = Math.round((tStars + aStars) / 2);
+      return `<div class="stars" aria-label="${stars} من 3 نجوم">${[0, 1, 2].map((i) => star(i < stars)).join('')}</div>
+        <p class="won">أحسنت يا يوسف! تعلّمت ${item.name}</p>
+        <div class="gains"><span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span></div>
+        <div class="btns"><button class="btn go" id="next-item" type="button">التالي: ${item.next}</button><a class="btn soft" href="oasis.html">العودة إلى الواحة</a></div>`;
+    }
+  ];
+
+  // a child who keeps trying but can't reach the line yet is never stuck (Q-51)
+  const ready = (i) => (i === 3 ? traced >= 0.6 || helped : i === 4 ? solved : true);
+  function show(i, dir) {
+    reached = Math.max(reached, i);
+    $('steps').innerHTML = STEPS.map((s, k) => `<li class="${k === i ? 'at' : k < reached || k < i ? 'passed' : ''}"><button type="button" data-k="${k}" ${k > reached ? 'disabled' : ''} aria-label="${s}">${k < i ? '✓' : k + 1}</button><span>${s}</span></li>`).join('');
+    const body = $('body');
+    body.innerHTML = BODY[i](); body.classList.remove('in'); void body.offsetWidth; body.style.setProperty('--dir', dir > 0 ? -1 : 1); if (dir) body.classList.add('in');
+    $('tip').textContent = TIPS[i];
+    $('prev').disabled = i === 0;
+    $('next').hidden = i === STEPS.length - 1;
+    $('next').disabled = !ready(i);
+    if (i === 3) setupTrace();
+    if (i === 5) { burst(); learner.clear(); }
+  }
+
+  const learner = Viewer.pages({ steps: STEPS.length, key: `ajyal.learn.${item.kind}.${item.glyph}`, start: q.get('resume') === '1' ? 3 : 0, label: (i) => `خطوة ${STEPS[i]}`, onShow: show, canNext: ready });
+  $('next').addEventListener('click', learner.next);
+  $('prev').addEventListener('click', learner.prev);
+  $('steps').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b && !b.disabled) learner.go(+b.dataset.k); });
+
+  // ---- clicks inside a step
+  $('body').addEventListener('click', (e) => {
+    const h = e.target.closest('[data-say]'); if (h) return speak(h.dataset.say);
+    if (e.target.closest('#speak')) { const s = $('speak'); s.classList.add('on'); return speak(item.kind === 'l' ? `${item.say}. ${item.example.say}` : item.say, () => s.classList.remove('on')); }
+    const c = e.target.closest('.count button');
+    if (c && !c.querySelector('b')) {
+      c.insertAdjacentHTML('beforeend', `<b>${DIG[counted]}</b>`); speak(NUM[counted]); counted++;
+      $('counted').textContent = counted < item.count ? `${NUM[counted - 1]}…` : `أحسنت! ${item.example.say}`;
+      return;
+    }
+    const p = e.target.closest('.pick');
+    if (p && !solved) {
+      tries++;
+      const ok = +p.dataset.a === item.act.a, fb = $('fb');
+      if (ok) {
+        solved = true; p.classList.add('right'); fb.className = 'fb ok'; fb.textContent = 'أحسنت! إجابة صحيحة'; burst();
+        $('body').querySelectorAll('.pick').forEach((x) => { x.disabled = true; });
+        $('next').disabled = false;
+      } else { p.classList.remove('wrong'); void p.offsetWidth; p.classList.add('wrong'); fb.className = 'fb no'; fb.textContent = 'حاول مرة أخرى!'; }
+    }
+    if (e.target.closest('#next-item')) learner.toast(`في النموذج: ${item.next} سيكون هنا بنفس الخطوات`);
+  });
+
+  // ---- tracing: the child's ink is compared with the shape, on a small grid
+  function setupTrace() {
+    const box = $('trace'), guide = box.querySelector('.guide'), ink = box.querySelector('.ink');
+    const S = box.clientWidth, dpr = window.devicePixelRatio || 1, G = 90;
+    [guide, ink].forEach((c) => { c.width = S * dpr; c.height = S * dpr; c.getContext('2d').scale(dpr, dpr); });
+    const font = (px) => `800 ${px}px "Thmanyah Sans", system-ui, sans-serif`;
+    // draw the glyph centred on its real ink box
+    const place = (ctx, size) => {
+      ctx.font = font(size * 0.7); ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.direction = 'rtl';
+      const m = ctx.measureText(item.glyph);
+      return size / 2 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+    };
+    const g = guide.getContext('2d');
+    const y = place(g, S);
+    g.fillStyle = '#F6E7C8'; g.fillText(item.glyph, S / 2, y);
+    g.setLineDash([S * 0.028, S * 0.024]); g.lineWidth = S * 0.012; g.strokeStyle = '#C79A55'; g.strokeText(item.glyph, S / 2, y);
+    // where the shape is, on a coarse grid
+    const mask = document.createElement('canvas'); mask.width = mask.height = G;
+    const mc = mask.getContext('2d'); const my = place(mc, G); mc.fillText(item.glyph, G / 2, my);
+    const md = mc.getImageData(0, 0, G, G).data, shape = [];
+    for (let i = 0; i < G * G; i++) if (md[i * 4 + 3] > 120) shape.push(i);
+    const coarse = document.createElement('canvas'); coarse.width = coarse.height = G;
+    const cc = coarse.getContext('2d');
+    const ic = ink.getContext('2d');
+    [ic, cc].forEach((c) => { c.lineCap = c.lineJoin = 'round'; });
+    ic.strokeStyle = '#F4823F'; ic.lineWidth = S * 0.085; cc.strokeStyle = '#000'; cc.lineWidth = G * 0.085;
+    let last = null;
+    const at = (e) => { const r = ink.getBoundingClientRect(); return [(e.clientX - r.left) * S / r.width, (e.clientY - r.top) * S / r.height]; };
+    const line = (a, b) => {
+      ic.beginPath(); ic.moveTo(...a); ic.lineTo(...b); ic.stroke();
+      cc.beginPath(); cc.moveTo(a[0] * G / S, a[1] * G / S); cc.lineTo(b[0] * G / S, b[1] * G / S); cc.stroke();
+    };
+    const score = () => {
+      const d = cc.getImageData(0, 0, G, G).data;
+      let hit = 0, inked = 0, out = 0;
+      const inShape = new Uint8Array(G * G); shape.forEach((i) => { inShape[i] = 1; if (d[i * 4 + 3] > 0) hit++; });
+      for (let i = 0; i < G * G; i++) if (d[i * 4 + 3] > 0) { inked++; if (!inShape[i]) out++; }
+      traced = shape.length ? hit / shape.length : 0; spill = inked ? out / inked : 0;
+      $('cover').style.setProperty('--p', Math.min(100, Math.round(traced * 100 / 0.8)) + '%');
+      strokes++;
+      if (traced < 0.6 && strokes >= 12 && !helped) { helped = true; $('next').disabled = false; $('tip').textContent = 'أحسنت المحاولة! هيا نكمل، وسنتدرّب عليه مرة أخرى.'; return; }
+      if (traced >= 0.6 && $('next').disabled) { $('next').disabled = false; $('tip').textContent = 'أحسنت! خطّك جميل. اضغط «التالي».'; burst(); }
+    };
+    ink.addEventListener('pointerdown', (e) => { ink.setPointerCapture(e.pointerId); last = at(e); line(last, last); });
+    ink.addEventListener('pointermove', (e) => { if (!last) return; const p = at(e); line(last, p); last = p; });
+    const up = () => { if (!last) return; last = null; score(); };
+    ink.addEventListener('pointerup', up); ink.addEventListener('pointercancel', up);
+    $('wipe').addEventListener('click', () => { ic.clearRect(0, 0, S, S); cc.clearRect(0, 0, G, G); traced = spill = 0; $('cover').style.setProperty('--p', '0%'); });
+  }
+  document.fonts?.load('800 100px "Thmanyah Sans"');
+
+  // ---- pronunciation: in production the admin's audio file; here the browser's Arabic voice stands in
+  const synth = window.speechSynthesis; let warned = false;
+  function speak(text, onEnd) {
+    const v = synth?.getVoices().find((x) => x.lang?.toLowerCase().startsWith('ar'));
+    if (!v) { if (!warned) { warned = true; learner.toast('لا يوجد صوت عربي على هذا الجهاز، وفي التطبيق سيُسمع ملف النطق'); } setTimeout(() => onEnd?.(), 900); return; }
+    synth.cancel(); const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.rate = 0.8; u.onend = () => onEnd?.(); synth.speak(u);
+  }
+  synth?.getVoices();
+
+  function burst() {
+    const c = document.createElement('div'); c.className = 'confetti';
+    const colors = ['#F4823F', '#FFC93C', '#5BC236', '#3D96D6', '#F58DA6'];
+    c.innerHTML = Array.from({ length: 26 }, (_, i) => `<i style="background:${colors[i % 5]};--x:${(Math.random() - 0.5) * 700}px;--y:${-120 - Math.random() * 260}px;--r:${Math.random() * 720}deg"></i>`).join('');
+    $('lesson').appendChild(c); setTimeout(() => c.remove(), 1200);
+  }
+})();
+</script>
+</body>
+</html>
