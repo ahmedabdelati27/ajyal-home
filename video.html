@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>كيف تطير الطيور؟ · غابة المعرفة</title>
+<link rel="stylesheet" href="viewer.css">
+<style>
+/* the player: the video on top, big controls right under it */
+.stage { min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+.frame { position: relative; margin: 0; flex: 0 1 auto; height: calc(100% - 92px); max-width: 100%; aspect-ratio: 16 / 9; }
+.frame-in { height: 100%; }
+.frame:fullscreen { height: 100%; background: #000; display: flex; align-items: center; }
+.frame:fullscreen .frame-in { border: 0; border-radius: 0; height: auto; }
+
+/* no real video file in the prototype: the poster drifts slowly while "playing" */
+.poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; animation: drift 24s ease-in-out infinite alternate; animation-play-state: paused; }
+.playing .poster { animation-play-state: running; }
+@keyframes drift { from { transform: scale(1); } to { transform: scale(1.14) translate(-3%, -2%); } }
+
+.big { position: absolute; left: 50%; top: 50%; width: 112px; height: 112px; margin: -56px 0 0 -56px; border: 5px solid var(--line); border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 4px 0 rgba(255,255,255,.55), inset 0 -5px 0 rgba(166,84,20,.35), 0 6px 0 var(--line), 0 14px 24px rgba(0,0,0,.25); transition: transform .15s, opacity .2s; }
+.big:hover { transform: scale(1.06); }
+.big svg { width: 52px; height: 52px; }
+.playing .big { opacity: 0; pointer-events: none; transform: scale(.8); }
+
+/* resume prompt: the BRD's «أكمل من حيث توقفت» */
+.resume { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(30,50,30,.45); }
+.resume[hidden] { display: none; }
+.resume div { background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
+.resume p b { color: var(--go); }
+.resume .btns { margin: 0; }
+.resume .btn { gap: 8px; }
+.resume .btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+/* control bar */
+.ctrl { width: var(--fw, 100%); max-width: 100%; display: flex; align-items: center; gap: 10px; height: 78px; padding: 0 12px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 5px 0 rgba(58,35,24,.15); }
+.cb { width: 52px; height: 52px; flex-shrink: 0; border: 0; border-radius: 50%; background: #FFF1D6; display: flex; align-items: center; justify-content: center; }
+.cb:hover { background: #FFE3A8; }
+.cb svg { width: 28px; height: 28px; }
+.cb.play { width: 62px; height: 62px; border: 4px solid var(--line); background: var(--amber); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), 0 4px 0 var(--line); }
+.cb.play svg { width: 30px; height: 30px; }
+.clock { flex-shrink: 0; font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; direction: ltr; color: var(--ink-soft); min-width: 104px; text-align: center; }
+.clock b { color: var(--ink); }
+/* RTL timeline: fills from the right */
+.bar { position: relative; flex: 1; min-width: 60px; height: 44px; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+.bar .rail { position: absolute; inset: 15px 0; border-radius: 999px; background: #E6EFDC; overflow: hidden; }
+.bar .fill { position: absolute; inset: 0 0 0 auto; width: var(--p, 0%); border-radius: 999px; background: linear-gradient(90deg, #8ED86A, var(--leaf)); }
+.bar .knob { position: absolute; top: 50%; right: var(--p, 0%); width: 34px; height: 34px; margin: -17px -17px 0 0; border-radius: 50%; background: var(--paper); border: 4px solid var(--leaf); box-shadow: 0 3px 0 rgba(58,35,24,.2); }
+.bar:focus-visible { outline: 3px solid #3D96D6; outline-offset: 4px; border-radius: 999px; }
+
+/* time's up while watching */
+.stop .card { padding-top: 110px; }
+.stop .card h2 { color: #C46A00; }
+
+@media (max-width: 760px) {
+  .frame { height: auto; width: 100%; }
+  .frame-in { height: auto; }
+  .stage { justify-content: flex-start; padding-top: 12vh; }
+  .ctrl { width: 100%; height: 64px; gap: 4px; padding: 0 8px; }
+  .cb { width: 42px; height: 42px; } .cb svg { width: 22px; height: 22px; }
+  .cb.play { width: 50px; height: 50px; }
+  .cb.ten, .cb.full { display: none; }
+  .clock { font-size: 14px; min-width: 76px; }
+  .big { width: 84px; height: 84px; margin: -42px 0 0 -42px; } .big svg { width: 38px; height: 38px; }
+  .resume div { padding: 12px 14px; border-radius: 20px; }
+  .resume p { font-size: 16px; margin-bottom: 8px; }
+  .resume .btns { flex-wrap: nowrap; gap: 8px; }
+  .resume .btn { height: 44px; padding: 0 14px; font-size: 15px; box-shadow: 0 3px 0 var(--go-deep); }
+  .resume .btn.soft { box-shadow: 0 3px 0 #E0C9A6; }
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="forest.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>غابة المعرفة</span></a>
+    <div class="ttl"><img src="img/forest/I-14.png" alt=""><h1>كيف تطير الطيور؟</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <figure class="frame" id="frame">
+      <div class="frame-in" id="screen">
+        <img class="poster" src="img/video/birds.jpg" alt="" draggable="false">
+        <button class="big" id="big" type="button" aria-label="تشغيل"><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="#6B3A1E"/></svg></button>
+        <div class="resume" id="resume">
+          <div>
+            <p>توقفت عند الدقيقة <b id="at">3:20</b></p>
+            <div class="btns">
+              <button class="btn go" id="go-on" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>أكمل من حيث توقفت</button>
+              <button class="btn soft" id="restart" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.5a8 8 0 1 1-7.4 4.9"/><path d="M14 1.5v6h-6"/></svg>من البداية</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </figure>
+
+    <div class="ctrl" id="ctrl">
+      <button class="cb play" id="play" type="button" aria-label="تشغيل"></button>
+      <button class="cb ten" id="back10" type="button" aria-label="رجوع 10 ثوانٍ"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4.5a8 8 0 1 1-7.4 4.9"/><path d="M14 1.5v6h-6"/><text x="12.6" y="16.4" text-anchor="middle" font-size="7.5" font-weight="800" fill="#6B3A1E" stroke="none" font-family="Thmanyah Sans, sans-serif">10</text></svg></button>
+      <button class="cb ten" id="fwd10" type="button" aria-label="تقديم 10 ثوانٍ"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5a8 8 0 1 0 7.4 4.9"/><path d="M10 1.5v6h6"/><text x="11.4" y="16.4" text-anchor="middle" font-size="7.5" font-weight="800" fill="#6B3A1E" stroke="none" font-family="Thmanyah Sans, sans-serif">10</text></svg></button>
+      <span class="clock"><b id="cur">0:00</b> / <span id="dur">8:00</span></span>
+      <div class="bar" id="bar" role="slider" tabindex="0" aria-label="موضع الفيديو" aria-valuemin="0" aria-valuemax="480" aria-valuenow="0"><span class="rail"><span class="fill"></span></span><span class="knob"></span></div>
+      <button class="cb" id="mute" type="button" aria-label="كتم الصوت" aria-pressed="false"></button>
+      <button class="cb full" id="full" type="button" aria-label="ملء الشاشة"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+  </main>
+
+  <div class="acts">
+    <button class="act" id="like" type="button" aria-pressed="false" aria-label="إعجاب"><svg viewBox="0 0 24 24" class="heart" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/></svg><span id="likes">342</span></button>
+    <button class="act" id="talk" type="button" aria-label="التعليقات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg><span>27</span><span class="lbl">تعليق</span></button>
+    <button class="act" id="share" type="button" aria-label="شارك مع أصدقائك"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M14 5l6 6-6 6M20 11H10a6 6 0 0 0-6 6v1"/></svg><span class="lbl">شارك</span></button>
+    <span class="act views" aria-label="2,815 مشاهدة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>2,815</span>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="التعليقات" aria-hidden="true">
+  <header><h2>التعليقات · 27</h2><button class="x" id="close" type="button" aria-label="إغلاق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A2318" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="list">
+    <div class="c"><img src="img/avatar.png" alt=""><div><b>يوسف م.</b><span>العصفور الأصفر يرفرف بسرعة!</span></div></div>
+    <div class="c"><img src="img/avatar.png" alt=""><div><b>مريم</b><span>الآن فهمت لماذا الريش خفيف</span></div></div>
+    <div class="c"><img src="img/avatar.png" alt=""><div><b>آدم</b><span>أريد فيديو عن النسور</span></div></div>
+  </div>
+  <p class="note">نراجع كل تعليق قبل أن يظهر، لنبقى لطفاء مع بعض.</p>
+  <form class="write" id="write"><input id="msg" placeholder="اكتب تعليقك…" maxlength="120" aria-label="اكتب تعليقك"><button type="submit">أرسل</button></form>
+</aside>
+
+<!-- watched to the end -->
+<div class="done" id="done" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="done-t">
+    <img class="owl" src="img/forest/owl-island.png" alt="">
+    <h2 id="done-t">أحسنت يا يوسف!</h2>
+    <p>شاهدت فيديو «كيف تطير الطيور؟» كله</p>
+    <span class="xp" id="xp" hidden><img src="img/forest/I-06.png" alt=""><b id="xp-n">+20</b> نقطة</span>
+    <div class="btns">
+      <a class="btn go" href="forest.html">العودة إلى الغابة</a>
+      <button class="btn soft" id="again" type="button">شاهده من جديد</button>
+    </div>
+    <div class="more">
+      <h3>فيديوهات قد تعجبك</h3>
+      <div>
+        <a href="#"><img src="img/forest/t05.jpg" alt=""><span>رحلة النحلة</span></a>
+        <a href="#"><img src="img/forest/t10.jpg" alt=""><span>رائد فضاء صغير</span></a>
+        <a href="#"><img src="img/forest/t15.jpg" alt=""><span>الغذاء الصحي</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- the daily time ran out: playback stops, the place is kept -->
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/forest/owl-island.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند الدقيقة <b id="kept">3:25</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const DUR = 480, KEY = 'ajyal.video.birds';
+  // XP only when the admin marked this item as XP-eligible on completion (never just for opening)
+  const XP = 0;
+  const q = new URLSearchParams(location.search);
+  // ?demo=timeup runs out the daily time a few seconds into playback
+  let timeLeft = q.get('demo') === 'timeup' ? 4 : 35 * 60;
+
+  const ICON = {
+    play: '<svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="#6B3A1E"/></svg>',
+    pause: '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.6" fill="#6B3A1E"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.6" fill="#6B3A1E"/></svg>',
+    sound: '<svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#6B3A1E"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+    muted: '<svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#6B3A1E"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>'
+  };
+  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  const store = { get() { try { return +localStorage.getItem(KEY) || 0; } catch { return 0; } }, set(v) { try { localStorage.setItem(KEY, String(Math.floor(v))); } catch {} } };
+
+  // a finished (or almost finished) video starts over; the prototype's default place matches the forest card (3:20)
+  const saved = store.get();
+  let t = saved > 0 && saved < DUR - 10 ? saved : saved >= DUR - 10 ? 0 : 200, playing = false, tick = null, muted = false;
+  const screen = $('screen'), bar = $('bar');
+
+  function draw() {
+    bar.style.setProperty('--p', (t / DUR) * 100 + '%');
+    bar.setAttribute('aria-valuenow', Math.floor(t)); bar.setAttribute('aria-valuetext', fmt(t));
+    $('cur').textContent = fmt(t);
+  }
+  function setPlaying(on) {
+    playing = on;
+    screen.classList.toggle('playing', on);
+    $('play').innerHTML = on ? ICON.pause : ICON.play;
+    $('play').setAttribute('aria-label', on ? 'إيقاف مؤقت' : 'تشغيل');
+    clearInterval(tick);
+    if (on) tick = setInterval(step, 250); else store.set(t);
+  }
+  let sinceSave = 0;
+  function step() {
+    t = Math.min(DUR, t + 0.25); draw();
+    // keep the place even if the app closes or the connection drops
+    if ((sinceSave += 0.25) >= 5) { sinceSave = 0; store.set(t); }
+    timeLeft -= 0.25; $('left').textContent = Math.max(0, Math.ceil(timeLeft / 60)) + ' د';
+    if (timeLeft <= 0) return timeUp();
+    if (t >= DUR) finish();
+  }
+  const seek = (v) => { t = Math.max(0, Math.min(DUR, v)); draw(); store.set(t); };
+
+  function finish() {
+    setPlaying(false); store.set(0);
+    $('xp').hidden = !XP; $('xp-n').textContent = '+' + XP;
+    $('done').hidden = false; $('again').focus();
+  }
+  function timeUp() {
+    setPlaying(false); store.set(t);
+    if (document.fullscreenElement) document.exitFullscreen();
+    if (drawer.classList.contains('open')) closeTalk();
+    $('kept').textContent = fmt(t); $('left').textContent = '0 د';
+    $('stop').hidden = false; $('ask').focus();
+  }
+
+  // resume prompt shows only when there's a saved place; coming from «أكمل» skips it
+  $('at').textContent = fmt(t);
+  if (q.get('resume') === '1' || t === 0) $('resume').hidden = true;
+  $('go-on').addEventListener('click', () => { $('resume').hidden = true; setPlaying(true); });
+  $('restart').addEventListener('click', () => { $('resume').hidden = true; seek(0); setPlaying(true); });
+  $('again').addEventListener('click', () => { $('done').hidden = true; seek(0); setPlaying(true); });
+
+  const toggle = () => { if (!$('resume').hidden) $('resume').hidden = true; setPlaying(!playing); };
+  $('play').addEventListener('click', toggle);
+  $('big').addEventListener('click', toggle);
+  screen.addEventListener('click', (e) => { if (e.target === screen || e.target.classList.contains('poster')) toggle(); });
+  $('back10').addEventListener('click', () => seek(t - 10));
+  $('fwd10').addEventListener('click', () => seek(t + 10));
+  $('mute').addEventListener('click', () => { muted = !muted; $('mute').innerHTML = muted ? ICON.muted : ICON.sound; $('mute').setAttribute('aria-pressed', muted); $('mute').setAttribute('aria-label', muted ? 'تشغيل الصوت' : 'كتم الصوت'); });
+  $('full').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else $('frame').requestFullscreen?.(); });
+
+  // timeline: RTL, so the start is on the right
+  const fromX = (x) => { const r = bar.getBoundingClientRect(); return ((r.right - x) / r.width) * DUR; };
+  let dragging = false;
+  bar.addEventListener('pointerdown', (e) => { dragging = true; bar.setPointerCapture(e.pointerId); seek(fromX(e.clientX)); });
+  bar.addEventListener('pointermove', (e) => { if (dragging) seek(fromX(e.clientX)); });
+  bar.addEventListener('pointerup', () => { dragging = false; });
+  bar.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') { seek(t + 10); e.preventDefault(); } if (e.key === 'ArrowRight') { seek(t - 10); e.preventDefault(); } });
+
+  addEventListener('keydown', (e) => {
+    if (document.activeElement === $('msg') || e.target === bar) return;
+    if (e.key === ' ') { e.preventDefault(); toggle(); }
+    if (e.key === 'ArrowLeft') seek(t + 10);
+    if (e.key === 'ArrowRight') seek(t - 10);
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeTalk();
+  });
+
+  // keep the controls as wide as the video
+  const fit = () => document.documentElement.style.setProperty('--fw', $('frame').getBoundingClientRect().width + 'px');
+  new ResizeObserver(fit).observe($('frame'));
+
+  // no saving or copying
+  addEventListener('contextmenu', (e) => { if (e.target.closest('.frame')) e.preventDefault(); });
+  addEventListener('pagehide', () => store.set(t >= DUR ? 0 : t));
+
+  const like = $('like');
+  like.addEventListener('click', () => { const on = like.getAttribute('aria-pressed') !== 'true'; like.setAttribute('aria-pressed', on); $('likes').textContent = 342 + (on ? 1 : 0); });
+
+  const drawer = $('drawer'), scrim = $('scrim');
+  const openTalk = () => { drawer.classList.add('open'); scrim.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); $('msg').focus(); };
+  const closeTalk = () => { drawer.classList.remove('open'); scrim.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); $('talk').focus(); };
+  $('talk').addEventListener('click', () => { if (playing) setPlaying(false); openTalk(); });
+  $('close').addEventListener('click', closeTalk);
+  scrim.addEventListener('click', closeTalk);
+  $('write').addEventListener('submit', (e) => { e.preventDefault(); if (!$('msg').value.trim()) return; $('msg').value = ''; toast('وصل تعليقك، وسيظهر بعد المراجعة'); });
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2200); };
+  $('share').addEventListener('click', () => toast('المشاركة مع أصدقائك داخل المنصة قريباً'));
+  $('ask').addEventListener('click', (e) => { e.preventDefault(); toast('أرسلنا طلبك، وسنخبرك عندما يوافق'); });
+
+  $('mute').innerHTML = ICON.sound;
+  setPlaying(false); draw();
+})();
+</script>
+</body>
+</html>
