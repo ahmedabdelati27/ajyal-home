@@ -45,35 +45,95 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
 .cont h2 { margin: 0; font-size: 16px; font-weight: 800; color: var(--rust-deep); }
 .cont b { font-size: 30px; font-weight: 800; line-height: 1.15; }
 .cont small { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
-.go { display: inline-flex; align-items: center; gap: 10px; height: 64px; padding: 0 30px; border-radius: 999px; background: var(--go); color: var(--paper); text-decoration: none; font-weight: 800; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); flex-shrink: 0; }
+.go { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 64px; padding: 0 30px; border-radius: 999px; background: var(--go); color: var(--paper); text-decoration: none; font-weight: 800; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); flex-shrink: 0; }
 
 /* worlds: the admin's themes, only a way to group the games */
 h2.sec { margin: 0 0 14px; font-size: 30px; font-weight: 800; }
-.worlds { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-.world { position: relative; padding: 0; border: 0; border-radius: 28px; overflow: hidden; background: var(--paper); text-align: start; box-shadow: 0 6px 0 #EED3B4; transition: transform .2s; }
-.world:hover { transform: translateY(-4px); }
-.world[aria-pressed="true"] { box-shadow: 0 0 0 5px #F7B347, 0 6px 0 #C98A1E; }
-.world img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
-.world span { display: flex; flex-direction: column; gap: 4px; padding: 10px 16px 14px; }
+.worlds { display: flex; gap: 16px; }
+.world { flex: 1; display: flex; align-items: center; gap: 14px; padding: 8px 20px 8px 8px; border: 0; border-radius: 999px; background: var(--paper); text-align: start; box-shadow: 0 6px 0 #EED3B4; transition: transform .2s; }
+.world:hover { transform: translateY(-3px); }
+.world[aria-pressed="true"] { background: #FFF6D8; box-shadow: 0 0 0 5px #F7B347, 0 6px 0 #C98A1E; }
+.world img { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px #F2E1CC; }
+.world span { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .world b { font-size: 24px; font-weight: 800; }
-.world small { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
-.world .meter { width: 100%; height: 8px; margin-top: 4px; }
+.world small { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.world .meter { width: 90px; height: 8px; }
 
-/* the games of the chosen world */
-.games { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-.game { position: relative; display: flex; flex-direction: column; background: var(--paper); border-radius: 26px; overflow: hidden; text-decoration: none; color: var(--ink); box-shadow: 0 6px 0 #EED3B4; transition: transform .2s; }
-.game:hover { transform: translateY(-5px) rotate(-1deg); }
-.game .cov { position: relative; aspect-ratio: 16 / 9; }
-.game .cov img { width: 100%; height: 100%; object-fit: cover; }
-.play { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border: 4px solid var(--line); border-radius: 50%; background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), 0 4px 0 var(--line); display: flex; align-items: center; justify-content: center; }
-.play svg { width: 28px; height: 28px; }
-.tag { position: absolute; top: 10px; left: 10px; height: 28px; padding: 0 10px; border-radius: 999px; font-size: 13px; font-weight: 800; display: flex; align-items: center; }
-.tag.ok { background: #4CB944; color: var(--paper); border: 2px solid var(--paper); }
-.tag.new { background: var(--paper); color: #D0335A; }
-.tag.on { background: #FFF1C9; color: #8A5A00; }
-.game .body { display: flex; flex-direction: column; gap: 3px; padding: 10px 14px 14px; }
-.game b { font-size: 20px; font-weight: 800; }
-.game small { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.sec-row { display: flex; align-items: center; justify-content: space-between; margin: 0 0 14px; }
+.sec-row h2.sec { margin: 0; }
+.view { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--paper); box-shadow: 0 4px 0 #EED3B4; }
+.view button { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: none; font-size: 18px; font-weight: 800; }
+.view button[aria-pressed="true"] { background: #FFF1C9; color: #8A5A00; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+.scene[hidden], .list[hidden] { display: none; }
+.list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.card { display: flex; flex-direction: column; gap: 4px; padding-bottom: 14px; border-radius: 26px; overflow: hidden; background: var(--paper); color: var(--ink); text-decoration: none; box-shadow: 0 6px 0 #EED3B4; }
+.card .cov { position: relative; display: block; aspect-ratio: 16 / 9; }
+.card .cov img { width: 100%; height: 100%; object-fit: cover; }
+.card .tag { top: 10px; left: 10px; }
+.card b { padding: 6px 14px 0; font-size: 21px; font-weight: 800; }
+.card small { padding: 0 14px; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+/* the chosen world as one picture: each game is a place in it, and finished games change the picture */
+.scene { position: relative; height: 720px; border: 8px solid var(--paper); border-radius: 40px; overflow: hidden; background: #CFE8F5; box-shadow: 0 8px 0 #EED3B4, 0 20px 40px rgba(58,35,24,.15); }
+.scene > .bgimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: fadein .5s ease-out; }
+@keyframes fadein { from { opacity: 0; transform: scale(1.03); } }
+.s-head { transform: scale(var(--kh, 1)); transform-origin: top right; position: absolute; z-index: 5; top: 20px; right: 20px; display: flex; align-items: center; gap: 16px; padding: 10px 22px; border-radius: 24px; background: rgba(255,255,255,.93); box-shadow: 0 4px 0 rgba(58,35,24,.15); }
+.s-head b { font-size: 30px; font-weight: 800; }
+.s-head small { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+.s-head .meter { width: 120px; height: 10px; }
+.s-hint { transform: scale(var(--ks, 1)); transform-origin: top left; position: absolute; z-index: 5; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 18px; border-radius: 999px; background: rgba(255,255,255,.93); font-size: 18px; font-weight: 800; box-shadow: 0 4px 0 rgba(58,35,24,.15); }
+
+/* a game's place: its picture in a round frame, its name, and its state */
+.spot { position: absolute; z-index: 4; left: var(--x); top: var(--y); transform: translate(-50%, -50%) scale(var(--ks, 1)); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0; border: 0; background: none; }
+.spot .pin { position: relative; width: 104px; height: 104px; border-radius: 50%; border: 6px solid var(--paper); background: var(--paper); box-shadow: 0 6px 0 rgba(58,35,24,.35), 0 12px 24px rgba(0,0,0,.25); transition: transform .2s; }
+.spot .pin img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.spot:hover .pin, .spot[aria-expanded="true"] .pin { transform: scale(1.08) translateY(-4px); }
+.spot.call .pin::before { content: ''; position: absolute; inset: -14px; border-radius: 50%; border: 5px solid rgba(255,255,255,.95); animation: ring 1.8s ease-out infinite; }
+@keyframes ring { from { transform: scale(.85); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
+.spot .name { padding: 4px 16px 6px; border-radius: 999px; background: var(--paper); font-size: 19px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 #EBC9A5; }
+.tag { position: absolute; top: -10px; left: -14px; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 14px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; border: 2px solid var(--paper); box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+.tag.ok { background: #4CB944; color: var(--paper); }
+.tag.new { background: #D0335A; color: var(--paper); }
+.tag.on { background: #FFC93C; color: #5A3A00; }
+
+/* a closer look at the game before playing */
+.peek { position: absolute; z-index: 6; width: 340px; transform: scale(var(--ks, 1)); transform-origin: top left; padding: 12px 12px 16px; border-radius: 28px; background: var(--paper); box-shadow: 0 8px 0 #EED3B4, 0 24px 44px rgba(0,0,0,.28); display: flex; flex-direction: column; gap: 8px; animation: peek .25s cubic-bezier(.3,1.4,.6,1); }
+@keyframes peek { from { opacity: 0; scale: .9; } }
+.peek[hidden] { display: none; }
+/* small screens: the picture is too small for a card inside it, so the card rises from the bottom */
+.small .s-hint { display: none; }
+/* phones: names and states stay readable (about 14px on screen), the picture details grow too */
+.small .spot .name { font-size: 26px; }
+.small .tag { font-size: 24px; height: 40px; }
+.small .life { scale: 1.6; }
+.small .list { grid-template-columns: repeat(2, 1fr); }
+.small .card b { font-size: 40px; } .small .card small { font-size: 28px; }
+.small .view button { height: 80px; font-size: 32px; padding: 0 30px; }
+#sheet > img { aspect-ratio: 2 / 1; }
+#sheet { position: fixed; z-index: 30; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); width: min(360px, calc(100vw - 32px)); transform: translateX(-50%); }
+.peek > img { width: 100%; aspect-ratio: 16 / 9; border-radius: 18px; object-fit: cover; }
+.peek b { padding: 0 6px; font-size: 25px; font-weight: 800; }
+.peek small { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.peek .go { height: 58px; margin-top: 4px; font-size: 21px; }
+.peek .x { position: absolute; top: 20px; left: 20px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(255,255,255,.92); font-size: 22px; font-weight: 800; line-height: 1; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+
+/* what the picture shows of the child's progress */
+.life { position: absolute; z-index: 3; left: var(--x); top: var(--y); width: var(--w); transform: translate(-50%, -50%); pointer-events: none; }
+.life img { width: 100%; height: auto; filter: drop-shadow(0 4px 4px rgba(0,40,60,.25)); }
+.bob { animation: bob 3s ease-in-out infinite; animation-delay: var(--d, 0s); }
+@keyframes bob { 50% { translate: 0 -8px; rotate: 5deg; } }
+.happy::after { content: '❤'; position: absolute; top: -18px; left: 50%; color: #F0507A; font-size: 26px; animation: love 2.4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+@keyframes love { 0% { opacity: 0; translate: -50% 10px; } 30%, 60% { opacity: 1; } 100% { opacity: 0; translate: -50% -26px; } }
+.life.fresh { animation: fresh 1.2s cubic-bezier(.3,1.4,.6,1) .3s both; }
+@keyframes fresh { from { opacity: 0; scale: .3; } }
+.sparkle::after { content: '✦'; position: absolute; top: -6px; right: -4px; color: #FFE38A; font-size: 30px; text-shadow: 0 0 10px #FFF; animation: twinkle 1.8s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .3; scale: .7; } }
+/* toy blocks on the mat: a pile before the house game, a little house after it */
+.blocks { height: 140px; }
+.blocks i { position: absolute; display: block; border-radius: 6px; background: var(--c); box-shadow: inset 0 -5px 0 rgba(0,0,0,.16), inset 0 3px 0 rgba(255,255,255,.35), 0 4px 6px rgba(0,0,0,.18); }
+.blocks i.roof { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); box-shadow: inset 0 -6px 0 rgba(0,0,0,.16); }
+.blocks i.win::after { content: ''; position: absolute; inset: 22% 22% 40%; border-radius: 3px; background: #BFE6FF; box-shadow: 0 0 0 3px #FFFFFF; }
+.blocks i.door::after { content: ''; position: absolute; left: 26%; right: 26%; bottom: 0; height: 72%; border-radius: 40% 40% 0 0 / 22% 22% 0 0; background: #8A4B22; }
 
 .toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: rgba(58,35,24,.9); color: var(--paper); border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: 16px; z-index: 40; opacity: 0; transition: opacity .25s; pointer-events: none; text-align: center; }
 .toast.show { opacity: 1; }
@@ -86,7 +146,7 @@ h2.sec { margin: 0 0 14px; font-size: 30px; font-weight: 800; }
 .dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
 .rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
 @media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
-@media (prefers-reduced-motion: reduce) { .isle { animation: none; } .world, .game { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .isle, .bob, .life.fresh, .happy::after, .sparkle::after, .spot.call .pin::before, .scene > .bgimg, .peek { animation: none; } .world, .spot .pin { transition: none; } }
 </style>
 </head>
 <body>
@@ -121,14 +181,14 @@ h2.sec { margin: 0 0 14px; font-size: 30px; font-weight: 800; }
   </section>
 
   <section aria-labelledby="w-t">
-    <h2 class="sec" id="w-t">العوالم</h2>
-    <div class="worlds" id="worlds" role="group" aria-label="اختر عالماً"></div>
+    <div class="sec-row"><h2 class="sec" id="w-t">اختر عالماً</h2>
+      <div class="view" role="group" aria-label="طريقة العرض"><button type="button" data-v="scene" aria-pressed="true">🏝️ صورة</button><button type="button" data-v="list" aria-pressed="false">☰ قائمة</button></div></div>
+    <div class="worlds" id="worlds" role="group" aria-labelledby="w-t"></div>
   </section>
 
-  <section aria-labelledby="g-t">
-    <h2 class="sec" id="g-t"></h2>
-    <div class="games" id="games"></div>
-  </section>
+  <p class="sr" id="said" role="status"></p>
+  <section class="scene" id="scene"></section>
+  <section class="list" id="list" hidden></section>
 </main>
 </div></div>
 
@@ -138,53 +198,142 @@ h2.sec { margin: 0 0 14px; font-size: 30px; font-weight: 800; }
   <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
   <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
 </nav>
+<div class="peek" id="sheet" role="dialog" aria-labelledby="peek-t" hidden></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  // worlds and games come from the admin (name, cover, short description, order); state is the child's: 'ok' done, 'new', or '1/2' stage reached
-  const g = (name, cover, how, state = '', href = '#') => ({ name, cover, how, state, href });
+  // worlds and games come from the admin (name, cover, short description, order, and the game's place in the world picture);
+  // state is the child's: 'ok' done, 'new', '1/2' stage reached, or '' not started
+  const g = (id, name, cover, how, at, state = '', href = '#') => ({ id, name, cover, how, at, state, href });
   const WORLDS = [
-    { id: 'env', name: 'البيئة', about: 'نحافظ على الطبيعة نظيفة وجميلة', cover: 'w-01', games: [
-      g('نظّف البحر', 'g-01', 'اجمع المخلفات ورتّبها في الحاويات', '2/2', 'game.html?resume=1'),
-      g('نظّف الحديقة', 'g-02', 'التقط المخلفات من العشب', 'ok'),
-      g('ازرع نبتة', 'g-03', 'ازرع البذرة واسقها حتى تكبر', 'new', 'game-plant.html')] },
-    { id: 'care', name: 'المسؤولية', about: 'نهتم بأشيائنا وبمن حولنا', cover: 'w-02', games: [
-      g('أطعم الحيوانات', 'g-04', 'أعطِ كل حيوان طعامه المناسب', 'new', 'game-feed.html'),
-      g('رتّب الغرفة', 'g-05', 'ضع كل لعبة في صندوقها')] },
-    { id: 'home', name: 'الوطن', about: 'نتعرّف على تراث وطننا الجميل', cover: 'w-03', games: [
-      g('رحلة في وطني', 'g-06', 'اجمع رموز التراث في المشهد', 'new')] },
-    { id: 'craft', name: 'الإتقان', about: 'نتقن عملنا خطوة بخطوة', cover: 'w-04', games: [
-      g('أكمل الصورة', 'g-07', 'ضع كل قطعة في مكانها الصحيح', 'ok'),
-      g('ابنِ البيت', 'g-08', 'رتّب المكعبات لتبني بيتاً', 'new', 'game-house.html')] }
+    { id: 'env', name: 'البيئة', about: 'نحافظ على الطبيعة نظيفة وجميلة', cover: 'w-01', scene: 'world-env', games: [
+      g('sea', 'نظّف البحر', 'g-01', 'اجمع المخلفات ورتّبها في الحاويات', [13, 74], '2/2', 'game.html?resume=1'),
+      g('garden', 'نظّف الحديقة', 'g-02', 'التقط المخلفات من العشب', [50, 74], 'ok'),
+      g('plant', 'ازرع نبتة', 'g-03', 'ازرع البذرة واسقها حتى تكبر', [86, 72], 'new', 'game-plant.html')] },
+    { id: 'care', name: 'المسؤولية', about: 'نهتم بأشيائنا وبمن حولنا', cover: 'w-02', scene: 'world-care', games: [
+      g('feed', 'أطعم الحيوانات', 'g-04', 'أعطِ كل حيوان طعامه المناسب', [27, 78], 'new', 'game-feed.html'),
+      g('room', 'رتّب الغرفة', 'g-05', 'ضع كل لعبة في صندوقها', [77, 70])] },
+    { id: 'home', name: 'الوطن', about: 'نتعرّف على تراث وطننا الجميل', cover: 'w-03', scene: 'world-home', games: [
+      g('trip', 'رحلة في وطني', 'g-06', 'اجمع رموز التراث في المشهد', [44, 62], 'new')] },
+    { id: 'craft', name: 'الإتقان', about: 'نتقن عملنا خطوة بخطوة', cover: 'w-04', scene: 'world-craft', games: [
+      g('puzzle', 'أكمل الصورة', 'g-07', 'ضع كل قطعة في مكانها الصحيح', [22, 56], 'ok'),
+      g('house', 'ابنِ البيت', 'g-08', 'رتّب المكعبات لتبني بيتاً', [71, 52], 'new', 'game-house.html')] }
   ];
   const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const games = (n) => (n > 2 ? `${ar(n)} ألعاب` : n === 2 ? 'لعبتين' : 'لعبة واحدة');
   let at = 'env';
+  // a game the child finished in this browser counts as done; the first time back here, the picture changes in front of them
+  const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k) => { try { localStorage.setItem(k, '1'); } catch {} } };
+  const SAY = { sea: 'انظر! البحر صار نظيفاً بفضلك', plant: 'أحسنت! النبتة أزهرت', feed: 'الحيوانات شبعت وهي سعيدة بك', house: 'أحسنت! البيت جاهز على السجادة' };
+  let fresh = null;
+  WORLDS.forEach((w) => w.games.forEach((x) => {
+    if (!store.get(`ajyal.done.${x.id}`)) return;
+    x.state = 'ok';
+    if (!store.get(`ajyal.seen.${x.id}`)) { fresh = x; at = w.id; }
+  }));
+
+  // what each game leaves in the picture: the mess before, the result after
+  const life = (x, y, w, inner, cls = '', d = 0) => `<span class="life ${cls}" style="--x:${x}%;--y:${y}%;--w:${w}px;--d:${d}s">${inner}</span>`;
+  const pic = (src) => `<img src="img/games/${src}.png" alt="">`;
+  const blk = (c, x, y, w, h, k = '') => `<i class="${k}" style="--c:${c};left:${x}px;top:${y}px;width:${w}px;height:${h}px"></i>`;
+  const ART = {
+    sea: (s) => (s === 'ok' ? life(8, 56, 90, pic('item-05'), 'bob sparkle')
+      : [[6, 46], [17, 52], [9, 63], [4, 80]].slice(0, s && s !== 'new' ? 2 : 4).map(([x, y], n) => life(x, y, 56, pic(`item-0${n + 1}`), 'bob', -n * 0.7)).join('')),
+    garden: (s) => (s === 'ok' ? '' : [[44, 62], [56, 66], [62, 58]].map(([x, y], n) => life(x, y, 44, pic(`item-0${n + 1}`))).join('')),
+    plant: (s) => life(94, 58.5, 72, pic(s === 'ok' ? 'plant-7' : 'plant-1'), s === 'ok' ? 'sparkle' : ''),
+    feed: (s) => [['an-rabbit', 12, 57], ['an-cat', 20, 60], ['an-hen', 28, 56], ['an-sheep', 36, 60]].map(([a, x, y], n) => life(x, y, 84, pic(a), s === 'ok' ? 'happy' : '', -n * 0.6)).join(''),
+    house: (s) => life(71, 76, 170, s === 'ok'
+      ? blk('#E5484D', 6, 0, 158, 60, 'roof') + blk('#3D96D6', 14, 56, 44, 66, 'win') + blk('#5BC236', 58, 56, 54, 66, 'door') + blk('#3D96D6', 112, 56, 44, 66, 'win') + blk('#F4823F', 0, 120, 170, 20)
+      : blk('#F4823F', 10, 104, 120, 20) + blk('#3D96D6', 30, 60, 40, 44, 'win') + blk('#5BC236', 96, 66, 46, 40) + blk('#E5484D', 116, 40, 54, 30, 'roof') + blk('#FFC93C', 70, 88, 60, 16), 'blocks')
+  };
 
   function render() {
     $('worlds').innerHTML = WORLDS.map((w) => {
       const done = w.games.filter((x) => x.state === 'ok').length;
       return `<button class="world" type="button" data-id="${w.id}" aria-pressed="${w.id === at}"><img src="img/games/${w.cover}.jpg" alt="">
-        <span><b>${w.name}</b><small>${w.about}</small><small>أكملت ${ar(done)} من ${ar(w.games.length)} ${w.games.length > 2 ? 'ألعاب' : w.games.length === 2 ? '' : 'لعبة'}</small><span class="meter" style="--p:${(done / w.games.length) * 100}%"><i></i></span></span></button>`;
+        <span><b>${w.name}</b><small>${ar(done)} من ${ar(w.games.length)} <span class="meter" style="--p:${(done / w.games.length) * 100}%"><i></i></span></small></span></button>`;
     }).join('');
     const w = WORLDS.find((x) => x.id === at);
-    $('g-t').textContent = `ألعاب عالم ${w.name}`;
-    $('games').innerHTML = w.games.map((x) => {
-      const tag = x.state === 'ok' ? '<span class="tag ok">✓ مكتملة</span>' : x.state === 'new' ? '<span class="tag new">جديدة</span>' : x.state ? `<span class="tag on">المرحلة ${ar(x.state.split('/')[0])} من ${ar(x.state.split('/')[1])}</span>` : '';
-      return `<a class="game" href="${x.href}" aria-label="${x.name}، ${x.how}"><span class="cov"><img src="img/games/${x.cover}.jpg" alt="">${tag}
-        <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="#6B3A1E"/></svg></span></span>
-        <span class="body"><b>${x.name}</b><small>${x.how}</small></span></a>`;
-    }).join('');
+    const done = w.games.filter((x) => x.state === 'ok').length;
+    $('scene').setAttribute('aria-label', `عالم ${w.name}`);
+    $('scene').innerHTML = `<img class="bgimg" src="img/games/${w.scene}.jpg" alt="">
+      <div class="s-head"><b>عالم ${w.name}</b><small>أكملت ${ar(done)} من ${games(w.games.length)} <span class="meter" style="--p:${(done / w.games.length) * 100}%"><i></i></span></small></div>
+      <div class="s-hint">👆 اضغط على مكان في الصورة لتلعب</div>
+      ${w.games.map((x) => (ART[x.id] ? ART[x.id](x.state).replaceAll('class="life', x === fresh ? 'class="life fresh' : 'class="life') : '')).join('')}
+      ${w.games.map((x, n) => `<button class="spot ${x.state && x.state !== 'ok' ? 'call' : ''}" type="button" data-n="${n}" aria-expanded="false" aria-label="${x.name}، ${label(x.state) || 'لم تبدأ بعد'}" style="--x:${x.at[0]}%;--y:${x.at[1]}%">
+        <span class="pin"><img src="img/games/${x.cover}.jpg" alt="">${tag(x.state)}</span><span class="name">${x.name}</span></button>`).join('')}
+      <div class="peek" id="peek" role="dialog" aria-labelledby="peek-t" hidden></div>`;
+    $('said').textContent = `عالم ${w.name}، أكملت ${ar(done)} من ${games(w.games.length)}`;
+    $('list').innerHTML = w.games.map((x) => `<a class="card" href="${x.href}" aria-label="${x.name}، ${x.how}، ${label(x.state) || 'لم تبدأ بعد'}"><span class="cov"><img src="img/games/${x.cover}.jpg" alt="">${tag(x.state)}</span><b>${x.name}</b><small>${x.how}</small></a>`).join('');
     fit();
+    if (fresh && w.games.includes(fresh)) {
+      store.set(`ajyal.seen.${fresh.id}`);
+      $('scene').scrollIntoView({ block: 'center' });
+      const say = SAY[fresh.id] || 'أحسنت! أكملت اللعبة';
+      setTimeout(() => toast(say, 4500), 600);
+      fresh = null;
+    }
   }
-  $('worlds').addEventListener('click', (e) => { const b = e.target.closest('.world'); if (b) { at = b.dataset.id; render(); } });
+  const label = (s) => (s === 'ok' ? 'مكتملة' : s === 'new' ? 'جديدة' : s ? `المرحلة ${ar(s.split('/')[0])} من ${ar(s.split('/')[1])}` : '');
+  const tag = (s) => (s ? `<span class="tag ${s === 'ok' ? 'ok' : s === 'new' ? 'new' : 'on'}">${s === 'ok' ? '✓ ' : ''}${label(s)}</span>` : '');
 
-  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
-  $('games').addEventListener('click', (e) => {
-    const t = e.target.closest('.game'); if (!t || t.getAttribute('href') !== '#') return;
-    e.preventDefault(); toast('في النموذج: جرّب «نظّف البحر» و«ازرع نبتة» و«أطعم الحيوانات» و«ابنِ البيت»');
+  // tapping a place opens a closer look with one big button
+  function open(btn) {
+    const ks = +getComputedStyle(page).getPropertyValue('--ks') || 1, small = ks > 1.3;
+    const w = WORLDS.find((x) => x.id === at), x = w.games[+btn.dataset.n], peek = $(small ? 'sheet' : 'peek');
+    $(small ? 'peek' : 'sheet').hidden = true;
+    $('scene').querySelectorAll('.spot').forEach((s) => s.setAttribute('aria-expanded', String(s === btn)));
+    const act = x.state === 'ok' ? 'العب مرة أخرى' : x.state && x.state !== 'new' ? 'أكمل اللعب' : 'العب الآن';
+    peek.innerHTML = `<img src="img/games/${x.cover}.jpg" alt=""><b id="peek-t">${x.name}</b><small>${x.how}</small>${x.state ? `<small>${label(x.state)}</small>` : ''}
+      <a class="go" href="${x.href}">${act} <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></a>
+      <button class="x" type="button" aria-label="إغلاق">×</button>`;
+    peek.hidden = false;
+    if (small) return peek.querySelector('.go').focus();
+    // beside the place, on the side with more room, and always inside the picture
+    const sc = $('scene'), W = sc.clientWidth, H = sc.clientHeight, pw = peek.offsetWidth * ks, ph = peek.offsetHeight * ks;
+    const px = (x.at[0] / 100) * W, py = (x.at[1] / 100) * H;
+    const left = x.at[0] > 50 ? px - 90 * ks - pw : px + 90 * ks;
+    peek.style.left = Math.min(W - pw - 16, Math.max(16, left)) + 'px';
+    peek.style.top = Math.min(H - ph - 16, Math.max(16, py - ph / 2)) + 'px';
+    peek.querySelector('.go').focus();
+  }
+  function close() {
+    const open = [$('peek'), $('sheet')].filter((p) => p && !p.hidden); if (!open.length) return;
+    open.forEach((p) => { p.hidden = true; });
+    const s = $('scene').querySelector('.spot[aria-expanded="true"]'); s?.setAttribute('aria-expanded', 'false'); s?.focus();
+  }
+
+  $('worlds').addEventListener('click', (e) => { const b = e.target.closest('.world'); if (b) { at = b.dataset.id; render(); } });
+  $('scene').addEventListener('click', (e) => {
+    const spot = e.target.closest('.spot');
+    if (spot) return spot.getAttribute('aria-expanded') === 'true' ? close() : open(spot);
+    if (e.target.closest('.x') || !e.target.closest('.peek')) return close();
+    const go = e.target.closest('.go');
+    if (go && go.getAttribute('href') === '#') { e.preventDefault(); toast('في النموذج: جرّب «نظّف البحر» و«ازرع نبتة» و«أطعم الحيوانات» و«ابنِ البيت»'); }
   });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  document.querySelector('.view').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    close();
+    document.querySelectorAll('.view button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    $('scene').hidden = b.dataset.v !== 'scene'; $('list').hidden = b.dataset.v !== 'list';
+    fit();
+  });
+  $('list').addEventListener('click', (e) => {
+    const c = e.target.closest('.card');
+    if (c && c.getAttribute('href') === '#') { e.preventDefault(); toast('في النموذج: جرّب «نظّف البحر» و«ازرع نبتة» و«أطعم الحيوانات» و«ابنِ البيت»'); }
+  });
+  // the sheet lives outside the picture: its own buttons, and a tap anywhere else closes it
+  $('sheet').addEventListener('click', (e) => {
+    if (e.target.closest('.x')) return close();
+    const go = e.target.closest('.go');
+    if (go && go.getAttribute('href') === '#') { e.preventDefault(); toast('في النموذج: جرّب «نظّف البحر» و«ازرع نبتة» و«أطعم الحيوانات» و«ابنِ البيت»'); }
+  });
+  document.addEventListener('click', (e) => { if (!$('sheet').hidden && !e.target.closest('#sheet, .spot')) close(); });
+
+  const toast = (s, ms = 2400) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), ms); };
 
   // the board is drawn at 1440 wide; scale it to the window like the forest
   const page = $('page'), wrap = $('wrap');
@@ -192,6 +341,10 @@ h2.sec { margin: 0 0 14px; font-size: 30px; font-weight: 800; }
     const k = Math.min(innerWidth / 1440, 1.5);
     const x = Math.max(0, (innerWidth - 1440 * k) / 2);
     page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    // on small screens the places in the picture and their card grow back, so a finger can still hit them
+    page.style.setProperty('--ks', Math.max(1, 0.55 / k).toFixed(2));
+    page.style.setProperty('--kh', Math.max(1, 0.4 / k).toFixed(2));
+    page.classList.toggle('small', 0.55 / k > 1.3);
     wrap.style.height = page.offsetHeight * k + 'px';
   }
   addEventListener('resize', fit);
