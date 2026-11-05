@@ -1,0 +1,25 @@
+/* the cloud curtain between the map and a region: two clouds close over the screen, then part on the new page.
+   Each cloud is one picture with a puffy inner edge, grown until it covers its half of the screen. */
+html::before, html::after {
+  content: ''; position: fixed; z-index: 9999; top: 0; bottom: 0; width: 62vw; pointer-events: none; visibility: hidden;
+  background: url(img/clouds/cloud.webp) right center / cover no-repeat;
+  transition: transform .6s cubic-bezier(.65, 0, .35, 1), visibility 0s .6s;
+}
+html::before { left: 0; transform: translateX(-102%); }
+/* the right cloud is the same picture turned around */
+html::after { right: 0; transform: translateX(102%) scaleX(-1); }
+html.clouds-shut::before, html.clouds-shut::after { visibility: visible; transition: transform .5s cubic-bezier(.65, 0, .35, 1); }
+html.clouds-shut::before { transform: none; }
+html.clouds-shut::after { transform: scaleX(-1); }
+/* tall phone screens: the puffs are smaller, so each cloud reaches further for the two to meet with no gaps */
+@media (max-aspect-ratio: 3 / 4) { html::before, html::after { width: 76vw; } }
+/* a page that arrives behind the clouds shows them closed from its first frame */
+html.clouds-still::before, html.clouds-still::after { transition: none; }
+@media (prefers-reduced-motion: reduce) { html::before, html::after { display: none; } }
+/* a slow page: soft dots on the clouds, so the child knows something is coming */
+#clouds-wait { position: fixed; z-index: 10000; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 10px; font: 800 20px 'Thmanyah Sans', system-ui, sans-serif; color: #4B3F93; animation: wait-in .4s ease-out; }
+#clouds-wait i { display: inline-block; width: 14px; height: 14px; margin: 0 4px; border-radius: 50%; background: #6E62C4; animation: wait-dot 1s ease-in-out infinite; }
+#clouds-wait i:nth-child(2) { animation-delay: .15s; } #clouds-wait i:nth-child(3) { animation-delay: .3s; }
+#clouds-wait span { display: flex; }
+@keyframes wait-dot { 50% { transform: translateY(-8px); opacity: .5; } }
+@keyframes wait-in { from { opacity: 0; } }

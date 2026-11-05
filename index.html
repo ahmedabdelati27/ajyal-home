@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>عالم أجيال · تجربة الزووم</title>
+<link rel="stylesheet" href="clouds.css">
+<script src="clouds.js"></script>
 <style>
 /* layout: one full-screen camera over a 1440×1024 world; HUD pinned to the screen edges and never zooms */
 :root {
@@ -278,18 +280,28 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   const whole = (animate) => { const s = fit(), v = view(); apply({ s, x: (v.w - W * s) / 2, y: (v.h - H * s) / 2 }, animate); };
 
   // tap an island: the camera flies in, then the region opens
+  let flying = false;
   function flyTo(i) {
+    // one tap is enough: more taps while the camera flies or the clouds close are ignored
+    if (flying) return;
+    flying = true;
     hideHint();
     const v = view(), s = fit() * 2.2;
     apply({ s, x: v.w / 2 - i.x * s, y: v.h / 2 - (i.y + 20) * s }, true);
     setTimeout(() => openRegion(i), reduce.matches ? 0 : 380);
   }
+  addEventListener('pageshow', () => { flying = false; });
+  Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen
   const PAGES = { forest: 'forest.html', beach: 'beach.html', letters: 'oasis.html', quran: 'quran.html', games: 'games.html' };
   function openRegion(i) {
     const to = i.href || PAGES[i.id];
-    if (to) { location.href = to; return; }
+    // the clouds close over the map and part on the region
+    if (to) { Clouds.go(to); return; }
+    Clouds.cover(() => { showRegion(i); flying = false; });
+  }
+  function showRegion(i) {
     document.getElementById('rg-art').src = `img/${i.id}.png`;
     const t = document.getElementById('rg-title');
     t.textContent = i.title; t.style.setProperty('--c', i.c); t.style.setProperty('--d', i.d);
