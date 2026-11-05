@@ -186,36 +186,86 @@ window.Viewer = (() => {
     book.classList.toggle('single', single);
     const paint = (s) => { R.innerHTML = page(spreads[s].r); L.innerHTML = page(spreads[s].l); };
 
-    // a shadow on a page underneath, only where there is a page
-    const cast = (half, kind) => { if (half.querySelector(':scope > .page')) half.insertAdjacentHTML('beforeend', `<i class="cast ${kind}"></i>`); };
-    const face = (side, x) => `<div class="face ${side}">${page(x) || '<div class="page"></div>'}<i class="shade"></i></div>`;
+    // ---- page curl
+    // The turning page lives in the frame of a left page (hinge = spine on its right edge, x = W).
+    // Its outer bottom corner travels from (0, H) over the spine to (2W, H). The fold is the line
+    // halfway between where the corner started and where it is now: the part on the hinge side stays
+    // flat (front), the lifted part is mirrored across the fold and shows the back of the page.
+    // Turning back is the same curl played in reverse.
+    const DUR = 1000;
+    const blank = '<div class="page"></div>';
+    const pts = (poly) => (poly.length ? `polygon(${poly.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(',')})` : 'polygon(0 0,0 0,0 0)');
+    // keep the part of a polygon where side(p) * sign >= 0
+    function cut(poly, side, sign) {
+      const out = [];
+      poly.forEach((p, i) => {
+        const q = poly[(i + 1) % poly.length], sp = side(p) * sign, sq = side(q) * sign;
+        if (sp >= 0) out.push(p);
+        if ((sp >= 0) !== (sq >= 0)) { const k = sp / (sp - sq); out.push([p[0] + (q[0] - p[0]) * k, p[1] + (q[1] - p[1]) * k]); }
+      });
+      return out;
+    }
+    // a gradient across a fold line: offset 0 at point X0, growing along unit direction g
+    function band(W, H, g, X0, stops) {
+      const a = Math.atan2(g[0], -g[1]);
+      const len = Math.abs(W * Math.sin(a)) + Math.abs(H * Math.cos(a));
+      const s0 = (X0[0] - (W / 2 - g[0] * len / 2)) * g[0] + (X0[1] - (H / 2 - g[1] * len / 2)) * g[1];
+      return `linear-gradient(${a}rad, rgba(0,0,0,0) ${s0}px, ${stops.map(([o, c]) => `${c} ${s0 + o}px`).join(', ')})`;
+    }
+
+    function curl(front, back, rev, done) {
+      const el = document.createElement('div');
+      el.className = 'curl';
+      el.innerHTML = `<div class="cfw"><div class="cf">${page(front) || blank}<i class="fs"></i></div></div><div class="cbw"><div class="cb">${page(back) || blank}<i class="bs"></i></div></div>`;
+      book.appendChild(el);
+      const cf = el.querySelector('.cf'), cb = el.querySelector('.cb'), fs = el.querySelector('.fs'), bs = el.querySelector('.bs');
+      const W = el.offsetWidth, H = el.offsetHeight, rect = [[0, 0], [W, 0], [W, H], [0, H]];
+
+      function frame(t) {
+        const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+        const phi = Math.PI * e;
+        const P = [W - W * Math.cos(phi), H - 0.34 * W * Math.sin(phi)];
+        const n = [0 - P[0], H - P[1]], len = Math.hypot(n[0], n[1]);
+        if (len < 0.5) { cf.style.clipPath = ''; cb.style.clipPath = pts([]); return; }
+        const u = [n[0] / len, n[1] / len], M = [P[0] / 2, (H + P[1]) / 2];
+        const side = (p) => (p[0] - M[0]) * u[0] + (p[1] - M[1]) * u[1];
+        cf.style.clipPath = pts(cut(rect, side, -1));
+        // back: mirror the page (its back faces the other way), then reflect it across the fold
+        const d = [-u[1], u[0]];
+        const r11 = 2 * d[0] * d[0] - 1, r12 = 2 * d[0] * d[1], r22 = 2 * d[1] * d[1] - 1;
+        const tx = M[0] + r11 * (W - M[0]) + r12 * -M[1], ty = M[1] + r12 * (W - M[0]) + r22 * -M[1];
+        cb.style.transform = `matrix(${-r11},${-r12},${r12},${r22},${tx},${ty})`;
+        cb.style.clipPath = pts(cut(rect, side, 1).map(([x, y]) => [W - x, y]));
+        // shading: the flat page darkens just before the fold; the curled back gets a soft highlight
+        const reach = Math.min(W * 0.35, len * 0.5);
+        fs.style.background = band(W, H, [-u[0], -u[1]], M, [[0, 'rgba(0,0,0,.3)'], [reach, 'rgba(0,0,0,0)']]);
+        bs.style.background = band(W, H, [-u[0], u[1]], [W - M[0], M[1]], [[0, 'rgba(0,0,0,.28)'], [reach * 0.18, 'rgba(255,255,255,.32)'], [reach * 0.6, 'rgba(0,0,0,.06)'], [reach * 1.4, 'rgba(0,0,0,.14)']]);
+      }
+
+      let raf = 0, ended = false;
+      const end = () => { if (ended) return; ended = true; cancelAnimationFrame(raf); done(); el.remove(); };
+      const start = performance.now();
+      const tick = (now) => { const t = Math.min(1, (now - start) / DUR); frame(rev ? 1 - t : t); if (t < 1) raf = requestAnimationFrame(tick); else end(); };
+      frame(rev ? 1 : 0);
+      raf = requestAnimationFrame(tick);
+      setTimeout(end, DUR + 300); // in case frames stop (background tab)
+      return el;
+    }
 
     function turn(from, to) {
       const a = spreads[from], b = spreads[to], fwd = to > from;
       busy = true;
-      const leaf = document.createElement('div');
-      if (single) {
-        // forward: the page swings away and the next one is already underneath; back: the previous page swings in
-        if (fwd) { R.innerHTML = page(b.r); cast(R, 'reveal'); }
-        leaf.className = 'leaf ' + (fwd ? 'away' : 'back-in');
-        leaf.innerHTML = face('front', fwd ? a.r : b.r) + face('back', null);
-      } else {
-        if (fwd) { L.innerHTML = page(b.l); cast(L, 'reveal'); cast(R, 'cover'); }
-        else { R.innerHTML = page(b.r); cast(R, 'reveal'); cast(L, 'cover'); }
-        leaf.className = 'leaf ' + (fwd ? 'to-right' : 'to-left');
-        leaf.innerHTML = face('front', fwd ? a.l : a.r) + face('back', fwd ? b.r : b.l);
-      }
-      book.appendChild(leaf);
-      let landed = false;
-      const land = () => { if (landed) return; landed = true; paint(to); leaf.remove(); busy = false; };
+      const land = () => { paint(to); busy = false; };
       if (reduce) return land();
-      leaf.addEventListener('animationend', (e) => { if (e.target === leaf) land(); });
-      setTimeout(land, 1100); // in case the animation never reports back (background tab)
+      // forward: the next page is already underneath; back: the page it returns to is revealed
+      if (single) { if (fwd) R.innerHTML = page(b.r); curl(fwd ? a.r : b.r, null, !fwd, land); }
+      else if (fwd) { L.innerHTML = page(b.l); curl(a.l, b.r, false, land); }
+      else { R.innerHTML = page(b.r); curl(b.l, a.r, true, land); }
     }
 
     function show(s, dir) {
-      // a key pressed mid-turn: land the current leaf first
-      if (busy) { book.querySelector('.leaf')?.remove(); paint(shown); busy = false; }
+      // a key pressed mid-turn: land the current page first
+      if (busy) { book.querySelector('.curl')?.remove(); paint(shown); busy = false; }
       if (shown === null || !dir || Math.abs(s - shown) !== 1) paint(s);
       else turn(shown, s);
       shown = s;

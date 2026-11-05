@@ -5,8 +5,8 @@
 .half { position: absolute; z-index: 1; top: 0; bottom: 0; width: 50%; }
 .half.r { right: 0; } .half.l { left: 0; }
 .page { position: absolute; inset: 0; overflow: hidden; background: #FFFDF8; }
-.r .page, .leaf.to-left .front, .leaf.to-right .back { border-radius: 0 1.2cqw 1.2cqw 0; }
-.l .page, .leaf.to-right .front, .leaf.to-left .back { border-radius: 1.2cqw 0 0 1.2cqw; }
+.r .page { border-radius: 0 1.2cqw 1.2cqw 0; }
+.l .page { border-radius: 1.2cqw 0 0 1.2cqw; }
 .half:not(:empty) { filter: drop-shadow(0 .4cqw .5cqw rgba(0,0,0,.28)); }
 
 /* the hardcover: cloth boards, gold corners, a spine, an amber ribbon */
@@ -40,45 +40,24 @@
 .page img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 /* the fold: a soft shadow along the spine */
 .page::after { content: ''; position: absolute; top: 0; bottom: 0; width: 14%; pointer-events: none; }
-.r .page::after, .to-left .front .page::after, .to-right .back .page::after { left: 0; background: linear-gradient(90deg, rgba(0,0,0,.28), transparent); }
-.l .page::after, .to-right .front .page::after, .to-left .back .page::after { right: 0; background: linear-gradient(-90deg, rgba(0,0,0,.28), transparent); }
+.r .page::after { left: 0; background: linear-gradient(90deg, rgba(0,0,0,.28), transparent); }
+.l .page::after { right: 0; background: linear-gradient(-90deg, rgba(0,0,0,.28), transparent); }
 
-/* the turning leaf */
-/* the turning leaf: it lifts a little off the book, its faces darken as they turn away from the light,
-   and it casts a shadow on the page it uncovers and on the page it lands on */
-.leaf { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 3; transform-style: preserve-3d; animation: var(--turn) .95s cubic-bezier(.42,.08,.26,1) forwards; }
-.leaf.to-right { left: 0; transform-origin: right center; --turn: turn-right; }
-.leaf.to-left { right: 0; transform-origin: left center; --turn: turn-left; }
-@keyframes turn-right { 0% { transform: translateZ(0) rotateY(0); } 50% { transform: translateZ(1.6cqw) rotateY(90deg); } 100% { transform: translateZ(0) rotateY(180deg); } }
-@keyframes turn-left { 0% { transform: translateZ(0) rotateY(0); } 50% { transform: translateZ(1.6cqw) rotateY(-90deg); } 100% { transform: translateZ(0) rotateY(-180deg); } }
-.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.face .page { position: absolute; inset: 0; }
-.face.back { transform: rotateY(180deg); }
-.shade { position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit; }
-.to-right .front .shade { background: linear-gradient(to left, rgba(0,0,0,.12), rgba(0,0,0,.5)); animation: shade-out .95s forwards; }
-.to-left .front .shade { background: linear-gradient(to right, rgba(0,0,0,.12), rgba(0,0,0,.5)); animation: shade-out .95s forwards; }
-.to-right .back .shade { background: linear-gradient(to right, rgba(0,0,0,.12), rgba(0,0,0,.5)); animation: shade-in .95s forwards; }
-.to-left .back .shade { background: linear-gradient(to left, rgba(0,0,0,.12), rgba(0,0,0,.5)); animation: shade-in .95s forwards; }
-@keyframes shade-out { 0% { opacity: 0; } 50%, 100% { opacity: 1; } }
-@keyframes shade-in { 0%, 50% { opacity: 1; } 100% { opacity: 0; } }
-/* cast shadows on the pages underneath, darkest along the spine */
-.cast { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.r > .cast { background: linear-gradient(to left, transparent 30%, rgba(0,0,0,.42)); }
-.l > .cast { background: linear-gradient(to right, transparent 30%, rgba(0,0,0,.42)); }
-.cast.reveal { animation: cast-reveal .95s forwards; }
-.cast.cover { animation: cast-cover .95s forwards; }
-@keyframes cast-reveal { 0% { opacity: 1; } 55%, 100% { opacity: 0; } }
-@keyframes cast-cover { 0%, 45% { opacity: 0; } 88% { opacity: 1; } 100% { opacity: 0; } }
-/* phones: one page, hinged on the right; it swings away to show the next page, or swings back in */
-.leaf.away, .leaf.back-in { left: 0; right: 0; width: 100%; transform-origin: right center; }
-.leaf.away { --turn: turn-away; } .leaf.back-in { --turn: turn-back; }
-@keyframes turn-away { 0% { transform: rotateY(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotateY(105deg); opacity: 0; } }
-@keyframes turn-back { 0% { transform: rotateY(105deg); opacity: 0; } 30% { opacity: 1; } 100% { transform: rotateY(0); opacity: 1; } }
-.away .front .shade, .back-in .front .shade { background: linear-gradient(to left, rgba(0,0,0,.1), rgba(0,0,0,.45)); }
-.away .front .shade { animation: shade-out .95s forwards; }
-.back-in .front .shade { animation: shade-in-rev .95s forwards; }
-@keyframes shade-in-rev { 0% { opacity: 1; } 100% { opacity: 0; } }
-.single .leaf .page { border-radius: 2cqw 0 0 2cqw; }
+/* the page curl (see Viewer.spreadbook): it sits over the turning page; the flat part is clipped,
+   the curled back is mirrored across the fold, and both cast a soft shadow on the pages beneath */
+.curl { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; width: 50%; pointer-events: none; }
+/* phones: one page bound on the right, so the curl peels inside the page and goes past the spine */
+.single .curl { width: 100%; overflow: hidden; border-radius: 2cqw 0 0 2cqw; }
+.cfw, .cbw { position: absolute; inset: 0; filter: drop-shadow(0 0 .9cqw rgba(0,0,0,.32)); }
+.cf, .cb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform-origin: 0 0; will-change: transform, clip-path; }
+.cf .page, .cb .page { position: absolute; inset: 0; }
+.fs, .bs { position: absolute; inset: 0; z-index: 3; }
+.cf .page { border-radius: 1.2cqw 0 0 1.2cqw; }
+.cb .page { border-radius: 0 1.2cqw 1.2cqw 0; }
+.cf .page::after { right: 0; background: linear-gradient(-90deg, rgba(0,0,0,.28), transparent); }
+.cb .page::after { left: 0; background: linear-gradient(90deg, rgba(0,0,0,.28), transparent); }
+.single .cf .page, .single .cb .page { border-radius: 2cqw 0 0 2cqw; }
+.single .cf .page::after, .single .cb .page::after { display: none; }
 
 /* phones: one page at a time, sliding */
 .book.single { aspect-ratio: 3 / 4; }
@@ -116,4 +95,4 @@
   .resume .btns { gap: 8px; }
   .resume .btn { height: 46px; padding: 0 16px; font-size: 16px; }
 }
-@media (prefers-reduced-motion: reduce) { .leaf, .shade, .cast { animation: none; } }
+
