@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ابنِ البيت · كثبان الألعاب</title>
+<link rel="stylesheet" href="viewer.css">
+<link rel="stylesheet" href="game.css">
+<style>
+.scene { --scene: url(img/games/room-scene.jpg); --bw: 40cqw; --bh: 54cqh; }
+
+/* the house is built on the mat: each piece has its own place, the next ones show as dashed outlines */
+.build { position: absolute; z-index: 2; left: 50%; bottom: 21cqh; width: var(--bw); height: var(--bh); translate: -50% 0; }
+.build.hot .slot.next { background-color: rgba(255,227,138,.55); }
+.slot { position: absolute; z-index: 3; }
+.slot.next { border-radius: .8cqw; background: rgba(255,255,255,.5); outline: max(.4cqw, 3px) dashed #FFFFFF; outline-offset: calc(-1 * max(.4cqw, 3px)); box-shadow: 0 0 0 1px rgba(90,60,30,.25); animation: blink 1.4s ease-in-out infinite; }
+.slot.next.roof { outline: 0; border-radius: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='50,2 98,98 2,98' fill='rgba(255,255,255,.35)' stroke='white' stroke-width='1.6' stroke-dasharray='4 3' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.slot.hint { animation: blink .35s ease-in-out 6; }
+@keyframes blink { 50% { opacity: .45; } }
+.slot .blk { width: 100%; height: 100%; }
+.slot .blk.in { animation: drop .45s cubic-bezier(.3, 1.4, .6, 1); }
+@keyframes drop { from { opacity: 0; transform: translateY(-30%); } }
+.slot.roof { z-index: 2; } .slot.round { z-index: 4; }
+
+/* toy blocks: a bright color, a soft shine, little studs on top */
+.blk { position: relative; display: block; background: var(--c); border-radius: .7cqw; box-shadow: inset 0 -.9cqh 0 rgba(0,0,0,.16), inset 0 .5cqh 0 rgba(255,255,255,.35); }
+.blk::before { content: ''; position: absolute; left: 6%; right: 6%; top: -1.3cqh; height: 1.4cqh; background: radial-gradient(ellipse at 50% 100%, var(--c) 58%, transparent 61%) 0 0 / 2.6cqw 100% repeat-x; }
+.blk.roof { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); box-shadow: inset 0 -1.4cqh 0 rgba(0,0,0,.16); }
+.blk.roof::before { display: none; }
+.blk.win::after { content: ''; position: absolute; left: 20%; right: 20%; top: 16%; height: 38%; border-radius: .5cqw; background: linear-gradient(90deg, transparent 45%, #FFFFFF 45% 55%, transparent 55%), linear-gradient(transparent 45%, #FFFFFF 45% 55%, transparent 55%), #BFE6FF; box-shadow: 0 0 0 .4cqw #FFFFFF; }
+.blk.round { border-radius: 50%; }
+.blk.round::before { display: none; }
+.blk.round::after { content: ''; position: absolute; inset: 18%; border-radius: 50%; background: linear-gradient(90deg, transparent 44%, #FFFFFF 44% 56%, transparent 56%), linear-gradient(transparent 44%, #FFFFFF 44% 56%, transparent 56%), #BFE6FF; }
+.blk.door::after { content: ''; position: absolute; left: 26%; right: 26%; bottom: 0; height: 74%; border-radius: 40% 40% 0 0 / 22% 22% 0 0; background: radial-gradient(circle at 76% 55%, #FFC93C 7%, transparent 8%), #8A4B22; }
+
+/* the same blocks, smaller, in the tray */
+.tray .thing.piece { width: auto; aspect-ratio: auto; padding: 1.6cqh .8cqw .6cqh; }
+.tray .blk { width: calc(var(--pw) * var(--bw) / 100 * .42); height: calc(var(--ph) * var(--bh) / 100 * .42); }
+.ghost .blk { width: 100%; height: 100%; }
+.tray .thing.piece.hint { animation: glowitem .7s ease-in-out 3; }
+.todo li i { width: 3.4cqw; height: 2.2cqw; border-radius: .5cqw; background: var(--c); box-shadow: inset 0 -.4cqh 0 rgba(0,0,0,.15); opacity: .55; }
+.todo li.now i, .todo li.ok i { opacity: 1; }
+.shine { position: absolute; z-index: 4; inset: -10%; pointer-events: none; background: radial-gradient(circle, rgba(255,240,180,.7), rgba(255,240,180,0) 65%); animation: shine 1.4s ease-out forwards; }
+@keyframes shine { from { opacity: 0; transform: scale(.6); } 40% { opacity: 1; } to { opacity: 0; transform: scale(1.2); } }
+
+@media (max-width: 760px) {
+  .scene { --bw: 72cqw; --bh: 42cqh; }
+  .build { bottom: 28cqh; }
+  .blk::before { top: -1cqh; height: 1.1cqh; background-size: 4cqw 100%; }
+  .tray .blk { width: calc(var(--pw) * var(--bw) / 100 * .5); height: calc(var(--ph) * var(--bh) / 100 * .5); }
+}
+@media (prefers-reduced-motion: reduce) { .slot.next, .slot .blk.in, .shine { animation: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="games.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>كثبان الألعاب</span></a>
+    <div class="ttl"><img src="img/games/g-08.jpg" alt=""><h1>ابنِ البيت</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <section class="scene fox-up" id="scene" aria-label="غرفة اللعب">
+      <div class="hud" aria-live="polite"><span id="stage-label"></span><span id="count"></span></div>
+      <div id="play"></div>
+      <div class="fox" aria-live="polite"><img src="img/games.png" alt=""><p id="tip"></p></div>
+      <div class="over" id="over" hidden></div>
+    </section>
+  </main>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">البداية</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button">أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button">من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/games.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">البداية</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script src="game.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  const { ar } = Game;
+  const { play, over, scene, tip, pop, cheer, result, miss } = Game.kit();
+  // an "ordered steps" game like «ازرع نبتة»: each piece has a place (in % of the build area) and a step number;
+  // pieces of the same step go in any order, a later step waits for the one before it
+  const PIECES = {
+    base: { name: 'الأساس', c: '#F4823F', x: 4, y: 88, w: 92, h: 12, g: 1 },
+    wallR: { name: 'الجدار الأيمن', c: '#3D96D6', x: 66, y: 44, w: 22, h: 44, g: 2, kind: 'win' },
+    door: { name: 'الباب', c: '#5BC236', x: 34, y: 44, w: 32, h: 44, g: 2, kind: 'door' },
+    wallL: { name: 'الجدار الأيسر', c: '#3D96D6', x: 12, y: 44, w: 22, h: 44, g: 2, kind: 'win' },
+    beam: { name: 'العارضة', c: '#FFC93C', x: 8, y: 36, w: 84, h: 8, g: 3 },
+    roof: { name: 'السقف', c: '#E5484D', x: 2, y: 4, w: 96, h: 32, g: 4, kind: 'roof' },
+    round: { name: 'النافذة المستديرة', c: '#9B6BD6', x: 43, y: 14, w: 14, h: 18, g: 5, kind: 'round' }
+  };
+  const GROUPS = ['', 'الأساس', 'الجدران والباب', 'العارضة', 'السقف', 'النافذة المستديرة'];
+  const STAGES = [
+    { groups: [1, 2], tray: ['door', 'wallR', 'base', 'wallL'] },
+    { groups: [3, 4, 5], tray: ['roof', 'round', 'beam'] }
+  ];
+  const STEPS = ['البداية', 'المرحلة ١: الأساس والجدران', 'المرحلة ٢: السقف', 'النتيجة'];
+  const XP = 25; // from gamification when completing the game is eligible
+  const placed = new Set();
+  let stage = null;
+  const ids = (g) => Object.keys(PIECES).filter((k) => PIECES[k].g === g);
+  const now = () => stage.groups.find((g) => ids(g).some((k) => !placed.has(k)));
+  const blk = (k, cls = '') => { const p = PIECES[k]; return `<i class="blk ${p.kind || ''} ${cls}" style="--c:${p.c};--pw:${p.w};--ph:${p.h}"></i>`; };
+
+  function show(i) {
+    scene.classList.toggle('lift', i === 1 || i === 2);
+    over.hidden = !(i === 0 || i === 3);
+    $('stage-label').textContent = i === 1 ? 'المرحلة ١ من ٢' : i === 2 ? 'المرحلة ٢ من ٢' : 'ابنِ البيت';
+    play.innerHTML = '';
+    if (i === 0) start();
+    if (i === 1 || i === 2) build(STAGES[i - 1]);
+    if (i === 3) finish();
+  }
+
+  function start() {
+    $('count').textContent = 'لعبة من عالم الإتقان';
+    tip('هيا نبني بيتاً متيناً!');
+    placed.clear(); stage = null; house();
+    over.innerHTML = `<div class="box2"><h2>ابنِ البيت</h2>
+      <p>اسحب المكعبات إلى أماكنها لتبني البيت. ابدأ من الأسفل: الأساس أولاً، ثم الجدران، ثم السقف.</p>
+      <div class="how"><span>${blk('base')}</span><span>${blk('wallR')}</span><span>${blk('roof')}</span></div>
+      <button class="btn go" id="begin" type="button">ابدأ اللعب</button></div>`;
+    over.querySelectorAll('.how .blk').forEach((b) => { b.style.width = '7cqw'; b.style.height = b.classList.contains('win') ? '7cqw' : b.classList.contains('roof') ? '4cqw' : '1.6cqw'; });
+  }
+  // the build area with every placed block, plus outlines where the next ones go
+  function house() {
+    const g = stage && now();
+    play.querySelector('.build')?.remove();
+    play.insertAdjacentHTML('afterbegin', `<div class="build" role="button" tabindex="0" aria-label="مكان البيت">${Object.keys(PIECES).map((k) => {
+      const p = PIECES[k], on = placed.has(k);
+      return `<span class="slot ${p.kind || ''} ${!on && p.g === g ? 'next' : ''}" data-p="${k}" style="left:${p.x}%;top:${p.y}%;width:${p.w}%;height:${p.h}%">${on ? blk(k) : ''}</span>`;
+    }).join('')}</div>`);
+  }
+
+  // ---- a stage: lay the pieces of each step, then the next step opens
+  function build(s) {
+    stage = s; drop.reset();
+    placed.clear();
+    if (s === STAGES[1]) ids(1).concat(ids(2)).forEach((k) => placed.add(k));
+    play.innerHTML = `<ol class="todo" aria-label="الخطوات"></ol><div class="tray">${s.tray.map((k) => `<button class="thing piece" type="button" data-p="${k}" aria-label="${PIECES[k].name}">${blk(k)}</button>`).join('')}</div>`;
+    house(); update();
+  }
+  function update() {
+    const g = now(), done = stage.tray.filter((k) => placed.has(k)).length;
+    play.querySelector('.todo').innerHTML = stage.groups.map((x) => `<li class="${g === undefined || x < g ? 'ok' : x === g ? 'now' : ''}"><b>${g === undefined || x < g ? '✓' : ar(stage.groups.indexOf(x) + 1)}</b><i style="--c:${PIECES[ids(x)[0]].c}"></i>${GROUPS[x]}</li>`).join('');
+    $('count').textContent = `القطع ${ar(done)} من ${ar(stage.tray.length)}`;
+    if (g) tip(`ضع ${GROUPS[g]}`);
+  }
+
+  const drop = Game.place({ root: play, items: '.tray .piece', targets: '.build',
+    onPick: () => tip('الآن اضغط على مكان البيت'),
+    onDrop(item, area) {
+      const k = item.dataset.p, p = PIECES[k], g = now();
+      if (p.g !== g) {
+        const right = play.querySelector(`.tray .piece[data-p="${ids(g).find((x) => !placed.has(x))}"]`);
+        return miss(item, right, `ليس بعد! نبني من الأسفل إلى الأعلى، نحتاج الآن ${GROUPS[g]}`, 'هذه هي القطعة المناسبة الآن');
+      }
+      placed.add(k); item.remove(); house();
+      const slot = play.querySelector(`.slot[data-p="${k}"]`); slot.firstElementChild.classList.add('in'); pop(slot, '✓');
+      if (now() !== undefined) { update(); if (now() !== g) tip(`أحسنت! انتهينا من ${GROUPS[g]}، الآن ${GROUPS[now()]}`); return; }
+      update();
+      tip(stage === STAGES[0] ? 'رائع! الجدران قوية على أساس متين' : 'بيت متقن وجميل!');
+      area.insertAdjacentHTML('beforeend', '<span class="shine"></span>');
+      cheer(() => game.next());
+    } });
+
+  // ---- result: a simple celebration, no score, lives or coins
+  function finish() {
+    $('count').textContent = 'البيت جاهز!';
+    tip('بنيته خطوة بخطوة، هذا هو الإتقان');
+    stage = null; Object.keys(PIECES).forEach((k) => placed.add(k)); house();
+    result({ id: 'house', title: 'أحسنت يا يوسف!', text: 'بنيت البيت بالترتيب من الأساس حتى السقف، بيت متين وجميل', xp: XP });
+    game.clear();
+  }
+  over.addEventListener('click', (e) => {
+    const id = e.target.closest('button')?.id;
+    if (id === 'begin') game.next();
+    if (id === 'again') game.go(1);
+  });
+
+  // finishing a stage moves on; a piece out of order only goes back with a hint, nothing is ever "game over"
+  const game = Viewer.pages({ steps: 4, key: 'ajyal.game.house', label: (i) => STEPS[i], onShow: show, canNext: (i) => (i === 1 || i === 2 ? stage === STAGES[i - 1] && now() === undefined : true) });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أطعم الحيوانات · كثبان الألعاب</title>
+<link rel="stylesheet" href="viewer.css">
+<link rel="stylesheet" href="game.css">
+<style>
+.scene { --scene: url(img/games/farm-scene.jpg); }
+
+/* each animal stands in its spot; its food goes to it, its water bowl sits at its feet */
+.pen { position: absolute; z-index: 2; left: var(--x); bottom: 23cqh; width: 15cqw; translate: -50% 0; padding: 0; border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: .6cqh; cursor: pointer; }
+.pen > img { width: 100%; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 .8cqh .5cqw rgba(60,40,10,.25)); pointer-events: none; transform-origin: 50% 100%; }
+.pen.hot > img { transform: scale(1.08); filter: drop-shadow(0 0 1.4cqw #FFE38A); }
+.pen.hint > img { animation: glowpen .7s ease-in-out 3; }
+@keyframes glowpen { 50% { transform: translateY(-1.2cqh) scale(1.08); filter: drop-shadow(0 0 1.6cqw #FFD94A); } }
+.pen.eat > img { animation: chomp .5s ease-in-out 2; }
+@keyframes chomp { 50% { transform: scale(1.06, .92); } }
+.pen.full > img { animation: hop .6s ease-out; }
+@keyframes hop { 40% { transform: translateY(-2.4cqh); } }
+.pen.no > img { animation: shakehead .45s; }
+@keyframes shakehead { 25% { rotate: -6deg; } 75% { rotate: 6deg; } }
+/* how full the animal is: one dot for each portion */
+.meal { display: flex; gap: .6cqw; padding: .5cqh .8cqw; border-radius: 999px; background: rgba(255,255,255,.85); }
+.meal i { width: 1.4cqw; height: 1.4cqw; border-radius: 50%; background: #E7DCCB; transition: background .3s; }
+.meal i.on { background: #5BC236; }
+
+/* stage 2: tap the empty bowls to fill them with water */
+.bowl { position: absolute; z-index: 3; left: var(--x); bottom: 18cqh; width: 11cqw; height: 6cqh; translate: -50% 0; padding: 0; border: 0; background: none; cursor: pointer; }
+.bowl::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 78%; border-radius: .6cqw .6cqw 5cqw 5cqw; background: linear-gradient(#9CC6E4, #6FA3CC); box-shadow: inset 0 -.6cqh 0 rgba(0,0,0,.15), 0 .6cqh 0 rgba(0,0,0,.15); }
+.bowl::after { content: ''; position: absolute; left: 0; right: 0; top: 4%; height: 40%; border-radius: 50%; background: #3E6E95; box-shadow: inset 0 0 0 .4cqw #CFE5F4; }
+.bowl span { position: absolute; z-index: 1; left: 9%; right: 9%; top: 10%; height: 28%; border-radius: 50%; background: #48B6EE; transform: scale(0); transition: transform .5s cubic-bezier(.3,1.4,.6,1); }
+.bowl.full span { transform: none; }
+.bowl.ready { animation: callbowl 1.6s ease-in-out infinite; }
+@keyframes callbowl { 50% { translate: -50% -.8cqh; } }
+.pen.drink > img { animation: drink 1s ease-in-out; }
+@keyframes drink { 30%, 70% { transform: translateY(1.2cqh) rotate(6deg); } }
+
+@media (max-width: 760px) {
+  /* eight foods take two rows of the tray, so the animals stand above it */
+  .pen { width: 22cqw; bottom: 35cqh; }
+  .meal i { width: 2.4cqw; height: 2.4cqw; }
+  .tray .thing { width: 13cqw; }
+  .bowl { width: 17cqw; height: 5cqh; bottom: 31cqh; }
+}
+@media (prefers-reduced-motion: reduce) { .bowl.ready { animation: none; } .pen > img { animation-duration: .01s !important; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="games.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>كثبان الألعاب</span></a>
+    <div class="ttl"><img src="img/games/g-04.jpg" alt=""><h1>أطعم الحيوانات</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <section class="scene fox-up" id="scene" aria-label="المزرعة">
+      <div class="hud" aria-live="polite"><span id="stage-label"></span><span id="count"></span></div>
+      <div id="play"></div>
+      <div class="fox" aria-live="polite"><img src="img/games.png" alt=""><p id="tip"></p></div>
+      <div class="over" id="over" hidden></div>
+    </section>
+  </main>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">البداية</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button">أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button">من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/games.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">البداية</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script src="game.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  const { ar } = Game;
+  const { play, over, scene, tip, nudge, pop, cheer, result, miss } = Game.kit();
+  // the same two mechanics as «نظّف البحر» with other data: drag each food to its animal, then tap to fill the bowls
+  const ANIMALS = [
+    { id: 'rabbit', name: 'الأرنب', img: 'an-rabbit', food: 'lettuce', x: 20 },
+    { id: 'cat', name: 'القطة', she: true, img: 'an-cat', food: 'fish', x: 40 },
+    { id: 'hen', name: 'الدجاجة', she: true, img: 'an-hen', food: 'corn', x: 60 },
+    { id: 'sheep', name: 'الخروف', img: 'an-sheep', food: 'grass', x: 80 }
+  ];
+  const FOOD = { lettuce: { img: 'fd-lettuce', name: 'الخس' }, fish: { img: 'fd-fish', name: 'السمك' }, corn: { img: 'fd-corn', name: 'الحبوب' }, grass: { img: 'fd-grass', name: 'العشب' } };
+  const PLATE = ['grass', 'fish', 'lettuce', 'corn', 'fish', 'grass', 'corn', 'lettuce'];
+  const EACH = 2; // portions each animal eats
+  const STEPS = ['البداية', 'المرحلة ١: أطعم الحيوانات', 'المرحلة ٢: املأ أوعية الماء', 'النتيجة'];
+  const XP = 25; // from gamification when completing the game is eligible
+  let fed = 0, filled = 0;
+  const mobile = matchMedia('(max-width: 760px)');
+  const xOf = (a, n) => (mobile.matches ? 14 + n * 24 : a.x);
+  // an animal plays one reaction at a time
+  const act = (pen, c) => { pen.classList.remove('eat', 'full', 'no', 'drink'); nudge(pen, c); };
+
+  function show(i) {
+    scene.classList.toggle('lift', i === 1);
+    over.hidden = !(i === 0 || i === 3);
+    $('stage-label').textContent = i === 1 ? 'المرحلة ١ من ٢' : i === 2 ? 'المرحلة ٢ من ٢' : 'أطعم الحيوانات';
+    play.innerHTML = '';
+    [start, feed, water, finish][i]();
+  }
+  const pens = (dots) => ANIMALS.map((a, n) => `<button class="pen" type="button" data-id="${a.id}" style="--x:${xOf(a, n)}%" aria-label="${a.name}"><img src="img/games/${a.img}.png" alt="">${dots ? `<span class="meal">${'<i></i>'.repeat(EACH)}</span>` : ''}</button>`).join('');
+
+  function start() {
+    $('count').textContent = 'لعبة من عالم المسؤولية';
+    tip('الحيوانات جائعة! هيا نطعمها');
+    play.innerHTML = pens(false);
+    over.innerHTML = `<div class="box2"><h2>أطعم الحيوانات</h2>
+      <p>المرحلة ١: اسحب كل طعام إلى الحيوان الذي يحبه.<br>المرحلة ٢: اضغط على الأوعية لتملأها بالماء.</p>
+      <div class="how"><span><img src="img/games/fd-lettuce.png" alt="">للأرنب</span><span><img src="img/games/fd-fish.png" alt="">للقطة</span><span><img src="img/games/fd-corn.png" alt="">للدجاجة</span></div>
+      <button class="btn go" id="begin" type="button">ابدأ اللعب</button></div>`;
+  }
+
+  // ---- stage 1: each food to the animal that eats it; a wrong animal says no and the food goes back
+  function feed() {
+    fed = 0; drop.reset();
+    play.innerHTML = pens(true) + `<div class="tray">${PLATE.map((k) => `<button class="thing" type="button" data-food="${k}" aria-label="${FOOD[k].name}"><img src="img/games/${FOOD[k].img}.png" alt=""></button>`).join('')}</div>`;
+    count1(); tip('اسحب كل طعام إلى الحيوان الذي يحبه');
+  }
+  const count1 = () => { $('count').innerHTML = `<img src="img/games/fd-lettuce.png" alt="">أطعمت ${ar(fed)} من ${ar(PLATE.length)}`; };
+  const drop = Game.place({ root: play, items: '.tray .thing', targets: '.pen',
+    onPick: () => tip('الآن اضغط على الحيوان الذي يحب هذا الطعام'),
+    onDrop(item, pen) {
+      const a = ANIMALS.find((x) => x.id === pen.dataset.id), f = FOOD[item.dataset.food];
+      if (a.food !== item.dataset.food) {
+        act(pen, 'no');
+        const right = play.querySelector(`.pen[data-id="${ANIMALS.find((x) => x.food === item.dataset.food).id}"]`);
+        return miss(item, right, `${a.name} ${a.she ? 'لا تأكل' : 'لا يأكل'} ${f.name}، جرّب حيواناً آخر`, `هذا هو الحيوان الذي يحب ${f.name}`);
+      }
+      item.remove(); fed++; count1();
+      const dot = pen.querySelector('.meal i:not(.on)'); dot.classList.add('on');
+      const full = !pen.querySelector('.meal i:not(.on)');
+      act(pen, full ? 'full' : 'eat'); pop(pen, '❤');
+      tip(fed === PLATE.length ? 'رائع! كل الحيوانات شبعت' : full ? `${a.name} ${a.she ? 'شبعت' : 'شبع'}! شكراً لك` : `${a.name} ${a.she ? 'تحب' : 'يحب'} ${f.name}، أحسنت!`);
+      if (fed === PLATE.length) cheer(() => game.next());
+    } });
+
+  // ---- stage 2: tap each bowl to fill it, and the animal drinks
+  function water() {
+    filled = 0;
+    play.innerHTML = pens(false) + ANIMALS.map((a, n) => `<button class="bowl ready" type="button" data-id="${a.id}" style="--x:${xOf(a, n)}%" aria-label="وعاء ماء ${a.name}"><span></span></button>`).join('');
+    count2(); tip('الحيوانات عطشى! اضغط على الأوعية لتملأها بالماء');
+  }
+  const count2 = () => { $('count').innerHTML = `<img src="img/games/tool-water.png" alt="">ملأت ${ar(filled)} من ${ar(ANIMALS.length)}`; };
+  play.addEventListener('click', (e) => {
+    if (game.at() !== 2) return;
+    const b = e.target.closest('.bowl'), pen = e.target.closest('.pen');
+    if (pen) return tip('اضغط على وعاء الماء أمام الحيوان');
+    if (!b || b.classList.contains('full')) return;
+    b.classList.remove('ready'); b.classList.add('full'); filled++; count2(); pop(b, '✓');
+    const p = play.querySelector(`.pen[data-id="${b.dataset.id}"]`); setTimeout(() => act(p, 'drink'), 300);
+    tip(filled < ANIMALS.length ? ['أحسنت!', 'الحيوانات تشكرك', 'ما زال هناك وعاء فارغ'][filled % 3] : 'رائع! كل الحيوانات شربت');
+    if (filled === ANIMALS.length) cheer(() => game.next());
+  });
+
+  // ---- result: a simple celebration, no score, lives or coins
+  function finish() {
+    $('count').textContent = 'الحيوانات سعيدة!';
+    tip('شكراً لأنك اهتممت بنا');
+    play.innerHTML = pens(false);
+    result({ id: 'feed', title: 'أحسنت يا يوسف!', text: 'أطعمت كل حيوان طعامه المناسب وسقيته، الحيوانات سعيدة بك', xp: XP, next: 'رتّب الغرفة' });
+    game.clear();
+  }
+  over.addEventListener('click', (e) => {
+    const id = e.target.closest('button')?.id;
+    if (id === 'begin') game.next();
+    if (id === 'again') game.go(1);
+    if (id === 'next-game') game.toast('في النموذج: «رتّب الغرفة» بنفس طريقة اللعب');
+  });
+
+  // finishing a stage moves on; a wrong animal only says no, nothing is ever "game over"
+  const game = Viewer.pages({ steps: 4, key: 'ajyal.game.feed', label: (i) => STEPS[i], onShow: show, canNext: (i) => (i === 1 ? fed === PLATE.length : i === 2 ? filled === ANIMALS.length : true) });
+  mobile.addEventListener('change', () => show(game.at()));
+})();
+</script>
+</body>
+</html>

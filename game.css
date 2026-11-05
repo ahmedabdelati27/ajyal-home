@@ -1,0 +1,92 @@
+/* shared look of the mini games in «كثبان الألعاب»: the scene, HUD, fox tips, tray, start and result cards.
+   Each game page adds only the pieces of its own scene. */
+.bg { background-image: url(img/games/dunes-hero.jpg); background-position: center 65%; }
+@media (max-aspect-ratio: 4 / 5) { .bg { background-position: 30% 65%; } }
+.ttl img { border-radius: 12px; object-fit: cover; width: 64px; height: 40px; }
+
+/* the game scene: one picture, game items sit over it */
+.stage { min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.scene { position: relative; height: calc(100% - 10px); max-width: 100%; aspect-ratio: 16 / 9; border: 8px solid var(--paper); border-radius: 30px; overflow: hidden; background: var(--scene) center / cover; box-shadow: 0 8px 0 rgba(58,35,24,.2), 0 20px 40px rgba(0,0,0,.2); touch-action: none; user-select: none; container-type: size; }
+.hud { position: absolute; z-index: 5; top: 12px; right: 12px; left: 12px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+.hud span { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.92); font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 rgba(0,0,0,.15); }
+.hud img { width: 32px; height: 32px; object-fit: contain; }
+
+.thing { position: absolute; z-index: 2; width: 9cqw; aspect-ratio: 1; padding: 0; border: 0; background: none; transform: translate(-50%, -50%); cursor: pointer; }
+.thing img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 .6cqw .6cqw rgba(0,40,70,.25)); pointer-events: none; }
+.pop { position: absolute; z-index: 6; font-size: 3cqw; font-weight: 800; color: #FFFFFF; text-shadow: 0 2px 0 rgba(0,0,0,.35); pointer-events: none; animation: rise .8s ease-out forwards; }
+@keyframes rise { to { translate: 0 -6cqh; opacity: 0; } }
+
+/* the tray along the bottom: drag an item to its place, or tap it and then tap the place */
+.tray { position: absolute; z-index: 4; left: 4%; right: 4%; bottom: 4%; min-height: 15cqh; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1.4cqw; padding: 1cqh 2cqw; border-radius: 2.4cqw; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 .3cqw rgba(255,255,255,.7); }
+.tray .thing { position: relative; transform: none; width: 7.5cqw; touch-action: none; }
+.tray .thing.picked { transform: translateY(-1cqh) scale(1.08); filter: drop-shadow(0 0 .8cqw #FFD94A); }
+.tray .thing.back { animation: shake .35s; }
+@keyframes shake { 25% { translate: -1cqw 0; } 75% { translate: 1cqw 0; } }
+/* after two misses the right item or place glows, so the child is never stuck */
+.tray .thing.hint { animation: glowitem .7s ease-in-out 3; }
+@keyframes glowitem { 50% { transform: translateY(-1.2cqh) scale(1.12); filter: drop-shadow(0 0 1.2cqw #FFD94A); } }
+.ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%) scale(1.1); }
+
+/* start and result cards over the scene */
+.over { position: absolute; z-index: 7; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(10,60,90,.35); }
+.over[hidden] { display: none; }
+.over .box2 { width: min(64cqw, 92%); background: #FFF7EC; border-radius: 3cqw; padding: 3cqh 3cqw; text-align: center; box-shadow: 0 1cqh 0 rgba(0,0,0,.2); display: flex; flex-direction: column; align-items: center; gap: 1.6cqh; }
+.over h2 { margin: 0; font-size: 4cqw; font-weight: 800; color: #1D6FA8; }
+.over p { margin: 0; font-size: 2.1cqw; font-weight: 700; line-height: 1.6; }
+.how { display: flex; gap: 2cqw; }
+.how span { display: flex; align-items: center; gap: 1cqw; padding: 1cqh 1.6cqw; border-radius: 2cqw; background: #FFFFFF; font-size: 1.8cqw; font-weight: 800; box-shadow: 0 .6cqh 0 #E0C9A6; }
+.how img { width: 5cqw; height: 5cqw; object-fit: contain; }
+.over .btn { height: auto; padding: 1.6cqh 3.4cqw; font-size: 2.2cqw; }
+.gain { display: inline-flex; align-items: center; gap: 1cqw; padding: .8cqh 2cqw .8cqh 1cqw; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-weight: 800; font-size: 2cqw; }
+.gain img { width: 4cqw; height: 4cqw; }
+.confetti { position: absolute; inset: 0; z-index: 8; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: 45%; left: 50%; width: 1.2cqw; height: 1.6cqw; border-radius: .3cqw; animation: fly 1.2s ease-out forwards; }
+@keyframes fly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
+
+/* the fox talks in a bubble at the corner, and steps up when the tray is out */
+.fox { position: absolute; z-index: 6; left: 1.5%; bottom: 2%; display: flex; align-items: flex-end; gap: .6cqw; pointer-events: none; }
+.fox img { width: 15cqw; height: 15cqw; object-fit: contain; }
+.fox p { margin: 0 0 9cqh; max-width: 26cqw; padding: 1.2cqh 1.6cqw; border-radius: 2cqw; background: #FFFFFF; font-size: 1.9cqw; font-weight: 800; line-height: 1.4; box-shadow: 0 .6cqh 0 #E2762E; }
+.fox p:empty { display: none; }
+.lift .fox { bottom: 22%; }
+/* scenes whose pieces fill the ground: the fox talks from the top corner */
+.fox-up .fox { top: 11cqh; bottom: auto; align-items: center; }
+.fox-up .fox img { width: 10cqw; height: 10cqw; }
+.fox-up .fox p { margin: 0; }
+
+/* the ordered steps of a stage, ticked one by one */
+.todo { position: absolute; z-index: 5; top: 13cqh; right: 2%; margin: 0; padding: 1.2cqh 1.2cqw; list-style: none; display: flex; flex-direction: column; gap: 1cqh; border-radius: 2cqw; background: rgba(255,255,255,.85); box-shadow: 0 .6cqh 0 rgba(0,0,0,.12); pointer-events: none; }
+.todo li { display: flex; align-items: center; gap: .8cqw; padding: .6cqh 1cqw .6cqh 1.4cqw; border-radius: 1.4cqw; font-size: 1.7cqw; font-weight: 800; color: #8C7B6B; }
+.todo li img { width: 3.6cqw; height: 3.6cqw; object-fit: contain; opacity: .55; }
+.todo li b { display: grid; place-items: center; width: 2.6cqw; height: 2.6cqw; border-radius: 50%; background: #EFE3D2; font-size: 1.5cqw; }
+.todo li.now { background: #FFF1C9; color: #3A2318; }
+.todo li.now img { opacity: 1; }
+.todo li.now b { background: #F4823F; color: #FFFFFF; }
+.todo li.ok { color: #3C8A2E; }
+.todo li.ok b { background: #5BC236; color: #FFFFFF; }
+
+.resume { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; background: rgba(60,30,10,.35); }
+.resume[hidden] { display: none; }
+.resume > div { margin: 0 12px; background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
+.resume p b { color: var(--go); }
+.resume .btns { margin: 0; }
+.stop .card h2 { color: #C46A00; }
+
+@media (max-width: 760px) {
+  /* phones in portrait: a taller scene so items stay big enough for a finger */
+  .scene { height: auto; width: 100%; max-height: 100%; aspect-ratio: 3 / 4; border-width: 5px; border-radius: 20px; }
+  .hud span { height: 34px; padding: 0 10px; font-size: 14px; } .hud img { width: 24px; height: 24px; }
+  .thing { width: 17cqw; } .tray .thing { width: 14cqw; }
+  .tray { min-height: 22cqh; }
+  .fox img { width: 22cqw; height: 22cqw; }
+  .fox p { font-size: 3.8cqw; max-width: 52cqw; margin-bottom: 8cqh; }
+  .lift .fox { bottom: 27%; }
+  /* scenes with a big piece in the middle: the fox talks from the top instead */
+  .fox-top .fox, .fox-up .fox { top: 9cqh; bottom: auto; align-items: center; }
+  .fox-top .fox img, .fox-up .fox img { width: 14cqw; height: 14cqw; }
+  .fox-top .fox p, .fox-up .fox p { margin: 0; max-width: 70cqw; }
+  .todo { display: none; }
+  .over .box2 { width: 92%; } .over h2 { font-size: 7cqw; } .over p, .how span { font-size: 4cqw; } .how img { width: 9cqw; height: 9cqw; } .over .btn { font-size: 4.2cqw; } .gain { font-size: 4cqw; } .gain img { width: 7cqw; height: 7cqw; }
+}
+@media (prefers-reduced-motion: reduce) { .confetti i, .pop, .tray .thing.hint { animation-duration: .01s; } }

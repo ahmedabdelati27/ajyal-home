@@ -149,15 +149,15 @@ h2.sec { margin: 0 0 14px; font-size: 30px; font-weight: 800; }
     { id: 'env', name: 'البيئة', about: 'نحافظ على الطبيعة نظيفة وجميلة', cover: 'w-01', games: [
       g('نظّف البحر', 'g-01', 'اجمع المخلفات ورتّبها في الحاويات', '2/2', 'game.html?resume=1'),
       g('نظّف الحديقة', 'g-02', 'التقط المخلفات من العشب', 'ok'),
-      g('ازرع نبتة', 'g-03', 'ازرع البذرة واسقها حتى تكبر', 'new')] },
+      g('ازرع نبتة', 'g-03', 'ازرع البذرة واسقها حتى تكبر', 'new', 'game-plant.html')] },
     { id: 'care', name: 'المسؤولية', about: 'نهتم بأشيائنا وبمن حولنا', cover: 'w-02', games: [
-      g('أطعم الحيوانات', 'g-04', 'أعطِ كل حيوان طعامه المناسب'),
+      g('أطعم الحيوانات', 'g-04', 'أعطِ كل حيوان طعامه المناسب', 'new', 'game-feed.html'),
       g('رتّب الغرفة', 'g-05', 'ضع كل لعبة في صندوقها')] },
     { id: 'home', name: 'الوطن', about: 'نتعرّف على تراث وطننا الجميل', cover: 'w-03', games: [
       g('رحلة في وطني', 'g-06', 'اجمع رموز التراث في المشهد', 'new')] },
     { id: 'craft', name: 'الإتقان', about: 'نتقن عملنا خطوة بخطوة', cover: 'w-04', games: [
       g('أكمل الصورة', 'g-07', 'ضع كل قطعة في مكانها الصحيح', 'ok'),
-      g('ابنِ البيت', 'g-08', 'رتّب المكعبات لتبني بيتاً')] }
+      g('ابنِ البيت', 'g-08', 'رتّب المكعبات لتبني بيتاً', 'new', 'game-house.html')] }
   ];
   const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
   let at = 'env';
@@ -183,7 +183,7 @@ h2.sec { margin: 0 0 14px; font-size: 30px; font-weight: 800; }
   const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
   $('games').addEventListener('click', (e) => {
     const t = e.target.closest('.game'); if (!t || t.getAttribute('href') !== '#') return;
-    e.preventDefault(); toast('في النموذج: جرّب لعبة «نظّف البحر» في عالم البيئة');
+    e.preventDefault(); toast('في النموذج: جرّب «نظّف البحر» و«ازرع نبتة» و«أطعم الحيوانات» و«ابنِ البيت»');
   });
 
   // the board is drawn at 1440 wide; scale it to the window like the forest
