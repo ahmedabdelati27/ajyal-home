@@ -24,7 +24,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   background: linear-gradient(var(--sky) 0 45%, var(--sea) 70% 100%); cursor: grab; }
 .stage.dragging { cursor: grabbing; }
 .world { position: absolute; left: 0; top: 0; width: 1440px; height: 1024px; transform-origin: 0 0; will-change: transform;
-  background: url(img/map-4k.jpg) center / cover no-repeat; }
+}
+/* the sea and sky run on past both sides of the island so wide screens never show empty bands */
+.sea { position: absolute; left: -718px; top: -27px; width: 2876px; height: 1079px; background: url(img/map-wide.jpg) 0 0 / 100% 100% no-repeat; pointer-events: none; }
 .world.flying { transition: transform .38s cubic-bezier(.3,.7,.2,1); }
 .trail { position: absolute; inset: 0; pointer-events: none; }
 
@@ -139,6 +141,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 <body>
 <div class="stage" id="stage" dir="rtl">
   <div class="world" id="world">
+    <div class="sea" aria-hidden="true"></div>
     <svg class="trail" viewBox="0 0 1440 1024" aria-hidden="true">
       <path d="M1330 810 C1330 650 1220 520 1130 445 C1170 560 1180 640 1170 735 C1010 700 900 600 760 575" fill="none" stroke="#FFF6E2" stroke-width="20" stroke-linecap="round" opacity=".85"/>
       <path d="M1330 810 C1330 650 1220 520 1130 445 C1170 560 1180 640 1170 735 C1010 700 900 600 760 575" fill="none" stroke="#F2A900" stroke-width="7" stroke-dasharray="1 18" stroke-linecap="round"/>
@@ -197,6 +200,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 <script>
 (() => {
   const W = 1440, H = 1024, MAX_ZOOM = 2.5;
+  // painted sea beyond the island, in world units
+  const SEA_L = -718, SEA_R = 2158;
   const ISLANDS = [
     { id: 'ai', title: 'ورشة السحر', sub: 'اصنع قصة أو فيديو أنت بطله', x: 1285, y: 196, c: '#B9A8F7', d: '#7B64DA', chips: [['I-11', 3], ['I-14', 1]] },
     { id: 'peak', title: 'قمة الأبطال', sub: 'شارك في المسابقات', x: 260, y: 330, c: '#FF7A6B', d: '#E0584A' },
@@ -241,7 +246,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   function clamp(c) {
     const v = view(), min = fit(), s = Math.min(Math.max(c.s, min), min * MAX_ZOOM);
     const ww = W * s, wh = H * s;
-    const x = ww <= v.w ? (v.w - ww) / 2 : Math.min(0, Math.max(v.w - ww, c.x));
+    const sw = (SEA_R - SEA_L) * s;
+    const x = sw <= v.w ? (v.w - ww) / 2 : Math.min(-SEA_L * s, Math.max(v.w - SEA_R * s, c.x));
     const y = wh <= v.h ? (v.h - wh) / 2 : Math.min(0, Math.max(v.h - wh, c.y));
     return { s, x, y };
   }
@@ -262,7 +268,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     const s = cam.s * factor;
     apply({ s, x: px - (px - cam.x) * (s / cam.s), y: py - (py - cam.y) * (s / cam.s) }, animate);
   }
-  const whole = (animate) => apply({ s: fit(), x: 0, y: 0 }, animate);
+  const whole = (animate) => { const s = fit(); apply({ s, x: (view().w - W * s) / 2, y: 0 }, animate); };
 
   // tap an island: the camera flies in, then the region opens
   function flyTo(i) {
