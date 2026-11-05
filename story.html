@@ -175,6 +175,8 @@
 
 <div class="toast" id="toast" role="status"></div>
 
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill');</script>
 <script src="viewer.js"></script>
 <script>
 (() => {
@@ -307,8 +309,9 @@
     u.onend = () => onEnd?.();
     synth.speak(u);
   }
-  function quiet() { clearInterval(timer); synth?.cancel(); document.querySelectorAll('.w.on').forEach((w) => w.classList.remove('on')); }
+  function quiet() { window.Sfx?.hush(false); clearInterval(timer); synth?.cancel(); document.querySelectorAll('.w.on').forEach((w) => w.classList.remove('on')); }
   function readPage() {
+    window.Sfx?.hush(true);
     const p = book.querySelector('.half.r .story');
     if (at === LAST) return stopReading(); // the voice stops at «النهاية»; the quiz waits for the child
     if (!reading || !p || at === 0) return;
@@ -361,6 +364,7 @@
   function answer(btn) {
     const Q = QUIZ[qi], pick = +btn.dataset.a, ok = pick === Q.a;
     marks[qi] = ok; if (ok) score++;
+    window.Sfx?.play(ok ? 'right' : 'retry');
     qcard.querySelectorAll('.opt').forEach((o) => { o.disabled = true; if (+o.dataset.a === Q.a) o.classList.add('right'); });
     if (!ok) btn.classList.add('wrong');
     const right = Q.type === 'tf' ? (Q.a ? 'خطأ' : 'صح') : Q.type === 'pics' ? Q.opts[Q.a].name : Q.opts[Q.a];
@@ -371,6 +375,7 @@
   const heroSoon = () => reader.toast('قريباً: اكتب اسمك واختر صورتك، لتصبح أنت بطل الحكاية');
   function stopReading() { reading = false; $('say').setAttribute('aria-pressed', 'false'); quiet(); }
   function result() {
+    window.Sfx?.play('win');
     const stars = score === QUIZ.length ? 3 : score >= 2 ? 2 : 1, perfect = score === QUIZ.length;
     const star = (on) => `<svg class="${on ? '' : 'off'}" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="#FFC93C" stroke="#E0A01E" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
     qcard.innerHTML = `<div class="result"><div class="stars" aria-label="${stars} من 3 نجوم">${[0, 1, 2].map((i) => star(i < stars)).join('')}</div>

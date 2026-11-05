@@ -45,7 +45,7 @@
     block(true);
     const img = new Image(); img.src = SRC;
     let closed = false;
-    const close = () => { if (closed) return; closed = true; root.classList.add('clouds-shut'); setTimeout(then, CLOSE + 50); };
+    const close = () => { if (closed) return; closed = true; window.Sfx?.play('clouds'); root.classList.add('clouds-shut'); setTimeout(then, CLOSE + 50); };
     if (img.complete) return close();
     img.onload = img.onerror = close;
     setTimeout(close, 300);

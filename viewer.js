@@ -257,6 +257,7 @@ window.Viewer = (() => {
       const a = spreads[from], b = spreads[to], fwd = to > from;
       busy = true;
       const land = () => { paint(to); busy = false; };
+      window.Sfx?.play('page');
       if (reduce) return land();
       // forward: the next page is already underneath; back: the page it returns to is revealed
       if (single) { if (fwd) R.innerHTML = page(b.r); curl(fwd ? a.r : b.r, null, !fwd, land); }

@@ -6,6 +6,8 @@
 <title>عالم أجيال · تجربة الزووم</title>
 <link rel="stylesheet" href="clouds.css">
 <script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps('a, button:not(.isl-hit):not(#here):not(#resume):not(#mission)');</script>
 <style>
 /* layout: one full-screen camera over a 1440×1024 world; HUD pinned to the screen edges and never zooms */
 :root {
@@ -99,6 +101,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .resume { left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; height: 54px; padding: 4px 16px 4px 4px; border: 0; border-radius: 999px; background: var(--paper); box-shadow: 0 4px 0 #E0A35C; cursor: pointer; font-weight: 800; font-size: 16px; }
 .resume i { width: 46px; height: 46px; padding: 4px; box-sizing: border-box; border-radius: 999px; background: conic-gradient(#5BC236 0 60%, #EFE7DB 60% 100%); }
 .resume img { display: block; width: 100%; height: 100%; border-radius: 999px; border: 2px solid var(--paper); box-sizing: border-box; }
+.sfx-slot { top: calc(var(--edge-y) + 104px + env(safe-area-inset-top, 0px)); left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); }
+.sfx-slot .sfx-btn { width: 46px; height: 46px; box-shadow: 0 3px 0 #8CCDE0; }
 .time { top: calc(var(--edge-y) + 60px + env(safe-area-inset-top, 0px)); left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); color: #2D6A12; height: 36px; font-size: 16px; box-shadow: 0 3px 0 #8CCDE0; }
 .time img { width: 26px; height: 26px; }
 
@@ -166,6 +170,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
       <button type="button" class="pill bell" aria-label="الإشعارات، 3 غير مقروءة"><img src="img/I-09.png" alt=""><b>3</b></button>
     </div>
   </div>
+  <span class="hud sfx-slot" id="sfx-slot"></span>
   <span class="hud pill time" title="باقي 35 دقيقة من وقت اليوم"><img src="img/I-10.png" alt=""><bdi>35 د</bdi></span>
 
   <div class="hud zoom" role="group" aria-label="التحكم في الخريطة">
@@ -285,6 +290,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     // one tap is enough: more taps while the camera flies or the clouds close are ignored
     if (flying) return;
     flying = true;
+    Sfx.play('open');
     hideHint();
     const v = view(), s = fit() * 2.2;
     apply({ s, x: v.w / 2 - i.x * s, y: v.h / 2 - (i.y + 20) * s }, true);

@@ -11,12 +11,14 @@
     // replay a one-shot animation class on an element
     const nudge = (el, c) => { el.classList.remove(c); void el.offsetWidth; el.classList.add(c); };
     const pop = (el, s) => {
+      window.Sfx?.play('right');
       const r = el.getBoundingClientRect(), sr = scene.getBoundingClientRect();
       const p = document.createElement('span'); p.className = 'pop'; p.textContent = s;
       p.style.left = r.left - sr.left + r.width / 2 + 'px'; p.style.top = r.top - sr.top + 'px';
       scene.appendChild(p); setTimeout(() => p.remove(), 800);
     };
-    function burst() {
+    function burst(sound = true) {
+      if (sound) window.Sfx?.play('win');
       const c = document.createElement('div'); c.className = 'confetti';
       const colors = ['#F4823F', '#FFC93C', '#5BC236', '#3D96D6', '#F58DA6'];
       c.innerHTML = Array.from({ length: 30 }, (_, i) => `<i style="background:${colors[i % 5]};--x:${(Math.random() - 0.5) * 80}cqw;--y:${-20 - Math.random() * 40}cqh;--r:${Math.random() * 720}deg"></i>`).join('');
@@ -33,13 +35,15 @@
       over.innerHTML = `<div class="box2"><h2>${title}</h2><p>${text}</p>
         ${xp && first ? `<span class="gain"><img src="img/forest/I-06.png" alt="">+${ar(xp)} نقطة</span>` : ''}
         <div class="btns"><a class="btn go" href="games.html">العودة إلى الكثبان</a><button class="btn soft" id="again" type="button">العب مرة أخرى</button>${next ? `<button class="btn soft" id="next-game" type="button">اللعبة التالية: ${next}</button>` : ''}</div></div>`;
-      burst();
+      // the stage that just ended already played the celebration sound
+      burst(false);
     }
     // two misses on the same item: the right answer glows for a moment
     function miss(item, right, first, second) {
+      window.Sfx?.play('retry');
       nudge(item, 'back'); item.classList.remove('picked');
       item.dataset.miss = +(item.dataset.miss || 0) + 1;
-      if (item.dataset.miss >= 2 && right) { nudge(right, 'hint'); setTimeout(() => right.classList.remove('hint'), 2200); tip(second); }
+      if (item.dataset.miss >= 2 && right) { setTimeout(() => window.Sfx?.play('bubble'), 350); nudge(right, 'hint'); setTimeout(() => right.classList.remove('hint'), 2200); tip(second); }
       else tip(first);
     }
     return { scene, play, over, tip, nudge, pop, burst, cheer, result, miss };
@@ -56,6 +60,7 @@
       const g = it.cloneNode(true); g.classList.remove('picked', 'back', 'hint'); g.classList.add('ghost');
       g.style.width = it.offsetWidth + 'px'; g.style.height = it.offsetHeight + 'px';
       document.body.appendChild(g);
+      window.Sfx?.play('pick');
       drag = { it, g, x: e.clientX, y: e.clientY, moved: false };
       move(e);
     });

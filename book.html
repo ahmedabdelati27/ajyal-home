@@ -147,6 +147,8 @@
 
 <div class="toast" id="toast" role="status"></div>
 
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill');</script>
 <script src="viewer.js"></script>
 <script>
 (() => {
@@ -167,6 +169,7 @@
   const book = $('book'), N = PAGES.length;
 
   function render(i, dir) {
+    if (dir) window.Sfx?.play('page');
     const p = PAGES[i];
     let html;
     if (p.cover) html = `<div class="paper cover"><img class="ill" src="img/books/owl-01.jpg" alt=""><h2>البومة الحكيمة</h2><p class="by">كتاب مصوّر · ${N} صفحات</p></div>`;
