@@ -15,24 +15,24 @@ img { display: block; max-width: none; }
 button { font: inherit; color: inherit; cursor: pointer; }
 
 /* hero: the storybook beach, fading into the sand */
-.hero { position: relative; height: clamp(420px, 36vw, 520px); background: url(img/stories/beach-hero.jpg) center 70% / cover; }
+.hero { position: relative; height: 500px; background: url(img/stories/beach-hero.jpg) center 70% / cover; }
 .hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 150px; background: linear-gradient(rgba(255,246,230,0), var(--sand) 92%); pointer-events: none; }
-.bar { position: absolute; z-index: 3; top: calc(16px + env(safe-area-inset-top, 0px)); left: var(--edge-x); right: var(--edge-x); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.bar { position: absolute; z-index: 3; top: 20px; left: 32px; right: 32px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #E8CFA6; white-space: nowrap; }
 .pill img { width: 30px; height: 30px; margin: -4px 0; }
 .stats { display: flex; gap: 10px; }
-.isle { position: absolute; z-index: 2; left: 4%; bottom: 6%; width: clamp(230px, 25vw, 370px); animation: float 4.5s ease-in-out infinite; }
+.isle { position: absolute; z-index: 2; left: 70px; top: 54px; width: 380px; animation: float 4.5s ease-in-out infinite; }
 @keyframes float { 50% { translate: 0 -8px; } }
-.say { position: absolute; z-index: 3; left: calc(4% + clamp(200px, 22vw, 330px)); top: 24%; max-width: 250px; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--coral); }
+.say { position: absolute; z-index: 3; left: 420px; top: 96px; max-width: 250px; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--coral); }
 .say::before { content: ''; position: absolute; left: -16px; bottom: 18px; border: 12px solid transparent; border-right-color: var(--paper); border-left: 0; }
-.head { position: absolute; z-index: 3; right: var(--edge-x); top: 22%; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-.head h1 { margin: 0; font-size: clamp(44px, 5.4vw, 78px); font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--coral-deep), 3px 0 0 var(--coral-deep), -3px 0 0 var(--coral-deep), 0 -3px 0 var(--coral-deep), 3px 3px 0 var(--coral-deep), -3px 3px 0 var(--coral-deep), 3px -3px 0 var(--coral-deep), -3px -3px 0 var(--coral-deep); }
+.head { position: absolute; z-index: 3; right: 80px; top: 110px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.head h1 { margin: 0; font-size: 78px; font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--coral-deep), 3px 0 0 var(--coral-deep), -3px 0 0 var(--coral-deep), 0 -3px 0 var(--coral-deep), 3px 3px 0 var(--coral-deep), -3px 3px 0 var(--coral-deep), 3px -3px 0 var(--coral-deep), -3px -3px 0 var(--coral-deep); }
 .head p { margin: 0; font-size: 22px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 4px 18px; }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
 .chip { height: 48px; padding: 0 18px; border-radius: 999px; border: 3px solid transparent; background: var(--paper); font-weight: 800; font-size: 17px; box-shadow: 0 4px 0 #E8CFA6; }
 .chip[aria-pressed="true"] { background: linear-gradient(#F4823F, #D6531E); color: var(--paper); border-color: var(--line); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
 
-main { position: relative; z-index: 2; max-width: 1280px; margin: -30px auto 0; padding: 0 var(--edge-x) 150px; display: flex; flex-direction: column; gap: 34px; }
+main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px; display: flex; flex-direction: column; gap: 34px; }
 
 /* continue reading */
 .cont { display: flex; align-items: center; gap: 22px; background: var(--paper); border-radius: 32px; padding: 16px 16px 16px 24px; box-shadow: 0 6px 0 #EED6B0; }
@@ -81,33 +81,16 @@ main { position: relative; z-index: 2; max-width: 1280px; margin: -30px auto 0; 
 .dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
 .rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
 
-@media (max-width: 1000px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .say { display: none; } }
-@media (max-width: 760px) {
-  :root { --edge-x: 14px; }
-  .hero { height: auto; padding: 80px var(--edge-x) 40px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .isle { position: relative; left: auto; bottom: auto; width: 200px; order: 2; }
-  .head { position: relative; right: auto; top: auto; align-items: center; text-align: center; order: 1; }
-  .head p { font-size: 17px; }
-  .chips { justify-content: center; order: 3; }
-  .stats .pill:nth-child(n+3), .back span { display: none; }
-  .pill { height: 42px; font-size: 16px; }
-  .cont { flex-wrap: wrap; gap: 14px; padding: 14px; }
-  .cont .art { width: 100%; height: auto; aspect-ratio: 16 / 9; }
-  .cont b { font-size: 24px; }
-  .meter { width: 120px; }
-  .go { width: 100%; justify-content: center; height: 56px; font-size: 20px; }
-  .row { gap: 12px; }
-  .plank { margin: -6px -8px 0; }
-  .shelf h2 { font-size: 24px; }
-  .body b { font-size: 16px; } .body p { display: none; }
-  .feats span { width: 32px; height: 32px; } .feats img { width: 24px; height: 24px; }
-  .dock a span { display: none; } .dock a { padding: 0 14px; }
-}
+/* drawn at 1440 wide like the forest board, then scaled to the window */
+#wrap { position: relative; width: 100%; overflow: hidden; }
+#page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: top left; }
+@media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
 @media (prefers-reduced-motion: reduce) { .isle { animation: none; } .card { transition: none; } }
 </style>
 </head>
 <body>
 
+<div id="wrap"><div id="page">
 <header class="hero">
   <div class="bar">
     <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
@@ -144,6 +127,7 @@ main { position: relative; z-index: 2; max-width: 1280px; margin: -30px auto 0; 
   </div>
   <div id="shelves"></div>
 </main>
+</div></div>
 
 <nav class="dock" aria-label="التنقل السريع">
   <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
@@ -190,6 +174,16 @@ main { position: relative; z-index: 2; max-width: 1280px; margin: -30px auto 0; 
   host.innerHTML = SHELVES.map((sh) => `<section class="shelf" data-id="${sh.id}" aria-label="${sh.title}"><h2>${shell}${sh.title}</h2><div class="row">${sh.items.map(card).join('')}</div><div class="plank" aria-hidden="true"></div></section>`).join('');
   host.style.cssText = 'display:flex;flex-direction:column;gap:34px';
 
+  // the board is drawn at 1440 wide; scale it to the window like the forest
+  const page = document.getElementById('page'), wrap = document.getElementById('wrap');
+  function fit() {
+    const k = Math.min(innerWidth / 1440, 1.5);
+    const x = Math.max(0, (innerWidth - 1440 * k) / 2);
+    page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    wrap.style.height = page.offsetHeight * k + 'px';
+  }
+  fit(); addEventListener('resize', fit);
+
   // category chips filter the shelves
   const chips = document.getElementById('chips');
   chips.innerHTML = [{ id: '', title: 'الكل' }, ...SHELVES].map((c) => `<button class="chip" type="button" data-id="${c.id}" aria-pressed="${c.id === ''}">${c.title}</button>`).join('');
@@ -197,6 +191,7 @@ main { position: relative; z-index: 2; max-width: 1280px; margin: -30px auto 0; 
     const b = e.target.closest('.chip'); if (!b) return;
     chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c === b));
     host.querySelectorAll('.shelf').forEach((sh) => { sh.hidden = !!b.dataset.id && sh.dataset.id !== b.dataset.id; });
+    fit();
   });
 })();
 </script>

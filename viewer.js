@@ -186,27 +186,37 @@ window.Viewer = (() => {
     book.classList.toggle('single', single);
     const paint = (s) => { R.innerHTML = page(spreads[s].r); L.innerHTML = page(spreads[s].l); };
 
+    // a shadow on a page underneath, only where there is a page
+    const cast = (half, kind) => { if (half.querySelector(':scope > .page')) half.insertAdjacentHTML('beforeend', `<i class="cast ${kind}"></i>`); };
+    const face = (side, x) => `<div class="face ${side}">${page(x) || '<div class="page"></div>'}<i class="shade"></i></div>`;
+
     function turn(from, to) {
       const a = spreads[from], b = spreads[to], fwd = to > from;
       busy = true;
-      if (fwd) L.innerHTML = page(b.l); else R.innerHTML = page(b.r);
       const leaf = document.createElement('div');
-      leaf.className = 'leaf ' + (fwd ? 'to-right' : 'to-left');
-      leaf.innerHTML = `<div class="face front">${page(fwd ? a.l : a.r)}</div><div class="face back">${page(fwd ? b.r : b.l)}</div>`;
+      if (single) {
+        // forward: the page swings away and the next one is already underneath; back: the previous page swings in
+        if (fwd) { R.innerHTML = page(b.r); cast(R, 'reveal'); }
+        leaf.className = 'leaf ' + (fwd ? 'away' : 'back-in');
+        leaf.innerHTML = face('front', fwd ? a.r : b.r) + face('back', null);
+      } else {
+        if (fwd) { L.innerHTML = page(b.l); cast(L, 'reveal'); cast(R, 'cover'); }
+        else { R.innerHTML = page(b.r); cast(R, 'reveal'); cast(L, 'cover'); }
+        leaf.className = 'leaf ' + (fwd ? 'to-right' : 'to-left');
+        leaf.innerHTML = face('front', fwd ? a.l : a.r) + face('back', fwd ? b.r : b.l);
+      }
       book.appendChild(leaf);
       let landed = false;
       const land = () => { if (landed) return; landed = true; paint(to); leaf.remove(); busy = false; };
       if (reduce) return land();
-      void leaf.offsetWidth; leaf.classList.add('go');
-      leaf.addEventListener('transitionend', land, { once: true });
-      setTimeout(land, 900); // in case the transition never reports back (background tab)
+      leaf.addEventListener('animationend', (e) => { if (e.target === leaf) land(); });
+      setTimeout(land, 1100); // in case the animation never reports back (background tab)
     }
 
     function show(s, dir) {
       // a key pressed mid-turn: land the current leaf first
       if (busy) { book.querySelector('.leaf')?.remove(); paint(shown); busy = false; }
       if (shown === null || !dir || Math.abs(s - shown) !== 1) paint(s);
-      else if (single) { paint(s); R.classList.remove('in'); void R.offsetWidth; R.style.setProperty('--dir', dir > 0 ? -1 : 1); R.classList.add('in'); }
       else turn(shown, s);
       shown = s;
     }
