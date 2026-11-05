@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نظّف البحر · كثبان الألعاب</title>
+<link rel="stylesheet" href="viewer.css">
+<style>
+.bg { background-image: url(img/games/dunes-hero.jpg); background-position: center 65%; }
+@media (max-aspect-ratio: 4 / 5) { .bg { background-image: url(img/games/dunes-hero.jpg); background-position: 30% 65%; } }
+.ttl img { border-radius: 12px; object-fit: cover; width: 64px; height: 40px; }
+
+/* the game scene: one sea picture, items float over it */
+.stage { min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.scene { position: relative; height: calc(100% - 10px); max-width: 100%; aspect-ratio: 16 / 9; border: 8px solid var(--paper); border-radius: 30px; overflow: hidden; background: url(img/games/sea-scene.jpg) center / cover; box-shadow: 0 8px 0 rgba(58,35,24,.2), 0 20px 40px rgba(0,0,0,.2); touch-action: none; user-select: none; container-type: size; }
+.hud { position: absolute; z-index: 5; top: 12px; right: 12px; left: 12px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+.hud span { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.92); font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 rgba(0,0,0,.15); }
+.hud img { width: 32px; height: 32px; }
+
+/* stage 1: trash bobs on the water, sea life swims by */
+.thing { position: absolute; z-index: 2; width: 9cqw; aspect-ratio: 1; padding: 0; border: 0; background: none; transform: translate(-50%, -50%); cursor: pointer; }
+.thing img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 .6cqw .6cqw rgba(0,40,70,.25)); pointer-events: none; }
+.trash { animation: bob 3s ease-in-out infinite; animation-delay: var(--d, 0s); }
+@keyframes bob { 50% { translate: 0 -1.2cqh; rotate: 6deg; } }
+.trash.got { animation: got .45s ease-in forwards; pointer-events: none; }
+@keyframes got { to { transform: translate(-50%, -50%) scale(.2); opacity: 0; } }
+.life { z-index: 1; width: 11cqw; animation: swim var(--t, 14s) linear infinite; animation-delay: var(--d, 0s); }
+@keyframes swim { from { left: 108%; } to { left: -8%; } }
+.life.oops img { animation: wiggle .5s; }
+@keyframes wiggle { 25% { rotate: -12deg; } 75% { rotate: 12deg; } }
+.pop { position: absolute; z-index: 6; font-size: 3cqw; font-weight: 800; color: #FFFFFF; text-shadow: 0 2px 0 rgba(0,0,0,.35); pointer-events: none; animation: rise .8s ease-out forwards; }
+@keyframes rise { to { translate: 0 -6cqh; opacity: 0; } }
+
+/* stage 2: drag each item into its bin (or tap it, then tap the bin) */
+.bins { position: absolute; z-index: 3; top: 16%; left: 0; right: 0; display: flex; justify-content: center; gap: 5cqw; }
+.bin { position: relative; width: 20cqw; padding: 0; border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: .8cqh; cursor: pointer; }
+.bin .lid { width: 100%; height: 3.2cqh; border-radius: 1.4cqw 1.4cqw .6cqw .6cqw; background: var(--c); box-shadow: inset 0 -.5cqh 0 rgba(0,0,0,.15); }
+.bin .box { position: relative; width: 86%; height: 24cqh; border-radius: .6cqw .6cqw 2.2cqw 2.2cqw; background: var(--c); box-shadow: inset 0 -1.2cqh 0 rgba(0,0,0,.12), 0 .8cqh 0 rgba(0,0,0,.18); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6cqh; color: #FFFFFF; font-size: 2.4cqw; font-weight: 800; }
+.bin .box img { width: 7cqw; height: 7cqw; object-fit: contain; filter: drop-shadow(0 .3cqw 0 rgba(0,0,0,.2)); }
+.bin .box small { font-size: 1.6cqw; opacity: .9; }
+.bin.hot .box, .bin.hot .lid { filter: brightness(1.12); transform: translateY(-.6cqh); }
+.bin.ok .box { animation: gulp .4s; }
+.bin.hint .box { animation: glowbin .7s ease-in-out 3; }
+@keyframes glowbin { 50% { box-shadow: 0 0 0 .8cqw #FFE38A, 0 0 3cqw #FFD94A; transform: translateY(-.8cqh); } }
+@keyframes gulp { 40% { transform: scale(1.06, .94); } }
+.tray { position: absolute; z-index: 4; left: 4%; right: 4%; bottom: 4%; min-height: 15cqh; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1.4cqw; padding: 1cqh 2cqw; border-radius: 2.4cqw; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 .3cqw rgba(255,255,255,.7); }
+.tray .thing { position: relative; transform: none; width: 7.5cqw; touch-action: none; }
+.tray .thing.picked { transform: translateY(-1cqh) scale(1.08); filter: drop-shadow(0 0 .8cqw #FFD94A); }
+.tray .thing.back { animation: shake .35s; }
+@keyframes shake { 25% { translate: -1cqw 0; } 75% { translate: 1cqw 0; } }
+.ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%) scale(1.1); }
+
+/* start and result cards over the scene */
+.over { position: absolute; z-index: 7; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(10,60,90,.35); }
+.over[hidden] { display: none; }
+.over .box2 { width: min(64cqw, 92%); background: #FFF7EC; border-radius: 3cqw; padding: 3cqh 3cqw; text-align: center; box-shadow: 0 1cqh 0 rgba(0,0,0,.2); display: flex; flex-direction: column; align-items: center; gap: 1.6cqh; }
+.over h2 { margin: 0; font-size: 4cqw; font-weight: 800; color: #1D6FA8; }
+.over p { margin: 0; font-size: 2.1cqw; font-weight: 700; line-height: 1.6; }
+.how { display: flex; gap: 2cqw; }
+.how span { display: flex; align-items: center; gap: 1cqw; padding: 1cqh 1.6cqw; border-radius: 2cqw; background: #FFFFFF; font-size: 1.8cqw; font-weight: 800; box-shadow: 0 .6cqh 0 #E0C9A6; }
+.how img { width: 5cqw; height: 5cqw; object-fit: contain; }
+.over .btn { height: auto; padding: 1.6cqh 3.4cqw; font-size: 2.2cqw; }
+.gain { display: inline-flex; align-items: center; gap: 1cqw; padding: .8cqh 2cqw .8cqh 1cqw; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-weight: 800; font-size: 2cqw; }
+.gain img { width: 4cqw; height: 4cqw; }
+.confetti { position: absolute; inset: 0; z-index: 8; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: 45%; left: 50%; width: 1.2cqw; height: 1.6cqw; border-radius: .3cqw; animation: fly 1.2s ease-out forwards; }
+@keyframes fly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
+
+/* the fox talks in a bubble at the corner */
+.fox { position: absolute; z-index: 6; left: 1.5%; bottom: 2%; display: flex; align-items: flex-end; gap: .6cqw; pointer-events: none; }
+.fox img { width: 15cqw; height: 15cqw; object-fit: contain; }
+.fox p { margin: 0 0 9cqh; max-width: 26cqw; padding: 1.2cqh 1.6cqw; border-radius: 2cqw; background: #FFFFFF; font-size: 1.9cqw; font-weight: 800; line-height: 1.4; box-shadow: 0 .6cqh 0 #E2762E; }
+.fox p:empty { display: none; }
+.sorting .fox { bottom: 22%; }
+
+.resume { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; background: rgba(60,30,10,.35); }
+.resume[hidden] { display: none; }
+.resume > div { margin: 0 12px; background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
+.resume p b { color: var(--go); }
+.resume .btns { margin: 0; }
+.stop .card h2 { color: #C46A00; }
+
+@media (max-width: 760px) {
+  .stage { justify-content: center; }
+  /* phones in portrait: a taller sea so items stay big enough for a finger */
+  .scene { height: auto; width: 100%; max-height: 100%; aspect-ratio: 3 / 4; border-width: 5px; border-radius: 20px; }
+  .hud span { height: 34px; padding: 0 10px; font-size: 14px; } .hud img { width: 24px; height: 24px; }
+  .thing { width: 17cqw; } .life { width: 18cqw; } .tray .thing { width: 14cqw; }
+  .bins { top: 12%; gap: 3cqw; } .bin { width: 28cqw; } .bin .box { height: 20cqh; font-size: 4.2cqw; } .bin .box img { width: 11cqw; height: 11cqw; } .bin .lid { height: 2.6cqh; }
+  .tray { min-height: 22cqh; }
+  .fox img { width: 22cqw; height: 22cqw; }
+  .fox p { font-size: 3.8cqw; max-width: 52cqw; margin-bottom: 8cqh; }
+  .sorting .fox { bottom: 27%; }
+  .over .box2 { width: 92%; } .over h2 { font-size: 7cqw; } .over p, .how span { font-size: 4cqw; } .how img { width: 9cqw; height: 9cqw; } .over .btn { font-size: 4.2cqw; } .gain { font-size: 4cqw; } .gain img { width: 7cqw; height: 7cqw; }
+}
+@media (prefers-reduced-motion: reduce) { .trash, .life, .confetti i, .pop { animation-duration: .01s; } .life { animation: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="games.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>كثبان الألعاب</span></a>
+    <div class="ttl"><img src="img/games/g-01.jpg" alt=""><h1>نظّف البحر</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <section class="scene" id="scene" aria-label="البحر">
+      <div class="hud" aria-live="polite"><span id="stage-label"></span><span id="count"></span></div>
+      <div id="play"></div>
+      <div class="fox" aria-live="polite"><img src="img/games.png" alt=""><p id="tip"></p></div>
+      <div class="over" id="over" hidden></div>
+    </section>
+  </main>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">البداية</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button">أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button">من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/games.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">البداية</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  const q = new URLSearchParams(location.search);
+  // a game the admin sets up from a supported type: collect in the scene, then sort into places.
+  // items, positions and the completion condition are the game's data
+  const KIND = { bottle: { img: 'item-01', bin: 'plastic', name: 'زجاجة بلاستيك' }, can: { img: 'item-02', bin: 'metal', name: 'علبة معدنية' }, paper: { img: 'item-03', bin: 'paper', name: 'ورقة' }, bag: { img: 'item-04', bin: 'plastic', name: 'كيس بلاستيك' } };
+  const TRASH = [['bottle', 22, 34], ['can', 41, 58], ['paper', 63, 30], ['bag', 80, 52], ['bottle', 52, 76], ['can', 15, 68], ['paper', 72, 74], ['bottle', 34, 18]];
+  const LIFE = [{ img: 'item-05', name: 'سمكة', y: 46, t: 15, d: 0 }, { img: 'item-06', name: 'سلحفاة', y: 64, t: 22, d: -8 }, { img: 'item-07', name: 'قنديل البحر', y: 26, t: 26, d: -14 }];
+  const BINS = [{ id: 'plastic', name: 'بلاستيك', c: '#3D96D6', icon: 'item-01' }, { id: 'metal', name: 'معادن', c: '#E8A417', icon: 'item-02' }, { id: 'paper', name: 'ورق', c: '#4CA64C', icon: 'item-03' }];
+  const STEPS = ['البداية', 'المرحلة ١: اجمع المخلفات', 'المرحلة ٢: رتّب المخلفات', 'النتيجة'];
+  const XP = 25; // from gamification when completing the game is eligible
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  let got = 0, sorted = 0, picked = null;
+  const play = $('play'), over = $('over'), scene = $('scene');
+  const tip = (s) => { $('tip').textContent = s; };
+
+  function show(i) {
+    scene.classList.toggle('sorting', i === 2);
+    over.hidden = !(i === 0 || i === 3);
+    $('stage-label').textContent = i === 1 ? 'المرحلة ١ من ٢' : i === 2 ? 'المرحلة ٢ من ٢' : 'نظّف البحر';
+    play.innerHTML = '';
+    if (i === 0) start();
+    if (i === 1) collect();
+    if (i === 2) sort();
+    if (i === 3) finish();
+  }
+
+  function start() {
+    $('count').textContent = 'لعبة من عالم البيئة';
+    tip('هيا ننظّف البحر معاً!');
+    over.innerHTML = `<div class="box2"><h2>نظّف البحر</h2>
+      <p>المرحلة ١: اضغط على المخلفات لتجمعها، واترك الكائنات البحرية تسبح بأمان.<br>المرحلة ٢: ضع كل مخلّف في الحاوية المناسبة.</p>
+      <div class="how"><span><img src="img/games/item-01.png" alt="">اجمعها</span><span><img src="img/games/item-05.png" alt="">اتركها</span></div>
+      <button class="btn go" id="begin" type="button">ابدأ اللعب</button></div>`;
+  }
+
+  // ---- stage 1: tap the trash, leave the sea life alone
+  function collect() {
+    got = 0;
+    play.innerHTML = LIFE.map((l) => `<button class="thing life" type="button" data-life="${l.name}" style="top:${l.y}%;--t:${l.t}s;--d:${l.d}s" aria-label="${l.name}"><img src="img/games/${l.img}.png" alt=""></button>`).join('')
+      + TRASH.map(([k, x, y], n) => `<button class="thing trash" type="button" data-k="${k}" style="left:${x}%;top:${y}%;--d:-${n * 0.4}s" aria-label="${KIND[k].name}"><img src="img/games/${KIND[k].img}.png" alt=""></button>`).join('');
+    count1(); tip('اضغط على المخلفات لتجمعها!');
+  }
+  const count1 = () => { $('count').innerHTML = `<img src="img/games/item-01.png" alt="">جمعت ${ar(got)} من ${ar(TRASH.length)}`; };
+  play.addEventListener('click', (e) => {
+    const t = e.target.closest('.trash'); const l = e.target.closest('.life');
+    if (t && !t.classList.contains('got')) {
+      t.classList.add('got'); got++; count1(); pop(t, '✓');
+      tip(got < TRASH.length ? ['رائع!', 'أحسنت!', 'هيا، ما زال هناك المزيد!'][got % 3] : 'أحسنت! البحر صار أنظف!');
+      if (got === TRASH.length) setTimeout(() => { burst(); setTimeout(() => game.next(), 900); }, 400);
+    }
+    if (l) { l.classList.remove('oops'); void l.offsetWidth; l.classList.add('oops'); tip(`هذه ${l.dataset.life}! نتركها تسبح بأمان`); }
+  });
+
+  // ---- stage 2: drag (or tap, then tap) each item into its bin; a wrong bin just sends it back
+  function sort() {
+    sorted = 0; picked = null;
+    play.innerHTML = `<div class="bins">${BINS.map((b) => `<button class="bin" type="button" data-bin="${b.id}" style="--c:${b.c}" aria-label="حاوية ${b.name}"><span class="lid"></span><span class="box"><img src="img/games/${b.icon}.png" alt="">${b.name}<small data-n="0"></small></span></button>`).join('')}</div>
+      <div class="tray" id="tray">${TRASH.map(([k], n) => `<button class="thing" type="button" data-k="${k}" data-n="${n}" aria-label="${KIND[k].name}"><img src="img/games/${KIND[k].img}.png" alt=""></button>`).join('')}</div>`;
+    count2(); tip('اسحب كل مخلّف إلى الحاوية المناسبة');
+  }
+  const count2 = () => { $('count').innerHTML = `<img src="img/games/item-02.png" alt="">رتّبت ${ar(sorted)} من ${ar(TRASH.length)}`; };
+  function drop(item, binEl) {
+    const ok = KIND[item.dataset.k].bin === binEl.dataset.bin;
+    if (!ok) {
+      item.classList.remove('back', 'picked'); void item.offsetWidth; item.classList.add('back');
+      // two misses on the same item: the right bin lights up so the child is never stuck
+      item.dataset.miss = +(item.dataset.miss || 0) + 1;
+      if (item.dataset.miss >= 2) { const right = play.querySelector(`.bin[data-bin="${KIND[item.dataset.k].bin}"]`); right.classList.add('hint'); setTimeout(() => right.classList.remove('hint'), 2200); tip('هذه هي الحاوية المناسبة، جرّب مرة أخرى'); }
+      else tip('ليست هنا! جرّب حاوية أخرى');
+      return;
+    }
+    item.remove(); sorted++; count2();
+    binEl.classList.remove('ok'); void binEl.offsetWidth; binEl.classList.add('ok'); pop(binEl, '✓');
+    tip(sorted < TRASH.length ? 'صحيح! أحسنت' : 'رائع! رتّبت كل المخلفات');
+    if (sorted === TRASH.length) setTimeout(() => { burst(); setTimeout(() => game.next(), 900); }, 400);
+  }
+  let drag = null;
+  play.addEventListener('pointerdown', (e) => {
+    const it = e.target.closest('.tray .thing'); if (!it) return;
+    e.preventDefault();
+    const g = it.cloneNode(true); g.className = 'thing ghost'; g.style.width = it.offsetWidth + 'px';
+    document.body.appendChild(g);
+    drag = { it, g, x: e.clientX, y: e.clientY, moved: false };
+    moveGhost(e);
+  });
+  addEventListener('pointermove', (e) => { if (!drag) return; if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 8) drag.moved = true; moveGhost(e); });
+  addEventListener('pointerup', (e) => {
+    if (!drag) return;
+    const { it, g, moved } = drag; drag = null; g.remove();
+    play.querySelectorAll('.bin.hot').forEach((b) => b.classList.remove('hot'));
+    const bin = binAt(e.clientX, e.clientY);
+    if (moved && bin) return drop(it, bin);
+    if (!moved) { play.querySelectorAll('.tray .picked').forEach((p) => p.classList.remove('picked')); picked = it; it.classList.add('picked'); tip('الآن اضغط على الحاوية المناسبة'); }
+  });
+  play.addEventListener('click', (e) => { const bin = e.target.closest('.bin'); if (bin && picked) { drop(picked, bin); picked = null; } });
+  function moveGhost(e) {
+    drag.g.style.left = e.clientX + 'px'; drag.g.style.top = e.clientY + 'px';
+    const hot = binAt(e.clientX, e.clientY);
+    play.querySelectorAll('.bin').forEach((b) => b.classList.toggle('hot', b === hot));
+  }
+  const binAt = (x, y) => [...play.querySelectorAll('.bin')].find((b) => { const r = b.getBoundingClientRect(); return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; });
+
+  // ---- result: a simple celebration, no score, lives or coins
+  function finish() {
+    $('count').textContent = 'البحر نظيف!';
+    tip('شكراً لك! الكائنات البحرية سعيدة');
+    play.innerHTML = LIFE.map((l) => `<span class="thing life" style="top:${l.y}%;--t:${l.t}s;--d:${l.d}s"><img src="img/games/${l.img}.png" alt=""></span>`).join('');
+    over.innerHTML = `<div class="box2"><h2>أحسنت يا يوسف!</h2><p>جمعت المخلفات ورتّبتها، وصار البحر نظيفاً وجميلاً</p>
+      <span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span>
+      <div class="btns"><a class="btn go" href="games.html">العودة إلى الكثبان</a><button class="btn soft" id="again" type="button">العب مرة أخرى</button><button class="btn soft" id="next-game" type="button">اللعبة التالية: نظّف الحديقة</button></div></div>`;
+    game.clear(); burst();
+  }
+  over.addEventListener('click', (e) => {
+    const id = e.target.closest('button')?.id;
+    if (id === 'begin') game.next();
+    if (id === 'again') game.go(1);
+    if (id === 'next-game') game.toast('في النموذج: «نظّف الحديقة» بنفس طريقة اللعب');
+  });
+
+  const pop = (el, s) => { const r = el.getBoundingClientRect(), sr = scene.getBoundingClientRect(); const p = document.createElement('span'); p.className = 'pop'; p.textContent = s; p.style.left = r.left - sr.left + r.width / 2 + 'px'; p.style.top = r.top - sr.top + 'px'; scene.appendChild(p); setTimeout(() => p.remove(), 800); };
+  function burst() {
+    const c = document.createElement('div'); c.className = 'confetti';
+    const colors = ['#F4823F', '#FFC93C', '#5BC236', '#3D96D6', '#F58DA6'];
+    c.innerHTML = Array.from({ length: 30 }, (_, i) => `<i style="background:${colors[i % 5]};--x:${(Math.random() - 0.5) * 80}cqw;--y:${-20 - Math.random() * 40}cqh;--r:${Math.random() * 720}deg"></i>`).join('');
+    scene.appendChild(c); setTimeout(() => c.remove(), 1300);
+  }
+
+  // the dunes card shows stage 2 for the demo; finishing a stage moves on, nothing is ever "game over"
+  const game = Viewer.pages({ steps: 4, key: 'ajyal.game.sea', start: q.get('resume') === '1' ? 2 : 0, label: (i) => STEPS[i], onShow: show, canNext: (i) => (i === 1 ? got === TRASH.length : i === 2 ? sorted === TRASH.length : true) });
+})();
+</script>
+</body>
+</html>

@@ -161,7 +161,7 @@
     stopPlay(); playing = true;
     const step = (i) => {
       document.querySelectorAll('.aya.on').forEach((a) => a.classList.remove('on'));
-      if (i > to) { playing = false; return done?.(); }
+      if (i > to || !ayaEl(i)) { playing = false; return done?.(); }
       ayaEl(i).classList.add('on');
       timer = setTimeout(() => step(i + 1), 1500 + AYAT[i].length * 650);
     };
@@ -245,7 +245,7 @@
     if (id === 'play') { if (playing) { stopPlay(); $('play').innerHTML = playIcon; } else { $('play').innerHTML = pauseIcon; play(0, AYAT.length - 1, () => { heard = true; $('play').innerHTML = playIcon; }); } }
     if (id === 'loop') { const on = $('loop').getAttribute('aria-pressed') !== 'true'; $('loop').setAttribute('aria-pressed', on); if (on) { const loop = () => play(ayaNow, ayaNow, () => $('loop')?.getAttribute('aria-pressed') === 'true' && loop()); loop(); } else stopPlay(); }
     if (id === 'again') play(repeated, repeated);
-    if (id === 'said') { repeated++; store.set(repeated); show(1); }
+    if (id === 'said') { stopPlay(); repeated++; store.set(repeated); show(1); }
     if (id === 'mic' && !e.target.closest('#mic').onclick) recite();
     if (id === 'hint') { const next = [...$('ayat').querySelectorAll('.w')].find((w) => !w.classList.contains('said')); next?.classList.add('hint'); learner.toast('في التطبيق: تُسمع بداية الكلمة بصوت القارئ'); }
     if (id === 'next') learner.next();
