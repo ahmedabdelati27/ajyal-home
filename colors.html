@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>وادي الألوان · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --sand: #FFF2F6; --go: #2E8B2A; --go-deep: #1F6A1C; --pink: #E0559A; --pink-deep: #A82E66; --line: #6B3A1E; --leaf: #5BC236; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); font-weight: 500; }
+img { display: block; max-width: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* drawn at 1440 wide like the forest board, then scaled to the window */
+#wrap { position: relative; width: 100%; overflow: hidden; }
+#page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: top left; }
+
+/* hero: the rainbow valley, fading into soft pink */
+.hero { position: relative; height: 500px; background: url(img/colors/valley-hero.jpg) center 60% / cover; }
+.hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 150px; background: linear-gradient(rgba(255,242,246,0), var(--sand) 92%); pointer-events: none; }
+.bar { position: absolute; z-index: 3; top: 20px; left: 32px; right: 32px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #F2C6D8; white-space: nowrap; }
+.pill img { width: 30px; height: 30px; margin: -4px 0; }
+.stats { display: flex; gap: 10px; }
+.isle { position: absolute; z-index: 2; left: 70px; top: 54px; width: 380px; animation: float 4.5s ease-in-out infinite; }
+@keyframes float { 50% { translate: 0 -8px; } }
+.say { position: absolute; z-index: 3; left: 420px; top: 96px; max-width: 250px; margin: 0; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--pink); }
+.say::before { content: ''; position: absolute; left: -16px; bottom: 18px; border: 12px solid transparent; border-right-color: var(--paper); border-left: 0; }
+.head { position: absolute; z-index: 3; right: 80px; top: 120px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.head h1 { margin: 0; font-size: 78px; font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--pink-deep), 3px 0 0 var(--pink-deep), -3px 0 0 var(--pink-deep), 0 -3px 0 var(--pink-deep), 3px 3px 0 var(--pink-deep), -3px 3px 0 var(--pink-deep), 3px -3px 0 var(--pink-deep), -3px -3px 0 var(--pink-deep); }
+.head p { margin: 0; font-size: 22px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 4px 18px; }
+
+main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px; display: flex; flex-direction: column; gap: 34px; }
+h2.sec { margin: 0 0 14px; display: flex; align-items: center; justify-content: space-between; font-size: 30px; font-weight: 800; }
+h2.sec small { font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+
+/* continue coloring */
+.cont { display: flex; align-items: center; gap: 22px; background: var(--paper); border-radius: 32px; padding: 16px 16px 16px 24px; box-shadow: 0 6px 0 #F2CFDD; }
+.cont[hidden] { display: none; }
+.cont .art { width: 112px; height: 112px; border-radius: 22px; overflow: hidden; flex-shrink: 0; background: #FFFFFF; box-shadow: inset 0 0 0 3px #F6DCE6; }
+.cont .art { position: relative; }
+.cont .art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+/* the lines over the child's colors, like on the coloring screen */
+.cont .art img.ink { mix-blend-mode: multiply; }
+.cont .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.cont h2 { margin: 0; font-size: 16px; font-weight: 800; color: var(--pink-deep); }
+.cont b { font-size: 30px; font-weight: 800; line-height: 1.15; }
+.cont small { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.go { display: inline-flex; align-items: center; gap: 10px; height: 64px; padding: 0 30px; border-radius: 999px; background: var(--go); color: var(--paper); text-decoration: none; font-weight: 800; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); flex-shrink: 0; }
+
+/* the two things to do here: draw freely, or color a picture */
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.mode { position: relative; display: flex; align-items: center; gap: 22px; min-height: 190px; padding: 22px 30px; border-radius: 34px; color: var(--paper); text-decoration: none; overflow: hidden; box-shadow: 0 8px 0 rgba(0,0,0,.18); transition: transform .2s; }
+.mode:hover { transform: translateY(-5px) rotate(-.6deg); }
+.mode.draw { background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.25), transparent 40%), linear-gradient(135deg, #7B6CF0, #B36CE0); }
+.mode.paint { background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.25), transparent 40%), linear-gradient(135deg, #FF8A5B, #F0508E); }
+.mode svg.art { width: 140px; height: 140px; flex-shrink: 0; filter: drop-shadow(0 6px 6px rgba(0,0,0,.18)); }
+.mode b { display: block; font-size: 38px; font-weight: 800; text-shadow: 0 3px 0 rgba(0,0,0,.15); }
+.mode small { display: block; margin-top: 6px; font-size: 19px; font-weight: 700; opacity: .95; line-height: 1.5; }
+.mode .cta { position: absolute; left: 26px; bottom: 22px; display: inline-flex; align-items: center; gap: 8px; height: 50px; padding: 0 22px; border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 19px; font-weight: 800; box-shadow: 0 4px 0 rgba(0,0,0,.15); }
+
+/* the coloring pictures */
+.chips { display: flex; gap: 10px; margin: 0 0 18px; }
+.chip { height: 46px; padding: 0 20px; border: 3px solid transparent; border-radius: 999px; background: var(--paper); font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #F2CFDD; }
+.chip[aria-pressed="true"] { background: linear-gradient(#F07AB2, #D6407F); color: var(--paper); border-color: var(--pink-deep); }
+.pics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+.pic { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 12px 12px 14px; border-radius: 28px; background: var(--paper); text-decoration: none; color: var(--ink); box-shadow: 0 6px 0 #F2CFDD; transition: transform .2s; }
+.pic:hover { transform: translateY(-5px) rotate(-1deg); }
+.pic .sheet { position: relative; aspect-ratio: 1; border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: inset 0 0 0 3px #F6E3EA; }
+.pic .sheet img { width: 100%; height: 100%; object-fit: contain; }
+.pic b { padding: 0 4px; font-size: 20px; font-weight: 800; }
+.tag { position: absolute; top: 18px; left: 18px; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 14px; font-weight: 800; display: flex; align-items: center; border: 2px solid var(--paper); box-shadow: 0 3px 0 rgba(0,0,0,.12); }
+.tag.ok { background: #4CB944; color: var(--paper); }
+.tag.on { background: #FFC93C; color: #5A3A00; }
+.tag.num { background: #7B6CF0; color: var(--paper); }
+
+/* my works from the valley */
+.works { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; }
+.work { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 10px 10px 12px; border-radius: 24px; background: var(--paper); box-shadow: 0 5px 0 #F2CFDD; }
+.work img { width: 100%; aspect-ratio: 1; border-radius: 16px; object-fit: cover; background: #FFFFFF; box-shadow: inset 0 0 0 2px #F6E3EA; }
+.work b { padding: 0 4px; font-size: 17px; font-weight: 800; }
+.work small { padding: 0 4px; font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.state { position: absolute; top: 16px; left: 16px; height: 26px; padding: 0 9px; border-radius: 999px; font-size: 13px; font-weight: 800; display: flex; align-items: center; background: #FFFFFF; box-shadow: 0 2px 0 rgba(0,0,0,.12); }
+.state.review { background: #FFF1C9; color: #8A5A00; } .state.published { background: #DDF5D3; color: #2E7D32; } .state.rejected { background: #FBE3E3; color: #B23B3B; }
+.empty { padding: 26px 30px; border-radius: 28px; background: rgba(255,255,255,.7); font-size: 19px; font-weight: 700; color: var(--ink-soft); }
+
+.toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: rgba(58,35,24,.9); color: var(--paper); border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: 16px; z-index: 40; opacity: 0; transition: opacity .25s; pointer-events: none; text-align: center; }
+.toast.show { opacity: 1; }
+
+/* dock: the same game bar as the map */
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a:hover { background: rgba(255,255,255,.25); }
+.dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+@media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
+@media (prefers-reduced-motion: reduce) { .isle { animation: none; } .mode, .pic { transition: none; } }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats">
+      <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+      <span class="pill" title="أيام متتالية"><img src="img/forest/I-07.png" alt="">5</span>
+      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">12</span>
+    </div>
+  </div>
+  <img class="isle" src="img/colors.png" alt="القطة مشمش في وادي الألوان">
+  <p class="say">أهلاً يا يوسف! ماذا نرسم اليوم؟</p>
+  <div class="head">
+    <h1>وادي الألوان</h1>
+    <p>ارسم ولوّن مع القطة مشمش</p>
+  </div>
+</header>
+
+<main>
+  <section class="cont" aria-labelledby="cont-t" id="cont" hidden></section>
+
+  <section class="modes" aria-label="ماذا تفعل">
+    <a class="mode draw" href="draw.html">
+      <svg class="art" viewBox="0 0 140 140" aria-hidden="true"><rect x="20" y="16" width="100" height="108" rx="14" fill="#FFFFFF"/><path d="M36 92c12-30 26-38 36-22s20 10 32-14" fill="none" stroke="#F0508E" stroke-width="7" stroke-linecap="round"/><circle cx="48" cy="46" r="10" fill="#FFC93C"/><path d="M96 104l26-26 8 8-26 26-12 4z" fill="#7B6CF0" stroke="#4B3F93" stroke-width="3" stroke-linejoin="round"/></svg>
+      <span><b>ارسم بحرية</b><small>لوحة بيضاء وأقلام وألوان،<br>ارسم ما تحب</small></span>
+      <span class="cta">ابدأ الرسم</span>
+    </a>
+    <a class="mode paint" href="#pics">
+      <svg class="art" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="54" fill="#FFFFFF"/><circle cx="50" cy="52" r="11" fill="#E53935"/><circle cx="78" cy="42" r="11" fill="#FDD835"/><circle cx="98" cy="64" r="11" fill="#4FC3F7"/><circle cx="44" cy="82" r="11" fill="#8BC34A"/><path d="M74 84c8 0 14 6 14 14s-8 14-18 10" fill="#F4E9DC" stroke="#C9AE8C" stroke-width="3"/></svg>
+      <span><b>لوّن رسمة</b><small>اختر رسمة جاهزة،<br>واضغط على أي جزء لتلوّنه</small></span>
+      <span class="cta">اختر رسمة</span>
+    </a>
+  </section>
+
+  <section id="pics" aria-labelledby="pics-t">
+    <h2 class="sec"><span id="pics-t">رسومات للتلوين</span><small id="pics-n"></small></h2>
+    <div class="chips" id="chips" role="group" aria-label="اختر نوع الرسومات"></div>
+    <div class="pics" id="grid"></div>
+  </section>
+
+  <section aria-labelledby="works-t">
+    <h2 class="sec"><span id="works-t">إبداعاتي من الوادي</span><a class="pill" href="#" id="all-works">كل إبداعاتي</a></h2>
+    <div id="works"></div>
+  </section>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="valley.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { PICS, CATS, thumb, works, STATES, progress } = Valley;
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  let cat = 'all';
+
+  function render() {
+    const mine = works.read();
+    const colored = new Set(mine.filter((w) => w.kind === 'color').map((w) => w.pic));
+    // carry on with the last picture the child left half colored
+    const open = PICS.find((p) => progress.get(p.id) && !colored.has(p.id));
+    $('cont').hidden = !open;
+    if (open) $('cont').innerHTML = `<div class="art" aria-hidden="true"><img src="${progress.get(open.id)}" alt=""><img class="ink" src="${thumb(open)}" alt=""></div>
+      <div class="txt"><h2 id="cont-t">أكمل من حيث توقفت</h2><b>${open.name}</b><small>رسمة بدأت تلوينها ولم تحفظها بعد</small></div>
+      <a class="go" href="color.html?pic=${open.id}">أكمل التلوين <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></a>`;
+
+    $('chips').innerHTML = CATS.map((c) => `<button class="chip" type="button" data-id="${c.id}" aria-pressed="${c.id === cat}">${c.n}</button>`).join('');
+    const list = PICS.filter((p) => cat === 'all' || p.cat === cat);
+    $('pics-n').textContent = `${ar(colored.size)} من ${ar(PICS.length)} رسومات لوّنتها`;
+    $('grid').innerHTML = list.map((p) => {
+      const tag = colored.has(p.id) ? '<span class="tag ok">✓ لوّنتها</span>' : progress.get(p.id) ? '<span class="tag on">بدأت تلوينها</span>' : p.parts ? '<span class="tag num">١٢٣ بالأرقام</span>' : '';
+      return `<a class="pic" href="color.html?pic=${p.id}" aria-label="${p.name}"><span class="sheet"><img src="${thumb(p)}" alt=""></span>${tag}<b>${p.name}</b></a>`;
+    }).join('');
+
+    // the valley's works: drawings and colorings, each with its state
+    const here = mine.filter((w) => w.kind === 'draw' || w.kind === 'color');
+    $('works').innerHTML = here.length
+      ? `<div class="works">${here.slice(0, 6).map((w) => `<div class="work"><img src="${w.img}" alt="${w.name}"><span class="state ${w.state}">${STATES[w.state]}</span><b>${w.name}</b><small>${w.kind === 'draw' ? 'رسمة حرة' : 'تلوين'}</small></div>`).join('')}</div>`
+      : '<p class="empty">لم تحفظ أي عمل بعد. ارسم أو لوّن، واحفظ عملك ليظهر هنا وفي غرفتك.</p>';
+    fit();
+  }
+
+  $('chips').addEventListener('click', (e) => { const b = e.target.closest('.chip'); if (b) { cat = b.dataset.id; render(); } });
+  document.querySelector('.mode.paint').addEventListener('click', (e) => { e.preventDefault(); $('pics').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
+  $('all-works').addEventListener('click', (e) => { e.preventDefault(); toast('في النموذج: صفحة «إبداعاتي» في غرفتي لم تُرسم بعد'); });
+
+  // the board is drawn at 1440 wide; scale it to the window like the forest
+  const page = $('page'), wrap = $('wrap');
+  function fit() {
+    const k = Math.min(innerWidth / 1440, 1.5);
+    const x = Math.max(0, (innerWidth - 1440 * k) / 2);
+    page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    wrap.style.height = page.offsetHeight * k + 'px';
+  }
+  addEventListener('resize', fit);
+  addEventListener('pageshow', render);
+  render();
+})();
+</script>
+</body>
+</html>

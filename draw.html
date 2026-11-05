@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ارسم بحرية · وادي الألوان</title>
+<link rel="stylesheet" href="viewer.css">
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill, .tool, .size');</script>
+<style>
+.bg { background: url(img/colors/valley-hero.jpg) center 70% / cover; }
+.bg::after { content: ''; position: absolute; inset: 0; background: rgba(240,236,255,.55); }
+.app { grid-template-rows: auto 1fr; }
+.ttl h1 { text-shadow: 0 3px 0 #4B3F93, 2px 0 0 #4B3F93, -2px 0 0 #4B3F93, 0 -2px 0 #4B3F93; }
+
+/* the studio: tools, a white sheet, the colors */
+.studio { min-height: 0; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; justify-items: center; gap: 22px; }
+.board { position: relative; height: min(100%, calc((100vw - 460px) * .75)); max-height: 100%; aspect-ratio: 4 / 3; border: 10px solid #FFFFFF; border-radius: 30px; background: #FFFFFF; overflow: hidden; box-shadow: 0 10px 0 rgba(75,63,147,.18), 0 24px 40px rgba(0,0,0,.18); touch-action: none; cursor: crosshair; }
+.board canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.colors { display: grid; grid-template-columns: repeat(2, 60px); gap: 12px; padding: 16px; border-radius: 30px; background: rgba(255,255,255,.88); box-shadow: 0 6px 0 rgba(75,63,147,.15); }
+.sw { width: 60px; height: 60px; border-radius: 50%; border: 4px solid #FFFFFF; background: var(--c); box-shadow: 0 0 0 2px rgba(0,0,0,.08), 0 4px 0 rgba(0,0,0,.15); transition: transform .15s; }
+.sw[aria-pressed="true"] { transform: scale(1.15); box-shadow: 0 0 0 4px #3A2318, 0 4px 0 rgba(0,0,0,.15); }
+.picked { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 999px; background: #FFFFFF; font-size: 18px; font-weight: 800; }
+.picked i { width: 22px; height: 22px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgba(0,0,0,.12); }
+
+.tools { display: flex; flex-direction: column; gap: 10px; width: 200px; }
+.row { display: flex; gap: 8px; }
+.tool { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 12px; border: 0; border-radius: 999px; background: #FFFFFF; font-size: 17px; font-weight: 800; box-shadow: 0 5px 0 rgba(75,63,147,.18); }
+.tool svg { width: 24px; height: 24px; flex-shrink: 0; }
+.tool:disabled { opacity: .45; cursor: default; }
+.tool[aria-pressed="true"] { background: #EDE9FF; color: #4B3F93; box-shadow: 0 0 0 3px #7B6CF0, 0 5px 0 rgba(75,63,147,.18); }
+.sizes { display: flex; justify-content: space-around; align-items: center; height: 64px; padding: 0 8px; border-radius: 999px; background: #FFFFFF; box-shadow: 0 5px 0 rgba(75,63,147,.18); }
+.size { width: 48px; height: 48px; border: 0; border-radius: 50%; background: none; display: grid; place-items: center; }
+.size i { display: block; width: var(--d); height: var(--d); border-radius: 50%; background: #3A2318; }
+.size[aria-pressed="true"] { background: #EDE9FF; box-shadow: 0 0 0 3px #7B6CF0; }
+.tool.save { height: 68px; background: var(--go); color: #FFFFFF; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); }
+
+/* saved: private first, and the child may send it for publishing */
+.saved .card img.work { width: 260px; aspect-ratio: 4 / 3; height: auto; border-radius: 20px; object-fit: cover; box-shadow: 0 0 0 6px #FFFFFF, 0 8px 20px rgba(0,0,0,.15); margin: 0 auto 6px; }
+.saved .note { margin: 0; font-size: 16px; color: var(--ink-soft); }
+.saved [hidden] { display: none; }
+
+@media (max-width: 900px) {
+  .studio { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto auto; gap: 10px; }
+  .board { height: auto; width: min(100%, 70dvh); border-width: 6px; border-radius: 22px; }
+  .colors { grid-auto-flow: column; grid-template-columns: none; grid-template-rows: 44px; max-width: 100%; overflow-x: auto; padding: 8px; gap: 8px; order: 2; }
+  .sw { width: 44px; height: 44px; border-width: 3px; }
+  .picked { display: none; }
+  .tools { order: 3; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .row { display: contents; }
+  .tool { height: 48px; font-size: 15px; padding: 0 8px; }
+  .tool span { display: none; }
+  .sizes { grid-column: span 2; height: 48px; }
+  .size { width: 40px; height: 40px; }
+  .tool.save { grid-column: span 2; height: 48px; font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="colors.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>وادي الألوان</span></a>
+    <div class="ttl"><h1>ارسم بحرية</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span>35 د</span></span>
+  </header>
+
+  <main class="studio">
+    <div class="tools">
+      <div class="row" role="group" aria-label="الأداة">
+        <button class="tool" type="button" data-tool="pen" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.5-5L16 4.5l3.5 3.5L9 18.5z" fill="#FFC93C"/><path d="M14 6.5l3.5 3.5"/></svg><span>القلم</span></button>
+        <button class="tool" type="button" data-tool="brush" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M14 4l6 6-6 4-4-4z" fill="#B88A5A"/><path d="M10 10c-4 0-6 3-6 6 0 2-1 3-1 4 4 0 9-1 9-6"/></svg><span>الفرشاة</span></button>
+      </div>
+      <div class="row">
+        <button class="tool" type="button" data-tool="eraser" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M8 20l-4-4 10-10 6 6-8 8z" fill="#F7A8C4"/><path d="M8 20h12"/></svg><span>الممحاة</span></button>
+      </div>
+      <div class="sizes" role="group" aria-label="حجم القلم">
+        <button class="size" type="button" data-size="8" aria-label="رفيع" aria-pressed="false"><i style="--d:8px"></i></button>
+        <button class="size" type="button" data-size="18" aria-label="متوسط" aria-pressed="true"><i style="--d:15px"></i></button>
+        <button class="size" type="button" data-size="36" aria-label="عريض" aria-pressed="false"><i style="--d:24px"></i></button>
+      </div>
+      <div class="row">
+        <button class="tool" type="button" id="undo" disabled aria-label="تراجع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7H8.5a4.5 4.5 0 0 0 0 9H17"/><path d="M12 3l3.5 4L12 11"/></svg></button>
+        <button class="tool" type="button" id="redo" disabled aria-label="إعادة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7h6.5a4.5 4.5 0 0 1 0 9H7"/><path d="M12 3L8.5 7 12 11"/></svg></button>
+      </div>
+      <button class="tool" type="button" id="clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="13" height="15" rx="2" fill="#FFFFFF"/><path d="M19 3l.8 1.7 1.7.8-1.7.8L19 8l-.8-1.7-1.7-.8 1.7-.8z" fill="#F7B347" stroke="none"/></svg><span>امسح اللوحة</span></button>
+      <button class="tool save" type="button" id="save">احفظ رسمتي</button>
+    </div>
+    <div class="board" id="board" role="img" aria-label="لوحة الرسم">
+      <canvas id="art" width="1200" height="900"></canvas>
+      <canvas id="live" width="1200" height="900"></canvas>
+    </div>
+    <div class="colors" id="colors" role="group" aria-label="الألوان"></div>
+  </main>
+</div>
+
+<div class="done saved" id="saved" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="saved-t">
+    <img class="work" id="saved-img" alt="">
+    <h2 id="saved-t">رسمة رائعة يا يوسف!</h2>
+    <p id="saved-p">حفظناها في «إبداعاتي»، وهي خاصة بك</p>
+    <p class="note" id="saved-note">يمكنك إرسالها لينشرها فريق أجيال داخل المنصة بعد مراجعتها</p>
+    <div class="btns" id="saved-btns">
+      <button class="btn go" type="button" id="publish">أرسلها للنشر</button>
+      <button class="btn soft" type="button" id="again">ارسم رسمة جديدة</button>
+      <a class="btn soft" href="colors.html">العودة إلى الوادي</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="valley.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { PALETTE, works, say } = Valley;
+  const W = 1200, H = 900, DRAFT = 'ajyal.draw.draft';
+  const art = $('art').getContext('2d'), live = $('live').getContext('2d');
+  // every stroke is kept, so undo and redo simply draw the sheet again
+  let strokes = [], redo = [], base = null, now = null;
+  let tool = 'pen', size = 18, color = 7, work = null;
+
+  $('colors').innerHTML = PALETTE.filter((p) => p.c !== '#FFFFFF').map((p) => `<button class="sw" type="button" data-c="${p.c}" style="--c:${p.c}" aria-label="${p.n}" aria-pressed="${PALETTE.indexOf(p) === color}"></button>`).join('')
+    + '<span class="picked" id="picked"></span>';
+  const showPicked = () => { $('picked').innerHTML = `<i style="--c:${PALETTE[color].c}"></i>${PALETTE[color].n}`; };
+  showPicked();
+  $('colors').addEventListener('click', (e) => {
+    const b = e.target.closest('.sw'); if (!b) return;
+    color = PALETTE.findIndex((p) => p.c === b.dataset.c);
+    $('colors').querySelectorAll('.sw').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    if (tool === 'eraser') pick('pen');
+    showPicked(); say(PALETTE[color].n);
+  });
+  const pick = (t) => { tool = t; document.querySelectorAll('[data-tool]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.tool === t))); };
+  document.querySelectorAll('[data-tool]').forEach((b) => b.addEventListener('click', () => pick(b.dataset.tool)));
+  document.querySelectorAll('.size').forEach((b) => b.addEventListener('click', () => {
+    size = +b.dataset.size; document.querySelectorAll('.size').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  }));
+
+  // a stroke: the pen is solid, the brush is soft and wider, the eraser paints the white sheet back
+  function stroke(ctx, s) {
+    if (s.clear) { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H); return; }
+    ctx.save();
+    ctx.lineCap = ctx.lineJoin = 'round';
+    ctx.strokeStyle = ctx.fillStyle = s.tool === 'eraser' ? '#FFFFFF' : s.c;
+    ctx.lineWidth = s.tool === 'brush' ? s.size * 1.8 : s.size;
+    if (s.tool === 'brush') ctx.globalAlpha = 0.55;
+    const p = s.pts;
+    if (p.length === 1) { ctx.beginPath(); ctx.arc(p[0][0], p[0][1], ctx.lineWidth / 2, 0, Math.PI * 2); ctx.fill(); }
+    else {
+      ctx.beginPath(); ctx.moveTo(p[0][0], p[0][1]);
+      for (let i = 1; i < p.length - 1; i++) ctx.quadraticCurveTo(p[i][0], p[i][1], (p[i][0] + p[i + 1][0]) / 2, (p[i][1] + p[i + 1][1]) / 2);
+      ctx.lineTo(p[p.length - 1][0], p[p.length - 1][1]); ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function redraw() {
+    art.fillStyle = '#FFFFFF'; art.fillRect(0, 0, W, H);
+    if (base) art.drawImage(base, 0, 0, W, H);
+    strokes.forEach((s) => stroke(art, s));
+    $('undo').disabled = !strokes.length; $('redo').disabled = !redo.length;
+  }
+  // the drawing so far is kept on the device, so leaving and coming back keeps it
+  let timer = null;
+  const keep = () => { clearTimeout(timer); timer = setTimeout(() => { try { localStorage.setItem(DRAFT, $('art').toDataURL('image/png')); } catch {} }, 500); };
+  try { const d = localStorage.getItem(DRAFT); if (d) { const i = new Image(); i.onload = () => { base = i; redraw(); }; i.src = d; } } catch {}
+  redraw();
+
+  const point = (e) => { const r = $('live').getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; };
+  $('board').addEventListener('pointerdown', (e) => {
+    e.preventDefault(); $('board').setPointerCapture(e.pointerId);
+    now = { tool, size, c: PALETTE[color].c, pts: [point(e)] };
+    live.clearRect(0, 0, W, H); stroke(live, now);
+  });
+  $('board').addEventListener('pointermove', (e) => {
+    if (!now) return;
+    const p = point(e), last = now.pts[now.pts.length - 1];
+    if (Math.hypot(p[0] - last[0], p[1] - last[1]) < 2) return;
+    now.pts.push(p);
+    live.clearRect(0, 0, W, H); stroke(live, now);
+  });
+  const end = () => {
+    if (!now) return;
+    strokes.push(now); redo = []; now = null;
+    live.clearRect(0, 0, W, H); redraw(); keep();
+    // a drawing sent for review stays as it was sent; drawing more makes a new work
+    if (work?.state === 'review') work = null;
+  };
+  $('board').addEventListener('pointerup', end);
+  $('board').addEventListener('pointercancel', end);
+
+  $('undo').addEventListener('click', () => { if (strokes.length) { redo.push(strokes.pop()); redraw(); keep(); } });
+  $('redo').addEventListener('click', () => { if (redo.length) { strokes.push(redo.pop()); redraw(); keep(); } });
+  // clearing is one more step, so undo brings the drawing back
+  $('clear').addEventListener('click', () => { strokes.push({ clear: true }); redo = []; redraw(); keep(); toast('مسحنا اللوحة، ويمكنك التراجع إن أردت'); });
+
+  // save: private in «إبداعاتي» first; publishing is the child's choice and goes to review
+  $('save').addEventListener('click', () => {
+    if (!strokes.length && !base) return toast('ارسم شيئاً أولاً ثم احفظه');
+    const img = $('art').toDataURL('image/jpeg', 0.85);
+    work = { id: work?.id || `draw-${Date.now()}`, kind: 'draw', name: 'رسمتي', img, state: 'private', at: Date.now() };
+    if (!works.save(work)) return toast('لم نستطع الحفظ على هذا الجهاز');
+    $('saved-img').src = img;
+    $('saved-t').textContent = 'رسمة رائعة يا يوسف!';
+    $('saved-p').textContent = 'حفظناها في «إبداعاتي»، وهي خاصة بك';
+    $('saved-note').hidden = false; $('publish').hidden = false;
+    $('saved').hidden = false; $('again').focus();
+    window.Sfx?.play('win');
+  });
+  $('publish').addEventListener('click', () => {
+    work.state = 'review'; works.save(work);
+    try { localStorage.removeItem(DRAFT); } catch {}
+    $('saved-t').textContent = 'أرسلنا رسمتك للمراجعة';
+    $('saved-p').textContent = 'سيراجعها فريق أجيال، ونخبرك بالنتيجة';
+    $('saved-note').hidden = true; $('publish').hidden = true;
+    $('again').focus();
+  });
+  $('again').addEventListener('click', () => {
+    strokes = []; redo = []; base = null; work = null;
+    try { localStorage.removeItem(DRAFT); } catch {}
+    redraw(); $('saved').hidden = true;
+  });
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
+})();
+</script>
+</body>
+</html>

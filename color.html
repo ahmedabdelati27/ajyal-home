@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لوّن رسمة · وادي الألوان</title>
+<link rel="stylesheet" href="viewer.css">
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill, .tool');</script>
+<style>
+.bg { background: url(img/colors/valley-hero.jpg) center 70% / cover; }
+.bg::after { content: ''; position: absolute; inset: 0; background: rgba(255,242,246,.55); }
+.app { grid-template-rows: auto 1fr; }
+.ttl img { width: 52px; height: 52px; border-radius: 14px; background: #FFFFFF; object-fit: contain; }
+.ttl h1 { text-shadow: 0 3px 0 #A82E66, 2px 0 0 #A82E66, -2px 0 0 #A82E66, 0 -2px 0 #A82E66; }
+
+/* the studio: tools, the picture, the colors */
+.studio { min-height: 0; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; justify-items: center; gap: 22px; }
+.board { position: relative; height: min(100%, calc(100vw - 420px)); max-height: 100%; aspect-ratio: 1; border: 10px solid #FFFFFF; border-radius: 30px; background: #FFFFFF; overflow: hidden; box-shadow: 0 10px 0 rgba(168,46,102,.18), 0 24px 40px rgba(0,0,0,.18); touch-action: none; cursor: pointer; }
+.board canvas, .board .lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* the lines sit on top of the colors, so a fill never covers them */
+.board .lines { mix-blend-mode: multiply; pointer-events: none; }
+.num { position: absolute; z-index: 2; translate: -50% -50%; width: 46px; height: 46px; border-radius: 50%; background: #FFFFFF; border: 5px solid var(--c); display: grid; place-items: center; font-size: 22px; font-weight: 800; pointer-events: none; box-shadow: 0 3px 6px rgba(0,0,0,.18); transition: opacity .3s, scale .3s; }
+.num.gone { opacity: 0; scale: .5; }
+.splash { position: absolute; z-index: 3; width: 18px; height: 18px; translate: -50% -50%; border-radius: 50%; background: var(--c); pointer-events: none; animation: splash .45s ease-out forwards; }
+@keyframes splash { to { scale: 5; opacity: 0; } }
+
+.colors { display: grid; grid-template-columns: repeat(2, 60px); gap: 12px; padding: 16px; border-radius: 30px; background: rgba(255,255,255,.88); box-shadow: 0 6px 0 rgba(168,46,102,.15); }
+.sw { width: 60px; height: 60px; border-radius: 50%; border: 4px solid #FFFFFF; background: var(--c); box-shadow: 0 0 0 2px rgba(0,0,0,.08), 0 4px 0 rgba(0,0,0,.15); transition: transform .15s; }
+.sw[aria-pressed="true"] { transform: scale(1.15); box-shadow: 0 0 0 4px #3A2318, 0 4px 0 rgba(0,0,0,.15); }
+.sw { position: relative; }
+.sw[data-n]::after { content: attr(data-n); position: absolute; top: -8px; left: -8px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; color: #3A2318; font-size: 15px; font-weight: 800; display: grid; place-items: center; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.picked { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 999px; background: #FFFFFF; font-size: 18px; font-weight: 800; }
+.picked i { width: 22px; height: 22px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgba(0,0,0,.12); }
+
+.tools { display: flex; flex-direction: column; gap: 12px; width: 190px; }
+.tool { display: flex; align-items: center; gap: 10px; height: 58px; padding: 0 18px; border: 0; border-radius: 999px; background: #FFFFFF; font-size: 19px; font-weight: 800; box-shadow: 0 5px 0 rgba(168,46,102,.18); }
+.tool svg { width: 26px; height: 26px; flex-shrink: 0; }
+.tool:disabled { opacity: .45; cursor: default; }
+.tool[hidden] { display: none; }
+.tool[aria-pressed="true"] { background: #EDE9FF; color: #4B3F93; }
+.tool.save { height: 68px; justify-content: center; background: var(--go); color: #FFFFFF; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); }
+.legend { margin: 6px 0 0; padding: 12px 14px; border-radius: 22px; background: rgba(255,255,255,.88); list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 16px; font-weight: 800; }
+.legend li { display: flex; align-items: center; gap: 8px; }
+.legend b { width: 30px; height: 30px; border-radius: 50%; border: 4px solid var(--c); display: grid; place-items: center; font-size: 15px; background: #FFFFFF; flex-shrink: 0; }
+.legend[hidden] { display: none; }
+
+/* saved: shown to the child, private, no publishing for colorings */
+.saved .card img.work { width: 220px; height: 220px; border-radius: 22px; object-fit: cover; box-shadow: 0 0 0 6px #FFFFFF, 0 8px 20px rgba(0,0,0,.15); margin: 0 auto 6px; }
+
+@media (max-width: 900px) {
+  .studio { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto auto; gap: 12px; }
+  .board { height: auto; width: min(100%, 62dvh); border-width: 6px; border-radius: 22px; }
+  .colors { grid-auto-flow: column; grid-template-columns: none; grid-template-rows: 46px; max-width: 100%; overflow-x: auto; padding: 10px; gap: 8px; order: 2; }
+  .sw { width: 46px; height: 46px; border-width: 3px; }
+  .picked { display: none; }
+  .tools { order: 3; flex-direction: row; flex-wrap: wrap; justify-content: center; width: auto; gap: 8px; }
+  .tool { height: 48px; padding: 0 14px; font-size: 16px; }
+  .tool.save { height: 52px; font-size: 18px; }
+  .legend { display: none; }
+  .num { width: 32px; height: 32px; font-size: 16px; border-width: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .splash { display: none; } .num { transition: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="colors.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>وادي الألوان</span></a>
+    <div class="ttl"><img id="ttl-img" alt=""><h1 id="ttl"></h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span>35 د</span></span>
+  </header>
+
+  <main class="studio">
+    <div class="tools">
+      <button class="tool" type="button" id="undo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7H8.5a4.5 4.5 0 0 0 0 9H17"/><path d="M12 3l3.5 4L12 11"/></svg>تراجع</button>
+      <button class="tool" type="button" id="reset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/></svg>من جديد</button>
+      <button class="tool" type="button" id="nums" aria-pressed="true" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><text x="12" y="16.5" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">١</text></svg>الأرقام</button>
+      <ol class="legend" id="legend" hidden aria-label="الألوان المقترحة"></ol>
+      <button class="tool save" type="button" id="save">احفظ عملي</button>
+    </div>
+    <div class="board" id="board" role="img" aria-label="الرسمة، اضغط على أي جزء لتلوينه">
+      <canvas id="paint" width="900" height="900"></canvas>
+      <canvas class="lines" id="lines" width="900" height="900"></canvas>
+    </div>
+    <div class="colors" id="colors" role="group" aria-label="الألوان"></div>
+  </main>
+</div>
+
+<div class="done saved" id="saved" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="saved-t">
+    <img class="work" id="saved-img" alt="">
+    <h2 id="saved-t">أحسنت يا يوسف! حفظنا تلوينك</h2>
+    <p>تجده في «إبداعاتي» داخل غرفتك، وهو لك وحدك</p>
+    <div class="btns">
+      <a class="btn go" href="colors.html#pics">لوّن رسمة أخرى</a>
+      <button class="btn soft" type="button" id="keep">أكمل هذه الرسمة</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="valley.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { PALETTE, PICS, lines, thumb, works, progress, say } = Valley;
+  const pic = PICS.find((p) => p.id === new URLSearchParams(location.search).get('pic')) || PICS[0];
+  const S = 900;
+  const paint = $('paint').getContext('2d', { willReadFrequently: true });
+  let color = 0, mask = null, undo = [], showNums = true, timer = null;
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+
+  $('ttl').textContent = pic.name; $('ttl-img').src = thumb(pic);
+  document.title = `${pic.name} · وادي الألوان`;
+  paint.fillStyle = '#FFFFFF'; paint.fillRect(0, 0, S, S);
+
+  // colors with their names; a numbered picture starts on the color of its first part
+  if (pic.parts) color = pic.parts[0].c;
+  const numOf = (i) => (pic.parts || []).filter((p) => p.c === i).map((p) => ar(p.n)).join('،');
+  $('colors').innerHTML = PALETTE.map((p, i) => `<button class="sw" type="button" data-i="${i}" ${numOf(i) ? `data-n="${numOf(i)}"` : ''} style="--c:${p.c}" aria-label="${p.n}" aria-pressed="${i === color}"></button>`).join('')
+    + '<span class="picked" id="picked"></span>';
+  const showPicked = () => { $('picked').innerHTML = `<i style="--c:${PALETTE[color].c}"></i>${PALETTE[color].n}`; };
+  showPicked();
+  $('colors').addEventListener('click', (e) => {
+    const b = e.target.closest('.sw'); if (!b) return;
+    color = +b.dataset.i;
+    $('colors').querySelectorAll('.sw').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    showPicked(); say(PALETTE[color].n);
+  });
+
+  // the lines: dark pixels are walls a fill cannot cross
+  lines(pic).then((img) => {
+    const lc = $('lines').getContext('2d', { willReadFrequently: true });
+    lc.fillStyle = '#FFFFFF'; lc.fillRect(0, 0, S, S); lc.drawImage(img, 0, 0, S, S);
+    const d = lc.getImageData(0, 0, S, S).data;
+    mask = new Uint8Array(S * S);
+    for (let i = 0; i < S * S; i++) mask[i] = (d[i * 4] + d[i * 4 + 1] + d[i * 4 + 2]) / 3 < 150 ? 1 : 0;
+    // the child's coloring so far comes back
+    const saved = progress.get(pic.id);
+    if (saved) { const i = new Image(); i.onload = () => { paint.drawImage(i, 0, 0, S, S); nums(); }; i.src = saved; }
+    nums();
+  });
+
+  // numbered pictures: a number in each part, with its suggested color; the number goes once the part is colored
+  if (pic.parts) {
+    $('nums').hidden = false; $('legend').hidden = false;
+    $('legend').innerHTML = pic.parts.map((p) => `<li><b style="--c:${PALETTE[p.c].c}">${ar(p.n)}</b>${p.shape}: ${PALETTE[p.c].n}</li>`).join('');
+    $('board').insertAdjacentHTML('beforeend', pic.parts.map((p) => `<span class="num" data-n="${p.n}" style="left:${p.at[0] / 9}%;top:${p.at[1] / 9}%;--c:${PALETTE[p.c].c}">${ar(p.n)}</span>`).join(''));
+    $('nums').addEventListener('click', () => { showNums = !showNums; $('nums').setAttribute('aria-pressed', String(showNums)); nums(); });
+  }
+  function nums() {
+    if (!pic.parts) return;
+    pic.parts.forEach((p) => {
+      const [r, g, b] = paint.getImageData(p.at[0], p.at[1], 1, 1).data;
+      $('board').querySelector(`.num[data-n="${p.n}"]`).classList.toggle('gone', !showNums || !(r > 250 && g > 250 && b > 250));
+    });
+  }
+
+  // tap to fill: the whole closed part under the finger takes the chosen color
+  $('board').addEventListener('pointerdown', (e) => {
+    if (!mask) return;
+    const r = $('paint').getBoundingClientRect();
+    let x = Math.floor((e.clientX - r.left) / r.width * S), y = Math.floor((e.clientY - r.top) / r.height * S);
+    // a tap right on a line still fills the part next to it
+    if (mask[y * S + x]) {
+      let best = null;
+      for (let d = 1; d <= 10 && !best; d++) for (const [dx, dy] of [[d, 0], [-d, 0], [0, d], [0, -d], [d, d], [-d, -d], [d, -d], [-d, d]]) {
+        const nx = x + dx, ny = y + dy;
+        if (nx >= 0 && ny >= 0 && nx < S && ny < S && !mask[ny * S + nx]) { best = [nx, ny]; break; }
+      }
+      if (!best) return;
+      [x, y] = best;
+    }
+    fill(x, y, PALETTE[color].c);
+    const s = document.createElement('span'); s.className = 'splash'; s.style.cssText = `left:${(e.clientX - r.left) / r.width * 100}%;top:${(e.clientY - r.top) / r.height * 100}%;--c:${PALETTE[color].c}`;
+    $('board').appendChild(s); setTimeout(() => s.remove(), 500);
+  });
+
+  function fill(x0, y0, hex) {
+    const rgb = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    const img = paint.getImageData(0, 0, S, S), d = img.data;
+    const at = (y0 * S + x0) * 4;
+    if (d[at] === rgb[0] && d[at + 1] === rgb[1] && d[at + 2] === rgb[2]) return;
+    // the part: every open pixel reachable from the tap without crossing a line
+    const seen = new Uint8Array(S * S), stack = [y0 * S + x0], part = [];
+    let minX = x0, maxX = x0, minY = y0, maxY = y0;
+    seen[y0 * S + x0] = 1;
+    while (stack.length) {
+      const p = stack.pop(); part.push(p);
+      const x = p % S, y = (p - x) / S;
+      if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y;
+      for (const q of [x > 0 ? p - 1 : -1, x < S - 1 ? p + 1 : -1, y > 0 ? p - S : -1, y < S - 1 ? p + S : -1]) {
+        if (q >= 0 && !seen[q] && !mask[q]) { seen[q] = 1; stack.push(q); }
+      }
+    }
+    // remember only the box that changes (one pixel wider for the rim under the line), so undo stays light
+    minX = Math.max(0, minX - 1); minY = Math.max(0, minY - 1); maxX = Math.min(S - 1, maxX + 1); maxY = Math.min(S - 1, maxY + 1);
+    const w = maxX - minX + 1, h = maxY - minY + 1;
+    undo.push({ x: minX, y: minY, data: paint.getImageData(minX, minY, w, h) });
+    if (undo.length > 30) undo.shift();
+    // the colored part grows by one pixel under the line, so no white rim shows along it
+    for (const p of part) {
+      const x = p % S;
+      for (const q of [p, x > 0 ? p - 1 : p, x < S - 1 ? p + 1 : p, p - S >= 0 ? p - S : p, p + S < S * S ? p + S : p]) {
+        if (q !== p && !mask[q]) continue;
+        d[q * 4] = rgb[0]; d[q * 4 + 1] = rgb[1]; d[q * 4 + 2] = rgb[2]; d[q * 4 + 3] = 255;
+      }
+    }
+    paint.putImageData(img, 0, 0, minX, minY, w, h);
+    window.Sfx?.play('pick');
+    changed();
+  }
+
+  function changed() {
+    $('undo').disabled = !undo.length;
+    nums();
+    // the coloring is kept as the child goes, so they can come back to it
+    clearTimeout(timer); timer = setTimeout(() => progress.set(pic.id, $('paint').toDataURL('image/png')), 400);
+  }
+  $('undo').addEventListener('click', () => {
+    const u = undo.pop(); if (!u) return;
+    paint.putImageData(u.data, u.x, u.y); changed();
+  });
+  $('reset').addEventListener('click', () => {
+    undo.push({ x: 0, y: 0, data: paint.getImageData(0, 0, S, S) });
+    paint.fillStyle = '#FFFFFF'; paint.fillRect(0, 0, S, S); changed();
+    toast('بدأت من جديد، ويمكنك التراجع إن أردت');
+  });
+
+  // save: the colors with the lines on top, into «إبداعاتي»; colorings are never sent for publishing
+  $('save').addEventListener('click', () => {
+    const out = document.createElement('canvas'); out.width = out.height = 600;
+    const o = out.getContext('2d');
+    o.drawImage($('paint'), 0, 0, 600, 600);
+    o.globalCompositeOperation = 'multiply'; o.drawImage($('lines'), 0, 0, 600, 600);
+    const img = out.toDataURL('image/jpeg', 0.85);
+    progress.set(pic.id, $('paint').toDataURL('image/png'));
+    if (!works.save({ id: `color-${pic.id}`, kind: 'color', pic: pic.id, name: pic.name, img, state: 'private', at: Date.now() })) return toast('لم نستطع الحفظ على هذا الجهاز');
+    $('saved-img').src = img; $('saved').hidden = false; $('keep').focus();
+    window.Sfx?.play('win');
+  });
+  $('keep').addEventListener('click', () => { $('saved').hidden = true; });
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
+})();
+</script>
+</body>
+</html>
