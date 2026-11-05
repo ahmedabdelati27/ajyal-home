@@ -5,110 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>لماذا يتغير شكل القمر؟ · غابة المعرفة</title>
 <link rel="stylesheet" href="viewer.css">
+<link rel="stylesheet" href="book.css">
 <style>
-/* Flipbook: an open book, two facing pages; the left page turns over to the right */
-.stage { min-height: 0; display: flex; align-items: center; justify-content: center; gap: 26px; }
-.book { position: relative; height: 86%; aspect-ratio: 3 / 2; max-width: calc(100% - 2 * (80px + 50px)); perspective: 2800px; container-type: size; }
-.half { position: absolute; z-index: 1; top: 0; bottom: 0; width: 50%; }
-.half.r { right: 0; } .half.l { left: 0; }
-.page { position: absolute; inset: 0; overflow: hidden; background: #FFFDF8; }
-.r .page, .leaf.to-left .front, .leaf.to-right .back { border-radius: 0 1.2cqw 1.2cqw 0; }
-.l .page, .leaf.to-right .front, .leaf.to-left .back { border-radius: 1.2cqw 0 0 1.2cqw; }
-.half:not(:empty) { filter: drop-shadow(0 .4cqw .5cqw rgba(0,0,0,.28)); }
-
-/* the hardcover: green cloth boards, gold corners, a spine, an amber ribbon */
-.case { position: absolute; z-index: 0; inset: -5% -3.4% -6%; overflow: hidden; border-radius: 2cqw; background-color: #2E5A37;
-  /* book cloth: fine grain over a woven grid */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E"),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(90deg, rgba(0,0,0,.07) 0 1px, transparent 1px 3px),
-    radial-gradient(ellipse at 50% 40%, #3A6E45, #2A5232 70%);
-  box-shadow: inset 0 0 0 .3cqw rgba(255,255,255,.08), inset 0 0 3cqw rgba(0,0,0,.5), 0 1cqw 0 #1C3A23, 0 2.6cqw 4cqw rgba(0,0,0,.32); transition: right .75s cubic-bezier(.45,.05,.3,1); }
-.spine { position: absolute; top: 0; bottom: 0; left: 50%; width: 3.4%; margin-left: -1.7%; background: linear-gradient(90deg, rgba(0,0,0,.4), rgba(255,255,255,.1) 50%, rgba(0,0,0,.4)); }
-.corner { position: absolute; width: 5cqw; height: 5cqw; background: linear-gradient(135deg, #FFEBB0, #E3AC3E 55%, #A9721A); box-shadow: inset 0 0 0 .2cqw rgba(255,255,255,.35); }
-.corner.tr { top: 0; right: 0; clip-path: polygon(0 0, 100% 0, 100% 100%); }
-.corner.tl { top: 0; left: 0; clip-path: polygon(0 0, 100% 0, 0 100%); }
-.corner.br { bottom: 0; right: 0; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
-.corner.bl { bottom: 0; left: 0; clip-path: polygon(0 0, 100% 100%, 0 100%); }
-.ribbon { position: absolute; z-index: 0; top: -5%; bottom: -12%; left: calc(50% + 2.4cqw); width: 2cqw; background: linear-gradient(90deg, #C9481A, #F4823F 45%, #C9481A); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 94%, 0 100%); transition: opacity .3s; }
-/* page edges: read pages pile up on the right, the rest wait on the left */
-.half.r > .page { box-shadow: calc(var(--sr) * .45cqw) calc(var(--sr) * .25cqw) 0 #F1E8D6, calc(var(--sr) * .9cqw) calc(var(--sr) * .5cqw) 0 #E2D5BB, calc(var(--sr) * 1.35cqw) calc(var(--sr) * .75cqw) 0 #D2C2A2; }
-.half.l > .page { box-shadow: calc(var(--sl) * -.45cqw) calc(var(--sl) * .25cqw) 0 #F1E8D6, calc(var(--sl) * -.9cqw) calc(var(--sl) * .5cqw) 0 #E2D5BB, calc(var(--sl) * -1.35cqw) calc(var(--sl) * .75cqw) 0 #D2C2A2; }
-.endpaper { background: #EAF3DC radial-gradient(circle at 1.2cqw 1.2cqw, rgba(46,90,55,.16) .35cqw, transparent .4cqw) 0 0 / 2.4cqw 2.4cqw; }
-
-/* closed: only the front board, with the cover art on it */
-.book { transition: translate .75s cubic-bezier(.45,.05,.3,1); }
-.book.closed { translate: 25% 0; }
-.closed .case { right: calc(50% - 2.8%); }
-.closed .spine { left: auto; right: 0; margin: 0; width: 7%; background: linear-gradient(90deg, rgba(0,0,0,.45), rgba(255,255,255,.08) 40%, rgba(0,0,0,.3)); }
-.closed .ribbon { opacity: 0; }
-.closed .l .page { border-radius: 1.2cqw; box-shadow: none; }
-.closed .l .page::after { display: none; }
-.page img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-/* the fold: a soft shadow along the spine */
-.page::after { content: ''; position: absolute; top: 0; bottom: 0; width: 14%; pointer-events: none; }
-.r .page::after, .to-left .front .page::after, .to-right .back .page::after { left: 0; background: linear-gradient(90deg, rgba(0,0,0,.28), transparent); }
-.l .page::after, .to-right .front .page::after, .to-left .back .page::after { right: 0; background: linear-gradient(-90deg, rgba(0,0,0,.28), transparent); }
+/* the moon Flipbook: illustrated pages with text on a cream band */
 .txt { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 9cqh 6cqw 5cqh; background: linear-gradient(rgba(255,250,240,0), rgba(255,250,240,.95) 30%); font-size: 2.5cqw; font-weight: 700; line-height: 1.7; text-wrap: pretty; }
 .no { position: absolute; bottom: 1.6cqh; font-size: 1.4cqw; font-weight: 800; color: var(--ink-soft); }
 .r .no, .to-left .front .no, .to-right .back .no { left: 3cqw; }
 .l .no, .to-right .front .no, .to-left .back .no { right: 3cqw; }
 .title { position: absolute; left: 6%; right: 6%; bottom: 7%; margin: 0; padding: 2.4cqh 2cqw; border-radius: 3cqw; background: rgba(255,250,240,.95); text-align: center; font-size: 4.2cqw; font-weight: 800; line-height: 1.25; color: #2F3A8F; box-shadow: 0 1cqh 0 rgba(0,0,0,.15); }
-
-/* the turning leaf */
-.leaf { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 3; transform-style: preserve-3d; transition: transform .75s cubic-bezier(.45,.05,.3,1); }
-.leaf.to-right { left: 0; transform-origin: right center; }
-.leaf.to-left { right: 0; transform-origin: left center; }
-.leaf.to-right.go { transform: rotateY(180deg); }
-.leaf.to-left.go { transform: rotateY(-180deg); }
-.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.face .page { position: absolute; inset: 0; }
-.face.back { transform: rotateY(180deg); }
-.face::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: rgba(0,0,0,.18); opacity: 0; transition: opacity .375s; }
-.leaf.go .front::before { opacity: 1; }
-
-/* phones: one page at a time, sliding */
-.book.single { aspect-ratio: 3 / 4; }
-.single .half.r { width: 100%; }
-.single .r .page { border-radius: 2cqw 0 0 2cqw; }
-.single .case { inset: -3% -2% -4% -4.5%; }
-.single .spine { left: auto; right: 0; margin: 0; width: 6%; }
-.single .ribbon { display: none; }
-.single .half.r > .page { box-shadow: -.8cqw .4cqw 0 #F1E8D6, -1.6cqw .8cqw 0 #E2D5BB; }
-.single .r .page::after { display: none; }
 .single .txt { font-size: 5cqw; padding: 12cqh 6cqw 5cqh; }
 .single .no { font-size: 3cqw; left: 5cqw; }
 .single .title { font-size: 8cqw; }
-.single .r.in { animation: in .3s ease-out both; }
-@keyframes in { from { opacity: 0; transform: translateX(calc(var(--dir) * 30px)); } to { opacity: 1; transform: none; } }
-
-.pager { justify-self: center; display: flex; align-items: center; gap: 14px; height: 52px; padding: 0 20px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(58,35,24,.15); }
-.pager b { font-size: 18px; font-weight: 800; white-space: nowrap; }
-.track { width: 180px; height: 10px; border-radius: 999px; background: #E6EFDC; overflow: hidden; }
-.track i { display: block; height: 100%; width: var(--p, 10%); border-radius: 999px; background: var(--leaf); transition: width .3s; }
-
-.resume { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; background: rgba(30,50,30,.35); }
-.resume[hidden] { display: none; }
-.resume > div { background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
-.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
-.resume p b { color: var(--go); }
-.resume .btns { margin: 0; }
-.resume .btn { gap: 8px; }
-.resume .btn svg { width: 22px; height: 22px; flex-shrink: 0; }
-.stop .card h2 { color: #C46A00; }
-
-@media (max-width: 760px) {
-  .stage { position: relative; gap: 0; }
-  .book { height: auto; width: calc(100% - 28px); max-width: 100%; max-height: 100%; }
-  .arrow { position: absolute; z-index: 4; width: 52px; height: 52px; top: 50%; margin-top: -26px; }
-  .arrow svg { width: 26px; height: 26px; }
-  .arrow.prev { right: -6px; } .arrow.next { left: -6px; }
-  .track { width: 90px; }
-  .resume > div { margin: 0 12px; padding: 18px 16px; }
-  .resume .btns { gap: 8px; }
-  .resume .btn { height: 46px; padding: 0 16px; font-size: 16px; }
-}
-@media (prefers-reduced-motion: reduce) { .leaf { transition: none; } }
 </style>
 </head>
 <body>
@@ -236,12 +143,9 @@
     : [{ r: null, l: 1 }, ...Array.from({ length: (N - 2) / 2 }, (_, k) => ({ r: 2 + 2 * k, l: 3 + 2 * k })), { r: N, l: 'end' }];
   const first = (s) => SPREADS[s].r || SPREADS[s].l;
   const num = (x) => (typeof x === 'number' ? x : null);
-  const book = $('book'), R = $('r'), L = $('l');
-  book.classList.toggle('single', single);
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let shown = null, busy = false;
+  const book = $('book');
+  const pages = Viewer.spreadbook({ book, spreads: SPREADS, page, single });
 
-  function paint(s) { R.innerHTML = page(SPREADS[s].r); L.innerHTML = page(SPREADS[s].l); }
   function status(s) {
     const r = num(SPREADS[s].r), l = num(SPREADS[s].l);
     $('count').textContent = r === 1 || (!r && l === 1) ? 'الغلاف' : r && l ? `الصفحتان ${r} و${l} من ${N}` : `الصفحة ${r || l} من ${N}`;
@@ -253,31 +157,8 @@
     book.style.setProperty('--sl', Math.min(1, (1 - read) * 1.6).toFixed(2));
     $('prev').disabled = s === 0;
   }
-
-  // turn one leaf: forward lifts the left page over to the right, back lifts the right page to the left
-  function turn(from, to) {
-    const a = SPREADS[from], b = SPREADS[to], fwd = to > from;
-    busy = true;
-    if (fwd) L.innerHTML = page(b.l); else R.innerHTML = page(b.r);
-    const leaf = document.createElement('div');
-    leaf.className = 'leaf ' + (fwd ? 'to-right' : 'to-left');
-    leaf.innerHTML = `<div class="face front">${page(fwd ? a.l : a.r)}</div><div class="face back">${page(fwd ? b.r : b.l)}</div>`;
-    book.appendChild(leaf);
-    let landed = false;
-    const land = () => { if (landed) return; landed = true; paint(to); leaf.remove(); busy = false; };
-    if (reduce) return land();
-    void leaf.offsetWidth; leaf.classList.add('go');
-    leaf.addEventListener('transitionend', land, { once: true });
-    setTimeout(land, 900); // in case the transition never reports back (background tab)
-  }
-
   function show(s, dir) {
-    // a key pressed mid-turn: land the current leaf first
-    if (busy) { book.querySelector('.leaf')?.remove(); paint(shown); busy = false; }
-    if (shown === null || !dir || Math.abs(s - shown) !== 1) paint(s);
-    else if (single) { paint(s); R.classList.remove('in'); void R.offsetWidth; R.style.setProperty('--dir', dir > 0 ? -1 : 1); R.classList.add('in'); }
-    else turn(shown, s);
-    shown = s; status(s);
+    pages.show(s, dir); status(s);
     const nx = SPREADS[s + 1]; if (nx) [nx.r, nx.l].forEach((n) => { if (num(n)) new Image().src = `img/books/moon-${String(n).padStart(2, '0')}.jpg`; });
   }
 
@@ -288,12 +169,12 @@
     save: first, load: (p) => Math.max(0, pageToStep(p)),
     label: (s) => `الصفحة ${first(s)}`, onShow: show
   });
-  $('next').addEventListener('click', () => !busy && reader.next());
-  $('prev').addEventListener('click', () => !busy && reader.prev());
+  $('next').addEventListener('click', () => !pages.busy() && reader.next());
+  $('prev').addEventListener('click', () => !pages.busy() && reader.prev());
 
   let x0 = null;
   book.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
-  addEventListener('pointerup', (e) => { if (x0 === null || busy) return; const dx = e.clientX - x0; x0 = null; if (dx > 50) reader.next(); else if (dx < -50) reader.prev(); });
+  addEventListener('pointerup', (e) => { if (x0 === null || pages.busy()) return; const dx = e.clientX - x0; x0 = null; if (dx > 50) reader.next(); else if (dx < -50) reader.prev(); });
 })();
 </script>
 </body>

@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الأرنب الصادق · شاطئ الحكايات</title>
+<link rel="stylesheet" href="viewer.css">
+<link rel="stylesheet" href="book.css">
+<style>
+/* the beach behind the book, and a sea-blue hardcover */
+.bg { background-image: url(img/stories/beach-hero.jpg); background-position: center 75%; }
+@media (max-aspect-ratio: 4 / 5) { .bg { background-image: url(img/stories/beach-hero.jpg); background-position: 28% 75%; } }
+.book { --cloth: #23597A; --cloth-hi: #2E6F94; --cloth-lo: #1D4A66; --cloth-edge: #143A52; --endpaper: #E3F2F8; --dots: rgba(35,89,122,.16); }
+.ribbon { background: linear-gradient(90deg, #B8405F, #F58DA6 45%, #B8405F); }
+
+/* story pages: text on the right, the picture on the left */
+.paper { background: #FFFBF0; display: flex; flex-direction: column; justify-content: center; padding: 6cqh 4cqw 7cqh; }
+.orn { position: absolute; top: 4cqh; left: 50%; width: 4cqw; height: 4cqw; margin-left: -2cqw; opacity: .8; }
+.story { margin: 0; font-size: 2.9cqw; font-weight: 700; line-height: 2.05; text-wrap: pretty; }
+.no { position: absolute; bottom: 2.4cqh; font-size: 1.4cqw; font-weight: 800; color: var(--ink-soft); }
+.r .no, .to-left .front .no, .to-right .back .no { left: 3cqw; }
+.title { position: absolute; left: 6%; right: 6%; bottom: 7%; margin: 0; padding: 2.4cqh 2cqw; border-radius: 3cqw; background: rgba(255,251,240,.95); text-align: center; box-shadow: 0 1cqh 0 rgba(0,0,0,.15); }
+.title b { display: block; font-size: 4.4cqw; font-weight: 800; line-height: 1.2; color: #B8405F; }
+.title small { font-size: 2cqw; font-weight: 700; color: var(--ink-soft); }
+/* words: every word can light up while reading aloud; dotted words have a meaning */
+.w { border-radius: .5cqw; transition: background .15s; }
+.w.on { background: #FFE38A; box-shadow: 0 0 0 .3cqw #FFE38A; }
+.gl { font: inherit; color: #1D6FA8; background: none; border: 0; padding: 0; border-bottom: .3cqw dotted #3D96D6; cursor: pointer; }
+.gl:hover { background: #E3F2F8; }
+.end { align-items: center; text-align: center; gap: 2cqh; }
+.end h3 { margin: 0; font-size: 6cqw; font-weight: 800; color: #B8405F; }
+.end p { margin: 0; font-size: 2.6cqw; font-weight: 700; }
+.end .btn { height: auto; padding: 1.6cqh 3cqw; font-size: 2.6cqw; margin-top: 1cqh; }
+.single .story { font-size: 5.4cqw; line-height: 1.9; }
+.single .combo { padding: 0; justify-content: flex-start; }
+.single .combo img { height: 56%; flex-shrink: 0; object-fit: cover; }
+.single .combo .story { padding: 3cqh 6cqw 0; }
+.single .no { font-size: 3cqw; left: 5cqw; }
+.single .title b { font-size: 9cqw; } .single .title small { font-size: 4cqw; }
+.single .end h3 { font-size: 12cqw; } .single .end p, .single .end .btn { font-size: 5cqw; }
+
+/* read-to-me */
+.pager .say { height: 42px; padding: 0 14px; border: 0; border-radius: 999px; background: #E3F2F8; color: #1D4A66; display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 16px; }
+.pager .say svg { width: 22px; height: 22px; }
+.pager .say[aria-pressed="true"] { background: #1D6FA8; color: var(--paper); }
+
+/* a word's meaning */
+.gloss { position: fixed; z-index: 30; width: min(300px, calc(100vw - 24px)); background: var(--paper); border-radius: 22px; padding: 14px 16px 16px; box-shadow: 0 6px 0 #3D96D6, 0 16px 30px rgba(0,0,0,.2); }
+.gloss[hidden] { display: none; }
+.gloss header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.gloss b { font-size: 24px; font-weight: 800; color: #1D6FA8; }
+.gloss p { margin: 6px 0 0; font-size: 18px; font-weight: 700; line-height: 1.6; }
+.hear { width: 42px; height: 42px; border: 0; border-radius: 50%; background: #E3F2F8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hear svg { width: 24px; height: 24px; }
+
+/* quiz */
+.quiz { position: fixed; inset: 0; z-index: 28; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(20,58,82,.55); }
+.quiz[hidden] { display: none; }
+.qcard { position: relative; width: min(760px, 100%); max-height: calc(100dvh - 40px); overflow-y: auto; background: #FFF7EC; border-radius: 36px; padding: 26px 30px 28px; box-shadow: 0 10px 0 rgba(0,0,0,.25); animation: rise .35s ease-out both; }
+@keyframes rise { from { opacity: 0; transform: translateY(24px) scale(.97); } to { opacity: 1; transform: none; } }
+.qtop { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.qtop img { width: 92px; height: 92px; margin: -14px 0 -10px; }
+.dots { display: flex; gap: 8px; }
+.dots i { width: 16px; height: 16px; border-radius: 50%; background: #EADBC4; }
+.dots i.yes { background: var(--leaf); } .dots i.nope { background: #F0436B; } .dots i.at { background: #F7B347; box-shadow: 0 0 0 4px rgba(247,179,71,.3); }
+.qhead { display: flex; align-items: flex-start; gap: 10px; margin: 10px 0 18px; }
+.qhead h2 { flex: 1; margin: 0; font-size: 28px; font-weight: 800; line-height: 1.4; }
+.opts { display: grid; gap: 12px; }
+.opt { min-height: 64px; padding: 10px 20px; border: 4px solid transparent; border-radius: 22px; background: var(--paper); font-size: 22px; font-weight: 800; text-align: start; box-shadow: 0 5px 0 #E0C9A6; transition: transform .15s; }
+.opt:hover:not(:disabled) { transform: translateY(-2px); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--leaf); background: #ECF9E4; }
+.opt.wrong { border-color: #F0436B; background: #FFE6EC; animation: shake .35s; }
+@keyframes shake { 25% { translate: -6px 0; } 75% { translate: 6px 0; } }
+.opts.tf { grid-template-columns: 1fr 1fr; }
+.opts.tf .opt { min-height: 96px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 26px; }
+.opts.tf svg { width: 40px; height: 40px; }
+.opts.pics { grid-template-columns: repeat(3, 1fr); }
+.opts.pics .opt { padding: 8px; display: flex; flex-direction: column; gap: 8px; font-size: 17px; text-align: center; }
+.opts.pics img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 14px; }
+.fb { min-height: 32px; margin: 14px 0 0; font-size: 20px; font-weight: 800; }
+.fb.ok { color: var(--go); } .fb.no { color: #C9372C; }
+.qcard .btns { margin-top: 10px; }
+/* result */
+.stars { display: flex; justify-content: center; gap: 10px; margin: 6px 0 4px; }
+.stars svg { width: 64px; height: 64px; }
+.stars svg.off path { fill: #EADBC4; stroke: #D6C2A2; }
+.result { text-align: center; }
+.result h2 { margin: 0; font-size: 36px; font-weight: 800; color: var(--go); }
+.result p { margin: 6px 0 0; font-size: 20px; font-weight: 700; color: var(--ink-soft); }
+.gains { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.gain { display: inline-flex; align-items: center; gap: 8px; height: 50px; padding: 0 18px 0 10px; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-weight: 800; font-size: 18px; }
+.gain img { width: 36px; height: 36px; }
+.gain.badge { background: #E3F2F8; color: #1D4A66; }
+.hero-me { gap: 8px; }
+.hero-me img { width: 28px; height: 28px; }
+.cover-hero { position: absolute; top: 5%; left: 50%; translate: -50% 0; height: auto; padding: 1.2cqh 2cqw; font-size: 1.8cqw; white-space: nowrap; }
+.cover-hero img { width: 2.6cqw; height: 2.6cqw; }
+.single .cover-hero { font-size: 4cqw; padding: 1.4cqh 4cqw; } .single .cover-hero img { width: 6cqw; height: 6cqw; }
+
+@media (max-width: 760px) {
+  .qcard { padding: 20px 16px 22px; border-radius: 28px; }
+  .qhead h2 { font-size: 22px; }
+  .opt { font-size: 18px; min-height: 56px; }
+  .opts.tf .opt { min-height: 80px; font-size: 22px; }
+  .opts.pics { gap: 8px; } .opts.pics .opt { font-size: 14px; padding: 6px; }
+  .stars svg { width: 50px; height: 50px; }
+  .result h2 { font-size: 28px; }
+  .pager .say span { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="beach.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>شاطئ الحكايات</span></a>
+    <div class="ttl"><img src="img/forest/I-11.png" alt=""><h1>الأرنب الصادق</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <button class="arrow prev" id="prev" type="button" aria-label="الصفحة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="book" id="book" aria-live="polite">
+      <div class="case" aria-hidden="true"><i class="spine"></i><i class="corner tr"></i><i class="corner tl"></i><i class="corner br"></i><i class="corner bl"></i></div>
+      <i class="ribbon" aria-hidden="true"></i>
+      <div class="half r"></div>
+      <div class="half l"></div>
+    </div>
+    <button class="arrow next" id="next" type="button" aria-label="الصفحة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  </main>
+
+  <div class="pager">
+    <b id="count">الغلاف</b>
+    <span class="track" aria-hidden="true"><i id="track"></i></span>
+    <button class="say" id="say" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>اقرأ لي</span></button>
+  </div>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">الصفحة 1</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.5a8 8 0 1 1-7.4 4.9"/><path d="M14 1.5v6h-6"/></svg>من البداية</button>
+    </div>
+  </div>
+</div>
+
+<!-- a word's simple meaning, written by the admin -->
+<div class="gloss" id="gloss" role="dialog" aria-labelledby="gloss-w" hidden>
+  <header><b id="gloss-w"></b><button class="hear" id="gloss-hear" type="button" aria-label="استمع إلى المعنى"><svg viewBox="0 0 24 24" fill="none" stroke="#1D6FA8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#1D6FA8"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></button></header>
+  <p id="gloss-m"></p>
+</div>
+
+<!-- the quiz after the story, then the result -->
+<div class="quiz" id="quiz" hidden>
+  <div class="qcard" role="dialog" aria-modal="true" aria-labelledby="q-t" id="qcard"></div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/beach.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">الصفحة 1</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  // in production: the story text, pictures, voiceover, word meanings and quiz all come from the admin
+  // {word|key} marks a word that has a meaning
+  const TEXT = [
+    'في قريةٍ صغيرة على {شاطئ|شاطئ} البحر، كان يعيش أرنبٌ اسمه زيتون.',
+    'كان زيتون يحبّ اللعب بالكرة الحمراء مع صديقته السلحفاة سلمى.',
+    'وفي يومٍ مشمس، ركل زيتون الكرة بقوّة، فطارت عالياً عالياً!',
+    'سقطت الكرة على {جرّة|جرة} العسل عند الدبّ دبدوب، فانكسرت الجرّة!',
+    'خاف زيتون كثيراً، وفكّر أن {يختبئ|يختبئ} خلف الصخرة الكبيرة.',
+    'قالت سلمى بهدوء: {الصدق|الصدق} {شجاعة|شجاعة} يا زيتون، والكذب لا يُصلح شيئاً.',
+    '{تشجّع|تشجع} زيتون، وذهب إلى الدبّ دبدوب وقال: أنا {آسف|آسف}، أنا كسرت الجرّة.',
+    'ابتسم دبدوب وقال: شكراً لأنك صادق يا زيتون، الجرّة يمكن إصلاحها.',
+    'ساعد زيتون وسلمى دبدوب، وصنعوا معاً جرّةً جديدة من {الطين|الطين}.',
+    'شعر زيتون بالفرح، وعرف أن الصدق يجعل القلب خفيفاً وسعيداً.'
+  ];
+  const MEANING = {
+    'شاطئ': 'المكان الذي يلتقي فيه البحر بالرمل.',
+    'جرة': 'إناءٌ من الفخّار نضع فيه الماء أو العسل.',
+    'يختبئ': 'يذهب إلى مكانٍ لا يراه فيه أحد.',
+    'الصدق': 'أن نقول الحقيقة دائماً.',
+    'شجاعة': 'أن تفعل الشيء الصحيح حتى لو كنت خائفاً.',
+    'تشجع': 'صار قلبه قوياً، ولم يعد خائفاً.',
+    'آسف': 'كلمة نقولها عندما نخطئ في حقّ أحد.',
+    'الطين': 'ترابٌ مبلول بالماء، نصنع منه الأواني.'
+  };
+  const N = TEXT.length;
+  // this story has a voiceover and can be personalised (admin flags; «أنت بطل القصة» also needs the package and the parent's permission)
+  const VOICE = true, HERO = true;
+  // read-aloud and word-meaning state, needed as soon as the first page shows
+  const synth = window.speechSynthesis, gloss = $('gloss');
+  let reading = false, timer = null, warned = false;
+  const img = (n) => `img/stories/honest-${String(n).padStart(2, '0')}.jpg`;
+  const shell = '<svg class="orn" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 34c-8 0-14-5-14-12 0-8 7-14 14-14s14 6 14 14c0 7-6 12-14 12z" fill="#F58DA6"/><path d="M20 34V10M13 32l3-21M27 32l-3-21M8 27l6-15M32 27l-6-15" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/></svg>';
+  // words keep their index so the read-aloud can light them up one by one
+  const words = (i) => {
+    let k = 0;
+    return TEXT[i].split(' ').map((tok) => {
+      const m = tok.match(/^\{(.+?)\|(.+?)\}(.*)$/);
+      if (m) return `<button class="w gl" type="button" data-i="${k++}" data-k="${m[2]}">${m[1]}</button>${m[3]}`;
+      return `<span class="w" data-i="${k++}">${tok}</span>`;
+    }).join(' ');
+  };
+  const plain = (i) => TEXT[i].replace(/\{(.+?)\|.+?\}/g, '$1');
+
+  const page = (x) => {
+    if (!x) return '';
+    if (x === 'cover') return `<div class="page"><img src="${img(1)}" alt="" draggable="false"><p class="title"><b>الأرنب الصادق</b><small>حكاية عن الصدق · ${N} صفحات</small></p>${HERO ? '<button class="btn soft hero-me cover-hero" type="button" data-hero><img src="img/I-15.png" alt="">كن أنت بطل القصة</button>' : ''}</div>`;
+    if (x === 'reader') return `<div class="page"><img src="${img(12)}" alt="" draggable="false"></div>`;
+    if (x === 'end') return `<div class="page paper end">${shell}<h3>النهاية</h3><p>أحسنت! أنهيت قصة «الأرنب الصادق».</p><p>هل أنت مستعد لأسئلة صغيرة عن القصة؟</p><button class="btn go" type="button" data-quiz>ابدأ الأسئلة</button></div>`;
+    if (x.p) return `<div class="page"><img src="${img(x.p + 1)}" alt="" draggable="false"></div>`;
+    if (x.t) return `<div class="page paper">${shell}<p class="story" data-p="${x.t}">${words(x.t - 1)}</p><span class="no">${x.t}</span></div>`;
+    if (x.c) return `<div class="page paper combo"><img src="${img(x.c + 1)}" alt="" draggable="false"><p class="story" data-p="${x.c}">${words(x.c - 1)}</p><span class="no">${x.c}</span></div>`;
+    return '';
+  };
+
+  // desktop: closed cover, then text on the right and its picture on the left, then «النهاية»
+  const single = matchMedia('(max-width: 760px)').matches;
+  const pagesOf = (fn) => Array.from({ length: N }, (_, i) => fn(i + 1));
+  const SPREADS = single
+    ? [{ r: 'cover', l: null }, ...pagesOf((i) => ({ r: { c: i }, l: null })), { r: 'end', l: null }]
+    : [{ r: null, l: 'cover' }, ...pagesOf((i) => ({ r: { t: i }, l: { p: i } })), { r: 'end', l: 'reader' }];
+  const LAST = SPREADS.length - 1;
+  const book = $('book');
+  const pages = Viewer.spreadbook({ book, spreads: SPREADS, page, single });
+
+  function status(s) {
+    $('count').textContent = s === 0 ? 'الغلاف' : s === LAST ? 'النهاية' : `الصفحة ${s} من ${N}`;
+    const read = Math.min(s, N) / N;
+    $('track').style.setProperty('--p', read * 100 + '%');
+    book.classList.toggle('closed', !single && s === 0);
+    book.style.setProperty('--sr', Math.min(1, read * 1.6).toFixed(2));
+    book.style.setProperty('--sl', Math.min(1, (1 - read) * 1.6).toFixed(2));
+    $('prev').disabled = s === 0;
+  }
+  let at = 0;
+  function show(s, dir) {
+    at = s; hideGloss(); quiet();
+    pages.show(s, dir); status(s);
+    const nx = SPREADS[s + 1]?.l || SPREADS[s + 1]?.r; if (nx?.p || nx?.c) new Image().src = img((nx.p || nx.c) + 1);
+    if (reading) setTimeout(readPage, single ? 400 : 950); // after the leaf lands
+  }
+
+  // the map and the beach show this story at 60%: page 6
+  const reader = Viewer.pages({ steps: SPREADS.length, key: 'ajyal.story.honest', start: 6, label: (s) => (s === 0 ? 'الغلاف' : s === LAST ? 'النهاية' : `الصفحة ${s}`), onShow: show, onFinish: openQuiz });
+  $('next').addEventListener('click', () => !pages.busy() && reader.next());
+  $('prev').addEventListener('click', () => !pages.busy() && reader.prev());
+  let x0 = null;
+  book.addEventListener('pointerdown', (e) => { x0 = e.target.closest('button') ? null : e.clientX; });
+  addEventListener('pointerup', (e) => { if (x0 === null || pages.busy()) return; const dx = e.clientX - x0; x0 = null; if (dx > 50) reader.next(); else if (dx < -50) reader.prev(); });
+  book.addEventListener('click', (e) => {
+    if (e.target.closest('[data-quiz]')) return openQuiz();
+    if (e.target.closest('[data-hero]')) return heroSoon();
+    const g = e.target.closest('.gl'); if (g) showGloss(g);
+  });
+
+  // ---- word meanings
+  function showGloss(el) {
+    if (reading) stopReading();
+    const k = el.dataset.k, r = el.getBoundingClientRect();
+    $('gloss-w').textContent = el.textContent; $('gloss-m').textContent = MEANING[k] || '';
+    gloss.hidden = false;
+    const w = gloss.offsetWidth, h = gloss.offsetHeight;
+    gloss.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2)) + 'px';
+    gloss.style.top = (r.top - h - 14 > 8 ? r.top - h - 14 : r.bottom + 14) + 'px';
+    $('gloss-hear').onclick = () => speak(`${el.textContent}. ${MEANING[k] || ''}`);
+  }
+  function hideGloss() { gloss.hidden = true; }
+  addEventListener('pointerdown', (e) => { if (!gloss.hidden && !e.target.closest('.gloss, .gl')) hideGloss(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') hideGloss(); });
+
+  // ---- read to me: in production the admin's voiceover file; here the browser's Arabic voice stands in
+  const voice = () => synth?.getVoices().find((v) => v.lang?.toLowerCase().startsWith('ar'));
+  function speak(text, onWord, onEnd) {
+    quiet();
+    const v = voice();
+    if (!v) {
+      if (!warned) { warned = true; reader.toast('لا يوجد صوت عربي على هذا الجهاز، فنعرض تظليل الكلمات فقط'); }
+      // no voice: light the words at a gentle reading pace
+      const n = text.split(' ').length; let i = 0;
+      timer = setInterval(() => { if (i < n) onWord?.(i++); else { clearInterval(timer); onEnd?.(); } }, 420);
+      return;
+    }
+    const u = new SpeechSynthesisUtterance(text);
+    u.voice = v; u.lang = v.lang; u.rate = 0.85;
+    const starts = []; text.split(' ').reduce((p, w) => (starts.push(p), p + w.length + 1), 0);
+    u.onboundary = (e) => { if (e.name === 'word' || e.charIndex >= 0) onWord?.(starts.filter((p) => p <= e.charIndex).length - 1); };
+    u.onend = () => onEnd?.();
+    synth.speak(u);
+  }
+  function quiet() { clearInterval(timer); synth?.cancel(); document.querySelectorAll('.w.on').forEach((w) => w.classList.remove('on')); }
+  function readPage() {
+    const p = book.querySelector('.half.r .story');
+    if (at === LAST) return stopReading(); // the voice stops at «النهاية»; the quiz waits for the child
+    if (!reading || !p || at === 0) return;
+    const i = +p.dataset.p - 1;
+    speak(plain(i), (k) => {
+      p.querySelectorAll('.w.on').forEach((w) => w.classList.remove('on'));
+      p.querySelector(`.w[data-i="${k}"]`)?.classList.add('on');
+    }, () => { if (reading) setTimeout(() => reading && reader.next(), 700); });
+  }
+  synth?.getVoices(); // voices load lazily in some browsers
+  if (!VOICE) $('say').hidden = true;
+  $('say').addEventListener('click', () => {
+    reading = !reading;
+    $('say').setAttribute('aria-pressed', reading);
+    if (reading) { if (at === 0) reader.next(); else readPage(); } else quiet();
+  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && reading) { reading = false; $('say').setAttribute('aria-pressed', 'false'); quiet(); } });
+
+  // ---- quiz: multiple choice, true/false, pick the picture
+  const QUIZ = [
+    { type: 'mcq', q: 'ماذا كسرت كرة زيتون؟', opts: ['جرّة العسل', 'نافذة البيت', 'قارب الصيّاد'], a: 0 },
+    { type: 'tf', q: 'اختبأ زيتون ولم يقل الحقيقة أبداً.', a: 1 },
+    { type: 'pics', q: 'اختر صورة صاحب جرّة العسل.', opts: [{ img: 9, name: 'الدبّ دبدوب' }, { img: 3, name: 'زيتون وسلمى' }, { img: 2, name: 'القرية' }], a: 0 },
+    { type: 'mcq', q: 'ماذا تعلّم زيتون في نهاية القصة؟', opts: ['أن الصدق شجاعة', 'أن يلعب وحده', 'أن يختبئ عندما يخطئ'], a: 0 }
+  ];
+  // XP and the badge come from the gamification settings when the story is eligible
+  const XP = 30;
+  const quiz = $('quiz'), qcard = $('qcard');
+  let qi = 0, score = 0, marks = [];
+  const tick = '<svg viewBox="0 0 24 24" fill="none" stroke="#2E8B2A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+  const cross = '<svg viewBox="0 0 24 24" fill="none" stroke="#C9372C" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const ear = '<button class="hear" type="button" data-hear aria-label="اقرأ السؤال لي"><svg viewBox="0 0 24 24" fill="none" stroke="#1D6FA8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#1D6FA8"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></button>';
+
+  function openQuiz() {
+    reading = false; $('say').setAttribute('aria-pressed', 'false'); quiet(); hideGloss();
+    qi = 0; score = 0; marks = []; quiz.hidden = false; ask();
+  }
+  function ask() {
+    const Q = QUIZ[qi];
+    const dots = QUIZ.map((_, i) => `<i class="${marks[i] === true ? 'yes' : marks[i] === false ? 'nope' : i === qi ? 'at' : ''}"></i>`).join('');
+    let opts;
+    if (Q.type === 'tf') opts = `<div class="opts tf"><button class="opt" data-a="0">${tick}صح</button><button class="opt" data-a="1">${cross}خطأ</button></div>`;
+    else if (Q.type === 'pics') opts = `<div class="opts pics">${Q.opts.map((o, i) => `<button class="opt" data-a="${i}"><img src="${img(o.img)}" alt="">${o.name}</button>`).join('')}</div>`;
+    else opts = `<div class="opts">${Q.opts.map((o, i) => `<button class="opt" data-a="${i}">${o}</button>`).join('')}</div>`;
+    qcard.innerHTML = `<div class="qtop"><img src="img/beach.png" alt=""><div class="dots" aria-label="السؤال ${qi + 1} من ${QUIZ.length}">${dots}</div></div>
+      <div class="qhead"><h2 id="q-t">${Q.q}</h2>${ear}</div>${opts}<p class="fb" id="fb" aria-live="polite"></p>
+      <div class="btns"><button class="btn go" id="q-next" type="button" hidden>${qi < QUIZ.length - 1 ? 'السؤال التالي' : 'شاهد نتيجتك'}</button></div>`;
+    qcard.querySelector('.opt').focus();
+  }
+  function answer(btn) {
+    const Q = QUIZ[qi], pick = +btn.dataset.a, ok = pick === Q.a;
+    marks[qi] = ok; if (ok) score++;
+    qcard.querySelectorAll('.opt').forEach((o) => { o.disabled = true; if (+o.dataset.a === Q.a) o.classList.add('right'); });
+    if (!ok) btn.classList.add('wrong');
+    const right = Q.type === 'tf' ? (Q.a ? 'خطأ' : 'صح') : Q.type === 'pics' ? Q.opts[Q.a].name : Q.opts[Q.a];
+    const fb = $('fb'); fb.className = 'fb ' + (ok ? 'ok' : 'no');
+    fb.textContent = ok ? 'أحسنت! إجابة صحيحة' : `لا بأس، الإجابة الصحيحة: ${right}`;
+    $('q-next').hidden = false; $('q-next').focus();
+  }
+  const heroSoon = () => reader.toast('قريباً: اكتب اسمك واختر صورتك، لتصبح أنت بطل الحكاية');
+  function stopReading() { reading = false; $('say').setAttribute('aria-pressed', 'false'); quiet(); }
+  function result() {
+    const stars = score === QUIZ.length ? 3 : score >= 2 ? 2 : 1, perfect = score === QUIZ.length;
+    const star = (on) => `<svg class="${on ? '' : 'off'}" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="#FFC93C" stroke="#E0A01E" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+    qcard.innerHTML = `<div class="result"><div class="stars" aria-label="${stars} من 3 نجوم">${[0, 1, 2].map((i) => star(i < stars)).join('')}</div>
+      <h2 id="q-t">${score >= 3 ? 'رائع يا يوسف!' : 'أحسنت المحاولة يا يوسف!'}</h2>
+      <p>أجبت عن ${score} من ${QUIZ.length} أسئلة إجابة صحيحة</p>
+      <div class="gains"><span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span>${perfect ? '<span class="gain badge"><img src="img/forest/S-01.png" alt="">شارة جديدة: صديق الحكايات</span>' : ''}</div>
+      <div class="btns">
+        <a class="btn go" href="beach.html">العودة إلى الشاطئ</a>
+        <button class="btn soft" id="q-again" type="button">اقرأ القصة مرة أخرى</button>
+        <button class="btn soft hero-me" id="q-hero" type="button"><img src="img/I-15.png" alt="">كن أنت بطل القصة</button>
+      </div></div>`;
+    $('q-again').addEventListener('click', () => { quiz.hidden = true; reader.go(0); });
+    $('q-hero').addEventListener('click', heroSoon);
+    if (!HERO) $('q-hero').remove();
+    reader.clear(); // the quiz is done: the story is finished
+  }
+  qcard.addEventListener('click', (e) => {
+    const o = e.target.closest('.opt'); if (o && !o.disabled) return answer(o);
+    if (e.target.closest('#q-next')) { qi++; return qi < QUIZ.length ? ask() : result(); }
+    if (e.target.closest('[data-hear]')) speak(QUIZ[qi].q);
+  });
+  // the quiz is a dialog: arrow keys must not turn the pages behind it
+  addEventListener('keydown', (e) => { if (!quiz.hidden && e.key.startsWith('Arrow')) e.stopImmediatePropagation(); }, true);
+})();
+</script>
+</body>
+</html>

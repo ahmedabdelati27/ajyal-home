@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>شاطئ الحكايات · أجيال الصالحية</title>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --sand: #FFF6E6; --go: #2E8B2A; --go-deep: #1F6A1C; --coral: #E0607F; --coral-deep: #B8405F; --sea: #3D96D6; --line: #6B3A1E; --leaf: #5BC236; --edge-x: 32px; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); font-weight: 500; }
+img { display: block; max-width: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* hero: the storybook beach, fading into the sand */
+.hero { position: relative; height: clamp(420px, 36vw, 520px); background: url(img/stories/beach-hero.jpg) center 70% / cover; }
+.hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 150px; background: linear-gradient(rgba(255,246,230,0), var(--sand) 92%); pointer-events: none; }
+.bar { position: absolute; z-index: 3; top: calc(16px + env(safe-area-inset-top, 0px)); left: var(--edge-x); right: var(--edge-x); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #E8CFA6; white-space: nowrap; }
+.pill img { width: 30px; height: 30px; margin: -4px 0; }
+.stats { display: flex; gap: 10px; }
+.isle { position: absolute; z-index: 2; left: 4%; bottom: 6%; width: clamp(230px, 25vw, 370px); animation: float 4.5s ease-in-out infinite; }
+@keyframes float { 50% { translate: 0 -8px; } }
+.say { position: absolute; z-index: 3; left: calc(4% + clamp(200px, 22vw, 330px)); top: 24%; max-width: 250px; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--coral); }
+.say::before { content: ''; position: absolute; left: -16px; bottom: 18px; border: 12px solid transparent; border-right-color: var(--paper); border-left: 0; }
+.head { position: absolute; z-index: 3; right: var(--edge-x); top: 22%; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.head h1 { margin: 0; font-size: clamp(44px, 5.4vw, 78px); font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--coral-deep), 3px 0 0 var(--coral-deep), -3px 0 0 var(--coral-deep), 0 -3px 0 var(--coral-deep), 3px 3px 0 var(--coral-deep), -3px 3px 0 var(--coral-deep), 3px -3px 0 var(--coral-deep), -3px -3px 0 var(--coral-deep); }
+.head p { margin: 0; font-size: 22px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 4px 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.chip { height: 48px; padding: 0 18px; border-radius: 999px; border: 3px solid transparent; background: var(--paper); font-weight: 800; font-size: 17px; box-shadow: 0 4px 0 #E8CFA6; }
+.chip[aria-pressed="true"] { background: linear-gradient(#F4823F, #D6531E); color: var(--paper); border-color: var(--line); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+
+main { position: relative; z-index: 2; max-width: 1280px; margin: -30px auto 0; padding: 0 var(--edge-x) 150px; display: flex; flex-direction: column; gap: 34px; }
+
+/* continue reading */
+.cont { display: flex; align-items: center; gap: 22px; background: var(--paper); border-radius: 32px; padding: 16px 16px 16px 24px; box-shadow: 0 6px 0 #EED6B0; }
+.cont .art { position: relative; width: 196px; height: 112px; border-radius: 22px; overflow: hidden; flex-shrink: 0; }
+.cont .art img { width: 100%; height: 100%; object-fit: cover; }
+.cont .art i { position: absolute; inset: auto 0 0 0; height: 6px; background: rgba(255,255,255,.6); }
+.cont .art i::after { content: ''; display: block; width: 60%; height: 100%; margin-inline-start: 0; background: var(--leaf); }
+.cont .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.cont h2 { margin: 0; font-size: 16px; font-weight: 800; color: var(--coral-deep); }
+.cont b { font-size: 30px; font-weight: 800; line-height: 1.15; }
+.cont small { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.meter { width: 220px; height: 12px; border-radius: 999px; background: #F2E6D2; overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--leaf); }
+.go { display: inline-flex; align-items: center; gap: 10px; height: 64px; padding: 0 30px; border-radius: 999px; background: var(--go); color: var(--paper); text-decoration: none; font-weight: 800; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); flex-shrink: 0; }
+
+.legend { display: flex; gap: 18px; font-size: 15px; font-weight: 700; color: var(--ink-soft); margin-bottom: -18px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend img { width: 26px; height: 26px; }
+
+/* shelves: one per admin category, cards standing on a pier plank */
+.shelf h2 { margin: 0 0 14px; display: flex; align-items: center; gap: 10px; font-size: 30px; font-weight: 800; }
+.shelf h2 svg { width: 40px; height: 40px; flex-shrink: 0; }
+.row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; position: relative; z-index: 1; }
+.plank { height: 22px; margin: -6px -20px 0; border-radius: 12px; background: repeating-linear-gradient(90deg, #C89A66 0 120px, #B98A57 120px 122px), #C89A66; box-shadow: 0 6px 0 #8C6239; }
+.card { display: flex; flex-direction: column; background: var(--paper); border-radius: 24px; overflow: hidden; text-decoration: none; color: var(--ink); box-shadow: 0 6px 0 #EED6B0; transition: transform .2s; }
+.card:hover { transform: translateY(-6px) rotate(-1deg); }
+.cov { position: relative; aspect-ratio: 16 / 9; background: #F2E6D2; }
+.cov img { width: 100%; height: 100%; object-fit: cover; }
+.tag { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: 999px; font-size: 13px; font-weight: 800; }
+.tag.new { background: var(--paper); color: #D0335A; }
+.tag.done { background: #4CB944; color: var(--paper); border: 2px solid var(--paper); }
+.feats { position: absolute; right: 8px; bottom: 8px; display: flex; gap: 6px; }
+.feats span { width: 40px; height: 40px; border-radius: 50%; background: var(--paper); display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18); }
+.feats img { width: 30px; height: 30px; }
+.body { padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 3px; }
+.body b { font-size: 19px; font-weight: 800; line-height: 1.3; }
+.body p { margin: 0; font-size: 15px; font-weight: 600; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.body small { font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.body .meter { width: 100%; height: 8px; margin-top: 4px; }
+
+/* dock: the same game bar as the map */
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a:hover { background: rgba(255,255,255,.25); }
+.dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+
+@media (max-width: 1000px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .say { display: none; } }
+@media (max-width: 760px) {
+  :root { --edge-x: 14px; }
+  .hero { height: auto; padding: 80px var(--edge-x) 40px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .isle { position: relative; left: auto; bottom: auto; width: 200px; order: 2; }
+  .head { position: relative; right: auto; top: auto; align-items: center; text-align: center; order: 1; }
+  .head p { font-size: 17px; }
+  .chips { justify-content: center; order: 3; }
+  .stats .pill:nth-child(n+3), .back span { display: none; }
+  .pill { height: 42px; font-size: 16px; }
+  .cont { flex-wrap: wrap; gap: 14px; padding: 14px; }
+  .cont .art { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .cont b { font-size: 24px; }
+  .meter { width: 120px; }
+  .go { width: 100%; justify-content: center; height: 56px; font-size: 20px; }
+  .row { gap: 12px; }
+  .plank { margin: -6px -8px 0; }
+  .shelf h2 { font-size: 24px; }
+  .body b { font-size: 16px; } .body p { display: none; }
+  .feats span { width: 32px; height: 32px; } .feats img { width: 24px; height: 24px; }
+  .dock a span { display: none; } .dock a { padding: 0 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .isle { animation: none; } .card { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats">
+      <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+      <span class="pill" title="أيام متتالية"><img src="img/forest/I-07.png" alt="">5</span>
+      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">12</span>
+    </div>
+  </div>
+  <img class="isle" src="img/beach.png" alt="السلحفاة سلمى على جزيرة شاطئ الحكايات">
+  <p class="say">أهلاً يا يوسف! أي حكاية نقرأ اليوم؟</p>
+  <div class="head">
+    <h1>شاطئ الحكايات</h1>
+    <p>اقرأ واستمع لقصص ممتعة مع السلحفاة سلمى</p>
+    <div class="chips" role="group" aria-label="تصنيف القصص" id="chips"></div>
+  </div>
+</header>
+
+<main>
+  <section class="cont" aria-labelledby="cont-t">
+    <div class="art" aria-hidden="true"><img src="img/stories/cover-00.jpg" alt=""><i></i></div>
+    <div class="txt">
+      <h2 id="cont-t">أكمل من حيث توقفت</h2>
+      <b>الأرنب الصادق</b>
+      <small>الصفحة 6 من 10 · قصة مسموعة <span class="meter" style="--p:60%"><i></i></span></small>
+    </div>
+    <a class="go" href="story.html?resume=1">أكمل القراءة <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></a>
+  </section>
+
+  <div class="legend" aria-hidden="true">
+    <span><img src="img/forest/I-12.png" alt="">قصة مسموعة</span>
+    <span><img src="img/I-15.png" alt="">أنت بطل القصة</span>
+  </div>
+  <div id="shelves"></div>
+</main>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+
+<script>
+(() => {
+  // a: has a voiceover · hero: can be personalised through «أنت بطل القصة» · status: '' / '40%' / 'done' · fresh: «جديد»
+  const s = (title, about, cover, pages, a, hero, status = '', fresh = false, href = '#') => ({ title, about, cover, pages, a, hero, status, fresh, href });
+  const SHELVES = [
+    { id: 'values', title: 'قيم وأخلاق', items: [
+      s('الأرنب الصادق', 'زيتون يتعلّم أن الصدق شجاعة', 0, 10, true, true, '60%', false, 'story.html?resume=1'),
+      s('السلحفاة الصبورة', 'سلمى تنتظر الزهرة حتى تتفتّح', 1, 8, true, false, 'done'),
+      s('مشاركة الكعكة', 'الفرح يكبر عندما نتقاسمه', 2, 6, false, true, '', true),
+      s('النملة المجتهدة', 'نملة صغيرة وبذرة كبيرة', 3, 8, true, false)
+    ] },
+    { id: 'animals', title: 'حيوانات وأصدقاء', items: [
+      s('صداقة القطة والعصفور', 'صديقان مختلفان يتعلّمان اللعب معاً', 5, 7, true, false),
+      s('الفيل الذي يخاف من الفأر', 'حتى الكبار يخافون أحياناً', 6, 6, false, true, '', true),
+      s('البطريق الذي يحب الدفء', 'بطريق صغير يبحث عن مكان دافئ', 7, 8, true, false, '30%'),
+      s('الحوت الصغير يبحث عن أمه', 'رحلة في البحر الأزرق الكبير', 4, 9, true, false, 'done')
+    ] },
+    { id: 'trips', title: 'مغامرات ورحلات', items: [
+      s('رحلة إلى قاع البحر', 'غوّاصة صفراء بين المرجان', 8, 10, true, false),
+      s('القارب الورقي', 'ضفدع يبحر في الجدول', 9, 6, false, false, 'done'),
+      s('سرّ الجزيرة الملوّنة', 'صندوق غامض على الرمال', 10, 12, false, true, '', true),
+      s('الطائرة الورقية الحمراء', 'دبدوب يطيّر طائرته عالياً', 11, 7, true, false)
+    ] }
+  ];
+  const shell = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12" fill="#FFE1E8"/><path d="M20 30c-6 0-10-4-10-9 0-6 5-10 10-10s10 4 10 10c0 5-4 9-10 9z" fill="#F58DA6"/><path d="M20 30V12M15 29l2-16M25 29l-2-16M11.5 25l4.5-11M28.5 25L24 14" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  const card = (it) => {
+    const going = it.status && it.status !== 'done';
+    const label = [it.title, it.a ? 'مسموعة' : '', it.hero ? 'يمكنك أن تكون بطلها' : '', it.status === 'done' ? 'مكتملة' : going ? 'جارية' : ''].filter(Boolean).join('، ');
+    return `<a class="card" href="${it.href}" aria-label="${label}">
+      <span class="cov"><img src="img/stories/cover-${String(it.cover).padStart(2, '0')}.jpg" alt="">
+        ${it.fresh && !it.status ? '<span class="tag new">جديد</span>' : ''}${it.status === 'done' ? '<span class="tag done">✓ مكتملة</span>' : ''}
+        <span class="feats">${it.a ? '<span title="قصة مسموعة"><img src="img/forest/I-12.png" alt=""></span>' : ''}${it.hero ? '<span title="أنت بطل القصة"><img src="img/I-15.png" alt=""></span>' : ''}</span></span>
+      <span class="body"><b>${it.title}</b><p>${it.about}</p><small>${it.pages} صفحات</small>${going ? `<span class="meter" style="--p:${it.status}"><i></i></span>` : ''}</span></a>`;
+  };
+  const host = document.getElementById('shelves');
+  host.innerHTML = SHELVES.map((sh) => `<section class="shelf" data-id="${sh.id}" aria-label="${sh.title}"><h2>${shell}${sh.title}</h2><div class="row">${sh.items.map(card).join('')}</div><div class="plank" aria-hidden="true"></div></section>`).join('');
+  host.style.cssText = 'display:flex;flex-direction:column;gap:34px';
+
+  // category chips filter the shelves
+  const chips = document.getElementById('chips');
+  chips.innerHTML = [{ id: '', title: 'الكل' }, ...SHELVES].map((c) => `<button class="chip" type="button" data-id="${c.id}" aria-pressed="${c.id === ''}">${c.title}</button>`).join('');
+  chips.addEventListener('click', (e) => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c === b));
+    host.querySelectorAll('.shelf').forEach((sh) => { sh.hidden = !!b.dataset.id && sh.dataset.id !== b.dataset.id; });
+  });
+})();
+</script>
+</body>
+</html>

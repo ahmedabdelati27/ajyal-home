@@ -13,6 +13,8 @@ window.Viewer = (() => {
   function social({ likes, onOpenTalk }) {
     const like = $('like'), drawer = $('drawer'), scrim = $('scrim');
     const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2200); };
+    // pages without interactions (stories) only get the toast
+    if (!like) return { toast, isOpen: () => false, closeTalk() {} };
     const isOpen = () => drawer.classList.contains('open');
     const openTalk = () => { drawer.classList.add('open'); scrim.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); $('msg').focus(); };
     const closeTalk = () => { drawer.classList.remove('open'); scrim.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); $('talk').focus(); };
@@ -120,7 +122,8 @@ window.Viewer = (() => {
 
   // a paged reader (PDF or Flipbook): steps are pages or spreads, label(i) names the place for the child
   // save/load turn a step into what's stored (e.g. a page number) and back
-  function pages({ steps, key, likes, xp = 0, start = 0, label, onShow, save = (i) => i, load = (v) => v }) {
+  // onFinish replaces the well-done card (stories open their quiz instead)
+  function pages({ steps, key, likes, xp = 0, start = 0, label, onShow, onFinish, save = (i) => i, load = (v) => v }) {
     const q = new URLSearchParams(location.search);
     let timeLeft = q.get('demo') === 'timeup' ? 4 : 35 * 60;
     const raw = { get() { try { return +localStorage.getItem(key) || 0; } catch { return 0; } }, set(v) { try { localStorage.setItem(key, String(v)); } catch {} } };
@@ -138,6 +141,8 @@ window.Viewer = (() => {
     const prev = () => { if (!stopped && at > 0) go(at - 1, -1); };
 
     function finish() {
+      // a story keeps its place until the quiz is done, so leaving mid-quiz comes back to it
+      if (onFinish) return onFinish();
       store.set(0);
       // XP only when the admin marked this item as XP-eligible on completion (never just for opening)
       $('xp').hidden = !xp; $('xp-n').textContent = '+' + xp;
@@ -158,19 +163,55 @@ window.Viewer = (() => {
     if (q.get('resume') === '1' || at === 0) $('resume').hidden = true;
     $('go-on').addEventListener('click', () => { $('resume').hidden = true; });
     $('restart').addEventListener('click', () => { $('resume').hidden = true; go(0); });
-    $('again').addEventListener('click', () => { $('done').hidden = true; go(0); });
+    $('again')?.addEventListener('click', () => { $('done').hidden = true; go(0); });
     $('ask').addEventListener('click', (e) => { e.preventDefault(); s.toast('أرسلنا طلبك، وسنخبرك عندما يوافق'); });
 
     addEventListener('keydown', (e) => {
-      if (document.activeElement === $('msg')) return;
+      if (document.activeElement === $('msg') || stopped) return;
       if (e.key === 'ArrowLeft') next();
       if (e.key === 'ArrowRight') prev();
     });
     addEventListener('contextmenu', (e) => { if (e.target.closest('.book')) e.preventDefault(); });
 
     onShow(at, 0);
-    return { next, prev, go, at: () => at, toast: s.toast };
+    return { next, prev, go, at: () => at, toast: s.toast, clear: () => store.set(0) };
   }
 
-  return { $, fmt, social, media, pages };
+  // an open book of spreads {r, l} (see book.css): paints both halves and turns one leaf at a time.
+  // Forward lifts the left page over to the right, like an Arabic book; on phones pages just slide.
+  function spreadbook({ book, spreads, page, single }) {
+    const R = book.querySelector('.half.r'), L = book.querySelector('.half.l');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let shown = null, busy = false;
+    book.classList.toggle('single', single);
+    const paint = (s) => { R.innerHTML = page(spreads[s].r); L.innerHTML = page(spreads[s].l); };
+
+    function turn(from, to) {
+      const a = spreads[from], b = spreads[to], fwd = to > from;
+      busy = true;
+      if (fwd) L.innerHTML = page(b.l); else R.innerHTML = page(b.r);
+      const leaf = document.createElement('div');
+      leaf.className = 'leaf ' + (fwd ? 'to-right' : 'to-left');
+      leaf.innerHTML = `<div class="face front">${page(fwd ? a.l : a.r)}</div><div class="face back">${page(fwd ? b.r : b.l)}</div>`;
+      book.appendChild(leaf);
+      let landed = false;
+      const land = () => { if (landed) return; landed = true; paint(to); leaf.remove(); busy = false; };
+      if (reduce) return land();
+      void leaf.offsetWidth; leaf.classList.add('go');
+      leaf.addEventListener('transitionend', land, { once: true });
+      setTimeout(land, 900); // in case the transition never reports back (background tab)
+    }
+
+    function show(s, dir) {
+      // a key pressed mid-turn: land the current leaf first
+      if (busy) { book.querySelector('.leaf')?.remove(); paint(shown); busy = false; }
+      if (shown === null || !dir || Math.abs(s - shown) !== 1) paint(s);
+      else if (single) { paint(s); R.classList.remove('in'); void R.offsetWidth; R.style.setProperty('--dir', dir > 0 ? -1 : 1); R.classList.add('in'); }
+      else turn(shown, s);
+      shown = s;
+    }
+    return { show, busy: () => busy };
+  }
+
+  return { $, fmt, social, media, pages, spreadbook };
 })();
