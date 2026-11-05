@@ -9,6 +9,8 @@
 :root {
   --sky: #8EDCF0; --sea: #4FC7D4; --ink: #3A2318; --ink-soft: #7A5A48;
   --paper: #FFFFFF; --cream: #FFF7EC; --go: #2E8B2A; --go-deep: #1F6A1C; --gold: #F2A900; --rose: #F0436B; --dock-line: #6B3A1E;
+  /* breathing room between the HUD and the screen edges */
+  --edge-x: 32px; --edge-y: 12px;
   --font: 'Thmanyah Sans', 'Segoe UI', Tahoma, system-ui, sans-serif;
   color-scheme: light;
 }
@@ -65,7 +67,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 
 /* HUD */
 .hud { position: absolute; z-index: 5; }
-.top { top: calc(12px + env(safe-area-inset-top, 0px)); left: calc(12px + env(safe-area-inset-left, 0px)); right: calc(12px + env(safe-area-inset-right, 0px));
+.top { top: calc(var(--edge-y) + env(safe-area-inset-top, 0px)); left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); right: calc(var(--edge-x) + env(safe-area-inset-right, 0px));
   display: flex; align-items: center; justify-content: space-between; gap: 8px; pointer-events: none; }
 .top > * { pointer-events: auto; }
 .pill { display: flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; background: var(--paper); border-radius: 999px; box-shadow: 0 4px 0 #C6E6F7; font-weight: 800; font-size: 18px; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -78,7 +80,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .bell { width: 46px; padding: 0; justify-content: center; position: relative; border: 0; cursor: pointer; }
 .bell b { position: absolute; top: -4px; left: -4px; min-width: 22px; height: 22px; border-radius: 999px; background: var(--rose); color: var(--paper); font-size: 13px; line-height: 22px; text-align: center; border: 2px solid var(--paper); }
 
-.zoom { left: calc(14px + env(safe-area-inset-left, 0px)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; }
+.zoom { left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; }
 .zbtn { width: 58px; height: 58px; border-radius: 20px; border: 0; background: var(--paper); box-shadow: 0 5px 0 #C6E6F7; cursor: pointer;
   display: flex; align-items: center; justify-content: center; }
 .zbtn svg { width: 28px; height: 28px; }
@@ -90,10 +92,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .me, .search { border: 0; cursor: pointer; }
 .search { width: 46px; padding: 0; justify-content: center; }
 /* shortcut to the unfinished story, shown only when its avatar is off-screen */
-.resume { left: calc(14px + env(safe-area-inset-left, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; height: 54px; padding: 4px 16px 4px 4px; border: 0; border-radius: 999px; background: var(--paper); box-shadow: 0 4px 0 #E0A35C; cursor: pointer; font-weight: 800; font-size: 16px; }
+.resume { left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; height: 54px; padding: 4px 16px 4px 4px; border: 0; border-radius: 999px; background: var(--paper); box-shadow: 0 4px 0 #E0A35C; cursor: pointer; font-weight: 800; font-size: 16px; }
 .resume i { width: 46px; height: 46px; padding: 4px; box-sizing: border-box; border-radius: 999px; background: conic-gradient(#5BC236 0 60%, #EFE7DB 60% 100%); }
 .resume img { display: block; width: 100%; height: 100%; border-radius: 999px; border: 2px solid var(--paper); box-sizing: border-box; }
-.time { top: calc(72px + env(safe-area-inset-top, 0px)); left: calc(14px + env(safe-area-inset-left, 0px)); color: #2D6A12; height: 36px; font-size: 16px; box-shadow: 0 3px 0 #8CCDE0; }
+.time { top: calc(var(--edge-y) + 60px + env(safe-area-inset-top, 0px)); left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); color: #2D6A12; height: 36px; font-size: 16px; box-shadow: 0 3px 0 #8CCDE0; }
 .time img { width: 26px; height: 26px; }
 
 /* game-style dock: a glossy amber bar with a thick chocolate outline */
@@ -105,7 +107,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .dock a[aria-current="page"] { background: linear-gradient(#F4823F, #D6531E); color: #FFFFFF; border-color: var(--dock-line); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); text-shadow: 0 1px 0 rgba(107,58,30,.5); }
 .rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--dock-line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
 
-.mission { right: calc(14px + env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: row-reverse; align-items: center; gap: 4px; }
+.mission { right: calc(var(--edge-x) + env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: row-reverse; align-items: center; gap: 4px; }
 .mission .bubble { display: flex; align-items: center; gap: 10px; background: var(--paper); border-radius: 999px; padding: 6px 6px 6px 8px; box-shadow: 0 5px 0 #F1C96B; border: 0; cursor: pointer; text-align: right; }
 .mission .bubble b { display: block; font-size: 19px; }
 .dashes { display: flex; gap: 5px; margin-top: 4px; }
@@ -114,7 +116,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .play { width: 46px; height: 46px; border-radius: 999px; background: var(--go); box-shadow: 0 4px 0 var(--go-deep); display: flex; align-items: center; justify-content: center; }
 .nour { width: 110px; height: 110px; transform: scaleX(-1); -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 70%); mask-image: radial-gradient(circle, #000 52%, transparent 70%); }
 
-.hint { left: 50%; top: calc(76px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: rgba(58,35,24,.82); color: var(--paper); border-radius: 999px; padding: 8px 18px; font-size: 15px; font-weight: 700; white-space: nowrap; transition: opacity .4s; pointer-events: none; }
+.hint { left: 50%; top: calc(var(--edge-y) + 64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: rgba(58,35,24,.82); color: var(--paper); border-radius: 999px; padding: 8px 18px; font-size: 15px; font-weight: 700; white-space: nowrap; transition: opacity .4s; pointer-events: none; }
 .hint.gone { opacity: 0; }
 
 /* region page stand-in */
@@ -131,6 +133,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   .pill { height: 40px; padding: 0 10px; font-size: 16px; }
   .dock a { padding: 0 14px; }
   .zbtn { width: 50px; height: 50px; }
+  :root { --edge-x: 14px; }
   .mission { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
   .hint { white-space: normal; width: max-content; max-width: calc(100% - 32px); text-align: center; border-radius: 18px; }
 }
