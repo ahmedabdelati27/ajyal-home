@@ -26,7 +26,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .world { position: absolute; left: 0; top: 0; width: 1440px; height: 1024px; transform-origin: 0 0; will-change: transform;
 }
 /* the sea and sky run on past both sides of the island so wide screens never show empty bands */
-.sea { position: absolute; left: -718px; top: -27px; width: 2876px; height: 1079px; background: url(img/map-wide.jpg) 0 0 / 100% 100% no-repeat; pointer-events: none; }
+.sea { position: absolute; left: -760px; top: -120px; width: 3001px; height: 1273px; background: url(img/map-wide.jpg) 0 0 / 100% 100% no-repeat; pointer-events: none; }
 .world.flying { transition: transform .38s cubic-bezier(.3,.7,.2,1); }
 .trail { position: absolute; inset: 0; pointer-events: none; }
 
@@ -201,7 +201,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 (() => {
   const W = 1440, H = 1024, MAX_ZOOM = 2.5;
   // painted sea beyond the island, in world units
-  const SEA_L = -718, SEA_R = 2158;
+  const SEA_L = -760, SEA_R = 2241, SEA_T = -120, SEA_B = 1153;
   const ISLANDS = [
     { id: 'ai', title: 'ورشة السحر', sub: 'اصنع قصة أو فيديو أنت بطله', x: 1285, y: 196, c: '#B9A8F7', d: '#7B64DA', chips: [['I-11', 3], ['I-14', 1]] },
     { id: 'peak', title: 'قمة الأبطال', sub: 'شارك في المسابقات', x: 260, y: 330, c: '#FF7A6B', d: '#E0584A' },
@@ -248,7 +248,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     const ww = W * s, wh = H * s;
     const sw = (SEA_R - SEA_L) * s;
     const x = sw <= v.w ? (v.w - ww) / 2 : Math.min(-SEA_L * s, Math.max(v.w - SEA_R * s, c.x));
-    const y = wh <= v.h ? (v.h - wh) / 2 : Math.min(0, Math.max(v.h - wh, c.y));
+    const sh = (SEA_B - SEA_T) * s;
+    const y = sh <= v.h ? (v.h - wh) / 2 : Math.min(-SEA_T * s, Math.max(v.h - SEA_B * s, c.y));
     return { s, x, y };
   }
   function apply(c, animate) {
@@ -268,7 +269,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     const s = cam.s * factor;
     apply({ s, x: px - (px - cam.x) * (s / cam.s), y: py - (py - cam.y) * (s / cam.s) }, animate);
   }
-  const whole = (animate) => { const s = fit(); apply({ s, x: (view().w - W * s) / 2, y: 0 }, animate); };
+  const whole = (animate) => { const s = fit(), v = view(); apply({ s, x: (v.w - W * s) / 2, y: (v.h - H * s) / 2 }, animate); };
 
   // tap an island: the camera flies in, then the region opens
   function flyTo(i) {
