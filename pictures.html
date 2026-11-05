@@ -14,13 +14,13 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
-body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: #24402A; overflow: hidden; -webkit-user-select: none; user-select: none; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: #DCEFD6; overflow: hidden; -webkit-user-select: none; user-select: none; }
 button { font: inherit; color: inherit; cursor: pointer; }
 img { display: block; max-width: none; -webkit-user-drag: none; }
 
-/* the forest, blurred, so the picture is the only sharp thing on screen */
-.bg { position: fixed; inset: -40px; background: url(img/forest/hero.jpg) center / cover; filter: blur(22px) saturate(1.15); }
-.bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(24,52,30,.35), rgba(24,52,30,.6)); }
+/* a quiet forest glade: trees frame the edges, the middle stays plain for the picture */
+.bg { position: fixed; inset: 0; background: url(img/pictures/viewer-bg.jpg) center bottom / cover; }
+@media (max-aspect-ratio: 4 / 5) { .bg { background-image: url(img/pictures/viewer-bg-tall.jpg); } }
 
 .app { position: relative; height: 100dvh; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto auto; gap: 14px;
   padding: calc(var(--edge-y) + env(safe-area-inset-top, 0px)) calc(var(--edge-x) + env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) calc(var(--edge-x) + env(safe-area-inset-left, 0px)); }
@@ -55,14 +55,14 @@ figcaption { position: absolute; left: 50%; bottom: -26px; transform: translateX
 .acts { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
 .act { height: 48px; padding: 0 16px; border: 0; border-radius: 999px; background: rgba(255,255,255,.92); display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 17px; box-shadow: 0 4px 0 rgba(0,0,0,.22); }
 .act svg { width: 26px; height: 26px; }
-.act.views { background: rgba(255,255,255,.2); color: var(--paper); box-shadow: none; cursor: default; }
+.act.views { background: rgba(255,255,255,.6); color: var(--ink-soft); box-shadow: none; cursor: default; }
 .act[aria-pressed="true"] { background: #FFE3EA; color: #D0335A; }
 .act[aria-pressed="true"] .heart { fill: #F0436B; stroke: #D0335A; animation: pop .35s ease-out; }
 @keyframes pop { 50% { transform: scale(1.35); } }
 
 /* film strip: every picture, seen ones get a small tick */
-.strip { justify-self: center; max-width: 100%; display: flex; gap: 8px; padding: 8px; border-radius: 22px; background: rgba(255,255,255,.18); overflow-x: auto; scrollbar-width: none; }
-.thumb { position: relative; flex-shrink: 0; width: 92px; aspect-ratio: 16 / 9; padding: 0; border: 3px solid transparent; border-radius: 14px; overflow: hidden; background: #E6EFDC; opacity: .7; transition: opacity .2s, transform .2s; }
+.strip { justify-self: center; max-width: 100%; display: flex; gap: 8px; padding: 8px; border-radius: 22px; background: rgba(255,255,255,.6); box-shadow: 0 4px 0 rgba(58,35,24,.12); overflow-x: auto; scrollbar-width: none; }
+.thumb { position: relative; flex-shrink: 0; width: 92px; aspect-ratio: 16 / 9; padding: 0; border: 3px solid transparent; border-radius: 14px; overflow: hidden; background: #E6EFDC; opacity: .8; transition: opacity .2s, transform .2s; }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .thumb:hover { opacity: 1; }
 .thumb[aria-current="true"] { opacity: 1; border-color: #FFD98C; transform: translateY(-4px); box-shadow: 0 4px 0 var(--line); }
