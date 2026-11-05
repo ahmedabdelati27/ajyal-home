@@ -30,7 +30,6 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 /* the sea and sky run on past both sides of the island so wide screens never show empty bands */
 .sea { position: absolute; left: -760px; top: -120px; width: 3001px; height: 1273px; background: url(img/map-wide.jpg) 0 0 / 100% 100% no-repeat; pointer-events: none; }
 .world.flying { transition: transform .38s cubic-bezier(.3,.7,.2,1); }
-.trail { position: absolute; inset: 0; pointer-events: none; }
 
 /* islands live in world coordinates; their name ribbons counter-scale so they stay readable at every zoom */
 .isl { position: absolute; width: 0; height: 0; }
@@ -48,8 +47,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .ribbon::before, .ribbon::after { content: ""; position: absolute; top: 9px; width: 24px; height: 31px; background: var(--d); z-index: -1; }
 .ribbon::before { right: -15px; clip-path: polygon(0 0, 100% 0, 72% 50%, 100% 100%, 0 100%); }
 .ribbon::after { left: -15px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 28% 50%); }
-.chip { display: flex; align-items: center; gap: 2px; background: #EEE8FF; color: #5B3CC4; border-radius: 999px; padding: 0 8px; height: 24px; font-size: 14px; }
-.chip img { width: 20px; height: 20px; margin: -3px; }
+.pill img, .dock a img, .lvl img, .zbtn img { max-width: none; flex-shrink: 0; }
 
 .mark { position: absolute; pointer-events: none; border-radius: 999px; border: 4px solid var(--paper); box-sizing: border-box;
   display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; box-shadow: 0 4px 0 rgba(58,35,24,.18); }
@@ -57,6 +55,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .mark.next { left: -78px; top: -63px; width: 42px; height: 42px; background: var(--paper); color: var(--ink); }
 .mark.tip { left: 40px; top: -71px; width: 38px; height: 38px; background: #FFF3C4; box-shadow: 0 3px 0 #F1C96B; animation: twinkle 1.8s ease-in-out infinite; }
 .mark.tip img { width: 26px; height: 26px; }
+.mark.count { width: 44px; height: 44px; background: #EEE8FF; box-shadow: 0 3px 0 #7B64DA; animation: bob 2.6s ease-in-out infinite; }
+.mark.count img { width: 30px; height: 30px; max-width: none; }
+.mark.count b { position: absolute; bottom: -7px; left: -7px; min-width: 22px; height: 22px; padding: 0 4px; box-sizing: border-box; border-radius: 999px; border: 2px solid var(--paper); background: #7B64DA; color: var(--paper); font-size: 13px; line-height: 18px; text-align: center; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.15) rotate(12deg); } }
 .tree { position: absolute; pointer-events: none; filter: drop-shadow(0 4px 3px rgba(58,35,24,.2)); }
 
@@ -138,7 +140,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   .hint { white-space: normal; width: max-content; max-width: calc(100% - 32px); text-align: center; border-radius: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .isl-art, .mark.tip, .here { animation: none; }
+  .isl-art, .mark.tip, .mark.count, .here { animation: none; }
   .world.flying { transition: none; }
 }
 </style>
@@ -148,10 +150,6 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 <div class="stage" id="stage" dir="rtl">
   <div class="world" id="world">
     <div class="sea" aria-hidden="true"></div>
-    <svg class="trail" viewBox="0 0 1440 1024" aria-hidden="true">
-      <path d="M1330 810 C1330 650 1220 520 1130 445 C1170 560 1180 640 1170 735 C1010 700 900 600 760 575" fill="none" stroke="#FFF6E2" stroke-width="20" stroke-linecap="round" opacity=".85"/>
-      <path d="M1330 810 C1330 650 1220 520 1130 445 C1170 560 1180 640 1170 735 C1010 700 900 600 760 575" fill="none" stroke="#F2A900" stroke-width="7" stroke-dasharray="1 18" stroke-linecap="round"/>
-    </svg>
     <div id="islands"></div>
     <button type="button" class="here" id="here" aria-label="أنت هنا: أكمل قصة الأرنب الصادق، أنجزت 60%"><img src="img/avatar.png" alt=""></button>
   </div>
@@ -209,7 +207,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   // painted sea beyond the island, in world units
   const SEA_L = -760, SEA_R = 2241, SEA_T = -120, SEA_B = 1153;
   const ISLANDS = [
-    { id: 'ai', title: 'ورشة السحر', sub: 'اصنع قصة أو فيديو أنت بطله', x: 1285, y: 196, c: '#B9A8F7', d: '#7B64DA', chips: [['I-11', 3], ['I-14', 1]] },
+    { id: 'ai', title: 'ورشة السحر', sub: 'اصنع قصة أو فيديو أنت بطله', x: 1285, y: 196, c: '#B9A8F7', d: '#7B64DA', counts: [['I-11', 3, 44, -92], ['I-14', 1, 84, -44]], aria: 'باقي 3 قصص وفيديو واحد' },
     { id: 'peak', title: 'قمة الأبطال', sub: 'شارك في المسابقات', x: 260, y: 330, c: '#FF7A6B', d: '#E0584A' },
     { id: 'letters', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', x: 790, y: 300, c: '#FFD43B', d: '#E0B000' },
     { id: 'forest', title: 'غابة المعرفة', sub: 'فيديوهات وكتب تعليمية', x: 1130, y: 430, c: '#5CB8F5', d: '#3D96D6', mark: 'done' },
@@ -231,17 +229,19 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     const el = document.createElement('div');
     el.className = 'isl';
     el.style.left = i.x + 'px'; el.style.top = i.y + 'px';
-    const chips = (i.chips || []).map(([icon, n]) => `<span class="chip"><img src="img/${icon}.png" alt="">${n}</span>`).join('');
+    // what is left in the AI workshop floats over its island, like the suggestion stars
+    const counts = (i.counts || []).map(([icon, n, x, y], k) => `<span class="mark count" aria-hidden="true" style="left:${x}px;top:${y}px;animation-delay:-${k * .9}s"><img src="img/${icon}.png" alt=""><b>${n}</b></span>`).join('');
     const trees = (i.trees || []).map(([x, y, s, img]) => `<img class="tree" src="img/${img}.png" alt="" style="left:${x - 76}px;top:${y - 79}px;width:${s}px;height:${s}px">`).join('');
     el.innerHTML = `
-      <button type="button" class="isl-hit" aria-label="${i.title}، ${i.sub}"></button>
+      <button type="button" class="isl-hit" aria-label="${i.title}، ${i.sub}${i.aria ? '. ' + i.aria : ''}"></button>
       <span class="isl-shadow"></span>
       <span class="isl-art"><img src="img/${i.id}.png" alt="" draggable="false"></span>
       ${trees}
       ${i.mark === 'done' ? '<span class="mark done" aria-hidden="true">✓</span>' : ''}
       ${i.mark === 'next' ? '<span class="mark next" aria-hidden="true">3</span>' : ''}
       ${i.tip ? '<span class="mark tip" aria-hidden="true"><img src="img/I-15.png" alt=""></span>' : ''}
-      <span class="ribbon" style="--c:${i.c};--d:${i.d}">${i.title}${chips}</span>`;
+      ${counts}
+      <span class="ribbon" style="--c:${i.c};--d:${i.d}">${i.title}</span>`;
     el.querySelector('.isl-hit').addEventListener('click', (e) => { if (!stage.dataset.moved) flyTo(i); });
     box.appendChild(el);
   }
