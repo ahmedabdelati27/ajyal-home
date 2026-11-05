@@ -61,7 +61,7 @@
     <section class="scene fox-up" id="scene" aria-label="المزرعة">
       <div class="hud" aria-live="polite"><span id="stage-label"></span><span id="count"></span></div>
       <div id="play"></div>
-      <div class="fox" aria-live="polite"><img src="img/games.png" alt=""><p id="tip"></p></div>
+      <div class="fox" aria-live="polite"><img src="img/games/fox.png" alt=""><p id="tip"></p></div>
       <div class="over" id="over" hidden></div>
     </section>
   </main>
@@ -79,7 +79,7 @@
 
 <div class="done stop" id="stop" hidden>
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
-    <img class="owl" src="img/games.png" alt="">
+    <img class="owl" src="img/games/fox.png" alt="">
     <h2 id="stop-t">انتهى وقت اليوم</h2>
     <p>حفظنا مكانك عند <b id="kept">البداية</b>، وتكمل من هنا في المرة القادمة</p>
     <div class="btns">
@@ -100,9 +100,9 @@
   const { play, over, scene, tip, nudge, pop, cheer, result, miss } = Game.kit();
   // the same two mechanics as «نظّف البحر» with other data: drag each food to its animal, then tap to fill the bowls
   const ANIMALS = [
-    { id: 'rabbit', name: 'الأرنب', img: 'an-rabbit', food: 'lettuce', x: 20 },
-    { id: 'cat', name: 'القطة', she: true, img: 'an-cat', food: 'fish', x: 40 },
-    { id: 'hen', name: 'الدجاجة', she: true, img: 'an-hen', food: 'corn', x: 60 },
+    { id: 'rabbit', name: 'الأرنب', img: 'an-rabbit', food: 'lettuce', x: 26 },
+    { id: 'cat', name: 'القطة', she: true, img: 'an-cat', food: 'fish', x: 44 },
+    { id: 'hen', name: 'الدجاجة', she: true, img: 'an-hen', food: 'corn', x: 62 },
     { id: 'sheep', name: 'الخروف', img: 'an-sheep', food: 'grass', x: 80 }
   ];
   const FOOD = { lettuce: { img: 'fd-lettuce', name: 'الخس' }, fish: { img: 'fd-fish', name: 'السمك' }, corn: { img: 'fd-corn', name: 'الحبوب' }, grass: { img: 'fd-grass', name: 'العشب' } };
