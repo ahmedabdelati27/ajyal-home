@@ -57,14 +57,15 @@ h2.sec small { font-size: 17px; font-weight: 700; color: var(--ink-soft); }
 
 /* the two things to do here: draw freely, or color a picture */
 .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.mode { position: relative; display: flex; align-items: center; gap: 22px; min-height: 190px; padding: 22px 30px; border-radius: 34px; color: var(--paper); text-decoration: none; overflow: hidden; box-shadow: 0 8px 0 rgba(0,0,0,.18); transition: transform .2s; }
+/* each card is an illustration: the art on the left, the words on the calm right side */
+.mode { position: relative; display: flex; align-items: center; min-height: 260px; padding: 26px 34px; border: 5px solid var(--paper); border-radius: 36px; text-decoration: none; overflow: hidden; background: var(--art) left center / cover no-repeat; box-shadow: 0 8px 0 var(--edge), 0 16px 30px rgba(0,0,0,.12); transition: transform .2s; }
 .mode:hover { transform: translateY(-5px) rotate(-.6deg); }
-.mode.draw { background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.25), transparent 40%), linear-gradient(135deg, #7B6CF0, #B36CE0); }
-.mode.paint { background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.25), transparent 40%), linear-gradient(135deg, #FF8A5B, #F0508E); }
-.mode svg.art { width: 140px; height: 140px; flex-shrink: 0; filter: drop-shadow(0 6px 6px rgba(0,0,0,.18)); }
-.mode b { display: block; font-size: 38px; font-weight: 800; text-shadow: 0 3px 0 rgba(0,0,0,.15); }
-.mode small { display: block; margin-top: 6px; font-size: 19px; font-weight: 700; opacity: .95; line-height: 1.5; }
-.mode .cta { position: absolute; left: 26px; bottom: 22px; display: inline-flex; align-items: center; gap: 8px; height: 50px; padding: 0 22px; border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 19px; font-weight: 800; box-shadow: 0 4px 0 rgba(0,0,0,.15); }
+.mode.draw { --art: url(img/colors/mode-draw.jpg); --ink-on: #3E3290; --deep: #6656D8; --edge: #B9AEF2; }
+.mode.paint { --art: url(img/colors/mode-paint.jpg); --ink-on: #9E2A5E; --deep: #E0559A; --edge: #F5B9CF; }
+.mode span.txt { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; max-width: 48%; }
+.mode b { display: block; font-size: 42px; font-weight: 800; line-height: 1.1; color: var(--ink-on); }
+.mode small { display: block; font-size: 19px; font-weight: 700; line-height: 1.5; color: var(--ink); }
+.mode .cta { display: inline-flex; align-items: center; gap: 8px; height: 54px; margin-top: 6px; padding: 0 24px; border-radius: 999px; background: var(--deep); color: var(--paper); font-size: 20px; font-weight: 800; box-shadow: 0 5px 0 var(--ink-on); }
 
 /* the coloring pictures */
 .chips { display: flex; gap: 10px; margin: 0 0 18px; }
@@ -130,14 +131,10 @@ h2.sec small { font-size: 17px; font-weight: 700; color: var(--ink-soft); }
 
   <section class="modes" aria-label="ماذا تفعل">
     <a class="mode draw" href="draw.html">
-      <svg class="art" viewBox="0 0 140 140" aria-hidden="true"><rect x="20" y="16" width="100" height="108" rx="14" fill="#FFFFFF"/><path d="M36 92c12-30 26-38 36-22s20 10 32-14" fill="none" stroke="#F0508E" stroke-width="7" stroke-linecap="round"/><circle cx="48" cy="46" r="10" fill="#FFC93C"/><path d="M96 104l26-26 8 8-26 26-12 4z" fill="#7B6CF0" stroke="#4B3F93" stroke-width="3" stroke-linejoin="round"/></svg>
-      <span><b>ارسم بحرية</b><small>لوحة بيضاء وأقلام وألوان،<br>ارسم ما تحب</small></span>
-      <span class="cta">ابدأ الرسم</span>
+      <span class="txt"><b>ارسم بحرية</b><small>لوحة بيضاء وأقلام وألوان،<br>ارسم ما تحب</small><span class="cta">ابدأ الرسم <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span></span>
     </a>
     <a class="mode paint" href="#pics">
-      <svg class="art" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="54" fill="#FFFFFF"/><circle cx="50" cy="52" r="11" fill="#E53935"/><circle cx="78" cy="42" r="11" fill="#FDD835"/><circle cx="98" cy="64" r="11" fill="#4FC3F7"/><circle cx="44" cy="82" r="11" fill="#8BC34A"/><path d="M74 84c8 0 14 6 14 14s-8 14-18 10" fill="#F4E9DC" stroke="#C9AE8C" stroke-width="3"/></svg>
-      <span><b>لوّن رسمة</b><small>اختر رسمة جاهزة،<br>واضغط على أي جزء لتلوّنه</small></span>
-      <span class="cta">اختر رسمة</span>
+      <span class="txt"><b>لوّن رسمة</b><small>اختر رسمة جاهزة،<br>واضغط على أي جزء لتلوّنه</small><span class="cta">اختر رسمة <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span></span>
     </a>
   </section>
 
