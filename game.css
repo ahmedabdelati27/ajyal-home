@@ -44,16 +44,20 @@
 @keyframes fly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
 
 /* the fox talks in a bubble at the corner, and steps up when the tray is out */
-.fox { position: absolute; z-index: 6; left: 1.5%; bottom: 2%; display: flex; align-items: flex-end; gap: .6cqw; pointer-events: none; }
+.fox { position: absolute; z-index: 6; left: 1.5%; bottom: 2%; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: .6cqw; pointer-events: none; }
 .fox img { width: 15cqw; height: 15cqw; object-fit: contain; transform-origin: 50% 100%; animation: idle 3.2s ease-in-out infinite; }
 @keyframes idle { 50% { transform: translateY(-.6cqh) rotate(-2deg); } }
 .fox p { margin: 0 0 9cqh; max-width: 26cqw; padding: 1.2cqh 1.6cqw; border-radius: 2cqw; background: #FFFFFF; font-size: 1.9cqw; font-weight: 800; line-height: 1.4; box-shadow: 0 .6cqh 0 #E2762E; }
 .fox p:empty { display: none; }
+/* the fox faces right, so his words sit in front of him with a little tail toward his mouth */
+.fox p { position: relative; }
+.fox p::before { content: ''; position: absolute; left: -1cqw; bottom: 1.4cqh; border: .9cqw solid transparent; border-right-color: #FFFFFF; border-left: 0; }
 .lift .fox { bottom: 22%; }
 /* scenes whose pieces fill the ground: the fox stands in the corner with his words above his head */
 .fox-up .fox { flex-direction: column-reverse; align-items: flex-end; gap: .4cqh; }
 .fox-up .fox img { width: 12cqw; height: 12cqw; }
-.fox-up .fox p { margin: 0; max-width: 22cqw; }
+.fox-up .fox p { margin: 0 0 0 5cqw; max-width: 22cqw; }
+.fox-up .fox p::before { left: 3cqw; bottom: -.9cqw; border: .9cqw solid transparent; border-top-color: #FFFFFF; border-bottom: 0; }
 
 /* the ordered steps of a stage, ticked one by one */
 .todo { position: absolute; z-index: 5; top: 13cqh; right: 2%; margin: 0; padding: 1.2cqh 1.2cqw; list-style: none; display: flex; flex-direction: column; gap: 1cqh; border-radius: 2cqw; background: rgba(255,255,255,.85); box-shadow: 0 .6cqh 0 rgba(0,0,0,.12); pointer-events: none; }
@@ -84,9 +88,10 @@
   .fox p { font-size: 3.8cqw; max-width: 52cqw; margin-bottom: 8cqh; }
   .lift .fox { bottom: 27%; }
   /* scenes with a big piece in the middle: the fox talks from the top instead */
-  .fox-top .fox, .fox-up .fox { top: 9cqh; bottom: auto; flex-direction: row; align-items: center; }
+  .fox-top .fox, .fox-up .fox { top: 9cqh; bottom: auto; flex-direction: row-reverse; align-items: center; }
   .fox-top .fox img, .fox-up .fox img { width: 14cqw; height: 14cqw; }
   .fox-top .fox p, .fox-up .fox p { margin: 0; max-width: 70cqw; }
+  .fox p::before, .fox-up .fox p::before { left: -1.6cqw; bottom: auto; top: 50%; margin-top: -1.6cqw; border: 1.6cqw solid transparent; border-right-color: #FFFFFF; border-left: 0; }
   .todo { display: none; }
   .over .box2 { width: 92%; } .over h2 { font-size: 7cqw; } .over p, .how span { font-size: 4cqw; } .how img { width: 9cqw; height: 9cqw; } .over .btn { font-size: 4.2cqw; } .gain { font-size: 4cqw; } .gain img { width: 7cqw; height: 7cqw; }
 }
