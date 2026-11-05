@@ -285,7 +285,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     setTimeout(() => openRegion(i), reduce.matches ? 0 : 380);
   }
   const region = document.getElementById('region');
+  // regions that already have their own screen
+  const PAGES = { forest: 'forest.html' };
   function openRegion(i) {
+    if (PAGES[i.id]) { location.href = PAGES[i.id]; return; }
     document.getElementById('rg-art').src = `img/${i.id}.png`;
     const t = document.getElementById('rg-title');
     t.textContent = i.title; t.style.setProperty('--c', i.c); t.style.setProperty('--d', i.d);
