@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>البومة الحكيمة · غابة المعرفة</title>
+<link rel="stylesheet" href="viewer.css">
+<style>
+/* PDF / e-book: one paper page at a time, arrows on both sides */
+.stage { min-height: 0; display: flex; align-items: center; justify-content: center; gap: 26px; }
+.book { position: relative; height: 100%; aspect-ratio: 1 / 1.3; max-width: calc(100% - 2 * (80px + 26px)); container-type: size; }
+.paper { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 4cqh; padding: 6cqw 6cqw 4cqw; border-radius: 18px; background: #FFFDF8; box-shadow: 0 8px 0 rgba(58,35,24,.14), 0 22px 40px rgba(0,0,0,.18); overflow: hidden; }
+.paper.in { animation: in .3s ease-out both; }
+@keyframes in { from { opacity: 0; transform: translateX(calc(var(--dir) * 30px)); } to { opacity: 1; transform: none; } }
+.ill { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 3cqw; pointer-events: none; }
+.txt { margin: 0; font-size: 6cqw; font-weight: 700; line-height: 1.75; text-wrap: pretty; }
+.num { margin-top: auto; text-align: center; font-size: 3.4cqw; font-weight: 800; color: var(--ink-soft); }
+/* cover and last page */
+.paper.cover { background: linear-gradient(#FFF4D9, #FFFDF8 60%); }
+.paper.cover h2 { margin: 2cqh 0 0; font-size: 11cqw; font-weight: 800; line-height: 1.2; color: #2F6B2A; text-align: center; }
+.paper.cover .by { margin: 0; text-align: center; font-size: 4.4cqw; font-weight: 700; color: var(--ink-soft); }
+.paper.end { justify-content: center; align-items: center; text-align: center; background: linear-gradient(#FFFDF8, #EAF6DF); }
+.paper.end img { width: 46cqw; height: 46cqw; }
+.paper.end h2 { margin: 0; font-size: 12cqw; font-weight: 800; color: #2F6B2A; }
+.paper.end p { margin: 0; font-size: 5.6cqw; font-weight: 700; }
+
+/* pager: where am I, and a zoom for older readers */
+.pager { justify-self: center; display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 8px 0 18px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(58,35,24,.15); }
+.pager b { font-size: 18px; font-weight: 800; white-space: nowrap; }
+.track { width: 180px; height: 10px; border-radius: 999px; background: #E6EFDC; overflow: hidden; }
+.track i { display: block; height: 100%; width: var(--p, 10%); margin-inline-start: 0; border-radius: 999px; background: var(--leaf); transition: width .3s; }
+.zoom { height: 42px; padding: 0 14px; border: 0; border-radius: 999px; background: #FFF1D6; display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 16px; }
+.zoom svg { width: 22px; height: 22px; }
+
+/* zoomed: the page fills the width and scrolls */
+.app.zoomed .stage { align-items: flex-start; overflow-y: auto; }
+.app.zoomed .book { height: auto; width: min(860px, 100%); max-width: 100%; }
+.app.zoomed .arrow { position: sticky; top: 40%; }
+
+.resume { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; background: rgba(30,50,30,.35); }
+.resume[hidden] { display: none; }
+.resume > div { background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
+.resume p b { color: var(--go); }
+.resume .btns { margin: 0; }
+.resume .btn { gap: 8px; }
+.resume .btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+.stop .card h2 { color: #C46A00; }
+
+@media (max-width: 760px) {
+  .stage { position: relative; gap: 0; }
+  .book { height: auto; width: 100%; max-width: 100%; max-height: 100%; }
+  .arrow { position: absolute; z-index: 2; width: 52px; height: 52px; top: 50%; margin-top: -26px; }
+  .arrow svg { width: 26px; height: 26px; }
+  .arrow.prev { right: -6px; } .arrow.next { left: -6px; }
+  .track { width: 90px; }
+  .zoom span { display: none; }
+  .resume > div { margin: 0 12px; padding: 18px 16px; }
+  .resume .btns { gap: 8px; }
+  .resume .btn { height: 46px; padding: 0 16px; font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app" id="app">
+  <header class="top">
+    <a class="pill back" href="forest.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>غابة المعرفة</span></a>
+    <div class="ttl"><img src="img/forest/I-11.png" alt=""><h1>البومة الحكيمة</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <button class="arrow prev" id="prev" type="button" aria-label="الصفحة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="book" id="book" aria-live="polite"></div>
+    <button class="arrow next" id="next" type="button" aria-label="الصفحة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  </main>
+
+  <div class="pager">
+    <b id="count">صفحة 1 من 10</b>
+    <span class="track" aria-hidden="true"><i id="track"></i></span>
+    <button class="zoom" id="zoom" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M10.5 7.5v6M7.5 10.5h6"/></svg><span>تكبير</span></button>
+  </div>
+
+  <div class="acts">
+    <button class="act" id="like" type="button" aria-pressed="false" aria-label="إعجاب"><svg viewBox="0 0 24 24" class="heart" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/></svg><span id="likes">211</span></button>
+    <button class="act" id="talk" type="button" aria-label="التعليقات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg><span>18</span><span class="lbl">تعليق</span></button>
+    <button class="act" id="share" type="button" aria-label="شارك مع أصدقائك"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M14 5l6 6-6 6M20 11H10a6 6 0 0 0-6 6v1"/></svg><span class="lbl">شارك</span></button>
+    <span class="act views" aria-label="1,530 قراءة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>1,530</span>
+  </div>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">الصفحة 1</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.5a8 8 0 1 1-7.4 4.9"/><path d="M14 1.5v6h-6"/></svg>من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="التعليقات" aria-hidden="true">
+  <header><h2>التعليقات · 18</h2><button class="x" id="close" type="button" aria-label="إغلاق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A2318" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="list">
+    <div class="c"><img src="img/avatar.png" alt=""><div><b>سلمى</b><span>أحب نوّارة لأنها ذكية ولطيفة</span></div></div>
+    <div class="c"><img src="img/avatar.png" alt=""><div><b>عبدالله</b><span>الفأر اعتذر، هذا تصرف جميل</span></div></div>
+  </div>
+  <p class="note">نراجع كل تعليق قبل أن يظهر، لنبقى لطفاء مع بعض.</p>
+  <form class="write" id="write"><input id="msg" placeholder="اكتب تعليقك…" maxlength="120" aria-label="اكتب تعليقك"><button type="submit">أرسل</button></form>
+</aside>
+
+<div class="done" id="done" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="done-t">
+    <img class="owl" src="img/forest/owl-island.png" alt="">
+    <h2 id="done-t">أحسنت يا يوسف!</h2>
+    <p>قرأت كتاب «البومة الحكيمة» كله</p>
+    <span class="xp" id="xp" hidden><img src="img/forest/I-06.png" alt=""><b id="xp-n">+20</b> نقطة</span>
+    <div class="btns">
+      <a class="btn go" href="forest.html">العودة إلى الغابة</a>
+      <button class="btn soft" id="again" type="button">اقرأه من جديد</button>
+    </div>
+    <div class="more">
+      <h3>كتب قد تعجبك</h3>
+      <div>
+        <a href="flipbook.html"><img src="img/forest/t07.jpg" alt=""><span>لماذا يتغير شكل القمر؟</span></a>
+        <a href="#"><img src="img/forest/t12.jpg" alt=""><span>كيف نتنفس؟</span></a>
+        <a href="#"><img src="img/forest/t05.jpg" alt=""><span>رحلة النحلة</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/forest/owl-island.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">الصفحة 1</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  // in production these pages come from the PDF the admin uploads
+  const PAGES = [
+    { cover: true },
+    { img: 'owl-02', text: 'في قلب غابة المعرفة، تعيش بومةٌ حكيمة اسمها نوّارة، في بيتٍ صغير فوق شجرةٍ كبيرة.' },
+    { img: 'owl-03', text: 'تحبّ نوّارة الكتب كثيراً، وتقرأ كل ليلة تحت ضوء القمر.' },
+    { img: 'owl-04', text: 'في الصباح، جاء السنجاب الصغير يبكي: لقد ضاع البلّوط الذي جمعته!' },
+    { img: 'owl-05', text: 'قالت نوّارة: لا تحزن، لنبحث معاً، ولننظر جيداً حولنا.' },
+    { img: 'owl-06', text: 'وجدا آثار أقدامٍ صغيرة على التراب، فتتبّعاها خطوةً خطوة.' },
+    { img: 'owl-07', text: 'وصلت الآثار إلى بيت الفأر الصغير، وكان يجمع البلّوط للشتاء.' },
+    { img: 'owl-08', text: 'اعتذر الفأر، وأعاد البلّوط إلى السنجاب، وصارا صديقين.' },
+    { img: 'owl-09', text: 'قالت نوّارة: الحكمة أن نفكّر بهدوء، وأن نساعد بعضنا دائماً.' },
+    { end: true }
+  ];
+  const book = $('book'), N = PAGES.length;
+
+  function render(i, dir) {
+    const p = PAGES[i];
+    let html;
+    if (p.cover) html = `<div class="paper cover"><img class="ill" src="img/books/owl-01.jpg" alt=""><h2>البومة الحكيمة</h2><p class="by">كتاب مصوّر · ${N} صفحات</p></div>`;
+    else if (p.end) html = `<div class="paper end"><img src="img/forest/owl-island.png" alt=""><h2>النهاية</h2><p>ماذا تفعل أنت عندما يضيع منك شيء؟</p></div>`;
+    else html = `<div class="paper"><img class="ill" src="img/books/${p.img}.jpg" alt=""><p class="txt">${p.text}</p><span class="num">${i + 1}</span></div>`;
+    book.innerHTML = html;
+    if (dir) { const el = book.firstChild; el.style.setProperty('--dir', dir > 0 ? -1 : 1); el.classList.add('in'); }
+    $('count').textContent = `صفحة ${i + 1} من ${N}`;
+    $('track').style.setProperty('--p', ((i + 1) / N) * 100 + '%');
+    $('prev').disabled = i === 0;
+    const nx = PAGES[i + 1]; if (nx?.img) new Image().src = `img/books/${nx.img}.jpg`;
+    if ($('app').classList.contains('zoomed')) document.querySelector('.stage').scrollTop = 0;
+  }
+
+  const reader = Viewer.pages({ steps: N, key: 'ajyal.book.owl', likes: 211, label: (i) => `الصفحة ${i + 1}`, onShow: render });
+  $('next').addEventListener('click', reader.next);
+  $('prev').addEventListener('click', reader.prev);
+
+  // swipe: in RTL, dragging to the right turns to the next page
+  let x0 = null;
+  book.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+  addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (dx > 50) reader.next(); else if (dx < -50) reader.prev(); });
+
+  $('zoom').addEventListener('click', () => {
+    const on = $('app').classList.toggle('zoomed');
+    $('zoom').setAttribute('aria-pressed', on);
+    $('zoom').querySelector('span').textContent = on ? 'تصغير' : 'تكبير';
+  });
+})();
+</script>
+</body>
+</html>

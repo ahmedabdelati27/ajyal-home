@@ -118,5 +118,59 @@ window.Viewer = (() => {
     return { toggle, toast: s.toast };
   }
 
-  return { $, fmt, social, media };
+  // a paged reader (PDF or Flipbook): steps are pages or spreads, label(i) names the place for the child
+  // save/load turn a step into what's stored (e.g. a page number) and back
+  function pages({ steps, key, likes, xp = 0, start = 0, label, onShow, save = (i) => i, load = (v) => v }) {
+    const q = new URLSearchParams(location.search);
+    let timeLeft = q.get('demo') === 'timeup' ? 4 : 35 * 60;
+    const raw = { get() { try { return +localStorage.getItem(key) || 0; } catch { return 0; } }, set(v) { try { localStorage.setItem(key, String(v)); } catch {} } };
+    const store = { get: () => (raw.get() ? load(raw.get()) : 0), set: (i) => raw.set(i ? save(i) : 0) };
+    const s = social({ likes });
+    // a finished book starts over
+    const saved = store.get();
+    let at = saved > 0 && saved < steps ? saved : start, stopped = false;
+
+    function go(i, dir = i >= at ? 1 : -1) {
+      at = Math.max(0, Math.min(steps - 1, i));
+      store.set(at); onShow(at, dir);
+    }
+    const next = () => { if (stopped) return; at < steps - 1 ? go(at + 1, 1) : finish(); };
+    const prev = () => { if (!stopped && at > 0) go(at - 1, -1); };
+
+    function finish() {
+      store.set(0);
+      // XP only when the admin marked this item as XP-eligible on completion (never just for opening)
+      $('xp').hidden = !xp; $('xp-n').textContent = '+' + xp;
+      $('done').hidden = false; $('again').focus();
+    }
+    // reading time counts only while the page is on screen
+    const clock = setInterval(() => {
+      if (document.hidden || stopped) return;
+      timeLeft -= 1; $('left').textContent = Math.max(0, Math.ceil(timeLeft / 60)) + ' د';
+      if (timeLeft > 0) return;
+      stopped = true; clearInterval(clock); store.set(at);
+      if (s.isOpen()) s.closeTalk();
+      $('kept').textContent = label(at); $('left').textContent = '0 د';
+      $('stop').hidden = false; $('ask').focus();
+    }, 1000);
+
+    $('at').textContent = label(at);
+    if (q.get('resume') === '1' || at === 0) $('resume').hidden = true;
+    $('go-on').addEventListener('click', () => { $('resume').hidden = true; });
+    $('restart').addEventListener('click', () => { $('resume').hidden = true; go(0); });
+    $('again').addEventListener('click', () => { $('done').hidden = true; go(0); });
+    $('ask').addEventListener('click', (e) => { e.preventDefault(); s.toast('أرسلنا طلبك، وسنخبرك عندما يوافق'); });
+
+    addEventListener('keydown', (e) => {
+      if (document.activeElement === $('msg')) return;
+      if (e.key === 'ArrowLeft') next();
+      if (e.key === 'ArrowRight') prev();
+    });
+    addEventListener('contextmenu', (e) => { if (e.target.closest('.book')) e.preventDefault(); });
+
+    onShow(at, 0);
+    return { next, prev, go, at: () => at, toast: s.toast };
+  }
+
+  return { $, fmt, social, media, pages };
 })();

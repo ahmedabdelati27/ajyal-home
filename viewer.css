@@ -30,6 +30,14 @@ img { display: block; max-width: none; -webkit-user-drag: none; }
 .ttl h1 { margin: 0; font-size: 34px; font-weight: 800; color: var(--paper); text-shadow: 0 3px 0 #2F6B2A, 2px 0 0 #2F6B2A, -2px 0 0 #2F6B2A, 0 -2px 0 #2F6B2A; white-space: nowrap; }
 .count { height: 36px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.92); display: flex; align-items: center; font-weight: 800; font-size: 17px; }
 
+/* big amber arrows for paging (pictures, books) */
+.arrow { width: 80px; height: 80px; flex-shrink: 0; border: 4px solid var(--line); border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line); transition: transform .15s; }
+.arrow:hover { transform: scale(1.06); }
+.arrow:active { transform: translateY(3px); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), 0 2px 0 var(--line); }
+.arrow:disabled { opacity: .45; cursor: default; transform: none; }
+.arrow svg { width: 40px; height: 40px; }
+
 /* the media sits in a thick white frame */
 .frame-in { position: relative; width: 100%; aspect-ratio: 16 / 9; border: 10px solid var(--paper); border-radius: 30px; overflow: hidden; background: #E6EFDC; box-shadow: 0 10px 0 rgba(0,0,0,.25), 0 24px 40px rgba(0,0,0,.25); touch-action: pan-y; }
 
@@ -92,7 +100,8 @@ img { display: block; max-width: none; -webkit-user-drag: none; }
   .top { grid-template-columns: auto 1fr auto; }
   .back span, .ttl img { display: none; }
   .ttl { flex-direction: column; gap: 4px; }
-  .ttl h1 { font-size: 24px; }
+  .ttl { min-width: 0; }
+  .ttl h1 { font-size: 22px; white-space: normal; text-align: center; line-height: 1.15; text-wrap: balance; }
   .count { height: 28px; font-size: 14px; }
   .frame-in { border-width: 6px; border-radius: 22px; }
   .act span.lbl { display: none; }
@@ -100,3 +109,6 @@ img { display: block; max-width: none; -webkit-user-drag: none; }
   .act { padding: 0 12px; height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* no printing the content */
+@media print { body { display: none; } }

@@ -13,12 +13,6 @@
 .frame-in img.in { animation: in .32s ease-out both; }
 @keyframes in { from { opacity: 0; transform: translateX(calc(var(--dir) * 40px)); } to { opacity: 1; transform: none; } }
 figcaption { position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%); background: var(--paper); border-radius: 999px; padding: 6px 28px 8px; font-size: 30px; font-weight: 800; white-space: nowrap; box-shadow: 0 5px 0 #3D96D6; }
-.arrow { width: 80px; height: 80px; flex-shrink: 0; border: 4px solid var(--line); border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center;
-  box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line); transition: transform .15s; }
-.arrow:hover { transform: scale(1.06); }
-.arrow:active { transform: translateY(3px); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), 0 2px 0 var(--line); }
-.arrow:disabled { opacity: .45; cursor: default; transform: none; }
-.arrow svg { width: 40px; height: 40px; }
 
 
 /* film strip: every picture, seen ones get a small tick */

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لماذا يتغير شكل القمر؟ · غابة المعرفة</title>
+<link rel="stylesheet" href="viewer.css">
+<style>
+/* Flipbook: an open book, two facing pages; the left page turns over to the right */
+.stage { min-height: 0; display: flex; align-items: center; justify-content: center; gap: 26px; }
+.book { position: relative; height: 100%; aspect-ratio: 3 / 2; max-width: calc(100% - 2 * (80px + 26px)); perspective: 2800px; container-type: size; }
+.half { position: absolute; top: 0; bottom: 0; width: 50%; }
+.half.r { right: 0; } .half.l { left: 0; }
+.page { position: absolute; inset: 0; overflow: hidden; background: #FFFDF8; }
+.r .page, .leaf.to-left .front, .leaf.to-right .back { border-radius: 0 18px 18px 0; }
+.l .page, .leaf.to-right .front, .leaf.to-left .back { border-radius: 18px 0 0 18px; }
+.half:not(:empty) { filter: drop-shadow(0 10px 0 rgba(58,35,24,.14)) drop-shadow(0 20px 26px rgba(0,0,0,.2)); }
+.page img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+/* the fold: a soft shadow along the spine */
+.page::after { content: ''; position: absolute; top: 0; bottom: 0; width: 14%; pointer-events: none; }
+.r .page::after, .to-left .front .page::after, .to-right .back .page::after { left: 0; background: linear-gradient(90deg, rgba(0,0,0,.28), transparent); }
+.l .page::after, .to-right .front .page::after, .to-left .back .page::after { right: 0; background: linear-gradient(-90deg, rgba(0,0,0,.28), transparent); }
+.txt { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 9cqh 6cqw 5cqh; background: linear-gradient(rgba(255,250,240,0), rgba(255,250,240,.95) 30%); font-size: 2.5cqw; font-weight: 700; line-height: 1.7; text-wrap: pretty; }
+.no { position: absolute; bottom: 1.6cqh; font-size: 1.4cqw; font-weight: 800; color: var(--ink-soft); }
+.r .no, .to-left .front .no, .to-right .back .no { left: 3cqw; }
+.l .no, .to-right .front .no, .to-left .back .no { right: 3cqw; }
+.title { position: absolute; left: 6%; right: 6%; bottom: 7%; margin: 0; padding: 2.4cqh 2cqw; border-radius: 3cqw; background: rgba(255,250,240,.95); text-align: center; font-size: 4.2cqw; font-weight: 800; line-height: 1.25; color: #2F3A8F; box-shadow: 0 1cqh 0 rgba(0,0,0,.15); }
+
+/* the turning leaf */
+.leaf { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 3; transform-style: preserve-3d; transition: transform .75s cubic-bezier(.45,.05,.3,1); }
+.leaf.to-right { left: 0; transform-origin: right center; }
+.leaf.to-left { right: 0; transform-origin: left center; }
+.leaf.to-right.go { transform: rotateY(180deg); }
+.leaf.to-left.go { transform: rotateY(-180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.face .page { position: absolute; inset: 0; }
+.face.back { transform: rotateY(180deg); }
+.face::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: rgba(0,0,0,.18); opacity: 0; transition: opacity .375s; }
+.leaf.go .front::before { opacity: 1; }
+
+/* phones: one page at a time, sliding */
+.book.single { aspect-ratio: 3 / 4; }
+.single .half.r { width: 100%; }
+.single .r .page { border-radius: 18px; }
+.single .r .page::after { display: none; }
+.single .txt { font-size: 5cqw; padding: 12cqh 6cqw 5cqh; }
+.single .no { font-size: 3cqw; left: 5cqw; }
+.single .title { font-size: 8cqw; }
+.single .r.in { animation: in .3s ease-out both; }
+@keyframes in { from { opacity: 0; transform: translateX(calc(var(--dir) * 30px)); } to { opacity: 1; transform: none; } }
+
+.pager { justify-self: center; display: flex; align-items: center; gap: 14px; height: 52px; padding: 0 20px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(58,35,24,.15); }
+.pager b { font-size: 18px; font-weight: 800; white-space: nowrap; }
+.track { width: 180px; height: 10px; border-radius: 999px; background: #E6EFDC; overflow: hidden; }
+.track i { display: block; height: 100%; width: var(--p, 10%); border-radius: 999px; background: var(--leaf); transition: width .3s; }
+
+.resume { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; background: rgba(30,50,30,.35); }
+.resume[hidden] { display: none; }
+.resume > div { background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
+.resume p b { color: var(--go); }
+.resume .btns { margin: 0; }
+.resume .btn { gap: 8px; }
+.resume .btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+.stop .card h2 { color: #C46A00; }
+
+@media (max-width: 760px) {
+  .stage { position: relative; gap: 0; }
+  .book { height: auto; width: 100%; max-width: 100%; max-height: 100%; }
+  .arrow { position: absolute; z-index: 4; width: 52px; height: 52px; top: 50%; margin-top: -26px; }
+  .arrow svg { width: 26px; height: 26px; }
+  .arrow.prev { right: -6px; } .arrow.next { left: -6px; }
+  .track { width: 90px; }
+  .resume > div { margin: 0 12px; padding: 18px 16px; }
+  .resume .btns { gap: 8px; }
+  .resume .btn { height: 46px; padding: 0 16px; font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .leaf { transition: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="forest.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>غابة المعرفة</span></a>
+    <div class="ttl"><img src="img/forest/I-13.png" alt=""><h1>لماذا يتغير شكل القمر؟</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <button class="arrow prev" id="prev" type="button" aria-label="الصفحة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="book" id="book" aria-live="polite">
+      <div class="half r" id="r"></div>
+      <div class="half l" id="l"></div>
+    </div>
+    <button class="arrow next" id="next" type="button" aria-label="الصفحة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="#6B3A1E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  </main>
+
+  <div class="pager">
+    <b id="count">الغلاف</b>
+    <span class="track" aria-hidden="true"><i id="track"></i></span>
+  </div>
+
+  <div class="acts">
+    <button class="act" id="like" type="button" aria-pressed="false" aria-label="إعجاب"><svg viewBox="0 0 24 24" class="heart" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/></svg><span id="likes">264</span></button>
+    <button class="act" id="talk" type="button" aria-label="التعليقات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg><span>21</span><span class="lbl">تعليق</span></button>
+    <button class="act" id="share" type="button" aria-label="شارك مع أصدقائك"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M14 5l6 6-6 6M20 11H10a6 6 0 0 0-6 6v1"/></svg><span class="lbl">شارك</span></button>
+    <span class="act views" aria-label="1,980 قراءة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>1,980</span>
+  </div>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">الصفحة 1</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.5a8 8 0 1 1-7.4 4.9"/><path d="M14 1.5v6h-6"/></svg>من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="التعليقات" aria-hidden="true">
+  <header><h2>التعليقات · 21</h2><button class="x" id="close" type="button" aria-label="إغلاق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A2318" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="list">
+    <div class="c"><img src="img/avatar.png" alt=""><div><b>رهف</b><span>الآن عرفت ما هو البدر!</span></div></div>
+    <div class="c"><img src="img/avatar.png" alt=""><div><b>خالد</b><span>سمسم الأرنب لطيف جداً</span></div></div>
+  </div>
+  <p class="note">نراجع كل تعليق قبل أن يظهر، لنبقى لطفاء مع بعض.</p>
+  <form class="write" id="write"><input id="msg" placeholder="اكتب تعليقك…" maxlength="120" aria-label="اكتب تعليقك"><button type="submit">أرسل</button></form>
+</aside>
+
+<div class="done" id="done" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="done-t">
+    <img class="owl" src="img/forest/owl-island.png" alt="">
+    <h2 id="done-t">أحسنت يا يوسف!</h2>
+    <p>قرأت كتاب «لماذا يتغير شكل القمر؟» كله</p>
+    <span class="xp" id="xp" hidden><img src="img/forest/I-06.png" alt=""><b id="xp-n">+20</b> نقطة</span>
+    <div class="btns">
+      <a class="btn go" href="forest.html">العودة إلى الغابة</a>
+      <button class="btn soft" id="again" type="button">اقرأه من جديد</button>
+    </div>
+    <div class="more">
+      <h3>كتب قد تعجبك</h3>
+      <div>
+        <a href="book.html"><img src="img/forest/t04.jpg" alt=""><span>البومة الحكيمة</span></a>
+        <a href="#"><img src="img/forest/t06.jpg" alt=""><span>كواكب مجموعتنا الشمسية</span></a>
+        <a href="#"><img src="img/forest/t10.jpg" alt=""><span>رائد فضاء صغير</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/forest/owl-island.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">الصفحة 1</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  // in production the pages come from the Flipbook the admin uploads
+  const TEXT = [
+    '',
+    'في ليلةٍ هادئة، نظر الأرنب سمسم إلى السماء، فرأى القمر رفيعاً مثل ابتسامة.',
+    'سأل سمسم البومة الحكيمة: لماذا يتغيّر شكل القمر كل ليلة؟',
+    'قالت البومة: القمر كرةٌ كبيرة، تدور حول الأرض في رحلةٍ طويلة.',
+    'والشمس تُضيء نصف القمر دائماً، مثل مصباحٍ يُضيء كرة.',
+    'عندما لا نرى الجزء المضيء أبداً، يختفي القمر. هذا هو المحاق.',
+    'بعد أيام، يظهر جزءٌ صغير مضيء، نسمّيه الهلال.',
+    'ثم يكبر الجزء المضيء، حتى نرى نصف القمر.',
+    'وبعد أسبوعين، يكتمل القمر ويصير دائرةً مضيئة: إنه البدر!',
+    'ثم يصغر القمر شيئاً فشيئاً، ليلةً بعد ليلة.',
+    'تتكرّر رحلة القمر كل شهر تقريباً، من المحاق إلى البدر ثم المحاق.',
+    'نام سمسم وهو يبتسم: سأراقب القمر كل ليلة!'
+  ];
+  const N = TEXT.length;
+  const page = (n) => {
+    if (!n) return '';
+    const img = `<img src="img/books/moon-${String(n).padStart(2, '0')}.jpg" alt="" draggable="false">`;
+    if (n === 1) return `<div class="page">${img}<p class="title">لماذا يتغير شكل القمر؟</p></div>`;
+    return `<div class="page">${img}<p class="txt">${TEXT[n - 1]}</p><span class="no">${n}</span></div>`;
+  };
+
+  // desktop: the cover alone, then spreads (2|3) … (10|11), then the last page alone
+  const single = matchMedia('(max-width: 760px)').matches;
+  const SPREADS = single
+    ? TEXT.map((_, i) => ({ r: i + 1, l: null }))
+    : [{ r: null, l: 1 }, ...Array.from({ length: (N - 2) / 2 }, (_, k) => ({ r: 2 + 2 * k, l: 3 + 2 * k })), { r: N, l: null }];
+  const first = (s) => SPREADS[s].r || SPREADS[s].l;
+  const book = $('book'), R = $('r'), L = $('l');
+  book.classList.toggle('single', single);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let shown = null, busy = false;
+
+  function paint(s) { R.innerHTML = page(SPREADS[s].r); L.innerHTML = page(SPREADS[s].l); }
+  function status(s) {
+    const { r, l } = SPREADS[s];
+    $('count').textContent = r === 1 || (!r && l === 1) ? 'الغلاف' : r && l ? `الصفحتان ${r} و${l} من ${N}` : `الصفحة ${r || l} من ${N}`;
+    $('track').style.setProperty('--p', (Math.max(r || 0, l || 0) / N) * 100 + '%');
+    $('prev').disabled = s === 0;
+  }
+
+  // turn one leaf: forward lifts the left page over to the right, back lifts the right page to the left
+  function turn(from, to) {
+    const a = SPREADS[from], b = SPREADS[to], fwd = to > from;
+    busy = true;
+    if (fwd) L.innerHTML = page(b.l); else R.innerHTML = page(b.r);
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf ' + (fwd ? 'to-right' : 'to-left');
+    leaf.innerHTML = `<div class="face front">${page(fwd ? a.l : a.r)}</div><div class="face back">${page(fwd ? b.r : b.l)}</div>`;
+    book.appendChild(leaf);
+    let landed = false;
+    const land = () => { if (landed) return; landed = true; paint(to); leaf.remove(); busy = false; };
+    if (reduce) return land();
+    void leaf.offsetWidth; leaf.classList.add('go');
+    leaf.addEventListener('transitionend', land, { once: true });
+    setTimeout(land, 900); // in case the transition never reports back (background tab)
+  }
+
+  function show(s, dir) {
+    // a key pressed mid-turn: land the current leaf first
+    if (busy) { book.querySelector('.leaf')?.remove(); paint(shown); busy = false; }
+    if (shown === null || !dir || Math.abs(s - shown) !== 1) paint(s);
+    else if (single) { paint(s); R.classList.remove('in'); void R.offsetWidth; R.style.setProperty('--dir', dir > 0 ? -1 : 1); R.classList.add('in'); }
+    else turn(shown, s);
+    shown = s; status(s);
+    const nx = SPREADS[s + 1]; if (nx) [nx.r, nx.l].forEach((n) => { if (n) new Image().src = `img/books/moon-${String(n).padStart(2, '0')}.jpg`; });
+  }
+
+  // the forest card shows 50%: page 6 for the demo
+  const pageToStep = (p) => SPREADS.findIndex((sp) => sp.r === p || sp.l === p);
+  const reader = Viewer.pages({
+    steps: SPREADS.length, key: 'ajyal.flip.moon', likes: 264, start: pageToStep(6),
+    save: first, load: (p) => Math.max(0, pageToStep(p)),
+    label: (s) => `الصفحة ${first(s)}`, onShow: show
+  });
+  $('next').addEventListener('click', () => !busy && reader.next());
+  $('prev').addEventListener('click', () => !busy && reader.prev());
+
+  let x0 = null;
+  book.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+  addEventListener('pointerup', (e) => { if (x0 === null || busy) return; const dx = e.clientX - x0; x0 = null; if (dx > 50) reader.next(); else if (dx < -50) reader.prev(); });
+})();
+</script>
+</body>
+</html>
