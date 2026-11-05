@@ -8,7 +8,7 @@
 /* layout: one full-screen camera over a 1440×1024 world; HUD pinned to the screen edges and never zooms */
 :root {
   --sky: #8EDCF0; --sea: #4FC7D4; --ink: #3A2318; --ink-soft: #7A5A48;
-  --paper: #FFFFFF; --cream: #FFF7EC; --go: #2E8B2A; --go-deep: #1F6A1C; --gold: #F2A900; --rose: #F0436B;
+  --paper: #FFFFFF; --cream: #FFF7EC; --go: #2E8B2A; --go-deep: #1F6A1C; --gold: #F2A900; --rose: #F0436B; --dock-line: #6B3A1E;
   --font: 'Thmanyah Sans', 'Segoe UI', Tahoma, system-ui, sans-serif;
   color-scheme: light;
 }
@@ -96,11 +96,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .time { top: calc(72px + env(safe-area-inset-top, 0px)); left: calc(14px + env(safe-area-inset-left, 0px)); color: #2D6A12; height: 36px; font-size: 16px; box-shadow: 0 3px 0 #8CCDE0; }
 .time img { width: 26px; height: 26px; }
 
-.dock { left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 8px; background: var(--paper); border-radius: 999px; box-shadow: 0 6px 0 rgba(31,111,209,.25); }
-.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border-radius: 999px; color: var(--ink); text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+/* game-style dock: a glossy amber bar with a thick chocolate outline */
+.dock { left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--dock-line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--dock-line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a:hover { background: rgba(255,255,255,.25); }
 .dock a img { width: 36px; height: 36px; margin: -6px 0; }
-.dock a[aria-current="page"] { background: var(--go); color: var(--paper); box-shadow: 0 4px 0 var(--go-deep); }
-.rank { background: #FFE8E4; color: #C9372C; border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+.dock a[aria-current="page"] { background: linear-gradient(#F4823F, #D6531E); color: #FFFFFF; border-color: var(--dock-line); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); text-shadow: 0 1px 0 rgba(107,58,30,.5); }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--dock-line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
 
 .mission { right: calc(14px + env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: row-reverse; align-items: center; gap: 4px; }
 .mission .bubble { display: flex; align-items: center; gap: 10px; background: var(--paper); border-radius: 999px; padding: 6px 6px 6px 8px; box-shadow: 0 5px 0 #F1C96B; border: 0; cursor: pointer; text-align: right; }
