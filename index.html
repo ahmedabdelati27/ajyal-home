@@ -286,7 +286,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   }
   const region = document.getElementById('region');
   // regions that already have their own screen
-  const PAGES = { forest: 'forest.html', beach: 'beach.html', letters: 'oasis.html' };
+  const PAGES = { forest: 'forest.html', beach: 'beach.html', letters: 'oasis.html', quran: 'quran.html' };
   function openRegion(i) {
     const to = i.href || PAGES[i.id];
     if (to) { location.href = to; return; }

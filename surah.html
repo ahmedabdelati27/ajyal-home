@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سورة الإخلاص · واحة القرآن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="viewer.css">
+<style>
+.bg { background-image: url(img/quran/quran-hero.jpg); background-position: center 60%; }
+@media (max-aspect-ratio: 4 / 5) { .bg { background-image: url(img/quran/quran-hero.jpg); background-position: 25% 60%; } }
+.bg::after { content: ''; position: absolute; inset: 0; background: rgba(20,40,40,.18); }
+.ttl h1 { text-shadow: 0 3px 0 #1E4A3A, 2px 0 0 #1E4A3A, -2px 0 0 #1E4A3A, 0 -2px 0 #1E4A3A; }
+.num { position: relative; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #2F6B2A; }
+.num::before, .num::after { content: ''; position: absolute; inset: 10%; border-radius: 18%; background: linear-gradient(#F3F8E8, #DDEBC6); box-shadow: inset 0 0 0 2px #B9D597; }
+.num::after { transform: rotate(45deg); }
+.num span { position: relative; z-index: 1; }
+
+/* the journey: stages on top, the mushaf page, then the controls for the stage */
+.stage { min-height: 0; overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 14px; padding-bottom: 6px; }
+.steps { display: flex; gap: 6px; margin: 0; padding: 8px 14px; list-style: none; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(30,74,58,.25); }
+.steps li { display: flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 16px; font-weight: 800; color: #9AA58E; }
+.steps li + li::before { content: ''; width: 26px; height: 3px; border-radius: 3px; background: #DDE6CF; margin-inline-end: 4px; }
+.steps button { width: 34px; height: 34px; border: 0; border-radius: 50%; background: #E9EFDD; color: #7E8B70; font-weight: 800; font-size: 15px; }
+.steps button:disabled { cursor: default; }
+.steps li.passed { color: #2E7D32; } .steps li.passed button { background: #4CB944; color: var(--paper); }
+.steps li.at { color: var(--ink); } .steps li.at button { background: linear-gradient(#FFD98C, #F7B347); color: var(--line); box-shadow: 0 0 0 4px rgba(247,179,71,.35); }
+
+/* a mushaf-like page: cream paper in a green and gold frame */
+.mushaf { position: relative; width: min(780px, 100%); padding: 16px 28px 18px; border-radius: 26px; background: #FFFDF5; border: 10px solid transparent; background-clip: padding-box; box-shadow: 0 0 0 3px #C9A24A, 0 0 0 13px #2F6B4A, 0 0 0 16px #C9A24A, 0 14px 30px rgba(0,0,0,.3); margin: 16px 0; }
+.mushaf::before { content: ''; position: absolute; inset: 6px; border: 2px solid rgba(201,162,74,.55); border-radius: 18px; pointer-events: none; }
+.band { display: flex; justify-content: center; margin-bottom: 8px; }
+.band span { min-width: 260px; padding: 6px 26px 8px; border-radius: 999px; background: linear-gradient(#3F8A5E, #2F6B4A); color: #FFF7DC; border: 3px solid #C9A24A; text-align: center; font-size: 22px; font-weight: 800; }
+.basmala { margin: 2px 0; text-align: center; font-family: 'Amiri Quran', 'Amiri', serif; font-size: 30px; line-height: 2; color: #2F4A3A; }
+.ayat { margin: 0; text-align: center; font-family: "Amiri Quran", "Amiri", serif; font-size: 36px; line-height: 2.1; color: #20302A; }
+.aya { border-radius: 14px; padding: 0 4px; cursor: pointer; transition: background .25s; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.aya:hover { background: rgba(201,162,74,.12); }
+.aya.on { background: rgba(255,214,102,.45); }
+.end { color: #A87B1E; margin: 0 4px; }
+.w { border-radius: 8px; transition: color .2s, background .2s; }
+/* reciting from memory: words stay hidden until the child says them */
+.hide .w { color: transparent; background: repeating-linear-gradient(90deg, #E7E0C9 0 10px, transparent 10px 14px) center 72% / 100% 4px no-repeat; }
+.hide .w.hint { color: rgba(32,48,42,.25); }
+.hide .w.said { color: #1F7A3A; background: none; }
+.hide .w.oops { color: #B4620E; background: none; text-decoration: underline 3px #F2A44B; text-underline-offset: 10px; }
+
+/* stage controls */
+.panel { width: min(780px, 100%); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px 18px 16px; border-radius: 28px; background: rgba(255,255,255,.94); box-shadow: 0 5px 0 rgba(30,74,58,.25); text-align: center; }
+.panel p { margin: 0; font-size: 19px; font-weight: 800; }
+.panel small { font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; }
+.big { width: 84px; height: 84px; border: 5px solid var(--line); border-radius: 50%; background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 4px 0 rgba(255,255,255,.55), 0 5px 0 var(--line); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.big svg { width: 40px; height: 40px; }
+.big.mic { background: linear-gradient(#8FE07A, #4CB944); }
+.big.live { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: inset 0 4px 0 rgba(255,255,255,.55), 0 5px 0 var(--line), 0 0 0 14px rgba(76,185,68,.2); } }
+.tog { height: 46px; padding: 0 16px; border: 0; border-radius: 999px; background: #EEF4E2; font-weight: 800; font-size: 16px; display: inline-flex; align-items: center; gap: 6px; }
+.tog[aria-pressed="true"] { background: #2F6B4A; color: #FFF7DC; }
+.panel .btn { height: 54px; font-size: 19px; }
+.panel .btn:disabled { opacity: .45; cursor: default; }
+.oops-msg { color: #B4620E; }
+.glow { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.ring { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#4CB944 var(--p, 100%), #E5EDD6 0); display: flex; align-items: center; justify-content: center; }
+.ring span { width: 92px; height: 92px; border-radius: 50%; background: #FFFDF5; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: #2F6B2A; }
+.won { font-size: 28px !important; color: var(--go); }
+.gain { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 18px 0 10px; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-weight: 800; font-size: 18px; }
+.gain img { width: 34px; height: 34px; }
+
+.resume { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; background: rgba(20,40,40,.4); }
+.resume[hidden] { display: none; }
+.resume > div { margin: 0 12px; background: #FFF7EC; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.resume p { margin: 0 0 14px; font-size: 22px; font-weight: 800; }
+.resume p b { color: var(--go); }
+.resume .btns { margin: 0; }
+.stop .card h2 { color: #C46A00; }
+.stop .owl { width: 200px !important; height: 200px !important; top: -100px !important; }
+
+@media (max-width: 760px) {
+  .steps { padding: 6px 8px; gap: 2px; } .steps li { padding: 0 2px; font-size: 13px; } .steps li + li::before { width: 10px; }
+  .steps li span { display: none; }
+  .mushaf { padding: 14px 12px 16px; border-width: 6px; box-shadow: 0 0 0 2px #C9A24A, 0 0 0 8px #2F6B4A, 0 0 0 10px #C9A24A, 0 10px 20px rgba(0,0,0,.3); margin: 10px 0; }
+  .band span { min-width: 0; font-size: 18px; }
+  .basmala { font-size: 22px; }
+  .ayat { font-size: 27px; line-height: 2.2; }
+  .panel p { font-size: 16px; }
+  .big { width: 70px; height: 70px; } .big svg { width: 32px; height: 32px; }
+}
+@media (prefers-reduced-motion: reduce) { .big.live { animation: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="quran.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>واحة القرآن</span></a>
+    <div class="ttl"><span class="num" aria-hidden="true"><span>١١٢</span></span><h1>سورة الإخلاص</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <ol class="steps" id="steps"></ol>
+    <!-- in production the verses come from a verified Mushaf source (admin «آيات السورة»), reviewed before publishing -->
+    <article class="mushaf" id="mushaf" aria-label="سورة الإخلاص">
+      <div class="band"><span>سورة الإخلاص</span></div>
+      <p class="basmala" id="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <p class="ayat" id="ayat"></p>
+    </article>
+    <section class="panel" id="panel" aria-live="polite"></section>
+  </main>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">مرحلة الاستماع</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button">أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button">من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/quran.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">مرحلة الاستماع</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="viewer.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  const q = new URLSearchParams(location.search);
+  // Surat Al-Ikhlas, word by word (prototype text; production uses the verified source)
+  const AYAT = [['قُلْ', 'هُوَ', 'اللَّهُ', 'أَحَدٌ'], ['اللَّهُ', 'الصَّمَدُ'], ['لَمْ', 'يَلِدْ', 'وَلَمْ', 'يُولَدْ'], ['وَلَمْ', 'يَكُنْ', 'لَهُ', 'كُفُوًا', 'أَحَدٌ']];
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const STAGES = ['استمع', 'ردّد', 'سمّع', 'أتممت'];
+  const NAMES = ['مرحلة الاستماع', 'مرحلة الترديد', 'مرحلة التسميع', 'إتمام السورة'];
+  const POS = 'ajyal.quran.112.aya';
+  const XP = 30; // from gamification, when completing the surah is an eligible event
+  const store = { get() { try { return +localStorage.getItem(POS) || 0; } catch { return 0; } }, set(v) { try { localStorage.setItem(POS, String(v)); } catch {} } };
+
+  // the verses, each word its own span so they can light up
+  $('ayat').innerHTML = AYAT.map((a, i) => `<span class="aya" data-i="${i}" role="button" tabindex="0" aria-label="الآية ${ar(i + 1)}">${a.map((w, k) => `<span class="w" data-k="${k}">${w}</span>`).join(' ')}<span class="end">﴿${ar(i + 1)}﴾</span></span>`).join(' ');
+  const ayaEl = (i) => $('ayat').querySelector(`.aya[data-i="${i}"]`);
+
+  // reciter audio stands in as timed highlighting: the Quran is never read by a synthetic voice
+  let timer = null, playing = false;
+  const stopPlay = () => { clearTimeout(timer); playing = false; document.querySelectorAll('.aya.on').forEach((a) => a.classList.remove('on')); };
+  function play(from, to, done) {
+    stopPlay(); playing = true;
+    const step = (i) => {
+      document.querySelectorAll('.aya.on').forEach((a) => a.classList.remove('on'));
+      if (i > to) { playing = false; return done?.(); }
+      ayaEl(i).classList.add('on');
+      timer = setTimeout(() => step(i + 1), 1500 + AYAT[i].length * 650);
+    };
+    step(from);
+  }
+
+  // ---- stages
+  let heard = false, repeated = store.get(), recited = 0, wrongAt = { a: 1, k: 1 }, fixed = false, ayaNow = 0;
+  const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z" fill="#6B3A1E"/></svg>';
+  const pauseIcon = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.6" fill="#6B3A1E"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.6" fill="#6B3A1E"/></svg>';
+  const micIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="#1F4A1A" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="#1F4A1A"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
+  const PANEL = [
+    () => `<p>استمع إلى السورة كاملة، واضغط على أي آية لتسمعها مرة أخرى</p>
+      <div class="row"><button class="big" id="play" type="button" aria-label="تشغيل التلاوة">${playIcon}</button>
+      <button class="tog" id="loop" type="button" aria-pressed="false">كرّر الآية</button></div>
+      <small>في التطبيق: تلاوة القارئ المعتمد من الأدمن</small>
+      <button class="btn go" id="next" type="button">انتقل إلى الترديد</button>`,
+    () => repeated < AYAT.length
+      ? `<p>استمع إلى الآية ﴿${ar(repeated + 1)}﴾ ثم ردّدها بصوتك</p>
+        <div class="row"><button class="tog" id="again" type="button">▶ استمع مرة أخرى</button><button class="btn go" id="said" type="button">ردّدتها ✓</button></div>
+        <small>الآية ${ar(repeated + 1)} من ${ar(AYAT.length)}</small>`
+      : `<p>أحسنت! ردّدت السورة كلها</p><button class="btn go" id="next" type="button">انتقل إلى التسميع</button>`,
+    () => recited < AYAT.length
+      ? `<p id="say-it">${fixed || recited !== wrongAt.a ? 'اقرأ السورة من حفظك، وسنتابع تلاوتك' : 'اقرأ السورة من حفظك، وسنتابع تلاوتك'}</p>
+        <div class="row"><button class="big mic" id="mic" type="button" aria-label="ابدأ التسميع">${micIcon}</button><button class="tog" id="hint" type="button">تلميح</button></div>
+        <small>في النموذج: محاكاة. في التطبيق يتابع النظام تلاوتك بالتعرّف على الصوت</small>`
+      : `<p>ما شاء الله! سمّعت السورة كاملة</p><button class="btn go" id="next" type="button">أتممت السورة</button>`,
+    () => `<div class="glow"><span class="ring" style="--p:100%"><span>١٠٠٪</span></span>
+      <p class="won">أحسنت يا يوسف! أتممت سورة الإخلاص</p>
+      <span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span></div>
+      <div class="row"><button class="btn go" id="next-sura" type="button">السورة التالية: المسد</button><button class="btn soft" id="review" type="button">راجع السورة</button><a class="btn soft" href="quran.html">العودة إلى الواحة</a></div>`
+  ];
+
+  let stage = 0;
+  function show(i) {
+    stage = i; stopPlay();
+    $('steps').innerHTML = STAGES.map((s, k) => `<li class="${k === i ? 'at' : k < i ? 'passed' : ''}"><button type="button" data-k="${k}" ${k > i ? 'disabled' : ''} aria-label="${NAMES[k]}">${k < i ? '✓' : ar(k + 1)}</button><span>${s}</span></li>`).join('');
+    $('mushaf').classList.toggle('hide', i === 2);
+    paintRecital();
+    $('panel').innerHTML = PANEL[i]();
+    if (i === 1 && repeated < AYAT.length) setTimeout(() => play(repeated, repeated), 400);
+    if (i === 3) { learner.clear(); store.set(0); }
+  }
+  const ready = (i) => (i === 1 ? repeated >= AYAT.length : i === 2 ? recited >= AYAT.length : true);
+  // resume: the map's card says verse 3 in reciting
+  const learner = Viewer.pages({ steps: 4, key: 'ajyal.quran.112', start: q.get('resume') === '1' ? 2 : 0, label: (i) => NAMES[i], onShow: show, canNext: ready });
+  if (q.get('resume') === '1' && stage === 2 && !recited) { recited = 2; fixed = true; paintRecital(); }
+
+  // ---- reciting from memory (simulated recognition): words appear as they're said; a wrong word must be repeated
+  function paintRecital() {
+    $('ayat').querySelectorAll('.w').forEach((w) => {
+      const a = +w.closest('.aya').dataset.i, k = +w.dataset.k;
+      w.classList.toggle('said', a < recited);
+    });
+  }
+  let live = null;
+  function recite() {
+    if (live) return;
+    const mic = $('mic'); mic.classList.add('live');
+    let a = recited, k = 0;
+    const words = () => ayaEl(a).querySelectorAll('.w');
+    live = setInterval(() => {
+      const w = words()[k];
+      if (!w) { recited = ++a; k = 0; if (a >= AYAT.length) { clearInterval(live); live = null; return show(2); } return; }
+      if (!fixed && a === wrongAt.a && k === wrongAt.k) {
+        clearInterval(live); live = null; mic.classList.remove('live');
+        w.classList.add('oops');
+        // gentle: a soft underline, the reciter says the word in the app, then the child tries again
+        $('say-it').innerHTML = '<span class="oops-msg">لنحاول هذه الكلمة مرة أخرى، استمع إليها ثم اقرأها</span>';
+        mic.setAttribute('aria-label', 'أعد الكلمة');
+        mic.onclick = (ev) => { ev.stopPropagation(); mic.onclick = null; mic.classList.add('live'); setTimeout(() => { w.classList.remove('oops'); w.classList.add('said'); fixed = true; mic.classList.remove('live'); $('say-it').textContent = 'أحسنت! أكمل التلاوة'; k++; recited = a; mic.setAttribute('aria-label', 'أكمل التسميع'); }, 900); };
+        return;
+      }
+      w.classList.remove('hint'); w.classList.add('said'); k++;
+    }, 650);
+  }
+
+  // ---- clicks
+  $('panel').addEventListener('click', (e) => {
+    const id = e.target.closest('button')?.id;
+    if (id === 'play') { if (playing) { stopPlay(); $('play').innerHTML = playIcon; } else { $('play').innerHTML = pauseIcon; play(0, AYAT.length - 1, () => { heard = true; $('play').innerHTML = playIcon; }); } }
+    if (id === 'loop') { const on = $('loop').getAttribute('aria-pressed') !== 'true'; $('loop').setAttribute('aria-pressed', on); if (on) { const loop = () => play(ayaNow, ayaNow, () => $('loop')?.getAttribute('aria-pressed') === 'true' && loop()); loop(); } else stopPlay(); }
+    if (id === 'again') play(repeated, repeated);
+    if (id === 'said') { repeated++; store.set(repeated); show(1); }
+    if (id === 'mic' && !e.target.closest('#mic').onclick) recite();
+    if (id === 'hint') { const next = [...$('ayat').querySelectorAll('.w')].find((w) => !w.classList.contains('said')); next?.classList.add('hint'); learner.toast('في التطبيق: تُسمع بداية الكلمة بصوت القارئ'); }
+    if (id === 'next') learner.next();
+    if (id === 'next-sura') learner.toast('في النموذج: سورة المسد ستكون هنا بنفس المراحل');
+    if (id === 'review') { repeated = 0; recited = 0; fixed = false; learner.go(0); }
+  });
+  // tap a verse to hear it again (listening stage)
+  $('ayat').addEventListener('click', (e) => { const a = e.target.closest('.aya'); if (!a || stage === 2) return; ayaNow = +a.dataset.i; play(ayaNow, ayaNow); });
+  $('steps').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b && !b.disabled) learner.go(+b.dataset.k); });
+})();
+</script>
+</body>
+</html>
