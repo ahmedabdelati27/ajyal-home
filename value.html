@@ -127,8 +127,8 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
     <a class="pill back" href="garden.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>حديقة القيم</span></a>
     <div class="stats">
       <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
-      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
-      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">6</span>
+      <span class="pill" title="النقاط"><img src="img/hud/points.png" alt="">3,240</span>
+      <span class="pill" title="الشارات"><img src="img/hud/badge.png" alt="">6</span>
     </div>
   </div>
   <div class="head"><span class="kicker">رحلة قيمة مع نور</span><h1 id="title"></h1><p id="about"></p></div>
@@ -208,7 +208,7 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
     $('party-t').textContent = `أزهرت شجرة ${v.name}!`;
     $('party-p').textContent = v.done;
     // XP and the badge come from gamification when completing a value is eligible
-    $('gains').innerHTML = `<span class="gain"><img src="img/forest/I-06.png" alt="">+${ar(XP)} نقطة</span>${v.badge ? `<span class="gain"><img src="img/forest/S-01.png" alt="">شارة جديدة: ${v.badge}</span>` : ''}`;
+    $('gains').innerHTML = `<span class="gain"><img src="img/hud/points.png" alt="">+${ar(XP)} نقطة</span>${v.badge ? `<span class="gain"><img src="img/hud/badge.png" alt="">شارة جديدة: ${v.badge}</span>` : ''}`;
     $('party').hidden = false; $('party-x').focus();
     window.Sfx?.play('win'); burst();
   }

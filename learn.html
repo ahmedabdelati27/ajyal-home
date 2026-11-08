@@ -213,7 +213,7 @@
       const stars = Math.round((tStars + aStars) / 2);
       return `<div class="stars" aria-label="${stars} من 3 نجوم">${[0, 1, 2].map((i) => star(i < stars)).join('')}</div>
         <p class="won">أحسنت يا يوسف! تعلّمت ${item.name}</p>
-        <div class="gains"><span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span></div>
+        <div class="gains"><span class="gain"><img src="img/hud/points.png" alt="">+${XP} نقطة</span></div>
         <div class="btns"><button class="btn go" id="next-item" type="button">التالي: ${item.next}</button><a class="btn soft" href="oasis.html">العودة إلى الواحة</a></div>`;
     }
   ];

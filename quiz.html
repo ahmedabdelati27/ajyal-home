@@ -184,7 +184,7 @@
     panel.innerHTML = `<img class="falcon" src="img/peak/${r.right >= Math.ceil(r.of / 2) ? 'f-trophy' : 'f-wave'}.png" alt="">
       <h2>${late ? 'أرسلنا إجاباتك التي اخترتها قبل أن تخرج' : !fresh ? 'نتيجتك في هذه المسابقة' : r.right ? 'أحسنت يا يوسف! وصلت إجاباتك' : 'شكراً لمشاركتك يا يوسف!'}</h2>
       <div class="score"><b>${ar(r.score)}</b> من ١٠٠</div>
-      <div class="facts"><span>✓ ${ar(r.right)} من ${ar(r.of)} إجابات صحيحة</span>${fresh ? `<span class="gain"><img src="img/forest/I-06.png" alt="">+${ar(XP)} نقاط للمشاركة</span>` : ''}</div>
+      <div class="facts"><span>✓ ${ar(r.right)} من ${ar(r.of)} إجابات صحيحة</span>${fresh ? `<span class="gain"><img src="img/hud/points.png" alt="">+${ar(XP)} نقاط للمشاركة</span>` : ''}</div>
       <p>تُحسب النتيجة بصحة الإجابات وسرعتها.</p>
       <div class="btns"><a class="btn go" href="peak.html">العودة إلى القمة</a></div>`;
     if (fresh) Sfx.play('win');

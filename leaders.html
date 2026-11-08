@@ -88,13 +88,13 @@
   const MEDAL = ['#F2A900', '#A7B1BD', '#D0874A'];
   const top = (p, i) => `<div class="top card ${['first', 'second', 'third'][i]}" style="--m:${MEDAL[i]}">
     <span class="face"><img src="img/avatars/${p.avatar}.png" alt=""><span aria-label="المركز ${ar(p.rank)}">${ar(p.rank)}</span></span>
-    <b>${p.name}</b><span class="xp"><img src="img/I-06.png" alt="">${num(p.xp)}</span>
+    <b>${p.name}</b><span class="xp"><img src="img/hud/points.png" alt="">${num(p.xp)}</span>
     <img class="bdg" src="img/badges/${p.badge}.png" alt="شارة ${badge(p.badge)}"></div>`;
   // read in order 1, 2, 3; shown right to left as second, first, third
   const mine = { rank: ME_RANK, name: me.name, avatar: me.avatar, xp: me.xp, badge: 'S-06' };
   document.getElementById('podium').innerHTML = LEADERS.slice(0, 3).map((p, i) => top(p.rank === ME_RANK ? mine : p, i)).join('');
   const row = (p, mine) => `<li class="${mine ? 'me' : ''}" ${mine ? 'aria-current="true"' : ''}><span class="n">${ar(p.rank)}</span><img class="av" src="img/avatars/${p.avatar}.png" alt="">
-    <b>${p.name}</b><span class="xp"><img src="img/I-06.png" alt="">${num(p.xp)}</span>${p.badge ? `<img class="bdg" src="img/badges/${p.badge}.png" alt="شارة ${badge(p.badge)}">` : '<span></span>'}</li>`;
+    <b>${p.name}</b><span class="xp"><img src="img/hud/points.png" alt="">${num(p.xp)}</span>${p.badge ? `<img class="bdg" src="img/badges/${p.badge}.png" alt="شارة ${badge(p.badge)}">` : '<span></span>'}</li>`;
   // the top ten, then the child's own place with the one just above when it is further down; a child in the top ten is lit in place
   const top10 = LEADERS.slice(3, 10).map((p) => (p.rank === ME_RANK ? row(mine, true) : row(p))).join('');
   const below = ME_RANK > 10 ? `${ME_RANK > 11 ? '<li class="gap" aria-hidden="true">…</li>' : ''}${LEADERS[ME_RANK - 2] && ME_RANK > 11 ? row(LEADERS[ME_RANK - 2]) : ''}${row(mine, true)}` : '';

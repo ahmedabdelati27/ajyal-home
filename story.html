@@ -404,7 +404,7 @@
     qcard.innerHTML = `<div class="result"><div class="stars" aria-label="${stars} من 3 نجوم">${[0, 1, 2].map((i) => star(i < stars)).join('')}</div>
       <h2 id="q-t">${score >= 3 ? 'رائع يا يوسف!' : 'أحسنت المحاولة يا يوسف!'}</h2>
       <p>أجبت عن ${score} من ${QUIZ.length} أسئلة إجابة صحيحة</p>
-      ${ME ? '' : `<div class="gains"><span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span>${perfect ? '<span class="gain badge"><img src="img/forest/S-01.png" alt="">شارة جديدة: صديق الحكايات</span>' : ''}</div>`}
+      ${ME ? '' : `<div class="gains"><span class="gain"><img src="img/hud/points.png" alt="">+${XP} نقطة</span>${perfect ? '<span class="gain badge"><img src="img/badges/S-01.png" alt="">شارة جديدة: صديق الحكايات</span>' : ''}</div>`}
       <div class="btns">
         <a class="btn go" href="beach.html">العودة إلى الشاطئ</a>
         <button class="btn soft" id="q-again" type="button">اقرأ القصة مرة أخرى</button>

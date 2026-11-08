@@ -196,8 +196,8 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
     $('nums').innerHTML = `<div class="num card"><span class="k"><img src="img/I-08.png" alt="">المستوى ${ar(me.level)}</span>
         <span class="lvl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="التقدم نحو المستوى ${ar(me.level + 1)}"><i style="width:${pct}%"></i></span>
         <small>باقي ${num(me.to - me.xp)} نقطة للوصول إلى المستوى ${ar(me.level + 1)}</small></div>
-      <div class="num card"><span class="k"><img src="img/I-06.png" alt="">مجموع نقاطي</span><span class="v">${num(me.xp)}</span></div>
-      <div class="num card"><span class="k"><img src="img/I-07.png" alt="">أيام متتالية</span><span class="v">${ar(me.streak)}</span></div>`;
+      <div class="num card"><span class="k"><img src="img/hud/points.png" alt="">مجموع نقاطي</span><span class="v">${num(me.xp)}</span></div>
+      <div class="num card"><span class="k"><img src="img/hud/streak.png" alt="">أيام متتالية</span><span class="v">${ar(me.streak)}</span></div>`;
     const got = BADGES.filter((b) => b.got).length;
     $('badges-t').textContent = `شاراتي (${ar(got)} من ${ar(BADGES.length)})`;
     $('badges').innerHTML = BADGES.map((b) => `<div class="badge card ${b.got ? '' : 'no'}"><img src="img/badges/${b.id}.png" alt="">
