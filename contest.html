@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مسابقة مستمرة · قمة الأبطال</title>
+<link rel="stylesheet" href="clouds.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps('.pill, .go, .soft');</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --sand: #FFF4F0; --go: #2E8B2A; --go-deep: #1F6A1C; --coral: #FF7A6B; --coral-deep: #C24A3C; --line: #6B3A1E; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); font-weight: 500; }
+img { display: block; max-width: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+#wrap { position: relative; width: 100%; overflow: hidden; }
+#page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: top left; }
+
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 20px 32px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #F2CFC6; white-space: nowrap; border: 0; }
+.pill img { width: 30px; height: 30px; margin: -4px 0; }
+.stats { display: flex; gap: 10px; }
+main { padding: 0 80px 150px; display: flex; flex-direction: column; gap: 30px; }
+
+/* the competition: its picture, what to do, until when */
+.about { display: grid; grid-template-columns: 1fr 560px; gap: 30px; align-items: start; }
+.about .cov { position: relative; border-radius: 32px; overflow: hidden; aspect-ratio: 16 / 9; box-shadow: 0 8px 0 #F2CFC6; }
+.about .cov img { width: 100%; height: 100%; object-fit: cover; }
+.type { position: absolute; top: 14px; right: 14px; height: 36px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 16px; font-weight: 800; display: flex; align-items: center; }
+.about .txt { display: flex; flex-direction: column; gap: 12px; }
+.about h1 { margin: 0; font-size: 46px; font-weight: 800; line-height: 1.15; color: var(--coral-deep); }
+.about p { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.6; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.meta span { height: 36px; padding: 0 14px; border-radius: 999px; background: var(--paper); font-size: 16px; font-weight: 800; display: flex; align-items: center; box-shadow: 0 3px 0 #F2CFC6; }
+.meta .soon { background: #FFE9C2; color: #8A5A00; }
+.rules { margin: 0; padding: 14px 18px; border-radius: 22px; background: var(--paper); list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 17px; font-weight: 700; box-shadow: 0 4px 0 #F2CFC6; }
+.rules li::before { content: '• '; color: var(--coral); font-weight: 800; }
+.rules b { color: var(--ink-soft); }
+
+/* my entry: send one, and see where it stands */
+.mine { display: flex; align-items: center; gap: 22px; padding: 18px 22px; border-radius: 30px; background: var(--paper); box-shadow: 0 6px 0 #F2CFC6; }
+.mine .t { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.mine b { font-size: 26px; font-weight: 800; }
+.mine small { font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+.state { align-self: flex-start; height: 32px; padding: 0 12px; border-radius: 999px; font-size: 15px; font-weight: 800; display: flex; align-items: center; }
+.state.review { background: #FFF1C9; color: #8A5A00; } .state.live { background: #DDF5D3; color: #2E7D32; } .state.win { background: #FFE0DA; color: var(--coral-deep); }
+.go { display: inline-flex; align-items: center; gap: 8px; height: 58px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--go); color: var(--paper); text-decoration: none; font-size: 20px; font-weight: 800; box-shadow: 0 5px 0 var(--go-deep); }
+.soft { display: inline-flex; align-items: center; height: 54px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--paper); font-size: 18px; font-weight: 800; box-shadow: 0 0 0 3px #F2CFC6, 0 5px 0 #F2CFC6; }
+
+/* the entries, to look at and vote for */
+.row { display: flex; align-items: center; justify-content: space-between; }
+.row h2 { margin: 0; font-size: 30px; font-weight: 800; }
+.row small { font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+.entries { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.entry { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 12px 12px 14px; border-radius: 28px; background: var(--paper); box-shadow: 0 6px 0 #F2CFC6; }
+/* an entry picture; a story cover shows the title the child wrote */
+.art { position: relative; display: block; }
+.art img { width: 100%; aspect-ratio: 1; border-radius: 18px; object-fit: cover; background: #FFFFFF; }
+.art .title { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 6px 10px; border-radius: 12px; background: rgba(255,255,255,.92); font-size: 17px; font-weight: 800; text-align: center; transform: rotate(-1.5deg); box-shadow: 0 2px 0 rgba(0,0,0,.1); }
+.art.small { width: 150px; flex-shrink: 0; }
+.art.small img { height: 150px; }
+.entry .who { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; }
+.entry b { font-size: 20px; font-weight: 800; }
+.votes { font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+.vote { height: 50px; border: 3px solid #F2CFC6; border-radius: 999px; background: #FFF6F3; font-size: 18px; font-weight: 800; }
+.vote[aria-pressed="true"] { border-color: var(--coral); background: var(--coral); color: var(--paper); }
+.entry.win { box-shadow: 0 0 0 5px #F7B347, 0 6px 0 #C98A1E, 0 0 30px rgba(247,179,71,.5); }
+.crown { position: absolute; top: -18px; left: 50%; translate: -50% 0; height: 38px; padding: 0 14px; border-radius: 999px; background: linear-gradient(#FFD98C, #F7B347); border: 3px solid var(--paper); font-size: 16px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+.entry.me .who b::after { content: ' (أنت)'; color: var(--coral-deep); }
+
+/* sending an entry: from «إبداعاتي», or a file from the device */
+.sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(60,20,10,.45); }
+.sheet[hidden] { display: none; }
+.sheet .box { position: relative; width: min(760px, 100%); max-height: 100%; overflow-y: auto; padding: 22px 24px 24px; border-radius: 32px; background: #FFFDFB; box-shadow: 0 10px 0 rgba(0,0,0,.2); display: flex; flex-direction: column; gap: 14px; }
+.sheet h2 { margin: 0; font-size: 28px; font-weight: 800; }
+.sheet p { margin: 0; font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+.x { position: absolute; top: 14px; left: 14px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--paper); font-size: 24px; font-weight: 800; box-shadow: 0 3px 0 #F2CFC6; }
+.picks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.pick { padding: 6px; border: 4px solid #F2CFC6; border-radius: 18px; background: var(--paper); }
+.pick img { width: 100%; aspect-ratio: 1; border-radius: 12px; object-fit: cover; }
+.pick[aria-pressed="true"] { border-color: var(--coral); box-shadow: 0 0 0 3px #FFE0DA; }
+.or { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+.or::before, .or::after { content: ''; flex: 1; border-top: 2px dashed #F2CFC6; }
+.upload { display: flex; align-items: center; justify-content: center; gap: 10px; height: 64px; border: 3px dashed #F2CFC6; border-radius: 20px; background: #FFF6F3; font-size: 18px; font-weight: 800; cursor: pointer; }
+.upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.preview { display: flex; align-items: center; gap: 14px; }
+.preview img { width: 120px; height: 120px; border-radius: 16px; object-fit: cover; }
+.preview[hidden] { display: none; }
+.empty { padding: 16px; border-radius: 18px; background: #FFF6F3; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.empty a { color: var(--coral-deep); }
+
+.toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: rgba(58,35,24,.9); color: var(--paper); border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: 16px; z-index: 40; opacity: 0; transition: opacity .25s; pointer-events: none; text-align: center; }
+.toast.show { opacity: 1; }
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+@media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } .picks { grid-template-columns: repeat(3, 1fr); } .sheet h2 { font-size: 22px; } }
+/* phones: the page is drawn 720 wide */
+.narrow main { padding: 0 32px 150px; }
+.narrow .about { grid-template-columns: 1fr; }
+.narrow .about h1 { font-size: 40px; }
+.narrow .mine { flex-wrap: wrap; }
+.narrow .entries { grid-template-columns: repeat(2, 1fr); }
+.narrow .row { flex-direction: column; align-items: flex-start; gap: 6px; }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="page">
+<div class="bar">
+  <a class="pill back" href="peak.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>قمة الأبطال</span></a>
+  <div class="stats">
+    <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+    <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+  </div>
+</div>
+<main>
+  <section class="about" id="about"></section>
+  <section class="mine" id="mine" aria-live="polite"></section>
+  <section aria-labelledby="ent-t">
+    <div class="row"><h2 id="ent-t">المشاركات</h2><small id="ent-n"></small></div>
+    <div class="entries" id="entries" style="margin-top:16px"></div>
+  </section>
+</main>
+</div></div>
+
+<div class="sheet" id="send" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="send-t">
+    <button class="x" type="button" id="send-x" aria-label="إغلاق">×</button>
+    <h2 id="send-t">شارك في المسابقة</h2>
+    <p id="send-p"></p>
+    <div id="from-works"></div>
+    <label class="upload"><input type="file" accept="image/png, image/jpeg" id="file"><span id="up-label"></span></label>
+    <div class="preview" id="preview" hidden><img id="prev-img" alt="مشاركتك"><p>هذه مشاركتك. تراجعها إدارة أجيال قبل أن تظهر للتصويت.</p></div>
+    <button class="go" type="button" id="submit" disabled>أرسل مشاركتي</button>
+  </div>
+</div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="valley.js"></script>
+<script src="peak.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { COMPS, isOpen, canEnter, until, ago, ar, mine, keep, winner } = Peak;
+  const c = COMPS.find((x) => x.id === new URLSearchParams(location.search).get('c') && x.kind === 'contest') || COMPS.find((x) => x.kind === 'contest');
+  const open = isOpen(c), entering = canEnter(c);
+  const story = c.mine === 'story', what = story ? 'قصة' : 'رسمة';
+  // vote counts show during voting or only at the end, as the admin sets the competition
+  const showVotes = !open || c.votes !== 'end';
+  let chosen = null, chosenName = '';
+  document.title = `${c.name} · قمة الأبطال`;
+
+  $('about').innerHTML = `<div class="cov"><img src="img/peak/${c.cover}.jpg" alt=""><span class="type">${story ? '📖' : '🎨'} مسابقة مستمرة</span></div>
+    <div class="txt"><h1>${c.name}</h1><p>${c.about}</p>
+      <div class="meta">${open ? `<span class="${entering ? 'soon' : ''}">✏️ ${entering ? until(c.due || c.end, 'آخر موعد للمشاركة') : 'انتهى وقت المشاركة'}</span><span class="soon">🗳 ${until(c.end, 'ينتهي التصويت')}</span>` : `<span>📅 ${ago(c)}</span>`}<span>👥 ${ar(c.people)} مشاركاً</span></div>
+      <ul class="rules"><li><b>المشاركة:</b> ${c.accepts}</li>${c.rules.map((r) => `<li>${r}</li>`).join('')}<li>الفائزة هي المشاركة التي تحصل على أكثر الأصوات عند انتهاء المسابقة</li></ul></div>`;
+
+  // a story entry: the child's own cover drawing with the title they gave it
+  const card = (e, cls = '') => `<span class="art ${cls}"><img src="img/peak/${e.img}.jpg" alt="${what} ${e.name}">${e.title ? `<span class="title">${e.title}</span>` : ''}</span>`;
+
+  function render() {
+    const m = mine(c.id);
+    const win = !open && winner(c);
+    // my entry and where it stands: under review, in the voting, not approved, or the result at the end
+    if (!open) {
+      const me = c.entries.find((e) => e.id === c.me);
+      $('mine').innerHTML = me ? `${card(me, 'small')}<div class="t"><b>مشاركتك${me.title ? `: ${me.title}` : ''}</b><span class="state ${win === me ? 'win' : 'live'}">${win === me ? '🏆 فازت مشاركتك!' : `حصلت على ${ar(me.votes)} صوتاً`}</span><small>${win === me ? 'مبروك! شارة «بطل القمة» في غرفتك' : `فازت مشاركة ${win.name} بـ ${ar(win.votes)} صوتاً. شكراً لمشاركتك!`}</small></div>`
+        : `<div class="t"><b>انتهت المسابقة</b><small>${win ? `فازت مشاركة ${win.name} بـ ${ar(win.votes)} صوتاً` : 'لم تكن فيها مشاركات'}</small></div>`;
+    } else if (m.entry) {
+      const st = { review: ['review', 'تحت المراجعة', 'تراجعها إدارة أجيال، ونخبرك بنتيجة المراجعة، ثم بنتيجة المسابقة عندما تنتهي.'],
+        live: ['live', 'في التصويت', 'اعتمدتها إدارة أجيال، وهي الآن في المعرض مع المشاركات.'],
+        rejected: ['review', 'لم تُعتمد', 'لم تُعتمد مشاركتك هذه المرة.'] }[m.entry.state];
+      $('mine').innerHTML = `<span class="art small"><img src="${m.entry.img}" alt="مشاركتك"></span><div class="t"><b>مشاركتك</b><span class="state ${st[0]}">${st[1]}</span><small>${st[2]}</small></div>
+        ${m.entry.state === 'review' ? '<button class="soft" type="button" id="withdraw">اسحب مشاركتي</button>' : ''}`;
+      $('withdraw')?.addEventListener('click', () => { keep(c.id, { entry: null }); toast('سحبت مشاركتك، ويمكنك المشاركة من جديد'); render(); });
+    } else if (entering) {
+      $('mine').innerHTML = `<div class="t"><b>لم تشارك بعد</b><small>شارك بـ${what} واحدة من عملك. ${until(c.due || c.end, 'آخر موعد للمشاركة')}</small></div><button class="go" type="button" id="join">شارك الآن</button>`;
+      $('join').addEventListener('click', openSend);
+    } else {
+      $('mine').innerHTML = '<div class="t"><b>انتهى وقت المشاركة</b><small>يمكنك التصويت للمشاركات حتى نهاية المسابقة</small></div>';
+    }
+    // the gallery: open entries take votes, an ended competition shows the winner first
+    const list = open ? c.entries : [...c.entries].sort((a, b) => b.votes - a.votes);
+    const mineLive = open && m.entry?.state === 'live' ? [{ id: 'mine', name: 'يوسف', votes: 0, me: true, src: m.entry.img }] : [];
+    $('ent-n').textContent = open ? (m.vote ? 'صوّتّ لمشاركة، ويمكنك تغيير صوتك قبل انتهاء المسابقة' : 'لك صوت واحد، أعطه للمشاركة التي تعجبك') + (showVotes ? '' : ' · تظهر الأصوات عند انتهاء المسابقة') : `${ar(c.entries.length)} مشاركات`;
+    $('entries').innerHTML = [...mineLive, ...list].map((e) => {
+      const votes = e.votes + (m.vote === e.id ? 1 : 0), isMe = e.me || e.id === c.me;
+      return `<div class="entry ${e === win ? 'win' : ''} ${isMe ? 'me' : ''}">${e === win ? '<span class="crown">🏆 الفائزة</span>' : ''}
+        ${e.src ? `<span class="art"><img src="${e.src}" alt="مشاركتك"></span>` : card(e)}<div class="who"><b>${e.name}</b>${showVotes ? `<span class="votes">${ar(votes)} صوتاً</span>` : ''}</div>
+        ${open && !isMe ? `<button class="vote" type="button" data-id="${e.id}" aria-pressed="${m.vote === e.id}">${m.vote === e.id ? 'صوّتّ لها ✓' : 'صوّت لها'}</button>` : ''}</div>`;
+    }).join('');
+    fit();
+  }
+  // one vote per child, which can move to another entry until the end
+  $('entries').addEventListener('click', (e) => {
+    const b = e.target.closest('.vote'); if (!b) return;
+    const m = mine(c.id), id = b.dataset.id;
+    keep(c.id, { vote: m.vote === id ? null : id });
+    window.Sfx?.play(m.vote === id ? 'tap' : 'right');
+    render();
+  });
+
+  // ---- sending an entry: from «إبداعاتي», or a file from the device (saved to «إبداعاتي» too)
+  function openSend() {
+    const works = Valley.works.read().filter((w) => w.kind === 'draw' && w.state !== 'rejected');
+    $('send-p').textContent = story ? 'ارفع قصتك التي كتبتها ورسمتها: ملف PDF أو صورة غلافها وصفحاتها' : 'اختر رسمة من «إبداعاتي»، أو ارفع صورة رسمتك من جهازك';
+    $('up-label').textContent = story ? '📄 ارفع ملف قصتك' : '📷 ارفع صورة رسمتك';
+    $('file').accept = story ? 'application/pdf, image/png, image/jpeg' : 'image/png, image/jpeg';
+    $('from-works').innerHTML = story ? ''
+      : works.length ? `<div class="picks">${works.slice(0, 8).map((w) => `<button class="pick" type="button" data-id="${w.id}" aria-pressed="false" aria-label="${w.name}"><img src="${w.img}" alt=""></button>`).join('')}</div><div class="or">أو</div>`
+      : '<p class="empty">لا توجد رسومات في «إبداعاتي» بعد. <a href="draw.html">ارسم رسمة في وادي الألوان</a>، أو ارفع صورة من جهازك.</p><div class="or">أو</div>';
+    chosen = null; chosenName = ''; $('preview').hidden = true; $('submit').disabled = true;
+    $('send').hidden = false; $('send-x').focus();
+  }
+  const choose = (img, name) => { chosen = img; chosenName = name; $('prev-img').src = img; $('preview').hidden = false; $('submit').disabled = false; };
+  $('from-works').addEventListener('click', (e) => {
+    const p = e.target.closest('.pick'); if (!p) return;
+    $('from-works').querySelectorAll('.pick').forEach((x) => x.setAttribute('aria-pressed', String(x === p)));
+    choose(p.querySelector('img').src, '');
+  });
+  $('file').addEventListener('change', () => {
+    const f = $('file').files[0]; if (!f) return;
+    if (f.type === 'application/pdf' && story) return choose('img/peak/c-story.jpg', f.name);
+    if (!/^image\/(png|jpeg)$/.test(f.type)) return toast(story ? 'اختر ملف PDF أو صورة' : 'اختر صورة بصيغة JPG أو PNG');
+    // a small copy is enough to show the entry here
+    const img = new Image(); img.onload = () => {
+      const s = 600 / Math.max(img.width, img.height), cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * s); cv.height = Math.round(img.height * s); cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      choose(cv.toDataURL('image/jpeg', 0.85), f.name); URL.revokeObjectURL(img.src);
+    };
+    img.src = URL.createObjectURL(f);
+  });
+  $('submit').addEventListener('click', () => {
+    if (!chosen) return;
+    // a file from the device becomes a work in «إبداعاتي», sent for review with the entry
+    if (chosenName && !story) Valley.works.save({ id: `upload-${Date.now()}`, kind: 'draw', name: 'رسمة مرفوعة', img: chosen, state: 'review', at: Date.now() });
+    keep(c.id, { entry: { img: chosen, state: 'review', at: Date.now() } });
+    $('send').hidden = true; window.Sfx?.play('win');
+    toast('أرسلنا مشاركتك، وتراجعها إدارة أجيال');
+    render(); $('mine').scrollIntoView({ block: 'center' });
+  });
+  $('send-x').addEventListener('click', () => { $('send').hidden = true; $('join')?.focus(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('send').hidden) { $('send').hidden = true; } });
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2600); };
+  const page = $('page'), wrap = $('wrap');
+  function fit() {
+    const B = innerWidth < 760 ? 720 : 1440;
+    page.style.width = B + 'px'; page.classList.toggle('narrow', B < 1440);
+    const k = Math.min(innerWidth / B, 1.5), x = Math.max(0, (innerWidth - B * k) / 2);
+    page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    wrap.style.height = page.offsetHeight * k + 'px';
+  }
+  addEventListener('resize', fit);
+  render();
+})();
+</script>
+</body>
+</html>

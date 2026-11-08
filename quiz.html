@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مسابقة سريعة · قمة الأبطال</title>
+<link rel="stylesheet" href="viewer.css">
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill');</script>
+<style>
+.bg { background: url(img/peak/peak-hero.jpg) center 40% / cover; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+.bg::after { content: ''; position: absolute; inset: 0; background: rgba(255,244,240,.6); }
+.app { grid-template-rows: auto 1fr; }
+.ttl img { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; }
+.ttl h1 { text-shadow: 0 3px 0 #C24A3C, 2px 0 0 #C24A3C, -2px 0 0 #C24A3C, 0 -2px 0 #C24A3C; }
+
+/* one card in the middle: the rules, then a question at a time, then the result */
+.stage { min-height: 0; display: flex; align-items: center; justify-content: center; overflow-y: auto; }
+.panel { position: relative; width: min(860px, 100%); max-height: 100%; overflow-y: auto; padding: 24px 28px 26px; border-radius: 34px; background: #FFFDFB; box-shadow: 0 10px 0 rgba(194,74,60,.18), 0 24px 40px rgba(0,0,0,.15); display: flex; flex-direction: column; gap: 16px; }
+.panel h2 { margin: 0; font-size: 32px; font-weight: 800; }
+.panel p { margin: 0; font-size: 19px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.cover { width: 100%; aspect-ratio: 16 / 7; border-radius: 22px; object-fit: cover; }
+.rules { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rules li { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 18px; background: #FFF1EC; font-size: 17px; font-weight: 800; }
+.rules li i { font-style: normal; font-size: 24px; }
+.btn.big { align-self: flex-start; height: 62px; padding: 0 34px; font-size: 22px; }
+
+/* a question: how far along, the time left, the choices */
+.qhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dots { display: flex; gap: 8px; }
+.dots i { width: 16px; height: 16px; border-radius: 50%; background: #F2DCD5; }
+.dots i.done { background: #FF9384; } .dots i.at { background: #F7B347; box-shadow: 0 0 0 4px rgba(247,179,71,.3); }
+.clock { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; }
+.timer { height: 14px; border-radius: 999px; background: #F2DCD5; overflow: hidden; }
+.timer i { display: block; height: 100%; width: 100%; border-radius: 999px; background: linear-gradient(90deg, #5BC236, #F7B347); transform-origin: right; }
+.timer.low i { background: #FF7A6B; }
+.qrow { display: flex; align-items: center; gap: 12px; }
+.q { margin: 0; flex: 1; font-size: 28px; font-weight: 800; line-height: 1.45; color: var(--ink) !important; }
+.hear { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 16px; border: 0; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-size: 17px; font-weight: 800; flex-shrink: 0; }
+.hear svg { width: 22px; height: 22px; }
+.opts { display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: 12px; }
+.opt { min-height: 72px; padding: 12px 16px; border: 4px solid #F2DCD5; border-radius: 22px; background: #FFFFFF; font-size: 22px; font-weight: 800; box-shadow: 0 5px 0 #F2DCD5; transition: transform .12s; }
+.opt img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+.opt span { display: block; margin-top: 4px; font-size: 18px; }
+.opt[aria-pressed="true"] { border-color: #FF7A6B; background: #FFF1EC; box-shadow: 0 5px 0 #FF7A6B; transform: translateY(-3px); }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.foot small { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+
+/* the result, right after sending */
+.res { align-items: center; text-align: center; }
+.res .falcon { width: 190px; margin: -10px 0 -6px; }
+.score { display: flex; align-items: baseline; gap: 8px; font-size: 26px; font-weight: 800; color: #C24A3C; }
+.score b { font-size: 76px; line-height: 1; }
+.facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.facts span { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 999px; background: #FFF1EC; font-size: 18px; font-weight: 800; }
+.facts .gain { background: #FFF1C9; color: #8A5A00; }
+.facts img { width: 30px; height: 30px; }
+.res .btns { margin: 6px 0 0; }
+
+@media (max-width: 760px) {
+  .panel { padding: 18px 16px 20px; border-radius: 26px; gap: 12px; }
+  .panel h2 { font-size: 26px; } .panel p { font-size: 17px; }
+  .rules { grid-template-columns: 1fr; } .rules li { font-size: 16px; }
+  .q { font-size: 22px; } .hear { height: 40px; padding: 0 12px; font-size: 15px; }
+  .opts { grid-template-columns: repeat(var(--m, 1), 1fr); } .opt { min-height: 60px; font-size: 19px; }
+  .score b { font-size: 60px; } .res .falcon { width: 150px; }
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="peak.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>قمة الأبطال</span></a>
+    <div class="ttl"><img id="ttl-img" alt=""><h1 id="ttl"></h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span>35 د</span></span>
+  </header>
+  <main class="stage"><section class="panel" id="panel"></section></main>
+  <p class="sr" id="said" role="status"></p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="peak.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { COMPS, isOpen, left, ago, ar, mine, keep } = Peak;
+  const c = COMPS.find((x) => x.id === new URLSearchParams(location.search).get('c') && x.kind === 'quiz') || COMPS[0];
+  const XP = 10; // participation reward, from gamification when eligible
+  const panel = $('panel');
+  let at = 0, answers = [], timer = null, left0 = 0, startedAt = 0;
+  $('ttl').textContent = c.name; $('ttl-img').src = `img/peak/${c.cover}.jpg`;
+  document.title = `${c.name} · قمة الأبطال`;
+
+  const synth = window.speechSynthesis; synth?.getVoices();
+  function hear(text) {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return toast('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.rate = 0.92; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  }
+  const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+
+  // ---- the details and the rules
+  function intro() {
+    const m = mine(c.id), done = m.result || c.done;
+    if (done) return result(done, false);
+    // started before and left mid-way: the answers given so far are sent
+    if (m.attempt) { answers = m.attempt; return send(true); }
+    const open = isOpen(c);
+    if (!open) { panel.innerHTML = `<img class="cover" src="img/peak/${c.cover}.jpg" alt=""><h2>${c.name}</h2><p>${c.about}</p><p><b>${ago(c)}، ولم تشارك فيها.</b></p><a class="btn go big" href="peak.html">العودة إلى القمة</a>`; return; }
+    panel.innerHTML = `<img class="cover" src="img/peak/${c.cover}.jpg" alt="">
+      <h2>${c.name}</h2><p>${c.about}</p>
+      <ul class="rules">
+        <li><i>❓</i>${ar(c.questions.length)} أسئلة</li>
+        <li><i>⏱</i>لكل سؤال ${ar(c.seconds)} ثانية</li>
+        <li><i>⭐</i>النتيجة بصحة الإجابات وسرعتها</li>
+        <li><i>📅</i>${open ? left(c) : ago(c)}</li>
+      </ul>
+      <p>تشارك مرة واحدة، وتظهر نتيجتك فور إرسال الإجابات.</p>
+      ${open ? '<button class="btn go big" type="button" id="go">ابدأ المسابقة</button>' : '<p><b>انتهت هذه المسابقة.</b></p>'}`;
+    $('go')?.addEventListener('click', () => { at = 0; answers = []; startedAt = Date.now(); keep(c.id, { attempt: [] }); ask(); });
+  }
+
+  // ---- one question at a time, with its own time
+  function ask() {
+    const Q = c.questions[at], last = at === c.questions.length - 1;
+    const opts = Q.type === 'tf' ? ['صح', 'خطأ'] : Q.opts;
+    panel.innerHTML = `<div class="qhead"><span class="dots" aria-hidden="true">${c.questions.map((_, i) => `<i class="${i < at ? 'done' : i === at ? 'at' : ''}"></i>`).join('')}</span>
+        <span>السؤال ${ar(at + 1)} من ${ar(c.questions.length)}</span><span class="clock" id="clock">⏱ ${ar(c.seconds)}</span></div>
+      <div class="timer" id="timer"><i id="bar"></i></div>
+      <div class="qrow"><p class="q">${Q.q}</p><button class="hear" type="button" id="hear">${SPEAKER}استمع</button></div>
+      <div class="opts" style="--n:${opts.length};--m:${Q.type === 'pics' ? 3 : Q.type === 'tf' ? 2 : 1}">${opts.map((o, i) => Q.type === 'pics'
+        ? `<button class="opt" type="button" data-i="${i}" aria-pressed="false" aria-label="${o.name}"><img src="${o.img}" alt=""><span>${o.name}</span></button>`
+        : `<button class="opt" type="button" data-i="${i}" aria-pressed="false">${o}</button>`).join('')}</div>
+      <div class="foot"><small>اختر إجابة، ثم ${last ? 'أرسل إجاباتك' : 'انتقل للسؤال التالي'}</small><button class="btn go" type="button" id="next" disabled>${last ? 'أرسل إجاباتي' : 'التالي'}</button></div>`;
+    answers[at] = { pick: null, ms: null };
+    left0 = Date.now();
+    tick();
+  }
+  function tick() {
+    clearInterval(timer);
+    timer = setInterval(() => {
+      const gone = (Date.now() - left0) / 1000, rest = Math.max(0, c.seconds - gone);
+      $('bar').style.transform = `scaleX(${rest / c.seconds})`;
+      $('clock').textContent = `⏱ ${ar(Math.ceil(rest))}`;
+      $('timer').classList.toggle('low', rest <= 5);
+      if (rest <= 5 && !$('timer').dataset.told) { $('timer').dataset.told = '1'; $('said').textContent = 'بقيت خمس ثوانٍ'; }
+      // time is up: the answer chosen so far is kept, and the next question comes
+      if (rest <= 0) { clearInterval(timer); toast('انتهى وقت هذا السؤال'); next(); }
+    }, 200);
+  }
+  panel.addEventListener('click', (e) => {
+    if (e.target.closest('#hear')) { const Q = c.questions[at]; return hear(`${Q.q}. ${(Q.type === 'tf' ? ['صح', 'خطأ'] : Q.opts.map((o) => o.name || o)).join('، ')}`); }
+    const o = e.target.closest('.opt');
+    if (o) {
+      panel.querySelectorAll('.opt').forEach((x) => x.setAttribute('aria-pressed', String(x === o)));
+      answers[at] = { pick: +o.dataset.i, ms: Date.now() - left0 };
+      keep(c.id, { attempt: answers });
+      $('next').disabled = false; return;
+    }
+    if (e.target.closest('#next')) next();
+  });
+  function next() {
+    clearInterval(timer);
+    if (at < c.questions.length - 1) { at++; return ask(); }
+    send();
+  }
+
+  // ---- send: the score comes from correct answers and how fast they came (no live play between children)
+  function send(late) {
+    let right = 0, score = 0;
+    c.questions.forEach((Q, i) => {
+      const a = answers[i];
+      if (a && a.pick === Q.a) { right++; score += 10 + Math.round(10 * Math.max(0, 1 - a.ms / (c.seconds * 1000))); }
+    });
+    const r = { score: Math.round(score * 100 / (c.questions.length * 20)), right, of: c.questions.length };
+    keep(c.id, { result: r, attempt: null });
+    result(r, true, late);
+  }
+  function result(r, fresh, late) {
+    panel.classList.add('res');
+    panel.innerHTML = `<img class="falcon" src="img/peak/${r.right >= Math.ceil(r.of / 2) ? 'f-trophy' : 'f-wave'}.png" alt="">
+      <h2>${late ? 'أرسلنا إجاباتك التي اخترتها قبل أن تخرج' : !fresh ? 'نتيجتك في هذه المسابقة' : r.right ? 'أحسنت يا يوسف! وصلت إجاباتك' : 'شكراً لمشاركتك يا يوسف!'}</h2>
+      <div class="score"><b>${ar(r.score)}</b> من ١٠٠</div>
+      <div class="facts"><span>✓ ${ar(r.right)} من ${ar(r.of)} إجابات صحيحة</span>${fresh ? `<span class="gain"><img src="img/forest/I-06.png" alt="">+${ar(XP)} نقاط للمشاركة</span>` : ''}</div>
+      <p>تُحسب النتيجة بصحة الإجابات وسرعتها.</p>
+      <div class="btns"><a class="btn go" href="peak.html">العودة إلى القمة</a></div>`;
+    if (fresh) Sfx.play('win');
+  }
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2200); };
+  // leaving mid-way does not stop the clock of the question on screen
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && timer) tick(); });
+  intro();
+})();
+</script>
+</body>
+</html>

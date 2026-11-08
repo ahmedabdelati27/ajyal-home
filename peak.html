@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>قمة الأبطال · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --sand: #FFF4F0; --go: #2E8B2A; --go-deep: #1F6A1C; --coral: #FF7A6B; --coral-deep: #C24A3C; --line: #6B3A1E; --leaf: #5BC236; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); font-weight: 500; }
+img { display: block; max-width: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* drawn at 1440 wide like the forest board, then scaled to the window */
+#wrap { position: relative; width: 100%; overflow: hidden; }
+#page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: top left; }
+
+/* hero: the peak with its trophy, fading into the page */
+.hero { position: relative; height: 500px; background: url(img/peak/peak-hero.jpg) center 35% / cover; }
+.hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 150px; background: linear-gradient(rgba(255,244,240,0), var(--sand) 92%); pointer-events: none; }
+.bar { position: absolute; z-index: 3; top: 20px; left: 32px; right: 32px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #F2CFC6; white-space: nowrap; }
+.pill img { width: 30px; height: 30px; margin: -4px 0; }
+.stats { display: flex; gap: 10px; }
+.isle { position: absolute; z-index: 2; left: 70px; top: 54px; width: 380px; animation: float 4.5s ease-in-out infinite; }
+@keyframes float { 50% { translate: 0 -8px; } }
+.say { position: absolute; z-index: 3; left: 420px; top: 96px; max-width: 260px; margin: 0; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--coral); }
+.say::before { content: ''; position: absolute; left: -16px; bottom: 18px; border: 12px solid transparent; border-right-color: var(--paper); border-left: 0; }
+.head { position: absolute; z-index: 3; right: 80px; top: 120px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.head h1 { margin: 0; font-size: 78px; font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--coral-deep), 3px 0 0 var(--coral-deep), -3px 0 0 var(--coral-deep), 0 -3px 0 var(--coral-deep), 3px 3px 0 var(--coral-deep), -3px 3px 0 var(--coral-deep), 3px -3px 0 var(--coral-deep), -3px -3px 0 var(--coral-deep); }
+.head p { margin: 0; font-size: 22px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 4px 18px; }
+
+main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px; display: flex; flex-direction: column; gap: 26px; }
+.row { display: flex; align-items: center; justify-content: space-between; }
+.row h2 { margin: 0; font-size: 30px; font-weight: 800; }
+.seg { display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: var(--paper); box-shadow: 0 4px 0 #F2CFC6; }
+.seg button { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: none; font-size: 18px; font-weight: 800; }
+.seg button[aria-pressed="true"] { background: linear-gradient(#FF9384, #E85D4D); color: var(--paper); }
+.note { margin: -10px 0 0; font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+
+/* a competition: what it is, how long it runs, and where the child stands */
+.comps { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+.comp { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 14px; border-radius: 32px; background: var(--paper); text-decoration: none; color: var(--ink); box-shadow: 0 6px 0 #F2CFC6; transition: transform .2s; }
+.comp:hover { transform: translateY(-4px); }
+.comp .cov { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 16 / 11; }
+.comp .cov img { width: 100%; height: 100%; object-fit: cover; }
+.comp.ended .cov img { filter: saturate(.55); }
+.type { position: absolute; top: 10px; right: 10px; height: 32px; padding: 0 12px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.comp .txt { display: flex; flex-direction: column; gap: 8px; padding: 6px 4px 4px 0; min-width: 0; }
+.comp b { font-size: 26px; font-weight: 800; line-height: 1.2; }
+.comp p { margin: 0; font-size: 16px; font-weight: 700; color: var(--ink-soft); line-height: 1.5; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.meta span { height: 30px; padding: 0 12px; border-radius: 999px; background: #FFF1EC; font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.meta .soon { background: #FFE9C2; color: #8A5A00; }
+.me { font-size: 16px; font-weight: 800; }
+.me.ok { color: var(--go-deep); } .me.wait { color: #8A5A00; } .me.win { color: var(--coral-deep); }
+.cta { margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 22px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 19px; font-weight: 800; box-shadow: 0 5px 0 var(--go-deep); }
+.comp.ended .cta { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 3px #F2CFC6, 0 5px 0 #F2CFC6; }
+.empty { padding: 26px 30px; border-radius: 28px; background: rgba(255,255,255,.7); font-size: 19px; font-weight: 700; color: var(--ink-soft); }
+
+.toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: rgba(58,35,24,.9); color: var(--paper); border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: 16px; z-index: 40; opacity: 0; transition: opacity .25s; pointer-events: none; text-align: center; }
+.toast.show { opacity: 1; }
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+@media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
+/* phones: the page is drawn 720 wide, one competition per row */
+.narrow .hero { height: 620px; }
+.narrow .isle { left: 20px; top: 70px; width: 300px; }
+.narrow .say { left: 320px; top: 110px; max-width: 360px; }
+.narrow .head { right: 32px; left: 32px; top: 380px; }
+.narrow .head h1 { font-size: 64px; }
+.narrow main { padding: 0 32px 150px; }
+.narrow .row { flex-direction: column; align-items: flex-start; gap: 12px; }
+.narrow .comps { grid-template-columns: 1fr; }
+@media (prefers-reduced-motion: reduce) { .isle { animation: none; } .comp { transition: none; } }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats">
+      <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">12</span>
+    </div>
+  </div>
+  <img class="isle" src="img/peak.png" alt="الصقر شاهين في قمة الأبطال">
+  <p class="say" id="say">أهلاً يا يوسف! أنا شاهين. أي مسابقة تشارك فيها اليوم؟</p>
+  <div class="head">
+    <h1>قمة الأبطال</h1>
+    <p>شارك في المسابقات مع الصقر شاهين</p>
+  </div>
+</header>
+
+<main>
+  <div class="row"><h2 id="list-t">المسابقات</h2>
+    <div class="seg" role="group" aria-label="المسابقات" id="seg"><button type="button" data-v="open" aria-pressed="true"></button><button type="button" data-v="ended" aria-pressed="false"></button></div></div>
+  <p class="note">المسابقات من فريق أجيال. في المسابقة السريعة تجيب عن أسئلة بوقت محدد، وفي المسابقة المستمرة تشارك بعملك ويصوّت الأطفال.</p>
+  <div class="comps" id="comps"></div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="peak.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { COMPS, visible, isOpen, left, ago, ar, mine, winner } = Peak;
+  let tab = 'open';
+
+  // where the child stands in a competition
+  function status(c) {
+    const m = mine(c.id), open = isOpen(c);
+    if (c.kind === 'quiz') {
+      const r = m.result || c.done;
+      if (r) return { cls: 'ok', text: `شاركت · نتيجتك ${ar(r.score)} من ١٠٠`, cta: 'شاهد نتيجتك' };
+      return open ? { cls: '', text: 'لم تشارك بعد', cta: 'ابدأ المسابقة' } : { cls: '', text: 'لم تشارك فيها', cta: 'تفاصيل المسابقة' };
+    }
+    const win = !open && winner(c);
+    if (!open) return c.me ? { cls: win.id === c.me ? 'win' : 'ok', text: win.id === c.me ? '🏆 فازت مشاركتك!' : `حصلت مشاركتك على ${ar(c.entries.find((e) => e.id === c.me).votes)} صوتاً · الفائزة: ${win.name}`, cta: 'شاهد النتيجة' }
+      : { cls: '', text: `الفائزة: مشاركة ${win.name}`, cta: 'شاهد النتيجة' };
+    if (m.entry) return { cls: m.entry.state === 'review' ? 'wait' : 'ok', text: { review: 'مشاركتك تحت المراجعة', live: 'مشاركتك في التصويت', rejected: 'لم تُعتمد مشاركتك' }[m.entry.state], cta: m.vote ? 'شاهد المشاركات' : 'صوّت لمشاركة' };
+    return { cls: '', text: 'لم تشارك بعد', cta: 'شارك الآن' };
+  }
+
+  function render() {
+    const open = COMPS.filter(isOpen), ended = COMPS.filter((c) => visible(c) && !isOpen(c));
+    const [b1, b2] = $('seg').querySelectorAll('button');
+    b1.textContent = `جارية الآن (${ar(open.length)})`; b2.textContent = `انتهت (${ar(ended.length)})`;
+    const list = tab === 'open' ? open : ended;
+    $('comps').innerHTML = list.length ? list.map((c) => {
+      const s = status(c), on = isOpen(c);
+      return `<a class="comp ${on ? '' : 'ended'}" href="${c.kind === 'quiz' ? 'quiz' : 'contest'}.html?c=${c.id}">
+        <span class="cov"><img src="img/peak/${c.cover}.jpg" alt=""><span class="type">${c.kind === 'quiz' ? '⏱ مسابقة سريعة' : c.mine === 'story' ? '📖 مسابقة مستمرة' : '🎨 مسابقة مستمرة'}</span></span>
+        <span class="txt"><b>${c.name}</b><p>${c.about}</p>
+          <span class="meta"><span class="${on ? 'soon' : ''}">${on ? left(c) : ago(c)}</span><span>👥 ${ar(c.people)} مشاركاً</span></span>
+          <span class="me ${s.cls}">${s.text}</span><span class="cta">${s.cta}</span></span></a>`;
+    }).join('') : '<p class="empty">لا توجد مسابقات هنا الآن، تابع القمة قريباً</p>';
+    fit();
+  }
+  $('seg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    tab = b.dataset.v; $('seg').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); render();
+  });
+
+  // the board is drawn at 1440 wide (720 on phones) and scaled to the window
+  const page = $('page'), wrap = $('wrap');
+  function fit() {
+    const B = innerWidth < 760 ? 720 : 1440;
+    page.style.width = B + 'px'; page.classList.toggle('narrow', B < 1440);
+    const k = Math.min(innerWidth / B, 1.5), x = Math.max(0, (innerWidth - B * k) / 2);
+    page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    wrap.style.height = page.offsetHeight * k + 'px';
+  }
+  addEventListener('resize', fit);
+  addEventListener('pageshow', (e) => { if (e.persisted) render(); });
+  render();
+})();
+</script>
+</body>
+</html>
