@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رحلة القيمة · حديقة القيم</title>
+<link rel="stylesheet" href="clouds.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --sand: #F1F8E8; --go: #2E8B2A; --go-deep: #1F6A1C; --leaf: #5BC236; --leaf-deep: #2F7A23; --sun: #F7B347; --line: #6B3A1E; --c: #3D96D6; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--sand); font-weight: 500; }
+img { display: block; max-width: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* drawn at 1440 wide like the forest board, then scaled to the window */
+#wrap { position: relative; width: 100%; overflow: hidden; }
+#page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: top left; }
+
+/* hero: the value's picture, the words on a soft veil, Nour with her words */
+.hero { position: relative; height: 520px; background: var(--cover) center 40% / cover; }
+.hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(270deg, rgba(241,248,232,.96) 0%, rgba(241,248,232,.85) 38%, rgba(241,248,232,0) 62%); }
+.hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 140px; background: linear-gradient(rgba(241,248,232,0), var(--sand) 92%); pointer-events: none; }
+.bar { position: absolute; z-index: 3; top: 20px; left: 32px; right: 32px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #CFE3BC; white-space: nowrap; }
+.pill img { width: 30px; height: 30px; margin: -4px 0; }
+.stats { display: flex; gap: 10px; }
+.head { position: absolute; z-index: 3; right: 80px; top: 100px; width: 600px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.head .kicker { font-size: 20px; font-weight: 800; color: var(--leaf-deep); }
+.head h1 { margin: 0; font-size: 76px; font-weight: 800; line-height: 1; color: var(--c); }
+.head p { margin: 0; font-size: 24px; font-weight: 700; line-height: 1.5; }
+.nour { position: absolute; z-index: 3; right: 80px; top: 300px; display: flex; align-items: flex-end; gap: 14px; width: 640px; }
+.nour img { width: 130px; flex-shrink: 0; animation: hover 3s ease-in-out infinite; }
+@keyframes hover { 50% { translate: 0 -8px; } }
+.nour .bub { position: relative; flex: 1; margin-bottom: 30px; padding: 16px 20px; border-radius: 24px; background: var(--paper); font-size: 20px; font-weight: 800; line-height: 1.5; box-shadow: 0 5px 0 var(--sun); }
+.nour .bub::before { content: ''; position: absolute; right: -14px; bottom: 22px; border: 11px solid transparent; border-left-color: var(--paper); border-right: 0; }
+.listen { display: inline-flex; align-items: center; gap: 6px; height: 40px; margin-top: 10px; padding: 0 14px; border: 0; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-size: 16px; font-weight: 800; }
+.listen[hidden] { display: none; }
+.listen svg { width: 20px; height: 20px; }
+
+main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px; display: flex; flex-direction: column; gap: 26px; }
+.meter { width: 260px; height: 14px; border-radius: 999px; background: #E3EFD6; overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--c); transition: width .6s; }
+.prog { display: flex; align-items: center; justify-content: space-between; }
+.prog h2 { margin: 0; font-size: 30px; font-weight: 800; }
+.prog small { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 800; color: var(--ink-soft); }
+
+/* the stations, one after another on a dotted path */
+.path { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.path::before { content: ''; position: absolute; top: 120px; right: 12%; left: 12%; border-top: 6px dashed #BFD9A8; z-index: 0; }
+.stn { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; padding: 14px 14px 18px; border: 0; border-radius: 30px; background: var(--paper); text-align: start; text-decoration: none; color: var(--ink); box-shadow: 0 6px 0 #D3E6C1; transition: transform .2s; }
+.stn:hover { transform: translateY(-5px); }
+.stn .cov { position: relative; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; }
+.stn .cov img { width: 100%; height: 100%; object-fit: cover; }
+.stn .no { position: absolute; top: -14px; right: -10px; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); color: var(--c); font-size: 24px; font-weight: 800; border: 5px solid var(--c); z-index: 2; }
+.stn .kind { position: absolute; bottom: 10px; right: 10px; height: 30px; padding: 0 12px; border-radius: 999px; background: rgba(255,255,255,.94); font-size: 15px; font-weight: 800; display: flex; align-items: center; }
+.stn b { padding: 0 6px; font-size: 24px; font-weight: 800; }
+.stn .st { display: flex; align-items: center; justify-content: space-between; padding: 0 6px; }
+.stn .st small { font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+.stn .act { display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border-radius: 999px; background: #EEF6E6; font-size: 18px; font-weight: 800; }
+.stn.ok .no { background: var(--leaf); color: var(--paper); border-color: var(--paper); }
+.stn.ok .st small { color: var(--leaf-deep); }
+.stn.next { box-shadow: 0 0 0 5px var(--sun), 0 6px 0 #C98A1E, 0 0 30px rgba(247,179,71,.6); }
+.stn.next .act { background: var(--go); color: var(--paper); box-shadow: 0 4px 0 var(--go-deep); }
+.stn .pointer { position: absolute; top: -70px; left: -26px; width: 92px; pointer-events: none; animation: hover 2.4s ease-in-out infinite; }
+.next-tip { margin: 0; padding: 14px 20px; border-radius: 22px; background: rgba(255,255,255,.75); font-size: 19px; font-weight: 800; color: var(--ink-soft); }
+
+/* the value is complete: a celebration with Nour */
+.sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(30,60,20,.45); }
+.sheet[hidden] { display: none; }
+.sheet .box { position: relative; width: min(620px, 100%); max-height: 100%; overflow-y: auto; padding: 22px 24px 24px; border-radius: 32px; background: #FBFFF5; box-shadow: 0 10px 0 rgba(0,0,0,.2); display: flex; flex-direction: column; gap: 14px; }
+.sheet h2 { margin: 0; font-size: 28px; font-weight: 800; }
+.party .box { align-items: center; text-align: center; background: radial-gradient(circle at 50% 20%, #FFF8D6, #FBFFF5 60%); }
+.party .cheer { width: 220px; }
+.party .tree { width: 150px; margin-top: -20px; }
+.party h2 { font-size: 34px; color: var(--leaf-deep); }
+.party p { margin: 0; font-size: 21px; font-weight: 700; line-height: 1.5; }
+.gains { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.gain { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px 0 10px; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-size: 18px; font-weight: 800; }
+.gain img { width: 34px; height: 34px; }
+.party .btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.party .btns a, .party .btns button { display: inline-flex; align-items: center; height: 56px; padding: 0 26px; border: 0; border-radius: 999px; font-size: 19px; font-weight: 800; text-decoration: none; }
+.party .btns .go { background: var(--go); color: var(--paper); box-shadow: 0 5px 0 var(--go-deep); }
+.party .btns .soft { background: var(--paper); color: var(--ink); box-shadow: 0 5px 0 #D3E6C1; }
+.confetti { position: fixed; inset: 0; z-index: 31; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: 40%; left: 50%; width: 12px; height: 16px; border-radius: 3px; animation: fly 1.4s ease-out forwards; }
+@keyframes fly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
+
+.toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: rgba(58,35,24,.9); color: var(--paper); border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: 16px; z-index: 40; opacity: 0; transition: opacity .25s; pointer-events: none; text-align: center; }
+.toast.show { opacity: 1; }
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+/* phones: the page is drawn 720 wide, so text and stations keep a readable size */
+.narrow .hero { height: 700px; }
+.narrow .hero::before { background: linear-gradient(rgba(241,248,232,.35), rgba(241,248,232,.92) 45%); }
+.narrow .head { right: 32px; left: 32px; width: auto; top: 250px; }
+.narrow .head h1 { font-size: 64px; }
+.narrow .nour { right: 32px; left: 32px; width: auto; top: 470px; }
+.narrow main { padding: 0 32px 150px; }
+.narrow .prog { flex-direction: column; align-items: flex-start; gap: 8px; }
+.narrow .path { grid-template-columns: 1fr; gap: 26px; }
+.narrow .path::before { display: none; }
+.narrow .stn .pointer { left: 0; }
+@media (max-width: 760px) {
+  .dock a span { display: none; } .dock a { padding: 0 14px; }
+  .choices { grid-template-columns: 1fr; }
+  .q { font-size: 20px; } .choice { font-size: 18px; min-height: 58px; }
+  .guide img { width: 56px; } .guide p { font-size: 17px; }
+  .party .cheer { width: 160px; }
+}
+@media (prefers-reduced-motion: reduce) { .nour img, .stn .pointer, .confetti i { animation: none; } .stn { transition: none; } }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero" id="hero">
+  <div class="bar">
+    <a class="pill back" href="garden.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>حديقة القيم</span></a>
+    <div class="stats">
+      <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">12</span>
+    </div>
+  </div>
+  <div class="head"><span class="kicker">رحلة قيمة مع نور</span><h1 id="title"></h1><p id="about"></p></div>
+  <div class="nour"><div class="bub"><span id="intro" aria-live="polite"></span><br><button class="listen" type="button" id="listen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع لنور</button></div><img src="img/garden/nour-wave.png" alt="نور"></div>
+</header>
+
+<main>
+  <div class="prog"><h2>محطات الرحلة</h2><small id="prog"></small></div>
+  <div class="path" id="path"></div>
+  <p class="next-tip" id="tip"></p>
+</main>
+</div></div>
+
+<!-- the value is complete -->
+<div class="sheet party" id="party" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="party-t">
+    <img class="cheer" src="img/garden/nour-cheer.png" alt="">
+    <img class="tree" src="img/garden/plant-3.png" alt="">
+    <h2 id="party-t"></h2>
+    <p id="party-p"></p>
+    <div class="gains" id="gains"></div>
+    <div class="btns"><a class="go" href="garden.html">شاهد حديقتك</a><button class="soft" type="button" id="party-x">ابقَ هنا</button></div>
+  </div>
+</div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="values.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { VALUES, KIND, state, finish, leave, back, say } = Values;
+  const v = VALUES.find((x) => x.id === new URLSearchParams(location.search).get('v')) || VALUES[0];
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const XP = 30; // from gamification when completing a value is eligible
+  document.title = `رحلة ${v.name} · حديقة القيم`;
+  document.documentElement.style.setProperty('--c', v.color);
+  $('hero').style.setProperty('--cover', `url(img/garden/v-${v.id}.jpg)`);
+  $('title').textContent = `رحلة ${v.name}`;
+  $('about').textContent = v.about;
+  // Nour reads her words aloud when the device can; the words stay on screen either way
+  $('listen').addEventListener('click', () => { if (!say($('intro').textContent)) toast('لا يوجد صوت عربي على هذا الجهاز، اقرأ كلمات نور'); });
+
+  function render(justDone) {
+    const s = state(v), next = v.stations.find((x) => x.req && !s.done.includes(x.id));
+    $('prog').innerHTML = `أكملت ${ar(s.n)} من ${ar(s.all)} محطات مطلوبة <span class="meter" style="--p:${(s.n / s.all) * 100}%"><i></i></span>`;
+    $('path').innerHTML = v.stations.map((x, i) => {
+      const ok = s.done.includes(x.id), isNext = x === next;
+      return `<a class="stn ${ok ? 'ok' : ''} ${isNext ? 'next' : ''}" href="${x.href}" data-id="${x.id}" aria-label="المحطة ${i + 1}: ${KIND[x.kind]} ${x.name}، ${ok ? 'أكملتها' : isNext ? 'التالية' : 'لم تبدأ'}">
+        <span class="no">${ok ? '✓' : ar(i + 1)}</span>
+        <span class="cov"><img src="${x.img}" alt=""><span class="kind">${KIND[x.kind]}${x.req ? '' : ' · إضافية'}</span></span>
+        <b>${x.name}</b>
+        <span class="st"><small>${ok ? '✓ أكملتها' : isNext ? 'المحطة التالية' : 'بعدها'}</small><span class="act">${ok ? 'افتح مرة أخرى' : 'ابدأ'}</span></span>
+        ${isNext ? '<img class="pointer" src="img/garden/nour-point.png" alt="">' : ''}</a>`;
+    }).join('');
+    // Nour: the introduction first, then where to go next, then her encouragement at the end
+    $('intro').textContent = s.complete ? v.done : s.n === 0 ? v.intro : justDone ? `أحسنت! أكملت «${justDone}». المحطة التالية: ${KIND[next.kind]} «${next.name}»` : `هيا نكمل! المحطة التالية: ${KIND[next.kind]} «${next.name}»`;
+    $('tip').textContent = s.complete ? `أكملت كل محطات ${v.name}، وأزهرت شجرتها في حديقتك` : `المحطات بالترتيب المقترح، ويمكنك فتح أي محطة. عندما تُكمل المحطات الثلاث تُزهر شجرة ${v.name}.`;
+    fit();
+  }
+
+  // opening a station: the prototype counts it done when the child comes back
+  $('path').addEventListener('click', (e) => {
+    const a = e.target.closest('.stn'); if (!a) return;
+    const x = v.stations.find((s) => s.id === a.dataset.id);
+    if (x.href === '#') { e.preventDefault(); return toast('في النموذج: هذا المحتوى لم يُرسم بعد'); }
+    leave(v.id, x.id);
+  });
+
+  function party() {
+    $('party-t').textContent = `أزهرت شجرة ${v.name}!`;
+    $('party-p').textContent = v.done;
+    // XP and the badge come from gamification when completing a value is eligible
+    $('gains').innerHTML = `<span class="gain"><img src="img/forest/I-06.png" alt="">+${ar(XP)} نقطة</span>${v.badge ? `<span class="gain"><img src="img/forest/S-01.png" alt="">شارة جديدة: ${v.badge}</span>` : ''}`;
+    $('party').hidden = false; $('party-x').focus();
+    window.Sfx?.play('win'); burst();
+  }
+  const closeParty = () => { $('party').hidden = true; $('path').querySelector('.stn')?.focus(); };
+  $('party-x').addEventListener('click', closeParty);
+  function burst() {
+    const c = document.createElement('div'); c.className = 'confetti';
+    const colors = ['#F4823F', '#FFC93C', '#5BC236', '#3D96D6', '#F58DA6'];
+    c.innerHTML = Array.from({ length: 40 }, (_, i) => `<i style="background:${colors[i % 5]};--x:${(Math.random() - 0.5) * 900}px;--y:${-120 - Math.random() * 380}px;--r:${Math.random() * 720}deg"></i>`).join('');
+    document.body.appendChild(c); setTimeout(() => c.remove(), 1500);
+  }
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('party').hidden) closeParty(); });
+
+  const toast = (s, ms = 2600) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), ms); };
+
+  // the board is drawn at 1440 wide; scale it to the window like the forest
+  const page = $('page'), wrap = $('wrap');
+  function fit() {
+    const B = innerWidth < 760 ? 720 : 1440;
+    page.style.width = B + 'px'; page.classList.toggle('narrow', B < 1440);
+    const k = Math.min(innerWidth / B, 1.5);
+    const x = Math.max(0, (innerWidth - B * k) / 2);
+    page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    wrap.style.height = page.offsetHeight * k + 'px';
+  }
+  addEventListener('resize', fit);
+
+  // back from a station: it counts as done, and Nour points to what comes next
+  function arrive() {
+    const before = state(v).complete;
+    const p = back();
+    const x = p && p[0] === v.id && v.stations.find((s) => s.id === p[1]);
+    render(x && x.name);
+    if (x && state(v).complete && !before) party();
+    else if (x) toast(`أحسنت! أكملت المحطة: ${x.name}`);
+  }
+  addEventListener('pageshow', (e) => { if (e.persisted) arrive(); });
+  arrive();
+})();
+</script>
+</body>
+</html>

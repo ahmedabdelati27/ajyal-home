@@ -32,9 +32,11 @@
       const key = `ajyal.done.${id}`;
       let first = true;
       try { first = !localStorage.getItem(key); localStorage.setItem(key, '1'); } catch {}
+      // a game opened from a value journey in the garden leads back to that journey
+      const journey = /value\.html/.test(document.referrer) ? document.referrer : null;
       over.innerHTML = `<div class="box2"><h2>${title}</h2><p>${text}</p>
         ${xp && first ? `<span class="gain"><img src="img/forest/I-06.png" alt="">+${ar(xp)} نقطة</span>` : ''}
-        <div class="btns"><a class="btn go" href="games.html">العودة إلى الكثبان</a><button class="btn soft" id="again" type="button">العب مرة أخرى</button>${next ? `<button class="btn soft" id="next-game" type="button">اللعبة التالية: ${next}</button>` : ''}</div></div>`;
+        <div class="btns"><a class="btn go" href="${journey || 'games.html'}">${journey ? 'العودة إلى رحلتك مع نور' : 'العودة إلى الكثبان'}</a><button class="btn soft" id="again" type="button">العب مرة أخرى</button>${next ? `<button class="btn soft" id="next-game" type="button">اللعبة التالية: ${next}</button>` : ''}</div></div>`;
       // the stage that just ended already played the celebration sound
       burst(false);
     }

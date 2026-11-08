@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ماذا يفعل الصادق؟ · كثبان الألعاب</title>
+<link rel="stylesheet" href="viewer.css">
+<link rel="stylesheet" href="game.css">
+<style>
+.scene { --scene: none; background: #FFF8EC; }
+
+/* a «choose» game: an everyday moment, a question, two choices */
+.sit { position: absolute; inset: 0 0 34% 0; width: 100%; height: 66%; object-fit: cover; }
+.panel { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 38%; padding: 2.2cqh 3cqw; display: flex; flex-direction: column; gap: 1.6cqh; background: #FFF8EC; border-radius: 3cqw 3cqw 0 0; box-shadow: 0 -1cqh 2cqh rgba(0,0,0,.08); }
+.qrow { display: flex; align-items: center; gap: 1.4cqw; }
+.q { margin: 0; flex: 1; font-size: 2.6cqw; font-weight: 800; line-height: 1.4; }
+.hear { display: inline-flex; align-items: center; gap: .6cqw; height: 6cqh; padding: 0 1.4cqw; border: 0; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-size: 1.6cqw; font-weight: 800; flex-shrink: 0; }
+.hear svg { width: 2.2cqw; height: 2.2cqw; }
+.choices { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
+.choice { border: .4cqw solid #EADBC4; border-radius: 2.2cqw; background: #FFFFFF; font-size: 2.1cqw; font-weight: 800; line-height: 1.35; padding: 1cqh 1.6cqw; box-shadow: 0 .8cqh 0 #EADBC4; }
+.choice:disabled { cursor: default; }
+.choice.right { border-color: #5BC236; background: #EFF9E6; box-shadow: 0 .8cqh 0 #5BC236; }
+.choice.think { opacity: .4; }
+.next { position: absolute; z-index: 4; left: 3cqw; bottom: 3cqh; }
+/* the fox talks over the picture, so the choices stay clear */
+.fox-up .fox { top: 10cqh; bottom: auto; }
+.next[hidden] { display: none; }
+
+@media (max-width: 760px) {
+  .sit { height: 46%; }
+  .panel { height: 56%; padding: 2cqh 4cqw; }
+  .q { font-size: 4.6cqw; } .hear { height: 5cqh; font-size: 3.4cqw; padding: 0 3cqw; } .hear svg { width: 4cqw; height: 4cqw; }
+  .choices { grid-template-columns: 1fr; gap: 1.4cqh; }
+  .choice { font-size: 4.2cqw; border-radius: 4cqw; }
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="games.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>كثبان الألعاب</span></a>
+    <div class="ttl"><img src="img/games/g-09.jpg" alt=""><h1>ماذا يفعل الصادق؟</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span id="left">35 د</span></span>
+  </header>
+
+  <main class="stage">
+    <section class="scene fox-up" id="scene" aria-label="الموقف">
+      <div class="hud" aria-live="polite"><span id="stage-label"></span><span id="count"></span></div>
+      <div id="play"></div>
+      <div class="fox" aria-live="polite"><img src="img/games/fox.png" alt=""><p id="tip"></p></div>
+      <div class="over" id="over" hidden></div>
+    </section>
+  </main>
+</div>
+
+<div class="resume" id="resume">
+  <div>
+    <p>توقفت عند <b id="at">البداية</b></p>
+    <div class="btns">
+      <button class="btn go" id="go-on" type="button">أكمل من حيث توقفت</button>
+      <button class="btn soft" id="restart" type="button">من البداية</button>
+    </div>
+  </div>
+</div>
+
+<div class="done stop" id="stop" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stop-t">
+    <img class="owl" src="img/games/fox.png" alt="">
+    <h2 id="stop-t">انتهى وقت اليوم</h2>
+    <p>حفظنا مكانك عند <b id="kept">البداية</b>، وتكمل من هنا في المرة القادمة</p>
+    <div class="btns">
+      <a class="btn go" href="#" id="ask">اطلب وقتاً إضافياً من ولي أمرك أو معلّمك</a>
+      <a class="btn soft" href="index.html">العودة إلى الخريطة</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill');</script>
+<script src="viewer.js"></script>
+<script src="game.js"></script>
+<script>
+(() => {
+  const { $ } = Viewer;
+  const { ar } = Game;
+  const { play, over, scene, tip, nudge, cheer, result } = Game.kit();
+  // a game of the «choose» type: each moment has a picture, a question and its choices; the other choice only asks the child to think again.
+  // It lives in the dunes like any game, so a value journey in the garden can link to it
+  const MOMENTS = [
+    { img: 'img/garden/act-wallet.jpg', q: 'وجدت محفظة على مقعد في الحديقة. ماذا تفعل؟', choices: [
+      { t: 'أعطيها لشخص كبير مسؤول ليعيدها إلى صاحبها', ok: true, why: 'أحسنت! الصادق الأمين يعيد الأشياء إلى أصحابها' },
+      { t: 'آخذها لنفسي، لم يرني أحد' }] },
+    { img: 'img/garden/act-cup.jpg', q: 'انكسر الكوب وأنت تلعب في البيت. ماذا تقول لأمك؟', choices: [
+      { t: 'لا أعرف من كسره' },
+      { t: 'أنا كسرته بالخطأ، وأنا آسف', ok: true, why: 'رائع! قول الحقيقة شجاعة، حتى عندما نخطئ' }] },
+    { img: 'img/garden/act-shop.jpg', q: 'أعطاك البائع نقوداً أكثر من حقك. ماذا تفعل؟', choices: [
+      { t: 'أخبره وأعيد النقود الزائدة', ok: true, why: 'ممتاز! الصادق لا يأخذ ما ليس له' },
+      { t: 'أحتفظ بها وأشتري حلوى' }] }
+  ];
+  const STEPS = ['البداية', 'المواقف', 'النتيجة'];
+  const XP = 25; // from gamification when completing the game is eligible
+  let at = 0, done = false;
+
+  // the moment and its choices can be heard, for children who do not read yet
+  const synth = window.speechSynthesis; synth?.getVoices();
+  function hear(text) {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return game.toast('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.rate = 0.92; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  }
+
+  function show(i) {
+    over.hidden = i === 1;
+    $('stage-label').textContent = i === 1 ? `الموقف ${ar(at + 1)} من ${ar(MOMENTS.length)}` : 'ماذا يفعل الصادق؟';
+    play.innerHTML = '';
+    if (i === 0) start();
+    if (i === 1) { at = 0; done = false; moment(); }
+    if (i === 2) finish();
+  }
+  function start() {
+    $('count').textContent = 'لعبة من عالم المسؤولية';
+    tip('هيا نفكّر معاً!');
+    over.innerHTML = `<div class="box2"><h2>ماذا يفعل الصادق؟</h2>
+      <p>ثلاثة مواقف من حياتنا اليومية.<br>في كل موقف اختر ما يفعله الشخص الصادق.</p>
+      <button class="btn go" id="begin" type="button">ابدأ اللعب</button></div>`;
+  }
+
+  function moment() {
+    const m = MOMENTS[at];
+    $('stage-label').textContent = `الموقف ${ar(at + 1)} من ${ar(MOMENTS.length)}`;
+    $('count').textContent = `${ar(at)} من ${ar(MOMENTS.length)}`;
+    play.innerHTML = `<img class="sit" src="${m.img}" alt="">
+      <div class="panel"><div class="qrow"><p class="q">${m.q}</p><button class="hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button></div>
+      <div class="choices">${m.choices.map((c, i) => `<button class="choice" type="button" data-i="${i}">${c.t}</button>`).join('')}</div></div>
+      <button class="btn go next" type="button" id="next" hidden>${at < MOMENTS.length - 1 ? 'الموقف التالي' : 'أنهيت المواقف'}</button>`;
+    tip('فكّر جيداً، ثم اختر');
+  }
+  play.addEventListener('click', (e) => {
+    if (e.target.closest('#hear')) { const m = MOMENTS[at]; return hear(`${m.q} ${m.choices.map((c, i) => `${i ? 'أو' : ''} ${c.t}`).join('، ')}`); }
+    if (e.target.closest('#next')) { if (at < MOMENTS.length - 1) { at++; return moment(); } done = true; return cheer(() => game.next()); }
+    const b = e.target.closest('.choice'); if (!b || b.disabled) return;
+    const c = MOMENTS[at].choices[+b.dataset.i];
+    if (!c.ok) {
+      // not a mistake to punish: the child thinks again and chooses once more
+      b.classList.add('think'); b.disabled = true; nudge(b, 'back'); Sfx.play('retry');
+      return tip('لنفكّر مرة أخرى: ماذا يفعل الشخص الصادق؟');
+    }
+    play.querySelectorAll('.choice').forEach((x) => { x.disabled = true; });
+    b.classList.add('right'); Sfx.play('right');
+    tip(c.why);
+    $('count').textContent = `${ar(at + 1)} من ${ar(MOMENTS.length)}`;
+    $('next').hidden = false; $('next').focus();
+  });
+
+  function finish() {
+    $('count').textContent = 'أنت صادق!';
+    tip('الصدق يجعل الجميع يثقون بنا');
+    result({ id: 'honest', title: 'أحسنت يا يوسف!', text: 'اخترت ما يفعله الصادق في كل المواقف', xp: XP });
+    game.clear();
+  }
+  over.addEventListener('click', (e) => {
+    const id = e.target.closest('button')?.id;
+    if (id === 'begin') game.next();
+    if (id === 'again') game.go(1);
+  });
+
+  const game = Viewer.pages({ steps: 3, key: 'ajyal.game.honest', label: (i) => STEPS[i], onShow: show, canNext: (i) => i !== 1 || done });
+})();
+</script>
+</body>
+</html>

@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="clouds.css">
 <script src="clouds.js"></script>
 <script src="sfx.js"></script>
+<script src="values.js"></script>
 <script>Sfx.taps('a, button:not(.isl-hit):not(#here):not(#resume):not(#mission)');</script>
 <style>
 /* layout: one full-screen camera over a 1440×1024 world; HUD pinned to the screen edges and never zooms */
@@ -120,7 +121,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .mission .bubble b { display: block; font-size: 19px; }
 .dashes { display: flex; gap: 5px; margin-top: 4px; }
 .dashes i { width: 22px; height: 7px; border-radius: 999px; background: #EFE7DB; }
-.dashes i:nth-child(1) { background: #4CB944; } .dashes i:nth-child(2) { background: #FF9F1C; }
+.dashes i.ok { background: #4CB944; } .dashes i.next { background: #FF9F1C; }
 .play { width: 46px; height: 46px; border-radius: 999px; background: var(--go); box-shadow: 0 4px 0 var(--go-deep); display: flex; align-items: center; justify-content: center; }
 .nour { width: 110px; height: 110px; transform: scaleX(-1); -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 70%); mask-image: radial-gradient(circle, #000 52%, transparent 70%); }
 
@@ -181,8 +182,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   <button type="button" class="hud resume" id="resume" hidden aria-label="أكمل قصة الأرنب الصادق، أنجزت 60%"><i><img src="img/avatar.png" alt=""></i>أكمل</button>
 
   <div class="hud mission">
-    <button type="button" class="bubble" id="mission" aria-label="مهمة اليوم مع نور: رحلة الصدق، المحطة 2 من 3">
-      <span><b>رحلة الصدق</b><span class="dashes" aria-hidden="true"><i></i><i></i><i></i></span></span>
+    <button type="button" class="bubble" id="mission" aria-label="رحلتك مع نور">
+      <span><b id="mission-t">رحلة مع نور</b><span class="dashes" id="mission-d" aria-hidden="true"></span></span>
       <span class="play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M17 5v14L6 12z" fill="#fff"/></svg></span>
     </button>
     <img class="nour" src="img/nour.webp" alt="">
@@ -300,7 +301,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen
-  const PAGES = { forest: 'forest.html', beach: 'beach.html', letters: 'oasis.html', quran: 'quran.html', games: 'games.html', colors: 'colors.html' };
+  const PAGES = { forest: 'forest.html', beach: 'beach.html', letters: 'oasis.html', quran: 'quran.html', games: 'games.html', colors: 'colors.html', garden: 'garden.html' };
   function openRegion(i) {
     const to = i.href || PAGES[i.id];
     // the clouds close over the map and part on the region
@@ -321,7 +322,15 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   const story = () => flyTo({ ...ISLANDS.find((x) => x.id === 'beach'), title: 'الأرنب الصادق', sub: 'أكمل القصة من الصفحة 6', href: 'story.html?resume=1' });
   document.getElementById('here').addEventListener('click', () => { if (!stage.dataset.moved) story(); });
   document.getElementById('resume').addEventListener('click', story);
-  document.getElementById('mission').addEventListener('click', () => flyTo({ ...ISLANDS.find((x) => x.id === 'garden'), title: 'رحلة الصدق', sub: 'المحطة 2 من 3 مع نور' }));
+  // the bubble is the value journey under way; with none, it opens the garden to choose one
+  const journey = Values.current();
+  if (journey) {
+    const s = Values.state(journey);
+    document.getElementById('mission-t').textContent = `رحلة ${journey.name}`;
+    document.getElementById('mission-d').innerHTML = Array.from({ length: s.all }, (_, i) => `<i class="${i < s.n ? 'ok' : i === s.n ? 'next' : ''}"></i>`).join('');
+    document.getElementById('mission').setAttribute('aria-label', `رحلتك مع نور: ${journey.name}، أكملت ${s.n} من ${s.all}`);
+  } else document.getElementById('mission-t').textContent = 'حديقة القيم';
+  document.getElementById('mission').addEventListener('click', () => flyTo({ ...ISLANDS.find((x) => x.id === 'garden'), href: journey ? `value.html?v=${journey.id}` : 'garden.html' }));
 
   // buttons and keys
   const centre = () => { const v = view(); return [v.w / 2, v.h / 2]; };
