@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أجيال الصالحية · عالم آمن يتعلّم فيه طفلك ويلعب</title>
+<meta name="description" content="قصص وفيديوهات، حروف وأرقام، قرآن وألعاب وقيم، في جزر ملوّنة يتنقّل بينها طفلك مع نور، للأطفال من 3 إلى 15 سنة.">
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent: #F4823F; --accent-deep: #D6531E; --line: #6B3A1E; --sky: #2F6FA8; --wrap: 1280px; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--page); font-weight: 500; line-height: 1.6; }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 32px; }
+:focus-visible { outline: 3px solid var(--accent-deep); outline-offset: 3px; border-radius: 12px; }
+
+/* buttons: one warm main action, a white one beside it */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 52px; padding: 0 24px; border: 0; border-radius: 999px; font-size: 18px; font-weight: 800; text-decoration: none; white-space: nowrap; transition: transform .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn.main { background: linear-gradient(#F79250, var(--accent-deep)); color: var(--paper); box-shadow: inset 0 2px 0 rgba(255,255,255,.3), 0 5px 0 #A9441A; }
+.btn.soft { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 2px var(--edge), 0 5px 0 var(--edge); }
+.btn img { width: 30px; height: 30px; margin: -4px 0; }
+
+/* header: clear over the sky, then a cream bar once the page scrolls */
+.top { position: fixed; z-index: 20; inset: 0 0 auto 0; transition: background .25s, box-shadow .25s; }
+.top.solid { background: rgba(255,247,236,.94); backdrop-filter: blur(10px); box-shadow: 0 2px 0 var(--edge); }
+.top .wrap { display: flex; align-items: center; gap: 24px; height: 80px; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.logo img { width: 48px; height: 48px; }
+.logo b { display: block; font-size: 24px; font-weight: 800; line-height: 1.1; }
+.logo small { display: block; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.nav { display: flex; gap: 4px; margin-inline-start: auto; }
+.nav a { padding: 8px 14px; border-radius: 999px; font-size: 17px; font-weight: 700; text-decoration: none; }
+.nav a:hover { background: rgba(255,255,255,.7); }
+.acts { display: flex; align-items: center; gap: 10px; }
+.acts .btn { height: 46px; padding: 0 20px; font-size: 17px; }
+.guest-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 6px; font-size: 16px; font-weight: 800; color: var(--sky); text-decoration: none; }
+.guest-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.burger { display: none; width: 46px; height: 46px; border: 0; border-radius: 50%; background: var(--paper); box-shadow: 0 0 0 2px var(--edge); place-items: center; }
+.menu { display: none; }
+
+/* hero: the sky and sea, the words on the right, the islands floating on the left */
+.hero { position: relative; overflow: hidden; background: url(img/landing/hero-sky.jpg) 30% 100% / cover no-repeat #CDE9F7; }
+.hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 120px; background: linear-gradient(rgba(255,247,236,0), var(--page)); pointer-events: none; }
+.hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1.1fr; align-items: center; gap: 24px; min-height: min(100svh, 880px); padding-top: 96px; padding-bottom: 96px; }
+.say { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+.age { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.85); font-size: 16px; font-weight: 800; color: var(--sky); box-shadow: 0 3px 0 rgba(47,111,168,.15); }
+.age i { width: 10px; height: 10px; border-radius: 50%; background: #5BC236; box-shadow: 0 0 0 4px rgba(91,194,54,.2); }
+h1 { margin: 0; font-size: clamp(40px, 5.2vw, 70px); font-weight: 800; line-height: 1.15; letter-spacing: -.5px; }
+h1 em { font-style: normal; color: var(--accent-deep); }
+.lead { margin: 0; max-width: 34ch; font-size: clamp(18px, 1.6vw, 21px); font-weight: 600; color: #4D3A2C; }
+.cta { display: flex; flex-wrap: wrap; gap: 14px; }
+.cta .btn { height: 58px; padding: 0 28px; font-size: 19px; }
+.trust { display: flex; flex-wrap: wrap; gap: 10px 20px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.trust li { display: flex; align-items: center; gap: 6px; }
+.trust svg { flex-shrink: 0; }
+
+/* the islands: each floats on its own beat; a tap leads down to what is on it */
+.isles { position: relative; width: 100%; aspect-ratio: 1 / .86; }
+.isle { position: absolute; left: var(--x); top: var(--y); width: var(--w); animation: bob 5s ease-in-out infinite; animation-delay: var(--d); }
+.isle img { width: 100%; filter: drop-shadow(0 14px 14px rgba(40,90,130,.18)); transition: transform .2s; }
+.isle:hover img, .isle:focus-visible img { transform: scale(1.07); }
+.isle span { position: absolute; left: 50%; bottom: 4%; translate: -50% 0; padding: 2px 12px; border-radius: 999px; background: var(--paper); font-size: 14px; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 var(--edge); opacity: 0; transition: opacity .2s; pointer-events: none; }
+.isle:hover span, .isle:focus-visible span { opacity: 1; }
+@keyframes bob { 50% { translate: 0 -10px; } }
+.nour { position: absolute; z-index: 2; right: -2%; top: -8%; width: 16%; animation: bob 4s ease-in-out infinite; }
+.nour img { width: 100%; filter: drop-shadow(0 10px 12px rgba(240,160,40,.3)); }
+.nour p { position: absolute; right: 92%; top: 6%; width: max-content; max-width: 220px; margin: 0; padding: 8px 14px; border-radius: 18px 18px 4px 18px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.4; box-shadow: 0 4px 0 #F2C94C; }
+
+.toast { position: fixed; z-index: 40; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 10px 20px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-weight: 700; font-size: 16px; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* tablets: the links fold into a menu */
+@media (max-width: 1100px) {
+  .nav, .acts .guest-link, .acts .main { display: none; }
+  .acts { margin-inline-start: auto; }
+  .burger { display: grid; }
+  .menu { position: absolute; top: 80px; inset-inline: 16px; display: none; flex-direction: column; gap: 4px; padding: 12px; border-radius: 24px; background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 16px 40px rgba(58,35,24,.18); }
+  .menu.open { display: flex; }
+  .menu a:not(.btn) { padding: 12px 14px; border-radius: 14px; font-size: 18px; font-weight: 700; text-decoration: none; }
+  .menu a:not(.btn):hover { background: var(--page); }
+  .menu .btn { margin-top: 6px; }
+}
+/* phones: the words first, the islands under them */
+@media (max-width: 860px) {
+  .wrap { padding: 0 16px; }
+  .top .wrap { height: 68px; gap: 12px; }
+  .menu { top: 68px; }
+  .logo img { width: 40px; height: 40px; }
+  .logo b { font-size: 20px; }
+  .logo small { display: none; }
+  .acts .soft { height: 42px; padding: 0 16px; font-size: 16px; }
+  .hero { background-image: url(img/landing/hero-sky-m.jpg); background-position: 20% 100%; }
+  .hero .wrap { grid-template-columns: 1fr; gap: 8px; min-height: 0; padding-top: 96px; padding-bottom: 72px; }
+  .say { align-items: stretch; gap: 18px; }
+  .age { align-self: flex-start; }
+  .cta { flex-direction: column; }
+  .cta .btn { width: 100%; }
+  .isles { max-width: 520px; margin: 56px auto 0; }
+  .isle span { display: none; }
+  .nour p { font-size: 13px; max-width: 150px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour { animation: none; } .btn, .isle img { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="logo" href="#hero" aria-label="أجيال الصالحية، إلى أعلى الصفحة">
+      <img src="img/garden/nour-cheer.png" alt="">
+      <span><b>أجيال الصالحية</b><small>عالم آمن للأطفال</small></span>
+    </a>
+    <nav class="nav" aria-label="أقسام الصفحة">
+      <a href="#islands">الجزر</a>
+      <a href="#how">كيف يعمل</a>
+      <a href="#safety">الأمان</a>
+      <a href="#schools">للمدارس</a>
+      <a href="#faq">الأسئلة</a>
+    </nav>
+    <div class="acts">
+      <a class="guest-link" href="index.html?guest=1">تصفّح كزائر</a>
+      <a class="btn soft" href="index.html" title="دخول ولي الأمر أو المؤسسة">دخول</a>
+      <a class="btn main" href="#" data-soon="signup">إنشاء حساب</a>
+      <button class="burger" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+    <div class="menu" id="menu">
+      <a href="#islands">الجزر</a>
+      <a href="#how">كيف يعمل</a>
+      <a href="#safety">الأمان</a>
+      <a href="#schools">للمدارس</a>
+      <a href="#faq">الأسئلة</a>
+      <a class="btn soft" href="index.html?guest=1">تصفّح كزائر</a>
+      <a class="btn main" href="#" data-soon="signup">إنشاء حساب</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero" aria-labelledby="hero-t">
+    <div class="wrap">
+      <div class="say">
+        <span class="age"><i aria-hidden="true"></i>للأطفال من 3 إلى 15 سنة</span>
+        <h1 id="hero-t">عالم ملوّن <em>يتعلّم</em> فيه طفلك ويلعب</h1>
+        <p class="lead">قصص وفيديوهات، حروف وأرقام، قرآن وألعاب وقيم، في جزر يتنقّل بينها طفلك مع نور. وأنت تتابع تقدّمه وتحدّد وقته اليومي من حسابك.</p>
+        <div class="cta">
+          <a class="btn main" href="#" data-soon="signup">أنشئ حساباً لطفلك</a>
+          <a class="btn soft" href="index.html?guest=1"><img src="img/garden/nour-wave.png" alt="">تصفّح كزائر</a>
+        </div>
+        <ul class="trust">
+          <li><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#5BC236"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#FFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>من غير كلمة مرور للطفل</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#5BC236"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#FFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>تحدّد وقته اليومي والمزايا المتاحة له</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#5BC236"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#FFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>ما يرسله للنشر نراجعه أولاً</li>
+        </ul>
+      </div>
+
+      <div class="isles" role="group" aria-label="جزر عالم أجيال">
+        <a class="isle" href="#islands" style="--x:2%;--y:2%;--w:30%;--d:-1s"><img src="img/ai.png" alt="ورشة السحر"><span>ورشة السحر</span></a>
+        <a class="isle" href="#islands" style="--x:36%;--y:-4%;--w:27%;--d:-3s"><img src="img/peak.png" alt="قمة الأبطال"><span>قمة الأبطال</span></a>
+        <a class="isle" href="#islands" style="--x:66%;--y:12%;--w:30%;--d:-2s"><img src="img/colors.png" alt="وادي الألوان"><span>وادي الألوان</span></a>
+        <a class="isle" href="#islands" style="--x:-4%;--y:34%;--w:32%;--d:-4s"><img src="img/beach.png" alt="شاطئ الحكايات"><span>شاطئ الحكايات</span></a>
+        <a class="isle" href="#islands" style="--x:27%;--y:23%;--w:43%;--d:0s"><img src="img/forest.png" alt="غابة المعرفة"><span>غابة المعرفة</span></a>
+        <a class="isle" href="#islands" style="--x:66%;--y:44%;--w:32%;--d:-1.5s"><img src="img/games.png" alt="كثبان الألعاب"><span>كثبان الألعاب</span></a>
+        <a class="isle" href="#islands" style="--x:8%;--y:66%;--w:29%;--d:-2.5s"><img src="img/letters.png" alt="واحة الحروف"><span>واحة الحروف</span></a>
+        <a class="isle" href="#islands" style="--x:40%;--y:63%;--w:30%;--d:-3.5s"><img src="img/quran.png" alt="واحة القرآن"><span>واحة القرآن</span></a>
+        <div class="nour" aria-hidden="true"><img src="img/garden/nour-wave.png" alt=""><p>أنا نور! تعالوا نستكشف عالم أجيال</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // the header turns into a cream bar once the sky has scrolled away a little
+  const top = $('top');
+  const solid = () => top.classList.toggle('solid', scrollY > 10);
+  addEventListener('scroll', solid, { passive: true }); solid();
+
+  // the menu on tablets and phones
+  const burger = top.querySelector('.burger'), menu = $('menu');
+  const shut = () => { menu.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); };
+  burger.addEventListener('click', () => { const open = menu.classList.toggle('open'); burger.setAttribute('aria-expanded', String(open)); if (open) menu.querySelector('a').focus(); });
+  menu.addEventListener('click', (e) => { if (e.target.closest('a')) shut(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) { shut(); burger.focus(); } });
+  document.addEventListener('click', (e) => { if (!e.target.closest('.menu, .burger')) shut(); });
+
+  // in the prototype the sign-up pages come later
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2600); };
+  document.addEventListener('click', (e) => { const a = e.target.closest('[data-soon]'); if (a) { e.preventDefault(); toast('في النموذج: صفحة إنشاء الحساب تأتي في خطوة لاحقة'); } });
+})();
+</script>
+</body>
+</html>
