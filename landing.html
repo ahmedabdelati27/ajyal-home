@@ -75,6 +75,106 @@ h1 em { font-style: normal; color: var(--accent-deep); }
 .toast { position: fixed; z-index: 40; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 10px 20px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-weight: 700; font-size: 16px; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
 .toast.show { opacity: 1; }
 
+/* the sections below the hero share one rhythm: a small coloured label, a title, one short line */
+.sec { padding: 96px 0; scroll-margin-top: 64px; }
+.sec.tint { background: #FFF1DE; }
+.sec-head { display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 760px; margin: 0 auto 48px; text-align: center; }
+.kicker { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--kb, #FFE3CC); color: var(--k, var(--accent-deep)); font-size: 15px; font-weight: 800; }
+h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-height: 1.2; }
+.sec-head p { margin: 0; font-size: 19px; font-weight: 600; color: var(--ink-soft); }
+.ticks { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; font-size: 17px; font-weight: 700; }
+.ticks li { display: flex; align-items: flex-start; gap: 10px; }
+.ticks li::before { content: ''; flex-shrink: 0; width: 22px; height: 22px; margin-top: 3px; border-radius: 50%;
+  background: var(--c, #5BC236) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px no-repeat; }
+
+/* the islands: pick one, see what is on it */
+.explore { display: grid; grid-template-columns: 1fr 1.3fr; gap: 32px; align-items: start; }
+.picks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pick { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 6px 12px; border: 3px solid transparent; border-radius: 24px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); font-size: 16px; font-weight: 800; line-height: 1.3; transition: transform .15s; }
+.pick img { width: 96px; height: 96px; }
+.pick:hover { transform: translateY(-3px); }
+.pick[aria-selected="true"] { border-color: var(--c); background: #FFFBF4; box-shadow: 0 4px 0 var(--c); }
+.isle-card { position: sticky; top: 100px; overflow: hidden; border-radius: 32px; background: var(--paper); box-shadow: 0 6px 0 var(--edge), 0 24px 48px rgba(58,35,24,.08); }
+.isle-card .pic { position: relative; aspect-ratio: 16 / 8; background: #E8F2F7; }
+.isle-card .pic > img { width: 100%; height: 100%; object-fit: cover; }
+.isle-card .guide { position: absolute; right: 20px; bottom: -22px; display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 18px 0 8px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 16px; font-weight: 800; box-shadow: 0 4px 0 rgba(58,35,24,.15); text-shadow: 0 1px 0 rgba(0,0,0,.15); }
+.isle-card .guide img { width: 38px; height: 38px; margin: -6px 0; }
+.isle-card .txt { display: flex; flex-direction: column; gap: 14px; padding: 40px 28px 30px; }
+.isle-card h3 { margin: 0; font-size: 32px; font-weight: 800; line-height: 1.2; }
+.isle-card p { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
+.isle-card.swap .pic > img, .isle-card.swap .txt { animation: swap .35s ease-out; }
+@keyframes swap { from { opacity: 0; translate: 0 8px; } }
+
+/* how the child grows */
+.grow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.g-card { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 26px 18px 24px; border-radius: 28px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); text-align: center; }
+.g-card .ic { display: flex; justify-content: center; height: 76px; }
+.g-card .ic img { width: 76px; height: 76px; }
+.g-card .ic.trio img { width: 58px; height: 58px; margin: 9px -8px 0; }
+.g-card .ic.trio img:nth-child(2) { margin-top: 0; position: relative; z-index: 1; }
+.g-card h3 { margin: 0; font-size: 21px; font-weight: 800; }
+.g-card p { margin: 0; font-size: 16px; font-weight: 600; color: var(--ink-soft); line-height: 1.55; }
+
+/* three steps */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: step; }
+.step { display: flex; flex-direction: column; overflow: hidden; border-radius: 28px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.step .pic { position: relative; aspect-ratio: 16 / 10; background: linear-gradient(#CFEAF9, #FFF1DE); }
+.step .pic img { width: 100%; height: 100%; object-fit: cover; }
+.step .pic img.char { width: 54%; height: auto; margin: 6% auto 0; object-fit: contain; filter: drop-shadow(0 12px 14px rgba(240,160,40,.3)); }
+.step .n { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 46px; height: 46px; border: 3px solid var(--paper); border-radius: 50%; background: var(--accent); color: var(--paper); font-size: 22px; font-weight: 800; box-shadow: 0 3px 0 rgba(58,35,24,.2); }
+.step .txt { display: flex; flex-direction: column; gap: 8px; padding: 22px 24px 26px; }
+.step h3 { margin: 0; font-size: 23px; font-weight: 800; }
+.step p { margin: 0; font-size: 17px; font-weight: 600; color: var(--ink-soft); }
+
+/* safety and control */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.split > img { width: 100%; border-radius: 32px; box-shadow: 0 6px 0 var(--edge); }
+.split .sec-head { align-items: flex-start; margin: 0 0 28px; text-align: start; }
+.rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.rules li { display: flex; gap: 12px; padding: 16px; border-radius: 22px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); }
+.rules .ic { flex-shrink: 0; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--kb); color: var(--k); }
+.rules b { display: block; font-size: 17px; font-weight: 800; line-height: 1.35; }
+.rules small { display: block; margin-top: 2px; font-size: 15px; font-weight: 600; color: var(--ink-soft); line-height: 1.5; }
+
+/* schools */
+.schools { overflow: hidden; border-radius: 40px; background: linear-gradient(135deg, #E3F2FD, #EAF7E4); box-shadow: 0 6px 0 #CFE3EE; }
+.schools .split { gap: 0; }
+.schools .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding: 48px; }
+.schools .txt p { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
+.schools img { width: 100%; height: 100%; object-fit: cover; min-height: 100%; }
+
+/* packages: what changes between them, prices come with the account */
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 980px; margin: 0 auto 32px; }
+.plans div { padding: 22px; border-radius: 24px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); text-align: center; }
+.plans b { display: block; font-size: 19px; font-weight: 800; }
+.plans small { display: block; margin-top: 4px; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+.center { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+
+/* questions */
+.faq { display: flex; flex-direction: column; gap: 12px; max-width: 860px; margin: 0 auto; }
+.faq details { border-radius: 22px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; font-size: 19px; font-weight: 800; cursor: pointer; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: '+'; flex-shrink: 0; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--page); font-size: 22px; transition: rotate .2s; }
+.faq details[open] summary::after { rotate: 45deg; }
+.faq details p { margin: 0; padding: 0 24px 22px; font-size: 17px; font-weight: 600; color: var(--ink-soft); }
+
+/* last call and footer */
+.go-card { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 32px; padding: 44px 56px; border-radius: 40px; background: url(img/landing/hero-sky-m.jpg) center 30% / cover; box-shadow: 0 6px 0 #BFDDEF; }
+.go-card img { width: 170px; animation: bob 4s ease-in-out infinite; }
+.go-card h2 { font-size: clamp(28px, 3vw, 40px); }
+.go-card p { margin: 8px 0 20px; font-size: 18px; font-weight: 700; color: #4D3A2C; }
+.foot { padding: 56px 0 32px; background: #3A2318; color: #F6E7D2; }
+.foot .wrap { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; }
+.foot .logo b { color: var(--paper); }
+.foot .logo small, .foot p { color: #CDB89F; }
+.foot p { margin: 12px 0 0; font-size: 15px; font-weight: 600; max-width: 30ch; }
+.foot h3 { margin: 0 0 10px; font-size: 16px; font-weight: 800; color: var(--paper); }
+.foot ul { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.foot ul a { font-size: 15px; font-weight: 600; text-decoration: none; color: #E9D6BC; }
+.foot ul a:hover { color: var(--paper); text-decoration: underline; }
+.foot .copy { grid-column: 1 / -1; margin-top: 16px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.12); font-size: 14px; color: #B9A288; }
+
 /* tablets: the links fold into a menu */
 @media (max-width: 1100px) {
   .nav, .acts .guest-link, .acts .main { display: none; }
@@ -105,7 +205,40 @@ h1 em { font-style: normal; color: var(--accent-deep); }
   .isle span { display: none; }
   .nour p { font-size: 13px; max-width: 150px; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour { animation: none; } .btn, .isle img { transition: none; } }
+/* the sections on tablets and phones */
+@media (max-width: 1100px) {
+  .grow { grid-template-columns: repeat(3, 1fr); }
+  .rules { grid-template-columns: 1fr; }
+  .foot .wrap { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 860px) {
+  .sec { padding: 64px 0; }
+  .sec-head { margin-bottom: 32px; }
+  .sec-head p { font-size: 17px; }
+  .explore, .split { grid-template-columns: 1fr; gap: 24px; }
+  /* the islands become one row to swipe */
+  .picks { display: flex; gap: 10px; overflow-x: auto; margin: 0 -16px; padding: 4px 16px 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .picks::-webkit-scrollbar { display: none; }
+  .pick { flex: 0 0 104px; scroll-snap-align: start; font-size: 14px; }
+  .pick img { width: 76px; height: 76px; }
+  .isle-card { position: static; }
+  .isle-card .txt { padding: 36px 20px 24px; }
+  .isle-card h3 { font-size: 26px; }
+  .grow { grid-template-columns: 1fr 1fr; }
+  .grow .g-card:last-child { grid-column: 1 / -1; }
+  .steps { grid-template-columns: 1fr; }
+  .split .sec-head { align-items: center; text-align: center; }
+  .schools .txt { padding: 28px 20px; align-items: stretch; }
+  .schools .kicker { align-self: flex-start; }
+  .schools img { order: -1; aspect-ratio: 16 / 9; }
+  .plans { grid-template-columns: 1fr; }
+  .center .btn { width: 100%; }
+  .go-card { grid-template-columns: 1fr; justify-items: center; gap: 12px; padding: 32px 20px; text-align: center; }
+  .go-card img { width: 120px; }
+  .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .foot .wrap > div:first-child { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour, .go-card img { animation: none; } .btn, .isle img, .pick { transition: none; } .isle-card.swap .pic > img, .isle-card.swap .txt { animation: none; } }
 </style>
 </head>
 <body>
@@ -151,7 +284,7 @@ h1 em { font-style: normal; color: var(--accent-deep); }
         <h1 id="hero-t">عالم ملوّن <em>يتعلّم</em> فيه طفلك ويلعب</h1>
         <p class="lead">قصص وفيديوهات، حروف وأرقام، قرآن وألعاب وقيم، في جزر يتنقّل بينها طفلك مع نور. وأنت تتابع تقدّمه وتحدّد وقته اليومي من حسابك.</p>
         <div class="cta">
-          <a class="btn main" href="#" data-soon="signup">أنشئ حساباً لطفلك</a>
+          <a class="btn main" href="#" data-soon="signup">أنشئ حسابك وأضف طفلك</a>
           <a class="btn soft" href="index.html?guest=1"><img src="img/garden/nour-wave.png" alt="">تصفّح كزائر</a>
         </div>
         <ul class="trust">
@@ -174,7 +307,158 @@ h1 em { font-style: normal; color: var(--accent-deep); }
       </div>
     </div>
   </section>
+
+  <section class="sec" id="islands" aria-labelledby="islands-t">
+    <div class="wrap">
+      <div class="sec-head" style="--k:#2F6FA8;--kb:#DDEEFB">
+        <span class="kicker">عالم أجيال</span>
+        <h2 id="islands-t">تسع جزر، وفي كل جزيرة عالم</h2>
+        <p>يتنقّل طفلك بين الجزر على خريطة واحدة، ولأغلب الجزر رفيق يرحّب به. اختر جزيرة لترى ما فيها.</p>
+      </div>
+      <div class="explore">
+        <div class="picks" id="picks" role="tablist" aria-label="جزر عالم أجيال"></div>
+        <article class="isle-card" id="isle-card" role="tabpanel"></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec tint" id="grow" aria-labelledby="grow-t">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">تقدّم طفلك</span>
+        <h2 id="grow-t">يتقدّم خطوة بخطوة، ويفرح بكل إنجاز</h2>
+        <p>يكسب طفلك النقاط عندما يُنهي شيئاً، لا عندما يفتح صفحة، فيرى ثمرة ما أنجزه.</p>
+      </div>
+      <div class="grow">
+        <div class="g-card"><span class="ic"><img src="img/hud/points.png" alt=""></span><h3>النقاط والمستويات</h3><p>نقاط عند إنهاء قصة أو حرف أو سورة أو لعبة، ومستوى بعد مستوى.</p></div>
+        <div class="g-card"><span class="ic trio"><img src="img/badges/S-02.png" alt=""><img src="img/badges/S-05.png" alt=""><img src="img/badges/S-07.png" alt=""></span><h3>الشارات</h3><p>شارات يجمعها كلما أنجز.</p></div>
+        <div class="g-card"><span class="ic"><img src="img/hud/streak.png" alt=""></span><h3>الأيام المتتالية</h3><p>يرى كم يوماً متتالياً زار فيه عالمه.</p></div>
+        <div class="g-card"><span class="ic"><img src="img/nav/leaders.png" alt=""></span><h3>المتصدرون</h3><p>لوحة متصدرين واحدة حسب مجموع النقاط.</p></div>
+        <div class="g-card"><span class="ic"><img src="img/nav/room.png" alt=""></span><h3>إبداعاتي</h3><p>رسوماته وتلويناته وقصصه في مكان واحد.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="how" aria-labelledby="how-t">
+    <div class="wrap">
+      <div class="sec-head" style="--k:#2D7A26;--kb:#E0F3D6">
+        <span class="kicker">كيف يعمل</span>
+        <h2 id="how-t">ثلاث خطوات، ويبدأ طفلك رحلته</h2>
+        <p>أنت من يُنشئ الحساب ويضيف الأطفال، ولا يحتاج طفلك اسم مستخدم ولا كلمة مرور.</p>
+      </div>
+      <ol class="steps" style="list-style:none;margin:0;padding:0">
+        <li class="step"><div class="pic"><img class="char" src="img/garden/nour-cheer.png" alt=""><span class="n">١</span></div>
+          <div class="txt"><h3>أنشئ حسابك</h3><p>حساب ولي أمر لأسرتك، أو حساب مؤسسة لمدرستك أو حضانتك، من غير اشتراط باقة مدفوعة عند التسجيل.</p></div></li>
+        <li class="step"><div class="pic"><img src="img/landing/s-parent.jpg" alt="أب يضيف ملفات أطفاله من هاتفه"><span class="n">٢</span></div>
+          <div class="txt"><h3>أضف أطفالك</h3><p>لكل طفل ملف باسمه وتاريخ ميلاده، فيُرتَّب له المحتوى حسب عمره.</p></div></li>
+        <li class="step"><div class="pic"><img src="img/landing/s-family.jpg" alt="أم وطفلها يتصفحان جزر عالم أجيال على جهاز لوحي"><span class="n">٣</span></div>
+          <div class="txt"><h3>اختر ملف طفلك</h3><p>تختار ملفه من حسابك، فيدخل عالمه ويبدأ من حيث توقف.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec tint" id="safety" aria-labelledby="safety-t">
+    <div class="wrap split">
+      <img src="img/landing/s-safe.jpg" alt="شمس مبتسمة تحمل درعاً عليه قلب">
+      <div>
+        <div class="sec-head" style="--k:#7B4FC7;--kb:#EDE3FF">
+          <span class="kicker">الأمان والتحكم</span>
+          <h2 id="safety-t">أنت تقرّر، وطفلك يستمتع بأمان</h2>
+          <p>من لوحتك تتابع طفلك وتضبط ما يناسبه.</p>
+        </div>
+        <ul class="rules" style="--k:#7B4FC7;--kb:#EDE3FF">
+          <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2.5h6"/></svg></span><span><b>وقت يومي لكل طفل</b><small>وتمدّه دقائق عند الحاجة لليوم نفسه.</small></span></li>
+          <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="2.5" y="7" width="19" height="10" rx="5"/><circle cx="16.5" cy="12" r="3" fill="currentColor"/></svg></span><span><b>تتحكم في المزايا</b><small>تشغّل المتاح في باقتك أو توقفه، مثل ورشة السحر والمسابقات ورفع الصور.</small></span></li>
+          <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span><b>مراجعة قبل النشر</b><small>ما يرسله طفلك للنشر يراجعه فريق المنصة أولاً.</small></span></li>
+          <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z"/><path d="M18.5 15l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z"/></svg></span><span><b>ذكاء اصطناعي بخيارات جاهزة</b><small>يختار طفلك الفكرة من خيارات معدّة، من غير كتابة حرة.</small></span></li>
+          <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg></span><span><b>نور مرشدة لا محادثة</b><small>تقدّم إرشادات معدّة مسبقاً بالصوت والكلمة.</small></span></li>
+          <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-6M22 19H2"/></svg></span><span><b>تتابع تقدّمه</b><small>ما أكمله وأهم نشاطاته، من غير مقارنة بغيره.</small></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="schools" aria-labelledby="schools-t">
+    <div class="wrap">
+      <div class="schools">
+        <div class="split">
+          <div class="txt">
+            <span class="kicker" style="--k:#2F6FA8;--kb:#FFFFFF">للمدارس والحضانات</span>
+            <h2 id="schools-t">عالم أجيال في صفّك</h2>
+            <p>حساب مؤسسة واحد لكل أطفالك، ومنه تختار ملف الطفل فيدخل عالمه على أي جهاز في الصف.</p>
+            <ul class="ticks" style="--c:#3D96D6">
+              <li>أضف الأطفال دفعة واحدة بملف Excel جاهز</li>
+              <li>وقت يومي ومزايا لكل طفل</li>
+              <li>تتابع تقدّم كل طفل من لوحة المؤسسة</li>
+            </ul>
+            <a class="btn main" href="#" data-soon="signup">أنشئ حساب مؤسسة</a>
+          </div>
+          <img src="img/landing/s-school.jpg" alt="معلّمة مع مجموعة أطفال يستخدمون أجهزة لوحية في الصف">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec tint" id="plans" aria-labelledby="plans-t">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">الباقات</span>
+        <h2 id="plans-t">باقات تناسب أسرتك أو مؤسستك</h2>
+        <p>يمكنك إنشاء حسابك من غير اشتراط باقة مدفوعة، وتجد الباقات وأسعارها داخل حسابك.</p>
+      </div>
+      <div class="plans">
+        <div><b>عدد الأطفال</b><small>كم ملف طفل يمكنك إضافته</small></div>
+        <div><b>ورشة السحر وتحسين الرسم</b><small>عدد القصص والفيديوهات والرسومات المحسّنة</small></div>
+        <div><b>المزايا المتاحة</b><small>مثل المسابقات وطباعة القصص المخصصة</small></div>
+      </div>
+      <div class="center"><a class="btn main" href="#" data-soon="signup">أنشئ حسابك</a></div>
+    </div>
+  </section>
+
+  <section class="sec" id="faq" aria-labelledby="faq-t">
+    <div class="wrap">
+      <div class="sec-head" style="--k:#2D7A26;--kb:#E0F3D6">
+        <span class="kicker">أسئلة شائعة</span>
+        <h2 id="faq-t">عندك سؤال؟</h2>
+      </div>
+      <div class="faq">
+        <details><summary>هل يحتاج طفلي حساباً خاصاً به؟</summary><p>لا. أنت تُنشئ الحساب وتضيف ملفات أطفالك، ثم تختار ملف طفلك فيدخل عالمه، من غير اسم مستخدم ولا كلمة مرور له.</p></details>
+        <details><summary>لأي عمر تناسب المنصة؟</summary><p>للأطفال من 3 إلى 15 سنة. يظهر لطفلك أولاً ما يناسب عمره، ولا يُخفى عنه باقي المحتوى بسبب عمره فقط.</p></details>
+        <details><summary>هل أستطيع تحديد وقت طفلي؟</summary><p>نعم. تضع حداً يومياً لكل طفل، ويمكنك أن تمدّه دقائق إضافية لليوم نفسه عند الحاجة.</p></details>
+        <details><summary>من يرى رسومات طفلي وقصصه؟</summary><p>تبقى أعماله في «إبداعاتي» خاصة، تراها أنت من حسابك ولا تظهر لغيركما. وإذا أرسل عملاً للنشر، يراجعه فريق المنصة قبل أن يظهر.</p></details>
+        <details><summary>هل تتحدث نور مع طفلي بحرية؟</summary><p>لا. نور مرشدة تقدّم إرشادات وجملاً معدّة مسبقاً بالصوت والكلمة، وليست محادثة مفتوحة.</p></details>
+        <details><summary>هل يمكن استخدام المنصة في المدرسة أو الحضانة؟</summary><p>نعم. للمدارس والحضانات حساب مؤسسة، ويمكنها إضافة الأطفال دفعة واحدة بملف Excel.</p></details>
+        <details><summary>هل أستطيع التصفح قبل إنشاء حساب؟</summary><p>نعم. يمكنك التصفح كزائر ومشاهدة المحتوى المتاح للزوار، من غير حفظ للنقاط أو التقدّم.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="start" aria-labelledby="start-t" style="padding-top:0">
+    <div class="wrap">
+      <div class="go-card">
+        <img src="img/garden/nour-wave.png" alt="">
+        <div>
+          <h2 id="start-t">جاهز ليبدأ طفلك رحلته؟</h2>
+          <p>أنشئ حسابك وأضف طفلك، ونور في انتظاره.</p>
+          <div class="cta"><a class="btn main" href="#" data-soon="signup">أنشئ حسابك وأضف طفلك</a><a class="btn soft" href="index.html?guest=1">تصفّح كزائر</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>
+      <a class="logo" href="#hero"><img src="img/garden/nour-cheer.png" alt=""><span><b>أجيال الصالحية</b><small>عالم آمن للأطفال</small></span></a>
+      <p>منصة تعليمية وترفيهية للأطفال من 3 إلى 15 سنة.</p>
+    </div>
+    <div><h3>المنصة</h3><ul><li><a href="#islands">الجزر</a></li><li><a href="#grow">تقدّم طفلك</a></li><li><a href="#how">كيف يعمل</a></li><li><a href="#safety">الأمان</a></li></ul></div>
+    <div><h3>لك</h3><ul><li><a href="#schools">للمدارس والحضانات</a></li><li><a href="#plans">الباقات</a></li><li><a href="#faq">أسئلة شائعة</a></li></ul></div>
+    <div><h3>حسابك</h3><ul><li><a href="index.html">دخول</a></li><li><a href="#" data-soon="signup">إنشاء حساب</a></li><li><a href="index.html?guest=1">تصفّح كزائر</a></li></ul></div>
+    <p class="copy">© 2026 أجيال الصالحية</p>
+  </div>
+</footer>
 
 <div class="toast" id="toast" role="status"></div>
 
@@ -193,6 +477,42 @@ h1 em { font-style: normal; color: var(--accent-deep); }
   menu.addEventListener('click', (e) => { if (e.target.closest('a')) shut(); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) { shut(); burger.focus(); } });
   document.addEventListener('click', (e) => { if (!e.target.closest('.menu, .burger')) shut(); });
+
+  // the islands: one picked at a time, what is on it in the card beside them
+  const ISLES = [
+    { id: 'forest', name: 'غابة المعرفة', guide: 'مع البومة', c: '#3D96D6', about: 'فيديوهات وأصوات وصور وكتب تعليمية، يظهر منها أولاً ما يناسب عمر طفلك.', ticks: ['فيديو وصوت وصور وكتب تقلّب صفحاتها', 'يكمل من حيث توقف', 'تصنيفات واضحة يختار منها ما يحب'] },
+    { id: 'beach', name: 'شاطئ الحكايات', guide: 'مع السلحفاة سلمى', c: '#E0607F', about: 'قصص يقرؤها طفلك أو يستمع إليها، وأسئلة قصيرة بعد كل قصة.', ticks: ['قراءة أو استماع بصوت الراوي', 'يضغط على كلمة ليعرف معناها', 'أنت بطل القصة: اسمه وصورته في قصص مختارة، حسب إعداداتك'] },
+    { id: 'letters', name: 'واحة الحروف', guide: 'مع الجمل جمّول', c: '#D9A400', about: 'الحروف والأرقام بالعربية والإنجليزية، في رحلة قصيرة لكل حرف.', ticks: ['يرى الحرف ومثالاً عليه ويسمع نطقه', 'يتتبّع كتابته بإصبعه', 'نشاط صغير في آخر الرحلة'] },
+    { id: 'quran', name: 'واحة القرآن', guide: 'قصار السور من جزء عمّ', c: '#5DAA33', about: 'يستمع طفلك إلى السورة ويردّدها، ثم يسمّعها والنظام يتابع تلاوته.', ticks: ['استماع وترديد آية بعد آية', 'تسميع يعيد فيه الكلمة إذا أخطأ', 'صفحات هادئة من غير مؤثرات صوتية'] },
+    { id: 'games', name: 'كثبان الألعاب', guide: 'مع الثعلب فنّوش', c: '#7B64DA', about: 'ألعاب قصيرة وبسيطة في عوالم البيئة والمسؤولية والوطن والإتقان.', ticks: ['ألعاب تعليمية سريعة', 'يرى كم لعبة أكمل في كل عالم', 'لا متجر ولا عملات'] },
+    { id: 'garden', name: 'حديقة القيم', guide: 'مع نور', c: '#3FB396', about: 'قيم مثل الصدق والتعاون والرحمة، تكبر شجرة كل قيمة كلما أكمل رحلتها.', ticks: ['قصص وفيديوهات وألعاب مرتبطة بكل قيمة', 'نور ترشده بالصوت والكلمة', 'شجرة تكبر في حديقته'] },
+    { id: 'colors', name: 'وادي الألوان', guide: 'مع القطة مشمش', c: '#E58A2B', about: 'رسم حر بأدوات بسيطة، وتلوين بلمسة واحدة.', ticks: ['رسم حر وصفحات تلوين', 'تُحفظ أعماله في «إبداعاتي»', 'إذا أرسل رسمة للنشر تُراجع أولاً'] },
+    { id: 'peak', name: 'قمة الأبطال', guide: 'مع الصقر شاهين', c: '#E0584A', about: 'مسابقات تنظّمها المنصة: أسئلة بوقت، ومسابقات لأجمل رسمة أو قصة.', ticks: ['مسابقات أسئلة سريعة', 'مسابقات للرسم والقصص بالتصويت', 'حسب باقتك وإعداداتك'] },
+    { id: 'ai', name: 'ورشة السحر', guide: 'مع نور', c: '#7B64DA', about: 'يصنع طفلك قصة مصوّرة أو فيديو، ويختار الفكرة من خيارات جاهزة.', ticks: ['قصة مصوّرة أو فيديو قصير', 'أفكار جاهزة، من غير كتابة حرة', 'حسب باقتك وإعداداتك'] }
+  ];
+  const picks = $('picks'), card = $('isle-card');
+  picks.innerHTML = ISLES.map((i, n) => `<button class="pick" type="button" role="tab" id="pick-${i.id}" data-id="${i.id}" aria-controls="isle-card" aria-selected="${n === 0}" tabindex="${n === 0 ? 0 : -1}" style="--c:${i.c}"><img src="img/${i.id}.png" alt="">${i.name}</button>`).join('');
+  function pick(id, focus) {
+    const i = ISLES.find((x) => x.id === id);
+    picks.querySelectorAll('.pick').forEach((b) => { const on = b.dataset.id === id; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) { b.focus(); b.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } });
+    card.setAttribute('aria-labelledby', `pick-${id}`);
+    card.style.setProperty('--c', i.c);
+    card.innerHTML = `<div class="pic"><img src="img/landing/r-${i.id}.jpg" alt=""><span class="guide"><img src="img/${i.id}.png" alt="">${i.guide}</span></div>
+      <div class="txt"><h3>${i.name}</h3><p>${i.about}</p><ul class="ticks">${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul></div>`;
+    card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+  }
+  picks.addEventListener('click', (e) => { const b = e.target.closest('.pick'); if (b) pick(b.dataset.id); });
+  // arrows move between the islands (right to left: the right arrow goes back)
+  picks.addEventListener('keydown', (e) => {
+    const n = ISLES.findIndex((x) => x.id === picks.querySelector('[aria-selected="true"]').dataset.id);
+    const step = { ArrowLeft: 1, ArrowRight: -1, ArrowDown: 1, ArrowUp: -1 }[e.key];
+    if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); return pick(ISLES[e.key === 'Home' ? 0 : ISLES.length - 1].id, true); }
+    if (!step) return;
+    e.preventDefault(); pick(ISLES[(n + step + ISLES.length) % ISLES.length].id, true);
+  });
+  pick(ISLES[0].id);
+  // an island in the hero opens its own card below
+  document.querySelectorAll('.isle').forEach((a) => a.addEventListener('click', () => pick(a.querySelector('img').getAttribute('src').match(/img\/(\w+)\.png/)[1])));
 
   // in the prototype the sign-up pages come later
   const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2600); };
