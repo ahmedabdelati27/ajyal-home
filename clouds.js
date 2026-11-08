@@ -5,7 +5,7 @@
 (() => {
   const root = document.documentElement;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const KEY = 'ajyal.clouds', SRC = 'img/clouds/cloud.webp', CLOSE = 500;
+  const KEY = 'ajyal.clouds', SRC = 'img/clouds/cloud.webp?v=3', CLOSE = 500;
   let arrived = false;
   try { arrived = sessionStorage.getItem(KEY) === '1'; sessionStorage.removeItem(KEY); } catch {}
 

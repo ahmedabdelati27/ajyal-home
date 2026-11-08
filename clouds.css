@@ -2,7 +2,7 @@
    Each cloud is one picture with a puffy inner edge, grown until it covers its half of the screen. */
 html::before, html::after {
   content: ''; position: fixed; z-index: 9999; top: 0; bottom: 0; width: 62vw; pointer-events: none; visibility: hidden;
-  background: url(img/clouds/cloud.webp) right center / cover no-repeat;
+  background: url(img/clouds/cloud.webp?v=3) right center / cover no-repeat;
   transition: transform .6s cubic-bezier(.65, 0, .35, 1), visibility 0s .6s;
 }
 html::before { left: 0; transform: translateX(-102%); }
