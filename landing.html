@@ -87,23 +87,55 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .ticks li::before { content: ''; flex-shrink: 0; width: 22px; height: 22px; margin-top: 3px; border-radius: 50%;
   background: var(--c, #5BC236) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px no-repeat; }
 
-/* the islands: pick one, see what is on it */
-.explore { display: grid; grid-template-columns: 1fr 1.3fr; gap: 32px; align-items: start; }
-.picks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.pick { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 6px 12px; border: 3px solid transparent; border-radius: 24px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); font-size: 16px; font-weight: 800; line-height: 1.3; transition: transform .15s; }
-.pick img { width: 96px; height: 96px; }
-.pick:hover { transform: translateY(-3px); }
-.pick[aria-selected="true"] { border-color: var(--c); background: #FFFBF4; box-shadow: 0 4px 0 var(--c); }
-.isle-card { position: sticky; top: 100px; overflow: hidden; border-radius: 32px; background: var(--paper); box-shadow: 0 6px 0 var(--edge), 0 24px 48px rgba(58,35,24,.08); }
-.isle-card .pic { position: relative; aspect-ratio: 16 / 8; background: #E8F2F7; }
-.isle-card .pic > img { width: 100%; height: 100%; object-fit: cover; }
-.isle-card .guide { position: absolute; right: 20px; bottom: -22px; display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 18px 0 8px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 16px; font-weight: 800; box-shadow: 0 4px 0 rgba(58,35,24,.15); text-shadow: 0 1px 0 rgba(0,0,0,.15); }
-.isle-card .guide img { width: 38px; height: 38px; margin: -6px 0; }
-.isle-card .txt { display: flex; flex-direction: column; gap: 14px; padding: 40px 28px 30px; }
-.isle-card h3 { margin: 0; font-size: 32px; font-weight: 800; line-height: 1.2; }
-.isle-card p { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
-.isle-card.swap .pic > img, .isle-card.swap .txt { animation: swap .35s ease-out; }
+/* the islands: a sea to sail on, one island big in the middle and its neighbours small on each side */
+.isles-sec { position: relative; background: linear-gradient(var(--page), rgba(255,247,236,0) 160px, rgba(255,247,236,0) calc(100% - 160px), var(--page)), url(img/landing/isles-sea.jpg) center / cover #CDEBF2; }
+.reel { position: relative; --sw: 400px; }
+.reel-track { display: flex; overflow-x: auto; overflow-y: hidden; padding: 10px calc(50% - var(--sw) / 2) 20px; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.reel-track::-webkit-scrollbar { display: none; }
+.slide { flex: 0 0 var(--sw); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: none; scroll-snap-align: center; transform: scale(var(--s, .55)); opacity: var(--o, .7); transform-origin: 50% 70%; will-change: transform; }
+.slide img { width: 100%; filter: drop-shadow(0 20px 18px rgba(30,90,120,.25)); animation: bob 5s ease-in-out infinite; animation-delay: var(--d); }
+.slide b { margin-top: -14px; padding: 4px 18px 6px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 24px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 rgba(58,35,24,.12); }
+.slide[aria-current="true"] b { background: var(--c); color: var(--paper); text-shadow: 0 1px 0 rgba(0,0,0,.18); }
+.reel-go { position: absolute; z-index: 2; top: 42%; display: grid; place-items: center; width: 56px; height: 56px; border: 0; border-radius: 50%; background: var(--paper); color: var(--line); box-shadow: 0 5px 0 var(--edge), 0 10px 24px rgba(58,35,24,.15); }
+.reel-go:hover { transform: scale(1.06); }
+.reel-go:disabled { opacity: .4; cursor: default; transform: none; }
+.reel-go.prev { right: 4px; } .reel-go.next { left: 4px; }
+.reel-dots { display: flex; justify-content: center; gap: 8px; margin: 4px 0 28px; }
+.reel-dots button { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 999px; background: rgba(58,35,24,.22); transition: width .2s, background .2s; }
+.reel-dots button[aria-current="true"] { width: 32px; background: var(--accent-deep); }
+.reel-info { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: center; max-width: 920px; margin: 0 auto; padding: 18px; border-radius: 32px; background: rgba(255,255,255,.94); box-shadow: 0 6px 0 rgba(58,35,24,.1), 0 24px 48px rgba(30,90,120,.12); }
+.reel-info .pic { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border-radius: 22px; }
+.reel-info .pic img { width: 100%; height: 100%; object-fit: cover; }
+.reel-info .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-inline-end: 12px; }
+.reel-info .guide { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 15px; font-weight: 800; }
+.reel-info h3 { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.2; }
+.reel-info p { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
+.reel-info.swap .pic img, .reel-info.swap .txt { animation: swap .35s ease-out; }
 @keyframes swap { from { opacity: 0; translate: 0 8px; } }
+
+/* the app: two phones and the two stores */
+.app-row { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.app-row .sec-head { align-items: flex-start; margin: 0 0 24px; text-align: start; }
+.stores { display: flex; flex-wrap: wrap; gap: 12px; }
+.store { display: inline-flex; align-items: center; gap: 10px; height: 60px; padding: 0 20px; border-radius: 16px; background: #1F1A24; color: var(--paper); text-decoration: none; box-shadow: 0 5px 0 #000; transition: transform .15s; }
+.store:hover { transform: translateY(-2px); }
+.store small { display: block; font-size: 12px; font-weight: 700; opacity: .8; line-height: 1.2; }
+.store b { display: block; font-size: 20px; font-weight: 800; line-height: 1.1; direction: ltr; text-align: right; font-family: system-ui, sans-serif; }
+.app-note { margin: 18px 0 0; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+.phones { position: relative; height: 560px; }
+.phone { position: absolute; width: 250px; aspect-ratio: 9 / 19.5; padding: 10px; border-radius: 42px; background: #22202B; box-shadow: inset 0 0 0 2px #3A3746, 0 30px 60px rgba(58,35,24,.25); }
+.phone .screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 33px; background: url(img/landing/hero-sky-m.jpg) 30% 100% / cover #CDE9F7; }
+.phone .screen::before { content: ''; position: absolute; z-index: 3; top: 8px; left: 50%; translate: -50% 0; width: 76px; height: 20px; border-radius: 999px; background: #22202B; }
+.phone.front { right: 10%; top: 0; z-index: 2; rotate: -4deg; }
+.phone.back { left: 6%; top: 60px; rotate: 6deg; }
+.phone.back .screen { background: url(img/landing/r-beach.jpg) 60% 50% / cover; }
+.phone.back .screen::after { content: 'شاطئ الحكايات'; position: absolute; top: 46px; left: 0; right: 0; text-align: center; color: var(--paper); font-size: 24px; font-weight: 800; text-shadow: 0 3px 0 #B8405F, 2px 0 0 #B8405F, -2px 0 0 #B8405F, 0 -2px 0 #B8405F; }
+.mini-hud { position: absolute; z-index: 2; top: 38px; inset-inline: 10px; display: flex; justify-content: space-between; }
+.mini-hud span { display: inline-flex; align-items: center; gap: 3px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--paper); font-size: 11px; font-weight: 800; box-shadow: 0 2px 0 var(--edge); }
+.mini-hud img { width: 16px; height: 16px; }
+.mini-isle { position: absolute; z-index: 1; width: var(--w); left: var(--x); top: var(--y); }
+.mini-dock { position: absolute; z-index: 2; bottom: 12px; inset-inline: 12px; display: flex; justify-content: space-around; padding: 6px; border-radius: 999px; background: rgba(255,246,232,.97); box-shadow: 0 0 0 2px #F3DDBB; }
+.mini-dock img { width: 28px; height: 28px; }
 
 /* how the child grows */
 .grow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
@@ -164,16 +196,17 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .go-card img { width: 170px; animation: bob 4s ease-in-out infinite; }
 .go-card h2 { font-size: clamp(28px, 3vw, 40px); }
 .go-card p { margin: 8px 0 20px; font-size: 18px; font-weight: 700; color: #4D3A2C; }
-.foot { padding: 56px 0 32px; background: #3A2318; color: #F6E7D2; }
+/* the footer: a quiet starry evening over the islands */
+.foot { padding: 72px 0 200px; color: #EDE6FF; background: linear-gradient(rgba(24,20,56,.6), rgba(24,20,56,.15) 70%), url(img/landing/foot-dusk.jpg) center bottom / cover #1E2148; }
 .foot .wrap { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; }
 .foot .logo b { color: var(--paper); }
-.foot .logo small, .foot p { color: #CDB89F; }
+.foot .logo small, .foot p { color: #C9C2EA; }
 .foot p { margin: 12px 0 0; font-size: 15px; font-weight: 600; max-width: 30ch; }
 .foot h3 { margin: 0 0 10px; font-size: 16px; font-weight: 800; color: var(--paper); }
 .foot ul { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.foot ul a { font-size: 15px; font-weight: 600; text-decoration: none; color: #E9D6BC; }
+.foot ul a { font-size: 15px; font-weight: 600; text-decoration: none; color: #DCD6F7; }
 .foot ul a:hover { color: var(--paper); text-decoration: underline; }
-.foot .copy { grid-column: 1 / -1; margin-top: 16px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.12); font-size: 14px; color: #B9A288; }
+.foot .copy { grid-column: 1 / -1; margin-top: 16px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.16); font-size: 14px; color: #BDB5E4; }
 
 /* tablets: the links fold into a menu */
 @media (max-width: 1100px) {
@@ -215,15 +248,23 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .sec { padding: 64px 0; }
   .sec-head { margin-bottom: 32px; }
   .sec-head p { font-size: 17px; }
-  .explore, .split { grid-template-columns: 1fr; gap: 24px; }
-  /* the islands become one row to swipe */
-  .picks { display: flex; gap: 10px; overflow-x: auto; margin: 0 -16px; padding: 4px 16px 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .picks::-webkit-scrollbar { display: none; }
-  .pick { flex: 0 0 104px; scroll-snap-align: start; font-size: 14px; }
-  .pick img { width: 76px; height: 76px; }
-  .isle-card { position: static; }
-  .isle-card .txt { padding: 36px 20px 24px; }
-  .isle-card h3 { font-size: 26px; }
+  .split, .app-row { grid-template-columns: 1fr; gap: 24px; }
+  /* the islands: a smaller one in the middle, a piece of each neighbour peeking in, swiped by finger */
+  .isles-sec { background-image: linear-gradient(var(--page), rgba(255,247,236,0) 120px, rgba(255,247,236,0) calc(100% - 120px), var(--page)), url(img/landing/isles-sea-m.jpg); }
+  .reel { --sw: 52vw; }
+  .reel-go { display: none; }
+  .slide b { font-size: 18px; }
+  .reel-info { grid-template-columns: 1fr; gap: 14px; padding: 12px; }
+  .reel-info .pic { aspect-ratio: 16 / 9; }
+  .reel-info .txt { padding: 0 8px 10px; }
+  .reel-info h3 { font-size: 24px; }
+  .app-row .sec-head { align-items: center; text-align: center; }
+  .stores { justify-content: center; }
+  .app-note { text-align: center; }
+  .phones { height: 440px; max-width: 360px; width: 100%; margin: 0 auto; }
+  .phone { width: 196px; border-radius: 34px; padding: 8px; }
+  .phone .screen { border-radius: 27px; }
+  .foot { padding-bottom: 150px; background-image: linear-gradient(rgba(24,20,56,.7), rgba(24,20,56,.25) 75%), url(img/landing/foot-dusk-m.jpg); }
   .grow { grid-template-columns: 1fr 1fr; }
   .grow .g-card:last-child { grid-column: 1 / -1; }
   .steps { grid-template-columns: 1fr; }
@@ -238,7 +279,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
   .foot .wrap > div:first-child { grid-column: 1 / -1; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour, .go-card img { animation: none; } .btn, .isle img, .pick { transition: none; } .isle-card.swap .pic > img, .isle-card.swap .txt { animation: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour, .go-card img { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .reel-info.swap .pic img, .reel-info.swap .txt { animation: none; } .reel-track { scroll-snap-type: x mandatory; } }
 </style>
 </head>
 <body>
@@ -308,17 +349,20 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     </div>
   </section>
 
-  <section class="sec" id="islands" aria-labelledby="islands-t">
+  <section class="sec isles-sec" id="islands" aria-labelledby="islands-t">
     <div class="wrap">
       <div class="sec-head" style="--k:#2F6FA8;--kb:#DDEEFB">
         <span class="kicker">عالم أجيال</span>
         <h2 id="islands-t">تسع جزر، وفي كل جزيرة عالم</h2>
-        <p>يتنقّل طفلك بين الجزر على خريطة واحدة، ولأغلب الجزر رفيق يرحّب به. اختر جزيرة لترى ما فيها.</p>
+        <p>يتنقّل طفلك بين الجزر على خريطة واحدة، ولأغلب الجزر رفيق يرحّب به. اسحب أو اضغط على جزيرة لترى ما فيها.</p>
       </div>
-      <div class="explore">
-        <div class="picks" id="picks" role="tablist" aria-label="جزر عالم أجيال"></div>
-        <article class="isle-card" id="isle-card" role="tabpanel"></article>
+      <div class="reel" id="reel" role="region" aria-roledescription="شريط متحرك" aria-label="جزر عالم أجيال">
+        <button class="reel-go prev" type="button" aria-label="الجزيرة السابقة"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        <div class="reel-track" id="reel-track"></div>
+        <button class="reel-go next" type="button" aria-label="الجزيرة التالية"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
       </div>
+      <div class="reel-dots" id="reel-dots" aria-label="اختر جزيرة"></div>
+      <article class="reel-info" id="reel-info" aria-live="polite"></article>
     </div>
   </section>
 
@@ -399,6 +443,35 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     </div>
   </section>
 
+  <section class="sec" id="app" aria-labelledby="app-t">
+    <div class="wrap app-row">
+      <div>
+        <div class="sec-head" style="--k:#2F6FA8;--kb:#DDEEFB">
+          <span class="kicker">تطبيق أجيال</span>
+          <h2 id="app-t">عالم أجيال في تطبيق على الجوال والجهاز اللوحي</h2>
+          <p>حمّل التطبيق، وادخل بحسابك، ثم اختر ملف طفلك. ويكمل من حيث توقف، سواء دخل من التطبيق أو من الموقع.</p>
+        </div>
+        <div class="stores">
+          <a class="store" href="#" data-soon="app"><svg width="28" height="28" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.7zM14.2 5.6c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg><span><small>حمّله من</small><b>App Store</b></span></a>
+          <a class="store" href="#" data-soon="app"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2.8l10.2 9.2L4 21.2c-.4-.2-.6-.6-.6-1.1V3.9c0-.5.2-.9.6-1.1z" fill="#34C759"/><path d="M14.2 12L4 2.8c.3-.2.7-.2 1.1 0l12.1 6.9z" fill="#2F9BFF"/><path d="M14.2 12l3 2.3-12.1 6.9c-.4.2-.8.2-1.1 0z" fill="#FF4D5A"/><path d="M17.2 9.7l3.2 1.8c.8.5.8 1.6 0 2.1l-3.2 1.8-3-2.4z" fill="#FFC531"/></svg><span><small>حمّله من</small><b>Google Play</b></span></a>
+        </div>
+        <p class="app-note">الحساب واحد: تُنشئه مرة، وتستخدمه على التطبيق والموقع.</p>
+      </div>
+      <div class="phones" aria-hidden="true">
+        <div class="phone back"><div class="screen"></div></div>
+        <div class="phone front"><div class="screen">
+          <div class="mini-hud"><span><img src="img/hud/points.png" alt="">3,240</span><span><img src="img/hud/streak.png" alt="">5</span></div>
+          <img class="mini-isle" src="img/ai.png" alt="" style="--w:44%;--x:4%;--y:16%">
+          <img class="mini-isle" src="img/colors.png" alt="" style="--w:44%;--x:52%;--y:22%">
+          <img class="mini-isle" src="img/forest.png" alt="" style="--w:58%;--x:22%;--y:38%">
+          <img class="mini-isle" src="img/beach.png" alt="" style="--w:44%;--x:0%;--y:60%">
+          <img class="mini-isle" src="img/games.png" alt="" style="--w:44%;--x:54%;--y:58%">
+          <div class="mini-dock"><img src="img/nav/map.png" alt=""><img src="img/nav/sections.png" alt=""><img src="img/nav/room.png" alt=""><img src="img/nav/leaders.png" alt=""></div>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
   <section class="sec tint" id="plans" aria-labelledby="plans-t">
     <div class="wrap">
       <div class="sec-head">
@@ -454,7 +527,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       <p>منصة تعليمية وترفيهية للأطفال من 3 إلى 15 سنة.</p>
     </div>
     <div><h3>المنصة</h3><ul><li><a href="#islands">الجزر</a></li><li><a href="#grow">تقدّم طفلك</a></li><li><a href="#how">كيف يعمل</a></li><li><a href="#safety">الأمان</a></li></ul></div>
-    <div><h3>لك</h3><ul><li><a href="#schools">للمدارس والحضانات</a></li><li><a href="#plans">الباقات</a></li><li><a href="#faq">أسئلة شائعة</a></li></ul></div>
+    <div><h3>لك</h3><ul><li><a href="#schools">للمدارس والحضانات</a></li><li><a href="#app">التطبيق</a></li><li><a href="#plans">الباقات</a></li><li><a href="#faq">أسئلة شائعة</a></li></ul></div>
     <div><h3>حسابك</h3><ul><li><a href="index.html">دخول</a></li><li><a href="#" data-soon="signup">إنشاء حساب</a></li><li><a href="index.html?guest=1">تصفّح كزائر</a></li></ul></div>
     <p class="copy">© 2026 أجيال الصالحية</p>
   </div>
@@ -490,33 +563,68 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     { id: 'peak', name: 'قمة الأبطال', guide: 'مع الصقر شاهين', c: '#E0584A', about: 'مسابقات تنظّمها المنصة: أسئلة بوقت، ومسابقات لأجمل رسمة أو قصة.', ticks: ['مسابقات أسئلة سريعة', 'مسابقات للرسم والقصص بالتصويت', 'حسب باقتك وإعداداتك'] },
     { id: 'ai', name: 'ورشة السحر', guide: 'مع نور', c: '#7B64DA', about: 'يصنع طفلك قصة مصوّرة أو فيديو، ويختار الفكرة من خيارات جاهزة.', ticks: ['قصة مصوّرة أو فيديو قصير', 'أفكار جاهزة، من غير كتابة حرة', 'حسب باقتك وإعداداتك'] }
   ];
-  const picks = $('picks'), card = $('isle-card');
-  picks.innerHTML = ISLES.map((i, n) => `<button class="pick" type="button" role="tab" id="pick-${i.id}" data-id="${i.id}" aria-controls="isle-card" aria-selected="${n === 0}" tabindex="${n === 0 ? 0 : -1}" style="--c:${i.c}"><img src="img/${i.id}.png" alt="">${i.name}</button>`).join('');
-  function pick(id, focus) {
-    const i = ISLES.find((x) => x.id === id);
-    picks.querySelectorAll('.pick').forEach((b) => { const on = b.dataset.id === id; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) { b.focus(); b.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } });
-    card.setAttribute('aria-labelledby', `pick-${id}`);
-    card.style.setProperty('--c', i.c);
-    card.innerHTML = `<div class="pic"><img src="img/landing/r-${i.id}.jpg" alt=""><span class="guide"><img src="img/${i.id}.png" alt="">${i.guide}</span></div>
-      <div class="txt"><h3>${i.name}</h3><p>${i.about}</p><ul class="ticks">${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul></div>`;
-    card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+  const track = $('reel-track'), dots = $('reel-dots'), info = $('reel-info');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  track.innerHTML = ISLES.map((i, n) => `<button class="slide" type="button" data-n="${n}" style="--c:${i.c};--d:${-n * 0.7}s" aria-label="${i.name}"><img src="img/${i.id}.png" alt=""><b>${i.name}</b></button>`).join('');
+  dots.innerHTML = ISLES.map((i, n) => `<button type="button" data-n="${n}" aria-label="${i.name}"></button>`).join('');
+  const slides = [...track.children];
+  let at = -1;
+  // move the row so island n sits in the middle (works the same both ways, right to left included)
+  function go(n, now) {
+    const t = track.getBoundingClientRect(), r = slides[n].getBoundingClientRect();
+    track.scrollBy({ left: (r.left + r.width / 2) - (t.left + t.width / 2), behavior: reduce || now ? 'auto' : 'smooth' });
   }
-  picks.addEventListener('click', (e) => { const b = e.target.closest('.pick'); if (b) pick(b.dataset.id); });
-  // arrows move between the islands (right to left: the right arrow goes back)
-  picks.addEventListener('keydown', (e) => {
-    const n = ISLES.findIndex((x) => x.id === picks.querySelector('[aria-selected="true"]').dataset.id);
-    const step = { ArrowLeft: 1, ArrowRight: -1, ArrowDown: 1, ArrowUp: -1 }[e.key];
-    if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); return pick(ISLES[e.key === 'Home' ? 0 : ISLES.length - 1].id, true); }
+  function show(n) {
+    if (n === at) return; at = n;
+    const i = ISLES[n];
+    slides.forEach((s, k) => s.setAttribute('aria-current', String(k === n)));
+    [...dots.children].forEach((d, k) => d.setAttribute('aria-current', String(k === n)));
+    document.querySelector('.reel-go.prev').disabled = n === 0;
+    document.querySelector('.reel-go.next').disabled = n === ISLES.length - 1;
+    info.style.setProperty('--c', i.c);
+    info.innerHTML = `<div class="pic"><img src="img/landing/r-${i.id}.jpg" alt=""></div>
+      <div class="txt"><span class="guide">${i.guide}</span><h3>${i.name}</h3><p>${i.about}</p><ul class="ticks">${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul></div>`;
+    info.classList.remove('swap'); void info.offsetWidth; info.classList.add('swap');
+  }
+  // the island in the middle is full size, the further from the middle the smaller and fainter
+  let raf = 0;
+  function paint() {
+    raf = 0;
+    const t = track.getBoundingClientRect(), mid = t.left + t.width / 2;
+    let best = 0, near = Infinity;
+    slides.forEach((s, k) => {
+      const r = s.getBoundingClientRect(), d = Math.abs(r.left + r.width / 2 - mid) / s.offsetWidth;
+      s.style.setProperty('--s', (1 - 0.45 * Math.min(d, 1)).toFixed(3));
+      s.style.setProperty('--o', Math.max(0, 1 - 0.3 * Math.min(d, 1) - (d > 1.2 ? (d - 1.2) * 2 : 0)).toFixed(3));
+      if (d < near) { near = d; best = k; }
+    });
+    show(best);
+  }
+  const queue = () => { if (!raf) raf = requestAnimationFrame(paint); };
+  track.addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', queue);
+  track.addEventListener('click', (e) => { const s = e.target.closest('.slide'); if (s) go(+s.dataset.n); });
+  dots.addEventListener('click', (e) => { const d = e.target.closest('button'); if (d) go(+d.dataset.n); });
+  document.querySelector('.reel-go.prev').addEventListener('click', () => go(Math.max(0, at - 1)));
+  document.querySelector('.reel-go.next').addEventListener('click', () => go(Math.min(ISLES.length - 1, at + 1)));
+  // arrow keys on the row (right to left: the left arrow goes on)
+  $('reel').addEventListener('keydown', (e) => {
+    const step = { ArrowLeft: 1, ArrowRight: -1 }[e.key];
     if (!step) return;
-    e.preventDefault(); pick(ISLES[(n + step + ISLES.length) % ISLES.length].id, true);
+    e.preventDefault(); const n = Math.min(ISLES.length - 1, Math.max(0, at + step)); go(n); slides[n].focus({ preventScroll: true });
   });
-  pick(ISLES[0].id);
-  // an island in the hero opens its own card below
-  document.querySelectorAll('.isle').forEach((a) => a.addEventListener('click', () => pick(a.querySelector('img').getAttribute('src').match(/img\/(\w+)\.png/)[1])));
+  track.addEventListener('focusin', (e) => { const s = e.target.closest('.slide'); if (s && +s.dataset.n !== at) go(+s.dataset.n); });
+  // start on the second island, so there is a smaller one on each side from the first look
+  go(1, true); paint();
+  // an island in the hero sails to its place in the row
+  document.querySelectorAll('.isle').forEach((a) => a.addEventListener('click', () => {
+    const id = a.querySelector('img').getAttribute('src').match(/img\/(\w+)\.png/)[1];
+    setTimeout(() => go(ISLES.findIndex((x) => x.id === id)), reduce ? 0 : 450);
+  }));
 
   // in the prototype the sign-up pages come later
   const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2600); };
-  document.addEventListener('click', (e) => { const a = e.target.closest('[data-soon]'); if (a) { e.preventDefault(); toast('في النموذج: صفحة إنشاء الحساب تأتي في خطوة لاحقة'); } });
+  document.addEventListener('click', (e) => { const a = e.target.closest('[data-soon]'); if (a) { e.preventDefault(); toast(a.dataset.soon === 'app' ? 'في النموذج: روابط التحميل تتوفر عند إطلاق التطبيق' : 'في النموذج: صفحة إنشاء الحساب تأتي في خطوة لاحقة'); } });
 })();
 </script>
 </body>
