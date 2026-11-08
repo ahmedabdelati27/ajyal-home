@@ -94,8 +94,8 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .isles-bg { z-index: -1; }
 .isles-bg i { background: center / cover no-repeat; opacity: 0; transition: opacity .7s ease; }
 .isles-bg i.on { opacity: 1; }
-.isles-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(var(--page), rgba(255,247,236,0) 150px, rgba(255,247,236,0) calc(100% - 150px), var(--page)); }
-.isles-sec .sec-head { width: fit-content; margin-bottom: 20px; padding: 18px 32px 20px; border-radius: 32px; background: rgba(255,255,255,.88); backdrop-filter: blur(8px); box-shadow: 0 6px 0 rgba(58,35,24,.08); }
+.isles-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(var(--page) 0, rgba(255,247,236,.82) 22%, rgba(255,247,236,0) 42%, rgba(255,247,236,0) 64%, rgba(255,247,236,.9) 80%, var(--page) 94%); }
+.isles-sec .sec-head { margin-bottom: 8px; }
 .reel { position: relative; --sw: 620px; --iw: 360px; }
 .reel-track { display: flex; overflow-x: auto; overflow-y: hidden; padding: 10px calc(50% - var(--sw) / 2) 20px; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
 .reel-track::-webkit-scrollbar { display: none; }
@@ -110,21 +110,18 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .reel-dots { display: flex; justify-content: center; gap: 8px; width: fit-content; margin: 6px auto 0; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.85); }
 .reel-dots button { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 999px; background: rgba(58,35,24,.22); transition: width .2s, background .2s; }
 .reel-dots button[aria-current="true"] { width: 32px; background: var(--accent-deep); }
-/* the words around the island in the middle */
-.around { position: absolute; z-index: 2; inset: 0; pointer-events: none; }
-.around > * { position: absolute; top: 46%; width: 290px; translate: 0 -50%; pointer-events: auto; }
-.say-a { left: calc(50% + var(--iw) / 2 + 12px); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 22px 24px; border-radius: 28px; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); box-shadow: 0 6px 0 rgba(58,35,24,.1), 0 20px 40px rgba(20,60,80,.18); }
-.say-a .guide { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 15px; font-weight: 800; }
-.say-a h3 { margin: 0; font-size: 32px; font-weight: 800; line-height: 1.2; color: var(--c); }
-.say-a p { margin: 0; font-size: 17px; font-weight: 600; color: var(--ink-soft); }
-.say-b { right: calc(50% + var(--iw) / 2 + 12px); display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; }
-.say-b li { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); font-size: 16px; font-weight: 800; box-shadow: 0 4px 0 rgba(58,35,24,.1), 0 14px 30px rgba(20,60,80,.15); }
-.say-b li:nth-child(2) { margin-inline-start: 26px; }
-.say-b li::before { content: ''; flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
-  background: var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat; }
+/* the words under the island in the middle: its guide, its name, what it is, and three things to do */
+.around { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 760px; margin: 18px auto 0; text-align: center; }
+.around .guide { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 15px; font-weight: 800; }
+.around h3 { margin: 0; font-size: 36px; font-weight: 800; line-height: 1.2; color: var(--c); }
+.around p { margin: 0; font-size: 19px; font-weight: 600; color: var(--ink-soft); }
+.around ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 8px 0 0; padding: 0; list-style: none; }
+.around li { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--paper); font-size: 16px; font-weight: 800; box-shadow: 0 4px 0 var(--edge); }
+.around li::before { content: ''; flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px no-repeat; }
 .around.swap > * { animation: swap .4s ease-out; }
-@keyframes swap { from { opacity: 0; translate: 0 calc(-50% + 10px); } }
-@media (max-width: 1180px) { .reel { --sw: 520px; --iw: 280px; } .around > * { width: 240px; } .say-a h3 { font-size: 26px; } }
+@keyframes swap { from { opacity: 0; translate: 0 8px; } }
+@media (max-width: 1180px) { .reel { --sw: 520px; --iw: 300px; } }
 
 /* the app: two phones and the two stores */
 .app-row { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
@@ -263,17 +260,16 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .sec-head p { font-size: 17px; }
   .split, .app-row { grid-template-columns: 1fr; gap: 24px; }
   /* the islands: a smaller one in the middle, a piece of each neighbour peeking in, the words under it */
-  .isles-sec { min-height: 0; }
-  .isles-sec .sec-head { padding: 14px 18px; }
+  .isles-sec { min-height: 0; background: var(--page); }
+  /* the picture stops under the dots, so the island's words read on the page colour */
+  .isles-bg { inset: 0 0 auto 0; height: 640px; }
+  .isles-bg::after { background: linear-gradient(var(--page), rgba(255,247,236,.75) 26%, rgba(255,247,236,0) 46%, rgba(255,247,236,0) 72%, var(--page)); }
+  .isles-sec .sec-head { margin-bottom: 0; }
   .reel { --sw: 58vw; --iw: 100%; }
   .reel-go { display: none; }
   .slide b { font-size: 18px; }
   .around { position: static; display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-  .around > * { position: static; width: auto; translate: none; }
-  .say-a { padding: 18px; }
-  .say-a h3 { font-size: 26px; }
-  .say-b li:nth-child(2) { margin-inline-start: 0; }
-  @keyframes swap { from { opacity: 0; translate: 0 10px; } }
+  .around h3 { font-size: 28px; } .around p { font-size: 17px; }
   .app-row .sec-head { align-items: center; text-align: center; }
   .stores { justify-content: center; }
   .app-note { text-align: center; }
@@ -373,14 +369,14 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
         <h2 id="islands-t">تسع جزر، وفي كل جزيرة عالم</h2>
         <p>يتنقّل طفلك بين الجزر على خريطة واحدة، ولأغلب الجزر رفيق يرحّب به. اسحب أو اضغط على جزيرة لترى ما فيها.</p>
       </div>
-      <div class="reel" id="reel" role="region" aria-roledescription="شريط متحرك" aria-label="جزر عالم أجيال">
+    </div>
+    <div class="reel" id="reel" role="region" aria-roledescription="شريط متحرك" aria-label="جزر عالم أجيال">
         <button class="reel-go prev" type="button" aria-label="الجزيرة السابقة"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="reel-track" id="reel-track"></div>
-        <div class="around" id="around" aria-live="polite"></div>
         <button class="reel-go next" type="button" aria-label="الجزيرة التالية"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
       </div>
-      <div class="reel-dots" id="reel-dots" aria-label="اختر جزيرة"></div>
-    </div>
+    <div class="reel-dots" id="reel-dots" aria-label="اختر جزيرة"></div>
+    <div class="wrap"><div class="around" id="around" aria-live="polite"></div></div>
   </section>
 
   <section class="sec tint" id="grow" aria-labelledby="grow-t">
@@ -604,8 +600,8 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     [n - 1, n, n + 1].forEach((k) => { const w = worlds[k]; if (w && !w.style.backgroundImage) w.style.backgroundImage = `url(img/landing/bg-${ISLES[k].id}.jpg)`; });
     worlds.forEach((w, k) => w.classList.toggle('on', k === n));
     around.style.setProperty('--c', i.c);
-    around.innerHTML = `<div class="say-a"><span class="guide">${i.guide}</span><h3>${i.name}</h3><p>${i.about}</p></div>
-      <ul class="say-b">${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul>`;
+    around.innerHTML = `<span class="guide">${i.guide}</span><h3>${i.name}</h3><p>${i.about}</p>
+      <ul>${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul>`;
     around.classList.remove('swap'); void around.offsetWidth; around.classList.add('swap');
   }
   // the island in the middle is full size, the further from the middle the smaller and fainter
