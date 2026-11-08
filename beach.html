@@ -155,7 +155,7 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
       label: [it.title, it.about, `${it.pages} صفحات`, it.a ? 'مسموعة' : '', it.hero ? 'يمكنك أن تكون بطلها' : '', it.status === 'done' ? 'مكتملة' : going ? 'جارية' : it.fresh ? 'جديدة' : ''].filter(Boolean).join('، ') };
   };
   const host = document.getElementById('shelves');
-  Shelf.render(host, SHELVES.map((sh) => ({ ...sh, count: COUNT[sh.id], items: sh.items.map(item) })));
+  Shelf.render(host, SHELVES.map((sh) => ({ ...sh, look: 'sand', count: COUNT[sh.id], items: sh.items.map(item) })));
   host.style.cssText = 'display:flex;flex-direction:column;gap:40px';
 
   // the board is drawn at 1440 wide; scale it to the window like the forest
