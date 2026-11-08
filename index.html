@@ -162,12 +162,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   </div>
 
   <div class="hud top">
-    <button type="button" class="pill me" aria-label="غرفتي: يوسف، المستوى 7"><img src="img/avatar.png" alt=""><span class="name">يوسف</span><span class="lvl"><img src="img/I-08.png" alt="">مستوى 7</span></button>
+    <button type="button" class="pill me" id="me" aria-label="غرفتي: يوسف، المستوى 7"><img src="img/avatar.png" alt=""><span class="name">يوسف</span><span class="lvl"><img src="img/I-08.png" alt="">مستوى 7</span></button>
     <div class="stats">
       <button type="button" class="pill search" aria-label="ابحث"><img src="img/I-05.png" alt=""></button>
       <span class="pill" title="النقاط"><img src="img/I-06.png" alt="">3,240</span>
       <span class="pill" title="أيام متتالية"><img src="img/I-07.png" alt="">5</span>
-      <span class="pill" title="الشارات"><img src="img/badge.png" alt="">12</span>
+      <span class="pill" title="الشارات"><img src="img/badge.png" alt="">6</span>
       <button type="button" class="pill bell" aria-label="الإشعارات، 3 غير مقروءة"><img src="img/I-09.png" alt=""><b>3</b></button>
     </div>
   </div>
@@ -190,10 +190,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   </div>
 
   <nav class="hud dock" aria-label="التنقل السريع">
-    <a href="#" aria-current="page"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
-    <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
-    <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
-    <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+    <a href="index.html" aria-current="page" aria-label="الخريطة"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+    <a href="sections.html" aria-label="كل الأقسام"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+    <a href="room.html" aria-label="غرفتي"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+    <a href="leaders.html" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
   </nav>
 
   <div class="hud hint" id="hint">اسحب الخريطة، وقرّب بالعجلة أو بإصبعين أو بزرار +، واضغط على أي جزيرة</div>
@@ -298,6 +298,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     setTimeout(() => openRegion(i), reduce.matches ? 0 : 380);
   }
   addEventListener('pageshow', () => { flying = false; });
+  // the child's own card opens «غرفتي»
+  document.getElementById('me').addEventListener('click', () => { Sfx.play('open'); Clouds.go('room.html'); });
   Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>كل الأقسام · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<link rel="stylesheet" href="hub.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+.hero { --hero: url(img/map-wide.jpg); background-position: center 60%; }
+:root { --accent-deep: #2F6B2A; }
+
+/* carry on: the one thing the child left half done */
+.cont { color: var(--ink); text-decoration: none; display: grid; grid-template-columns: 96px 1fr auto; gap: 18px; align-items: center; padding: 14px 18px 14px 14px; }
+.cont img { width: 96px; height: 96px; border-radius: 22px; object-fit: cover; }
+.cont b { font-size: 22px; } .cont small { display: block; margin-top: 4px; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.bar-p { margin-top: 8px; height: 12px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.bar-p i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5BC236, #2E8B2A); }
+
+/* every place on the map, as a plain list (also the way in on slow devices) */
+.places { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.place { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 12px 12px 18px; text-decoration: none; color: var(--ink); transition: transform .2s; }
+.place:hover { transform: translateY(-4px); }
+.place .art { height: 210px; border-radius: 24px; background: var(--c); display: grid; place-items: center; overflow: hidden; }
+.place .art img { width: 250px; filter: drop-shadow(0 8px 6px rgba(0,0,0,.18)); }
+.place b { padding: 4px 8px 0; font-size: 28px; font-weight: 800; }
+.place p { margin: 0; padding: 0 8px; font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+.tag { position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 16px; font-weight: 800; box-shadow: 0 3px 0 rgba(0,0,0,.08); }
+.tag img { width: 24px; height: 24px; }
+.go-in { margin: 4px 8px 0; align-self: flex-start; display: inline-flex; align-items: center; height: 50px; padding: 0 22px; border-radius: 999px; background: var(--d); color: #FFFFFF; font-size: 19px; font-weight: 800; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
+.narrow .places { grid-template-columns: 1fr 1fr; gap: 18px; }
+.narrow .place .art { height: 180px; } .narrow .place .art img { width: 210px; }
+.narrow .place b { font-size: 24px; } .narrow .tag { top: 20px; right: 20px; font-size: 15px; }
+.narrow .cont { grid-template-columns: 80px 1fr; } .narrow .cont img { width: 80px; height: 80px; } .narrow .cont .btn { grid-column: 1 / -1; }
+@media (prefers-reduced-motion: reduce) { .place { transition: none; } }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats">
+      <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+      <span class="pill" title="المستوى"><img src="img/I-08.png" alt="">مستوى 7</span>
+      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+      <span class="pill" title="أيام متتالية"><img src="img/I-07.png" alt="">5</span>
+      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">6</span>
+    </div>
+  </div>
+  <div class="head">
+    <h1>كل الأقسام</h1>
+    <p>كل أماكن عالم أجيال في مكان واحد</p>
+  </div>
+</header>
+
+<main>
+  <a class="cont card" href="story.html?resume=1">
+    <img src="img/stories/cover-00.jpg" alt="">
+    <span><b>أكمل من حيث توقفت</b><small>قصة «الأرنب الصادق» في شاطئ الحكايات · الصفحة ٦ من ١٠</small><span class="bar-p" aria-hidden="true"><i style="width:60%"></i></span></span>
+    <span class="btn go">أكمل</span>
+  </a>
+  <h2>إلى أين تذهب اليوم؟</h2>
+  <div class="places" id="places"></div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html" aria-label="الخريطة"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="sections.html" aria-current="page" aria-label="كل الأقسام"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="room.html" aria-label="غرفتي"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="leaders.html" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="values.js"></script>
+<script src="workshop.js"></script>
+<script src="hub.js"></script>
+<script>
+(() => {
+  const { ar } = Workshop;
+  // the same places as the map, in the order a child meets them
+  const growing = Values.current();
+  const PLACES = [
+    { id: 'forest', href: 'forest.html', title: 'غابة المعرفة', sub: 'فيديوهات وكتب وصور تعليمية', c: '#D7EEFC', d: '#3D96D6', tag: '✓ شاهدت كل الجديد' },
+    { id: 'beach', href: 'beach.html', title: 'شاطئ الحكايات', sub: 'اقرأ واستمع لقصص ممتعة', c: '#FFE3EA', d: '#E0607F', tag: 'قصة جارية' },
+    { id: 'letters', href: 'oasis.html', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', c: '#FFF2C2', d: '#C99A00' },
+    { id: 'quran', href: 'quran.html', title: 'واحة القرآن', sub: 'استمع وردّد وسمّع سور جزء عمّ', c: '#E2F4D6', d: '#5DAA33' },
+    { id: 'games', href: 'games.html', title: 'كثبان الألعاب', sub: 'ألعاب تعليمية في أربعة عوالم', c: '#ECE6FD', d: '#7B64DA', tip: true },
+    { id: 'colors', href: 'colors.html', title: 'وادي الألوان', sub: 'ارسم بحرية ولوّن الرسومات', c: '#FFE8D1', d: '#E58A2B', tip: true },
+    { id: 'garden', href: 'garden.html', title: 'حديقة القيم', sub: 'رحلات مع نور لتزرع القيم', c: '#D9F3EA', d: '#3FB396', tag: growing ? `قيمة ${growing.name} تكبر` : '' },
+    { id: 'peak', href: 'peak.html', title: 'قمة الأبطال', sub: 'شارك في المسابقات', c: '#FFE1DC', d: '#E0584A' },
+    { id: 'ai', href: 'workshop.html', title: 'ورشة السحر', sub: 'اصنع قصة أو فيديو، وكن بطل القصة', c: '#ECE6FD', d: '#7B64DA', tag: `✨ ${Workshop.count('story')}`, gate: 'story' }
+  ];
+  document.getElementById('places').innerHTML = PLACES.map((p) => `<a class="place card" href="${p.href}" style="--c:${p.c};--d:${p.d}">
+    <span class="art"><img src="img/${p.id}.png" alt=""></span>
+    ${p.tip ? '<span class="tag"><img src="img/I-15.png" alt="">مقترح لك</span>' : p.tag && (!p.gate || Workshop.open(p.gate)) ? `<span class="tag">${p.tag}</span>` : ''}
+    <b>${p.title}</b><p>${p.sub}</p><span class="go-in">ادخل</span></a>`).join('');
+  // tapping a place closes the clouds over the page, like on the map
+  document.getElementById('places').addEventListener('click', (e) => {
+    const a = e.target.closest('a.place'); if (!a || e.ctrlKey || e.metaKey) return;
+    e.preventDefault(); Sfx.play('open'); Clouds.go(a.href);
+  });
+  Hub.fit();
+  addEventListener('load', Hub.fit);
+})();
+</script>
+</body>
+</html>
