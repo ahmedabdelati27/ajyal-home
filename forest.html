@@ -19,8 +19,6 @@ img { max-width: none; }
 @keyframes enter { from { opacity: 0; transform: var(--t) scale(1.04); } to { opacity: 1; transform: var(--t); } }
 @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
 .float { animation: float 4.5s ease-in-out infinite; }
-.card { transition: transform .2s ease; }
-.card:hover { transform: translateY(-6px) rotate(-1deg); }
 body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
 /* same game-style dock as the map, not scaled with the board */
 .dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid #6B3A1E; border-radius: 999px;
@@ -30,13 +28,14 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
 .dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
 .rank { background: #FFF6E6; color: #C9372C; border: 2px solid #6B3A1E; border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
 @media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
-@media (prefers-reduced-motion: reduce) { #page, .float { animation: none; } .card { transition: none; } }
+@media (prefers-reduced-motion: reduce) { #page, .float { animation: none; } }
 </style>
 <link rel="stylesheet" href="dock.css">
+<link rel="stylesheet" href="shelf.css">
 </head>
 <body>
 <div id="wrap"><div id="page">
-<div dir="rtl" style="position: relative; width: 1440px; height: 1760px; overflow: hidden; background: #F2F8E6; color: #3A2318; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-size: 18px; font-weight: 500; line-height: 1.5;">
+<div dir="rtl" style="position: relative; width: 1440px; min-height: 1760px; overflow: hidden; background: #F2F8E6; color: #3A2318; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-size: 18px; font-weight: 500; line-height: 1.5;">
 
 <!-- forest header: storybook clearing behind the owl's island, fading into the page -->
 <div aria-hidden="true" style="position: absolute; inset: 0 0 auto 0; height: 500px; overflow: hidden;">
@@ -95,7 +94,7 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
 </div>
 </div>
 
-<main style="position: absolute; top: 470px; left: 80px; right: 80px; display: flex; flex-direction: column; gap: 34px;">
+<main style="position: relative; z-index: 2; margin: 470px 80px 0; padding-bottom: 150px; display: flex; flex-direction: column; gap: 34px;">
 
 <!-- continue where you left off -->
 <section aria-labelledby="cont" style="display: flex; align-items: center; gap: 22px; background: #FFFFFF; border-radius: 32px; padding: 16px 16px 16px 24px; box-shadow: 0 6px 0 #B9DDA6;">
@@ -116,278 +115,8 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
 </a>
 </section>
 
-<!-- shelves: one per admin category, the child's age group first -->
-
-<section aria-label="عالم الحيوان">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-<h2 style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 30px; font-weight: 800;"><span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: #E2F4D6; display: flex; align-items: center; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z M5 19l8-8" fill="#5CB85A" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"></path></svg></span>عالم الحيوان</h2>
-<span style="display: flex; align-items: center; gap: 14px;">
-<span style="font-size: 15px; font-weight: 700; color: #6B5A48;">مرتبة لتناسب عمرك أولاً</span>
-<a href="#" style="font-weight: 800; font-size: 17px; color: #2E7D32; text-decoration: none;">عرض الكل</a>
-</span>
-</div>
-<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 22px; margin-top: 14px; position: relative; z-index: 1;">
-
-<a href="video.html" class="card" aria-label="كيف تطير الطيور؟، فيديو، جاري" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t01.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-14.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">كيف تطير الطيور؟</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">فيديو · 8 دقائق</span>
-<span style="display: block; height: 8px; border-radius: 999px; background: #E6EFDC; overflow: hidden; margin-top: 4px;"><span style="display: block; width: 42%; height: 100%; border-radius: 999px; background: #5BC236;"></span></span>
-</span>
-</a>
-
-<a href="audio.html" class="card" aria-label="أصوات الغابة، صوت، مكتمل" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t02.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-12.png" alt="" style="width: 34px; height: 34px;"></span>
-
-<span style="position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 4px; background: #4CB944; color: #FFFFFF; border: 2px solid #FFFFFF; border-radius: 999px; padding: 0 10px 0 8px; height: 28px; font-size: 13px; font-weight: 800;">✓ مكتمل</span>
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">أصوات الغابة</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">صوت · 5 دقائق</span>
-
-</span>
-</a>
-
-<a href="pictures.html" class="card" aria-label="صغار الحيوانات، صور" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t03.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-19.png" alt="" style="width: 34px; height: 34px;"></span>
-<span style="position: absolute; top: 10px; left: 10px; background: #FFFFFF; color: #D0335A; border-radius: 999px; padding: 0 10px; font-size: 13px; font-weight: 800;">جديد</span>
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">صغار الحيوانات</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">صور · 12 صورة</span>
-
-</span>
-</a>
-
-<a href="book.html" class="card" aria-label="البومة الحكيمة، كتاب" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t04.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-11.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">البومة الحكيمة</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">كتاب · 10 صفحات</span>
-
-</span>
-</a>
-
-<a href="#" class="card" aria-label="رحلة النحلة، فيديو" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t05.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-14.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">رحلة النحلة</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">فيديو · 6 دقائق</span>
-
-</span>
-</a>
-
-</div>
-<!-- the branch the cards sit on -->
-<div aria-hidden="true" style="height: 22px; margin: -6px -20px 0; border-radius: 12px; background: linear-gradient(#B98250, #9A6838); box-shadow: 0 6px 0 #7C522A;"></div>
-</section>
-
-<section aria-label="الفضاء والكواكب">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-<h2 style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 30px; font-weight: 800;"><span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: #E7E3FF; display: flex; align-items: center; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z M5 19l8-8" fill="#7C5BD8" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"></path></svg></span>الفضاء والكواكب</h2>
-<span style="display: flex; align-items: center; gap: 14px;">
-
-<a href="#" style="font-weight: 800; font-size: 17px; color: #2E7D32; text-decoration: none;">عرض الكل</a>
-</span>
-</div>
-<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 22px; margin-top: 14px; position: relative; z-index: 1;">
-
-<a href="#" class="card" aria-label="كواكب مجموعتنا الشمسية، فيديو" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t06.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-14.png" alt="" style="width: 34px; height: 34px;"></span>
-<span style="position: absolute; top: 10px; left: 10px; background: #FFFFFF; color: #D0335A; border-radius: 999px; padding: 0 10px; font-size: 13px; font-weight: 800;">جديد</span>
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">كواكب مجموعتنا الشمسية</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">فيديو · 7 دقائق</span>
-
-</span>
-</a>
-
-<a href="flipbook.html" class="card" aria-label="لماذا يتغير شكل القمر؟، كتاب تفاعلي، جاري" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t07.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-13.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">لماذا يتغير شكل القمر؟</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">كتاب تفاعلي · 12 صفحة</span>
-<span style="display: block; height: 8px; border-radius: 999px; background: #E6EFDC; overflow: hidden; margin-top: 4px;"><span style="display: block; width: 50%; height: 100%; border-radius: 999px; background: #5BC236;"></span></span>
-</span>
-</a>
-
-<a href="#" class="card" aria-label="صور من الفضاء، صور" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t08.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-19.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">صور من الفضاء</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">صور · 15 صورة</span>
-
-</span>
-</a>
-
-<a href="#" class="card" aria-label="أغنية الكواكب، صوت، مكتمل" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t09.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-12.png" alt="" style="width: 34px; height: 34px;"></span>
-
-<span style="position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 4px; background: #4CB944; color: #FFFFFF; border: 2px solid #FFFFFF; border-radius: 999px; padding: 0 10px 0 8px; height: 28px; font-size: 13px; font-weight: 800;">✓ مكتمل</span>
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">أغنية الكواكب</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">صوت · 3 دقائق</span>
-
-</span>
-</a>
-
-<a href="#" class="card" aria-label="رائد فضاء صغير، فيديو" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t10.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-14.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">رائد فضاء صغير</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">فيديو · 9 دقائق</span>
-
-</span>
-</a>
-
-</div>
-<!-- the branch the cards sit on -->
-<div aria-hidden="true" style="height: 22px; margin: -6px -20px 0; border-radius: 12px; background: linear-gradient(#B98250, #9A6838); box-shadow: 0 6px 0 #7C522A;"></div>
-</section>
-
-<section aria-label="جسم الإنسان">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-<h2 style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 30px; font-weight: 800;"><span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: #FFE4EA; display: flex; align-items: center; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z M5 19l8-8" fill="#EE6F8D" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"></path></svg></span>جسم الإنسان</h2>
-<span style="display: flex; align-items: center; gap: 14px;">
-
-<a href="#" style="font-weight: 800; font-size: 17px; color: #2E7D32; text-decoration: none;">عرض الكل</a>
-</span>
-</div>
-<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 22px; margin-top: 14px; position: relative; z-index: 1;">
-
-<a href="#" class="card" aria-label="أسناني اللامعة، فيديو، مكتمل" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t11.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-14.png" alt="" style="width: 34px; height: 34px;"></span>
-
-<span style="position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 4px; background: #4CB944; color: #FFFFFF; border: 2px solid #FFFFFF; border-radius: 999px; padding: 0 10px 0 8px; height: 28px; font-size: 13px; font-weight: 800;">✓ مكتمل</span>
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">أسناني اللامعة</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">فيديو · 4 دقائق</span>
-
-</span>
-</a>
-
-<a href="#" class="card" aria-label="كيف نتنفس؟، كتاب" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t12.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-11.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">كيف نتنفس؟</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">كتاب · 8 صفحات</span>
-
-</span>
-</a>
-
-<a href="#" class="card" aria-label="حواسنا الخمس، صور" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t13.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-19.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">حواسنا الخمس</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">صور · 10 صور</span>
-
-</span>
-</a>
-
-<a href="#" class="card" aria-label="قلبي ينبض، صوت" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t14.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-12.png" alt="" style="width: 34px; height: 34px;"></span>
-
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">قلبي ينبض</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">صوت · 4 دقائق</span>
-
-</span>
-</a>
-
-<a href="#" class="card" aria-label="الغذاء الصحي، فيديو" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #3A2318; box-shadow: 0 6px 0 #D5E6C4;">
-<span style="position: relative; height: 140px; background: #E6EFDC;">
-<img src="img/forest/t15.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-<!-- content type badge -->
-<span style="position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(58,35,24,.18);"><img src="img/forest/I-14.png" alt="" style="width: 34px; height: 34px;"></span>
-<span style="position: absolute; top: 10px; left: 10px; background: #FFFFFF; color: #D0335A; border-radius: 999px; padding: 0 10px; font-size: 13px; font-weight: 800;">جديد</span>
-
-</span>
-<span style="padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px;">
-<span style="font-size: 19px; font-weight: 800; line-height: 1.3;">الغذاء الصحي</span>
-<span style="font-size: 14px; font-weight: 700; color: #6B5A48;">فيديو · 6 دقائق</span>
-
-</span>
-</a>
-
-</div>
-<!-- the branch the cards sit on -->
-<div aria-hidden="true" style="height: 22px; margin: -6px -20px 0; border-radius: 12px; background: linear-gradient(#B98250, #9A6838); box-shadow: 0 6px 0 #7C522A;"></div>
-</section>
-
+<!-- shelves: one per admin category, the child's age group first (drawn by shelf.js) -->
+<div id="shelves" style="display: flex; flex-direction: column; gap: 40px;"></div>
 </main>
 
 <!-- game-style dock -->
@@ -401,15 +130,51 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
   <a href="index.html?open=room" aria-label="غرفتي"><img src="img/nav/room.png" alt=""><span>غرفتي</span></a>
   <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
 </nav>
+<script src="shelf.js"></script>
 <script>
-  // the board is drawn at 1440 wide; scale it to the window
+  // what the admin puts in each category; the icon and its colour say what each thing is
+  const K = {
+    video: { src: 'img/forest/I-14.png', c: '#8E5BE8', name: 'فيديو' },
+    audio: { src: 'img/forest/I-12.png', c: '#EC6A93', name: 'صوت' },
+    pics: { src: 'img/forest/I-19.png', c: '#2EA3D9', name: 'صور' },
+    book: { src: 'img/forest/I-11.png', c: '#E8742B', name: 'كتاب' },
+    flip: { src: 'img/forest/I-13.png', c: '#E8742B', name: 'كتاب تفاعلي' }
+  };
+  const c = (title, kind, t, meta, more = {}) => ({ title, img: `img/forest/t${t}.jpg`, kinds: [K[kind]], meta, clock: kind === 'video' || kind === 'audio', ...more,
+    label: [title, K[kind].name, meta.replace(/ د$/, ' دقائق'), more.tag === 'done' ? 'مكتمل' : more.tag === 'new' ? 'جديد' : more.p ? 'جاري' : ''].filter(Boolean).join('، ') });
+  const leaf = (fill) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z M5 19l8-8" fill="${fill}" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+  Shelf.render(document.getElementById('shelves'), [
+    { id: 'animals', title: 'عالم الحيوان', icon: leaf('#5CB85A'), tint: '#E2F4D6', count: 18, items: [
+      c('كيف تطير الطيور؟', 'video', '01', '8 د', { href: 'video.html', p: '42%' }),
+      c('أصوات الغابة', 'audio', '02', '5 د', { href: 'audio.html', tag: 'done' }),
+      c('صغار الحيوانات', 'pics', '03', '12 صورة', { href: 'pictures.html', tag: 'new' }),
+      c('البومة الحكيمة', 'book', '04', '10 صفحات', { href: 'book.html' }),
+      c('رحلة النحلة', 'video', '05', '6 د')] },
+    { id: 'space', title: 'الفضاء والكواكب', icon: leaf('#7C5BD8'), tint: '#E7E3FF', count: 14, items: [
+      c('كواكب مجموعتنا الشمسية', 'video', '06', '7 د', { tag: 'new' }),
+      c('لماذا يتغير شكل القمر؟', 'flip', '07', '12 صفحة', { href: 'flipbook.html', p: '50%' }),
+      c('صور من الفضاء', 'pics', '08', '15 صورة'),
+      c('أغنية الكواكب', 'audio', '09', '3 د', { tag: 'done' }),
+      c('رائد فضاء صغير', 'video', '10', '9 د')] },
+    { id: 'body', title: 'جسم الإنسان', icon: leaf('#EE6F8D'), tint: '#FFE4EA', count: 12, items: [
+      c('أسناني اللامعة', 'video', '11', '4 د', { tag: 'done' }),
+      c('كيف نتنفس؟', 'book', '12', '8 صفحات'),
+      c('حواسنا الخمس', 'pics', '13', '10 صور'),
+      c('قلبي ينبض', 'audio', '14', '4 د'),
+      c('الغذاء الصحي', 'video', '15', '6 د', { tag: 'new' })] }
+  ]);
+
+  // the board is drawn at 1440 wide; scale it to the window, and on phones the shelves grow back so a finger can hit a cover
   const page = document.getElementById('page');
   function fit() {
     const k = Math.min(innerWidth / 1440, 1.5);
     const x = Math.max(0, (innerWidth - 1440 * k) / 2);
     const t = 'translateX(' + x + 'px) scale(' + k + ')';
+    page.style.setProperty('--u', Math.max(1, 0.62 / k).toFixed(2) + 'px');
+    page.classList.toggle('small', 0.62 / k > 1.4);
     page.style.setProperty('--t', t); page.style.transform = t;
-    document.getElementById('wrap').style.height = 1760 * k + 'px';
+    document.getElementById('wrap').style.height = page.offsetHeight * k + 'px';
+    Shelf.sync(document.getElementById('shelves'));
   }
   fit(); addEventListener('resize', fit);
 </script>
