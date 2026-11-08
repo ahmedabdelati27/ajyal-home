@@ -13,15 +13,16 @@
   const AVATARS = ['A-01', 'A-02', 'A-03', 'A-04', 'A-05', 'A-06', 'A-07', 'A-08'];
 
   // badges and achievements are one system; the admin sets each one's name, picture and condition
+  // about: the admin's short description; how: the condition; prog: how far the child is when it can be counted; go: where to earn it
   const BADGES = [
-    { id: 'S-01', n: 'صديق الحكايات', how: 'أنهِ ٣ قصص', got: true },
-    { id: 'S-02', n: 'نجم القرآن', how: 'أكمل ٣ سور', got: true },
-    { id: 'S-03', n: 'بطل الحروف', how: 'أكمل ١٠ حروف', got: false },
-    { id: 'S-04', n: 'الفنان الصغير', how: 'تُعتمد رسمة لك للنشر', got: true },
-    { id: 'S-05', n: 'زارع القيم', how: 'أكمل قيمة في الحديقة', got: true },
-    { id: 'S-06', n: 'شعلة الأيام', how: 'العب ٥ أيام متتالية', got: true },
-    { id: 'S-07', n: 'بطل القمة', how: 'تفوز مشاركتك في مسابقة', got: false },
-    { id: 'S-08', n: 'المستكشف', how: 'أكمل ٣ فيديوهات وكتب', got: true }
+    { id: 'S-01', n: 'صديق الحكايات', about: 'لمن يحب القصص ويفهمها', how: 'أنهِ ٣ قصص مع أسئلتها', got: true, go: ['beach.html', 'شاطئ الحكايات'] },
+    { id: 'S-02', n: 'نجم القرآن', about: 'لمن يحفظ سور جزء عمّ', how: 'سمّع سورتين كاملتين', got: true, go: ['quran.html', 'واحة القرآن'] },
+    { id: 'S-03', n: 'بطل الحروف', about: 'لمن يتعلّم الحروف والأرقام', how: 'أكمل رحلة ١٠ حروف أو أرقام', got: false, prog: [7, 10], go: ['oasis.html', 'واحة الحروف'] },
+    { id: 'S-04', n: 'الفنان الصغير', about: 'لمن يشارك رسوماته الجميلة', how: 'أرسل رسمة للنشر، ويعتمدها فريق أجيال', got: true, need: 'publish', go: ['colors.html', 'وادي الألوان'] },
+    { id: 'S-05', n: 'زارع القيم', about: 'لمن يزرع القيم مع نور', how: 'أكمل رحلة قيمة واحدة في الحديقة', got: true, go: ['garden.html', 'حديقة القيم'] },
+    { id: 'S-06', n: 'شعلة الأيام', about: 'لمن يزور عالم أجيال كل يوم', how: 'ادخل ٥ أيام متتالية', got: true, go: null },
+    { id: 'S-07', n: 'بطل القمة', about: 'لمن يفوز في مسابقة مستمرة', how: 'تحصل مشاركتك على أعلى الأصوات في مسابقة', got: false, need: 'contests', go: ['peak.html', 'قمة الأبطال'] },
+    { id: 'S-08', n: 'المستكشف', about: 'لمن يحب أن يتعلّم أشياء جديدة', how: 'أكمل ٣ فيديوهات أو كتب في الغابة', got: true, go: ['forest.html', 'غابة المعرفة'] }
   ];
 
   // the general leaderboard: one list by total points, with child-friendly data only

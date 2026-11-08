@@ -37,6 +37,8 @@
 .rules-note { margin: 0; padding: 12px 18px; border-radius: 18px; background: #FFF1DD; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
 
 /* badges: the ones earned shine, the others say how to get them */
+.badges-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.badges-head .btn { height: 48px; padding: 0 20px; font-size: 17px; }
 .badges { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .badge { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 12px 18px; text-align: center; }
 .badge img { width: 120px; height: 120px; }
@@ -129,7 +131,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   <section role="tabpanel" id="p-me" aria-labelledby="t-me">
     <div class="nums" id="nums"></div>
     <p class="rules-note">تاريخ ميلادك، ووقت اللعب، وما يمكنك استخدامه، يحددها ولي أمرك أو معلّمك. أنت تغيّر اسمك وصورتك فقط.</p>
-    <h2 id="badges-t"></h2>
+    <div class="badges-head"><h2 id="badges-t"></h2><a class="btn soft" href="index.html?open=badges">كل الشارات وكيف تحصل عليها</a></div>
     <div class="badges" id="badges"></div>
   </section>
 

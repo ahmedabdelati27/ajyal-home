@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>شاراتي · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<link rel="stylesheet" href="hub.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+.hero { --hero: url(img/room/badges-hero.jpg); background-position: center 40%; }
+:root { --accent-deep: #8A4B1A; }
+
+/* how many so far */
+.sum { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; padding: 20px 26px; }
+.sum .big { display: flex; align-items: baseline; gap: 8px; font-size: 22px; font-weight: 800; color: var(--ink-soft); }
+.sum .big b { font-size: 60px; line-height: 1; color: var(--accent-deep); }
+.sum .bar-b { display: block; height: 18px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.sum .bar-b i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFC93C, #F4823F); }
+.sum p { margin: 10px 0 0; font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--paper); font-size: 17px; font-weight: 800; box-shadow: 0 4px 0 var(--edge); }
+.chip[aria-pressed="true"] { background: #FFE2C4; box-shadow: 0 4px 0 #F1B27A; }
+
+/* one card per badge: what it is, whether it is earned, and how to earn it */
+.badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.badge { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 18px 20px; text-align: center; }
+.badge > img { width: 150px; height: 150px; }
+.badge.no > img { filter: grayscale(1) opacity(.5); }
+.badge.lit { box-shadow: 0 0 0 4px #F4823F, 0 6px 0 var(--edge); }
+.closed { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.badge h3 { margin: 4px 0 0; font-size: 24px; font-weight: 800; }
+.badge .about { margin: 0; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.state { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: 999px; font-size: 15px; font-weight: 800; }
+.state.ok { background: #DDF5D2; color: var(--go-deep); } .state.wait { background: #F5EDE2; color: var(--ink-soft); }
+.how { align-self: stretch; margin-top: 4px; padding: 12px 14px; border-radius: 18px; background: #FFF6E8; text-align: start; display: flex; flex-direction: column; gap: 8px; }
+.how small { font-size: 14px; font-weight: 800; color: var(--accent-deep); }
+.how b { font-size: 18px; font-weight: 800; line-height: 1.45; }
+.prog { display: flex; align-items: center; gap: 10px; }
+.prog .pb { flex: 1; height: 12px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.prog .pb i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5BC236, #2E8B2A); }
+.prog span { font-size: 15px; font-weight: 800; white-space: nowrap; }
+.acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 4px; }
+.acts .btn { height: 46px; padding: 0 16px; font-size: 16px; }
+.hear { background: #FFF1C9; color: #8A5A00; box-shadow: none; }
+.hear svg { width: 20px; height: 20px; }
+
+.narrow .sum { grid-template-columns: 1fr; gap: 12px; }
+.narrow .badges { grid-template-columns: 1fr 1fr; gap: 16px; }
+.narrow .badge > img { width: 120px; height: 120px; }
+.narrow .badge h3 { font-size: 21px; }
+</style>
+<link rel="stylesheet" href="dock.css">
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats"><span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span></div>
+  </div>
+  <div class="head">
+    <h1>شاراتي</h1>
+    <p>اجمع الشارات وأنت تتعلم وتلعب</p>
+  </div>
+</header>
+
+<main>
+  <div class="sum card" id="sum"></div>
+  <div class="chips" role="group" aria-label="عرض الشارات" id="chips"></div>
+  <div class="badges" id="badges"></div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html" aria-label="الخريطة"><img src="img/nav/map.png" alt=""><span>الخريطة</span></a>
+  <a href="index.html?open=sections" aria-label="كل الأقسام"><img src="img/nav/sections.png" alt=""><span>كل الأقسام</span></a>
+  <a href="index.html?open=room" aria-label="غرفتي"><img src="img/nav/room.png" alt=""><span>غرفتي</span></a>
+  <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+
+<script src="profile.js"></script>
+<script src="workshop.js"></script>
+<script src="hub.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar, BADGES } = Profile;
+  // the badges the admin switched off are not shown; the count is of the active ones
+  const got = BADGES.filter((b) => b.got).length;
+  if (!BADGES.length) { $('sum').innerHTML = '<p class="empty">لا توجد شارات الآن، تابعنا قريباً</p>'; return Hub.fit(); }
+  $('sum').innerHTML = `<span class="big"><b>${ar(got)}</b>من ${ar(BADGES.length)}</span>
+    <div><span class="bar-b" role="progressbar" aria-valuemin="0" aria-valuemax="${BADGES.length}" aria-valuenow="${got}" aria-label="الشارات التي حصلت عليها"><i style="width:${got / BADGES.length * 100}%"></i></span>
+    <p>كل شارة لها شرط. عندما تحققه تصلك الشارة وحدها، وتظهر هنا وفي غرفتك.</p></div>`;
+
+  const SHOW = [['all', 'كل الشارات'], ['got', 'حصلت عليها'], ['wait', 'لم أحصل عليها بعد']];
+  let show = 'all';
+  const wanted = new URLSearchParams(location.search).get('b');
+  const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+  function render() {
+    $('chips').innerHTML = SHOW.map(([k, n]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === show}">${n}</button>`).join('');
+    const list = BADGES.filter((b) => show === 'all' || (show === 'got' ? b.got : !b.got));
+    $('badges').innerHTML = list.map((b) => `<article class="badge card ${b.got ? '' : 'no'} ${b.id === wanted ? 'lit' : ''}" id="b-${b.id}" aria-labelledby="t-${b.id}">
+      <img src="img/badges/${b.id}.png" alt="">
+      <h3 id="t-${b.id}">${b.n}</h3><p class="about">${b.about}</p>
+      <span class="state ${b.got ? 'ok' : 'wait'}">${b.got ? '✓ حصلت عليها' : 'لم تحصل عليها بعد'}</span>
+      <div class="how"><small>${b.got ? 'شرطها' : 'كيف تحصل عليها؟'}</small><b>${b.how}</b>
+        ${!b.got && b.prog ? `<span class="prog"><span class="pb" aria-hidden="true"><i style="width:${b.prog[0] / b.prog[1] * 100}%"></i></span><span>${ar(b.prog[0])} من ${ar(b.prog[1])}</span></span>` : ''}</div>
+      <div class="acts"><button class="btn hear" type="button" data-hear="${b.id}">${SPEAKER}استمع</button>${!b.got && b.go ? (b.need && !Workshop.open(b.need) ? '' : `<a class="btn go" href="${b.go[0]}">اذهب إلى ${b.go[1]}</a>`) : ''}</div>
+      ${!b.got && b.need && !Workshop.open(b.need) ? '<p class="closed">هذا غير متاح لك الآن، اسأل ولي أمرك أو معلّمك عنه.</p>' : ''}
+    </article>`).join('');
+    Hub.fit();
+  }
+  $('chips').addEventListener('click', (e) => { const c = e.target.closest('.chip'); if (c) { show = c.dataset.k; render(); } });
+
+  // read aloud for children who do not read yet
+  const synth = window.speechSynthesis; synth?.getVoices();
+  $('badges').addEventListener('click', (e) => {
+    const h = e.target.closest('[data-hear]'); if (!h) return;
+    const b = BADGES.find((x) => x.id === h.dataset.hear), v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return Hub.toast('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(`${b.n}. ${b.got ? 'حصلت عليها. شرطها' : 'كيف تحصل عليها'}: ${b.how}`);
+    u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  });
+
+  render();
+  addEventListener('load', () => { Hub.fit(); const el = wanted && document.getElementById(`b-${wanted}`);
+    // scroll this page only, so the map behind the panel stays where it is
+    if (el) scrollTo({ top: el.getBoundingClientRect().top + scrollY - (innerHeight - el.offsetHeight) / 2 }); });
+})();
+</script>
+<div class="toast" id="toast" role="status"></div>
+</body>
+</html>

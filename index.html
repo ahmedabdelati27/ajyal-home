@@ -219,7 +219,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
       <button type="button" class="pill search" aria-label="ابحث"><img src="img/I-05.png" alt=""></button>
       <span class="pill" title="النقاط"><img src="img/hud/points.png" alt="">3,240</span>
       <span class="pill" title="أيام متتالية"><img src="img/hud/streak.png" alt="">5</span>
-      <span class="pill" title="الشارات"><img src="img/hud/badge.png" alt="">6</span>
+      <button type="button" class="pill" id="badges-pill" title="الشارات" aria-label="شاراتي، 6 شارات"><img src="img/hud/badge.png" alt="">6</button>
       <button type="button" class="pill bell" aria-label="الإشعارات، 3 غير مقروءة"><img src="img/I-09.png" alt=""><b>3</b></button>
     </div>
   </div>
@@ -379,7 +379,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   }
   addEventListener('pageshow', () => { flying = false; });
   // ---- the bottom bar's pages open in a panel over the map (?open=room&tab=works&w=… opens one straight away)
-  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'] };
+  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'], badges: ['badges.html', 'شاراتي'] };
   const sheet = document.getElementById('sheet'), frame = document.getElementById('sheet-f'), dockLinks = [...document.querySelectorAll('.dock a')];
   const lit = (id) => dockLinks.forEach((a) => (a.dataset.sheet === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   // while the panel is open the map behind it cannot be reached; the bar stays usable
@@ -389,7 +389,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     if (!SHEETS[id]) return;
     const [page, title] = SHEETS[id];
     // replace, so the panel's page never adds a step to «back»
-    frame.contentWindow.location.replace(`${page}?embed=1${q.w ? `&w=${encodeURIComponent(q.w)}` : ''}${q.tab ? `&tab=${q.tab}` : ''}`);
+    frame.contentWindow.location.replace(`${page}?embed=1${q.w ? `&w=${encodeURIComponent(q.w)}` : ''}${q.b ? `&b=${encodeURIComponent(q.b)}` : ''}${q.tab ? `&tab=${q.tab}` : ''}`);
     frame.title = title; sheet.setAttribute('aria-label', title);
     sheet.hidden = false; lit(id); still(true); hideHint();
     if (push) history.pushState({ sheet: id }, '', `?open=${id}`);
@@ -416,11 +416,13 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     if (e.data?.ajyal === 'close') return closeSheet();
     if (e.data?.ajyal !== 'go') return;
     const u = new URL(e.data.href);
-    if (u.pathname.endsWith('/index.html') && u.searchParams.get('open')) return openSheet(u.searchParams.get('open'), { tab: u.searchParams.get('tab'), w: u.searchParams.get('w') });
+    if (u.pathname.endsWith('/index.html') && u.searchParams.get('open')) return openSheet(u.searchParams.get('open'), { tab: u.searchParams.get('tab'), w: u.searchParams.get('w'), b: u.searchParams.get('b') });
     Sfx.play('open'); Clouds.go(e.data.href);
   });
   // the child's own card opens «غرفتي»
   document.getElementById('me').addEventListener('click', () => openSheet('room'));
+  // the badge count opens every badge and how to earn it
+  document.getElementById('badges-pill').addEventListener('click', () => openSheet('badges'));
   Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen
@@ -519,7 +521,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   whole(false);
   // another page's bar asked for a panel: ?open=room&tab=works
   const asked = new URLSearchParams(location.search);
-  if (SHEETS[asked.get('open')]) { history.replaceState({ sheet: asked.get('open') }, '', location.search); openSheet(asked.get('open'), { tab: asked.get('tab'), w: asked.get('w') }, false); }
+  if (SHEETS[asked.get('open')]) { history.replaceState({ sheet: asked.get('open') }, '', location.search); openSheet(asked.get('open'), { tab: asked.get('tab'), w: asked.get('w'), b: asked.get('b') }, false); }
 
   // ---- Nour's tour: on a child's first visit she shows every island, the bar and her journey (?tour=1 shows it again)
   // (in the product «seen» is kept on the child's file; the words, and their voice, would come from the admin)
