@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نقاطي · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<link rel="stylesheet" href="hub.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+.hero { --hero: url(img/room/points-hero.jpg); background-position: center 55%; }
+:root { --accent-deep: #B7791F; }
+
+/* the total and the level, big */
+.total { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; padding: 22px 28px; }
+.total .star { width: 130px; height: 130px; animation: bob 3s ease-in-out infinite; }
+@keyframes bob { 50% { translate: 0 -6px; } }
+.total .n { display: flex; align-items: baseline; gap: 10px; font-size: 26px; font-weight: 800; color: var(--accent-deep); }
+.total .n b { font-size: 76px; line-height: 1; color: var(--ink); }
+.lvl { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.lvl .row { display: flex; align-items: center; justify-content: space-between; font-size: 18px; font-weight: 800; }
+.lvl .row img { width: 30px; height: 30px; vertical-align: middle; margin-inline-end: 6px; }
+.lvl .bar-l { display: block; height: 18px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.lvl .bar-l i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFC93C, #F4823F); }
+.lvl small { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+
+/* the levels as a path of steps */
+.steps { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; padding: 18px; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.step .dot { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #F5EDE2; font-size: 22px; font-weight: 800; color: var(--ink-soft); }
+.step.done .dot { background: linear-gradient(#FFD45E, #F4A62A); color: #FFFFFF; box-shadow: 0 4px 0 #B7791F; }
+.step.now .dot { background: #FFFFFF; color: var(--accent-deep); box-shadow: inset 0 0 0 4px #F4A62A, 0 0 0 6px #FFE9B8; }
+.step small { font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+
+/* how to earn points: the activities the admin chose */
+.earn { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.way { display: grid; grid-template-columns: 76px 1fr auto; gap: 14px; align-items: center; padding: 12px 16px 12px 12px; }
+.way .isl { width: 76px; height: 76px; border-radius: 20px; background: #FFF6E8; display: grid; place-items: center; }
+.way .isl img { width: 86px; margin: 0 -5px; }
+.way b { display: block; font-size: 19px; font-weight: 800; }
+.way .xp { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 17px; font-weight: 800; color: var(--accent-deep); }
+.way .xp img { width: 26px; height: 26px; }
+.way .btn { height: 46px; padding: 0 16px; font-size: 16px; }
+.way .closed { font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.no-pts { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px 20px; }
+.no-pts p { margin: 0; font-size: 17px; font-weight: 700; line-height: 1.7; color: var(--ink-soft); }
+.hear { background: #FFF1C9; color: #8A5A00; box-shadow: none; }
+.hear svg { width: 22px; height: 22px; }
+
+.narrow .total { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+.narrow .total .lvl { width: 100%; }
+.narrow .steps { grid-template-columns: repeat(5, 1fr); row-gap: 14px; }
+.narrow .earn { grid-template-columns: 1fr; }
+.narrow .no-pts { grid-template-columns: 1fr; }
+@media (prefers-reduced-motion: reduce) { .total .star { animation: none; } }
+</style>
+<link rel="stylesheet" href="dock.css">
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats"><span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/hud/clock.png" alt="">35 د</span></div>
+  </div>
+  <div class="head">
+    <h1>نقاطي</h1>
+    <p>كل إنجاز يضيف نجوماً إلى كنزك</p>
+  </div>
+</header>
+
+<main>
+  <div class="total card" id="total"></div>
+  <h2>المستويات</h2>
+  <div class="steps card" id="steps"></div>
+  <h2>كيف تكسب النقاط؟</h2>
+  <div class="earn" id="earn"></div>
+  <div class="no-pts card">
+    <p id="no-p">تكسب النقاط عندما تُنهي شيئاً، لا عندما تفتح صفحة أو تبحث أو تفتح لوحة الرسم. وكلما جمعت نقاطاً أكثر، ارتفع مستواك، وتقدّمت في لوحة المتصدرين.</p>
+    <button class="btn hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button>
+  </div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html" aria-label="الخريطة"><img src="img/nav/map.png" alt=""><span>الخريطة</span></a>
+  <a href="index.html?open=sections" aria-label="كل الأقسام"><img src="img/nav/sections.png" alt=""><span>كل الأقسام</span></a>
+  <a href="index.html?open=room" aria-label="غرفتي"><img src="img/nav/room.png" alt=""><span>غرفتي</span></a>
+  <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="profile.js"></script>
+<script src="workshop.js"></script>
+<script src="hub.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar, num, LEVELS, EARN } = Profile, me = Profile.read();
+  const top = me.level >= LEVELS.length, pct = top ? 100 : Math.round((me.xp - me.from) / (me.to - me.from) * 100);
+  $('total').innerHTML = `<img class="star" src="img/hud/points.png" alt="">
+    <div><span class="n"><b>${num(me.xp)}</b>نقطة</span>
+      <div class="lvl"><span class="row"><span><img src="img/I-08.png" alt="">المستوى ${ar(me.level)}</span>${top ? '' : `<span>المستوى ${ar(me.level + 1)}</span>`}</span>
+        <span class="bar-l" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="التقدم نحو المستوى التالي"><i style="width:${pct}%"></i></span>
+        <small>${top ? 'وصلت إلى أعلى مستوى، رائع!' : `باقي ${num(me.to - me.xp)} نقطة للوصول إلى المستوى ${ar(me.level + 1)}`}</small></div>
+      <a class="btn soft" href="index.html?open=leaders" style="margin-top:14px">ترتيبك في المتصدرين: ${ar(Profile.ME_RANK)}</a></div>`;
+
+  // the levels: the points each one needs, the ones reached lit
+  $('steps').innerHTML = LEVELS.map((p, i) => {
+    const n = i + 1, cls = n < me.level ? 'done' : n === me.level ? 'now' : '';
+    return `<div class="step ${cls}"><span class="dot" aria-hidden="true">${ar(n)}</span><small>${num(p)}</small><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">المستوى ${ar(n)}، ${num(p)} نقطة${cls === 'now' ? '، مستواك الآن' : cls === 'done' ? '، وصلت إليه' : ''}</span></div>`;
+  }).join('');
+
+  // a way to earn points that the child cannot use now says so plainly, without prices
+  $('earn').innerHTML = EARN.map((w) => {
+    const shut = w.need && !Workshop.open(w.need);
+    return `<div class="way card"><span class="isl"><img src="${w.img}" alt=""></span>
+      <div><b>${w.n}</b><span class="xp"><img src="img/hud/points.png" alt="">+${ar(w.xp)} نقطة</span></div>
+      ${shut ? '<span class="closed">غير متاح لك الآن</span>' : `<a class="btn go" href="${w.go[0]}" aria-label="اذهب إلى ${w.go[1]}">ابدأ</a>`}</div>`;
+  }).join('');
+
+  const synth = window.speechSynthesis; synth?.getVoices();
+  $('hear').addEventListener('click', () => {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return Hub.toast('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(`كيف تكسب النقاط؟ ${EARN.map((w) => `${w.n}: ${w.xp} نقطة`).join('. ')}. ${$('no-p').textContent}`); u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  });
+  Hub.fit();
+  addEventListener('load', Hub.fit);
+})();
+</script>
+</body>
+</html>

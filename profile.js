@@ -18,7 +18,7 @@
     { id: 'S-01', n: 'صديق الحكايات', about: 'لمن يحب القصص ويفهمها', how: 'أنهِ ٣ قصص مع أسئلتها', got: true, go: ['beach.html', 'شاطئ الحكايات'] },
     { id: 'S-02', n: 'نجم القرآن', about: 'لمن يحفظ سور جزء عمّ', how: 'سمّع سورتين كاملتين', got: true, go: ['quran.html', 'واحة القرآن'] },
     { id: 'S-03', n: 'بطل الحروف', about: 'لمن يتعلّم الحروف والأرقام', how: 'أكمل رحلة ١٠ حروف أو أرقام', got: false, prog: [7, 10], go: ['oasis.html', 'واحة الحروف'] },
-    { id: 'S-04', n: 'الفنان الصغير', about: 'لمن يشارك رسوماته الجميلة', how: 'أرسل رسمة للنشر، ويعتمدها فريق أجيال', got: true, need: 'publish', go: ['colors.html', 'وادي الألوان'] },
+    { id: 'S-04', n: 'الفنان الصغير', about: 'لمن يشارك رسوماته الجميلة', how: 'أرسل رسمة للنشر، ويعتمدها فريق أجيال', got: true, go: ['colors.html', 'وادي الألوان'] },
     { id: 'S-05', n: 'زارع القيم', about: 'لمن يزرع القيم مع نور', how: 'أكمل رحلة قيمة واحدة في الحديقة', got: true, go: ['garden.html', 'حديقة القيم'] },
     { id: 'S-06', n: 'شعلة الأيام', about: 'لمن يزور عالم أجيال كل يوم', how: 'ادخل ٥ أيام متتالية', got: true, go: null },
     { id: 'S-07', n: 'بطل القمة', about: 'لمن يفوز في مسابقة مستمرة', how: 'تحصل مشاركتك على أعلى الأصوات في مسابقة', got: false, need: 'contests', go: ['peak.html', 'قمة الأبطال'] },
@@ -39,5 +39,18 @@
     week: [['الإثنين', 2, true], ['الثلاثاء', 3, false], ['الأربعاء', 4, true], ['الخميس', 5, true], ['الجمعة', 6, true], ['السبت', 7, true], ['الأحد', 8, true]],
     goals: [{ d: 3 }, { d: 5, badge: 'S-06' }, { d: 7 }, { d: 14 }, { d: 30 }] };
 
-  window.Profile = { ar, num, read, save, AVATARS, BADGES, LEADERS, ME_RANK, STREAK };
+  // levels: the admin sets each one's number and the points that reach it; a level opens nothing, it only cheers
+  const LEVELS = [0, 100, 300, 600, 1000, 1800, 2800, 4000, 5500, 7500];
+  // the activities the admin made worth points, with their value (the prototype's numbers)
+  const EARN = [
+    { n: 'إكمال قصة مع أسئلتها', xp: 30, img: 'img/beach.png', go: ['beach.html', 'شاطئ الحكايات'] },
+    { n: 'إكمال حرف أو رقم', xp: 20, img: 'img/letters.png', go: ['oasis.html', 'واحة الحروف'] },
+    { n: 'إكمال سورة', xp: 40, img: 'img/quran.png', go: ['quran.html', 'واحة القرآن'] },
+    { n: 'إكمال لعبة', xp: 20, img: 'img/games.png', go: ['games.html', 'كثبان الألعاب'] },
+    { n: 'إكمال قيمة في الحديقة', xp: 50, img: 'img/garden.png', go: ['garden.html', 'حديقة القيم'] },
+    { n: 'المشاركة في مسابقة', xp: 10, img: 'img/peak.png', go: ['peak.html', 'قمة الأبطال'], need: 'contests' },
+    { n: 'اعتماد إبداعك للنشر', xp: 25, img: 'img/colors.png', go: ['index.html?open=room&tab=works', 'إبداعاتي'] }
+  ];
+
+  window.Profile = { ar, num, read, save, AVATARS, BADGES, LEADERS, ME_RANK, STREAK, LEVELS, EARN };
 })();

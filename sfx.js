@@ -3,7 +3,7 @@
 // Browsers allow sound only after the child's first touch, so the sounds load and wake up then.
 // A switch in the top bar turns them off, and the choice is remembered on this device.
 (() => {
-  if (document.documentElement.dataset.sfx === 'none') { window.Sfx = { play() {}, taps() {}, hush() {} }; return; }
+  if (document.documentElement.dataset.sfx === 'none') { window.Sfx = { play() {}, taps() {}, hush() {}, setOff() {}, isOff: () => true }; return; }
   // each sound with its own volume, so a soft page turn and a bright chime come out about equally loud
   const FILES = { tap: 0.49, open: 1.45, clouds: 0.62, right: 0.83, retry: 1.07, pick: 0.75, win: 0.54, page: 2.2, bubble: 0.6 };
   const KEY = 'ajyal.sfx.off', VOLUME = 0.6;
@@ -66,9 +66,12 @@
     } else time.before(b);
   }
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', mount) : mount();
+  // the settings page turns the sounds on or off too; every open page follows
+  function setOff(v) { off = !!v; try { localStorage.setItem(KEY, off ? '1' : '0'); } catch {} document.querySelectorAll('.sfx-btn').forEach(paint); if (!off) { wake(); play('tap'); } }
+  addEventListener('storage', (e) => { if (e.key === KEY) { off = e.newValue === '1'; document.querySelectorAll('.sfx-btn').forEach(paint); } });
 
   window.Sfx = {
-    play,
+    play, setOff, isOff: () => off,
     // taps on these elements make the soft tap sound; elements marked data-sfx="none" stay silent
     taps(selector = 'a, button') {
       document.addEventListener('click', (e) => { const t = e.target.closest(selector); if (t && !t.closest('[data-sfx="none"], .sfx-btn')) play('tap'); }, true);

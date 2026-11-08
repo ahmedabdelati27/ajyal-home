@@ -218,14 +218,15 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     <button type="button" class="pill me" id="me" aria-label="غرفتي: يوسف، المستوى 7"><img src="img/avatar.png" alt=""><span class="name">يوسف</span><span class="lvl"><img src="img/I-08.png" alt="">مستوى 7</span></button>
     <div class="stats">
       <button type="button" class="pill search" aria-label="ابحث"><img src="img/I-05.png" alt=""></button>
-      <span class="pill" title="النقاط"><img src="img/hud/points.png" alt="">3,240</span>
+      <button type="button" class="pill" id="points-pill" title="النقاط" aria-label="نقاطي، 3,240 نقطة"><img src="img/hud/points.png" alt="">3,240</button>
       <button type="button" class="pill" id="streak-pill" title="أيام متتالية" aria-label="أيامي المتتالية، 5 أيام"><img src="img/hud/streak.png" alt="">5</button>
       <button type="button" class="pill" id="badges-pill" title="الشارات" aria-label="شاراتي، 6 شارات"><img src="img/hud/badge.png" alt="">6</button>
       <button type="button" class="pill bell" id="bell" aria-label="الإشعارات"><img src="img/hud/bell.png" alt=""><b id="bell-n" hidden></b></button>
+      <button type="button" class="pill bell" id="gear" aria-label="الإعدادات"><img src="img/hud/gear.png" alt=""></button>
     </div>
   </div>
   <span class="hud sfx-slot" id="sfx-slot"></span>
-  <span class="hud pill time" title="باقي 35 دقيقة من وقت اليوم"><img src="img/I-10.png" alt=""><bdi>35 د</bdi></span>
+  <span class="hud pill time" title="باقي 35 دقيقة من وقت اليوم" role="img" aria-label="باقي 35 دقيقة من وقت اليوم"><img src="img/hud/clock.png" alt=""><bdi>35 د</bdi></span>
 
   <div class="hud zoom" role="group" aria-label="التحكم في الخريطة">
     <button type="button" class="zbtn" id="zin" aria-label="قرّب"><svg viewBox="0 0 24 24" fill="none" stroke="#3A2318" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -380,7 +381,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   }
   addEventListener('pageshow', () => { flying = false; });
   // ---- the bottom bar's pages open in a panel over the map (?open=room&tab=works&w=… opens one straight away)
-  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'], badges: ['badges.html', 'شاراتي'], streak: ['streak.html', 'أيامي المتتالية'], notes: ['notes.html', 'إشعاراتي'] };
+  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'], badges: ['badges.html', 'شاراتي'], streak: ['streak.html', 'أيامي المتتالية'], notes: ['notes.html', 'إشعاراتي'], points: ['points.html', 'نقاطي'], settings: ['settings.html', 'الإعدادات'] };
   const sheet = document.getElementById('sheet'), frame = document.getElementById('sheet-f'), dockLinks = [...document.querySelectorAll('.dock a')];
   const lit = (id) => dockLinks.forEach((a) => (a.dataset.sheet === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   // while the panel is open the map behind it cannot be reached; the bar stays usable
@@ -436,6 +437,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   addEventListener('storage', (e) => { if (e.key === 'ajyal.notes.read') bellCount(); });
   addEventListener('pageshow', bellCount);
   document.getElementById('bell').addEventListener('click', () => openSheet('notes'));
+  document.getElementById('points-pill').addEventListener('click', () => openSheet('points'));
+  document.getElementById('gear').addEventListener('click', () => openSheet('settings'));
   Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen

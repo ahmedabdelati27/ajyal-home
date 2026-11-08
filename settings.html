@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الإعدادات · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<link rel="stylesheet" href="hub.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+.hero { --hero: url(img/room/settings-hero.jpg); background-position: center 45%; }
+:root { --accent-deep: #6B4FC7; }
+
+.group { display: flex; flex-direction: column; gap: 0; padding: 6px 0; }
+.group h2 { margin: 6px 0 10px; }
+.row { display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: center; padding: 14px 20px; border-top: 2px solid #F5EDE2; }
+.row:first-child { border-top: 0; }
+.row .ic { width: 64px; height: 64px; border-radius: 18px; background: #F6F2FF; display: grid; place-items: center; }
+.row .ic img { width: 48px; height: 48px; }
+.row .ic.face img { width: 64px; height: 64px; border-radius: 50%; }
+.row b { display: block; font-size: 20px; font-weight: 800; }
+.row small { display: block; margin-top: 2px; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.row .btn { height: 46px; padding: 0 18px; font-size: 16px; }
+
+/* an on/off switch the child can flip */
+.switch { position: relative; width: 74px; height: 42px; border: 0; border-radius: 999px; background: #E2D8C8; cursor: pointer; transition: background .2s; }
+.switch::after { content: ''; position: absolute; top: 4px; right: 4px; width: 34px; height: 34px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: right .2s; }
+.switch[aria-checked="true"] { background: var(--go); }
+.switch[aria-checked="true"]::after { right: 36px; }
+.switch:focus-visible { outline: 3px solid var(--accent-deep); outline-offset: 3px; }
+
+/* what the parent or teacher decides: shown, not changed here */
+.locked .lock { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 999px; background: #F2EEE8; font-size: 15px; font-weight: 800; color: var(--ink-soft); }
+.state { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: 999px; font-size: 15px; font-weight: 800; }
+.state.on { background: #DDF5D2; color: var(--go-deep); } .state.off { background: #F2EEE8; color: var(--ink-soft); }
+.note-box { margin: 4px 20px 14px; padding: 12px 16px; border-radius: 16px; background: #FFF6E8; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.parent { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px 20px; }
+.parent p { margin: 0; font-size: 16px; font-weight: 700; color: var(--ink-soft); line-height: 1.6; }
+
+.narrow .row { grid-template-columns: 56px 1fr; } .narrow .row > :last-child { grid-column: 2; justify-self: start; }
+.narrow .row .ic { width: 56px; height: 56px; }
+.narrow .parent { grid-template-columns: 1fr; }
+@media (prefers-reduced-motion: reduce) { .switch, .switch::after { transition: none; } }
+</style>
+<link rel="stylesheet" href="dock.css">
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats"><span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/hud/clock.png" alt="">35 د</span></div>
+  </div>
+  <div class="head">
+    <h1>الإعدادات</h1>
+    <p>اجعل عالمك كما تحب</p>
+  </div>
+</header>
+
+<main>
+  <section class="group card" aria-labelledby="g1">
+    <h2 id="g1" style="padding:0 20px">أنا</h2>
+    <div class="row" id="me-row"></div>
+    <div class="row">
+      <span class="ic"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6B4FC7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#6B4FC7"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>
+      <div><b id="snd-t">المؤثرات الصوتية</b><small>أصوات صغيرة عندما تضغط أو تفوز</small></div>
+      <button class="switch" type="button" role="switch" id="snd" aria-labelledby="snd-t"></button>
+    </div>
+    <div class="row">
+      <span class="ic"><img src="img/nour.webp" alt="" style="border-radius:50%"></span>
+      <div><b>جولة نور</b><small>تعرّف على جزر عالم أجيال مرة أخرى مع نور</small></div>
+      <a class="btn soft" href="index.html?tour=1">شاهد الجولة</a>
+    </div>
+  </section>
+
+  <section class="group card locked" aria-labelledby="g2">
+    <h2 id="g2" style="padding:0 20px">يحددها ولي أمرك أو معلّمك</h2>
+    <div class="row">
+      <span class="ic"><img src="img/hud/clock.png" alt=""></span>
+      <div><b>وقت اليوم</b><small>٦٠ دقيقة كل يوم، وباقي لك اليوم ٣٥ دقيقة</small></div>
+      <span class="lock">🔒 من ولي أمرك أو معلّمك</span>
+    </div>
+    <div id="feats"></div>
+    <p class="note-box">لا تستطيع تغيير هذه الأشياء من هنا. إذا أردت شيئاً منها، اطلبه من ولي أمرك أو معلّمك.</p>
+  </section>
+
+  <div class="parent card">
+    <p><b>لولي الأمر أو المعلّم:</b> للخروج من حساب الطفل أو اختيار طفل آخر.</p>
+    <button class="btn soft" type="button" id="leave">خروج وتبديل الطفل</button>
+  </div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html" aria-label="الخريطة"><img src="img/nav/map.png" alt=""><span>الخريطة</span></a>
+  <a href="index.html?open=sections" aria-label="كل الأقسام"><img src="img/nav/sections.png" alt=""><span>كل الأقسام</span></a>
+  <a href="index.html?open=room" aria-label="غرفتي"><img src="img/nav/room.png" alt=""><span>غرفتي</span></a>
+  <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="profile.js"></script>
+<script src="workshop.js"></script>
+<script src="hub.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const me = Profile.read();
+  // the child may change only the name and the picture (in «غرفتي»)
+  $('me-row').innerHTML = `<span class="ic face"><img src="img/avatars/${me.avatar}.png" alt=""></span>
+    <div><b>${me.name}</b><small>اسمك وصورتك</small></div><a class="btn soft" href="index.html?open=room">غيّر اسمك وصورتك</a>`;
+
+  // sounds: the same switch as the speaker on the map, remembered on this device
+  const paint = () => $('snd').setAttribute('aria-checked', String(!Sfx.isOff()));
+  $('snd').addEventListener('click', () => { Sfx.setOff(!Sfx.isOff()); paint(); });
+  paint();
+
+  // the features the package has and the parent left on, shown and never switched here
+  const FEATS = [['ai', 'ورشة السحر', 'اصنع قصة أو فيديو'], ['enhance', 'تحسين الرسم بالذكاء الاصطناعي', 'اجعل رسمتك أجمل'], ['hero', 'أنت بطل القصة', 'ضع اسمك في قصة'], ['contests', 'المسابقات', 'شارك في قمة الأبطال'], ['photos', 'رفع الصور', 'صورك وصور أسرتك في أنت بطل القصة']];
+  $('feats').innerHTML = FEATS.map(([k, n, s]) => {
+    const on = k === 'photos' ? Workshop.photos && Workshop.open('photos') : k === 'ai' ? Workshop.open('story') || Workshop.open('video') : Workshop.open(k);
+    const pic = k === 'photos' ? '<span style="font-size:32px" aria-hidden="true">📷</span>' : `<img src="${{ ai: 'img/ai.png', enhance: 'img/colors.png', hero: 'img/I-15.png', contests: 'img/peak.png' }[k]}" alt="">`;
+    return `<div class="row"><span class="ic">${pic}</span>
+      <div><b>${n}</b><small>${s}</small></div><span class="state ${on ? 'on' : 'off'}">${on ? 'متاح لك' : 'غير متاح الآن'}</span></div>`;
+  }).join('');
+
+  // leaving the child's world asks for the parent (in the product: the parent confirms before it happens)
+  $('leave').addEventListener('click', () => Hub.toast('هنا يطلب التطبيق من ولي الأمر تأكيد دخوله، ثم يعرض قائمة الأطفال'));
+  Hub.fit();
+  addEventListener('load', Hub.fit);
+})();
+</script>
+</body>
+</html>
