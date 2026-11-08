@@ -143,7 +143,7 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
     };
     const hero = open('hero');
     $('makes').innerHTML = door('story') + door('video') + `<a class="make ${hero ? '' : 'out'}" href="hero.html">
-      <img class="art" src="img/stories/cover-00.jpg" alt="">${hero ? '' : '<span class="left none">🔒 غير متاحة الآن</span>'}<b>أنت بطل القصة</b><p>ضع اسمك وصورتك في قصة من شاطئ الحكايات</p><span class="cta">${hero ? 'اختر قصة' : 'لماذا لا أستطيع؟'}</span></a>`;
+      <img class="art" src="img/workshop/k-hero.jpg" alt="">${hero ? '' : '<span class="left none">🔒 غير متاحة الآن</span>'}<b>أنت بطل القصة</b><p>ضع اسمك وصورتك في قصة من شاطئ الحكايات</p><span class="cta">${hero ? 'اختر قصة' : 'لماذا لا أستطيع؟'}</span></a>`;
 
     const works = Valley.works.read().filter((w) => KIND_OF[w.kind]);
     $('mine').innerHTML = works.length ? works.map((w) => `<a class="work" href="${w.href}">
