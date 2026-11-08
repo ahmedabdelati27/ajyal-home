@@ -24,6 +24,12 @@
 .title { position: absolute; left: 6%; right: 6%; bottom: 7%; margin: 0; padding: 2.4cqh 2cqw; border-radius: 3cqw; background: rgba(255,251,240,.95); text-align: center; box-shadow: 0 1cqh 0 rgba(0,0,0,.15); }
 .title b { display: block; font-size: 4.4cqw; font-weight: 800; line-height: 1.2; color: #B8405F; }
 .title small { font-size: 2cqw; font-weight: 700; color: var(--ink-soft); }
+/* the child's copy: the pictures of the people who play the characters on this page */
+.faces { position: absolute; top: 3cqh; left: 1.6cqw; display: flex; gap: 1cqw; }
+.faces span { display: flex; flex-direction: column; align-items: center; gap: .6cqh; }
+.page .faces img { width: 6.4cqw; height: 6.4cqw; border-radius: 50%; border: .45cqw solid #FFFFFF; object-fit: cover; background: #FFFFFF; box-shadow: 0 .6cqh 0 rgba(0,0,0,.18); }
+.faces b { padding: .2cqh 1cqw; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 1.3cqw; font-weight: 800; }
+.single .page .faces img { width: 15cqw; height: 15cqw; border-width: 1cqw; } .single .faces b { font-size: 3.2cqw; padding: .2cqh 2.4cqw; } .single .faces { gap: 2cqw; left: 3cqw; }
 /* words: every word can light up while reading aloud; dotted words have a meaning */
 .w { border-radius: .5cqw; transition: background .15s; }
 .w.on { background: #FFE38A; box-shadow: 0 0 0 .3cqw #FFE38A; }
@@ -178,6 +184,7 @@
 <script src="sfx.js"></script>
 <script>Sfx.taps('.btn, .pill');</script>
 <script src="viewer.js"></script>
+<script src="workshop.js"></script>
 <script>
 (() => {
   const { $ } = Viewer;
@@ -207,7 +214,21 @@
   };
   const N = TEXT.length;
   // this story has a voiceover and can be personalised (admin flags; «أنت بطل القصة» also needs the package and the parent's permission)
-  const VOICE = true, HERO = true;
+  const VOICE = true, HERO = Workshop.open('hero');
+  // the child's copy (?me=honest): the characters' names change and their pictures join the drawings; the plot and the ending stay the same
+  const ME = new URLSearchParams(location.search).get('me') === 'honest' ? Workshop.copy.get('honest') : null;
+  const ROLES = Workshop.HERO.find((h) => h.id === 'honest').roles;
+  const swap = (s) => (ME ? ROLES.reduce((t, r) => (ME.names[r.id] ? t.split(r.from).join(ME.names[r.id]) : t), s) : s);
+  TEXT.forEach((t, i) => { TEXT[i] = swap(t); });
+  const faces = (i) => {
+    if (!ME) return '';
+    const on = ROLES.filter((r) => TEXT[i].includes(ME.names[r.id] || r.from) && (ME.photos[r.id] || r.me));
+    return on.length ? `<span class="faces">${on.map((r) => `<span><img src="${ME.photos[r.id] || 'img/avatar.png'}" alt=""><b>${ME.names[r.id] || r.from}</b></span>`).join('')}</span>` : '';
+  };
+  if (ME) {
+    document.querySelector('.top .back').href = 'hero.html?s=honest';
+    document.querySelector('.top .back span').textContent = 'نسختي';
+  }
   // read-aloud and word-meaning state, needed as soon as the first page shows
   const synth = window.speechSynthesis, gloss = $('gloss');
   let reading = false, timer = null, warned = false;
@@ -226,12 +247,12 @@
 
   const page = (x) => {
     if (!x) return '';
-    if (x === 'cover') return `<div class="page"><img src="${img(1)}" alt="" draggable="false"><p class="title"><b>الأرنب الصادق</b><small>حكاية عن الصدق · ${N} صفحات</small></p>${HERO ? '<button class="btn soft hero-me cover-hero" type="button" data-hero><img src="img/I-15.png" alt="">كن أنت بطل القصة</button>' : ''}</div>`;
+    if (x === 'cover') return `<div class="page"><img src="${img(1)}" alt="" draggable="false"><p class="title"><b>الأرنب الصادق</b><small>${ME ? `نسخة ${ME.names.hero}` : 'حكاية عن الصدق'} · ${N} صفحات</small></p>${HERO ? `<button class="btn soft hero-me cover-hero" type="button" data-hero><img src="img/I-15.png" alt="">${ME ? 'غيّر الأسماء أو الصور' : 'كن أنت بطل القصة'}</button>` : ''}</div>`;
     if (x === 'reader') return `<div class="page"><img src="${img(12)}" alt="" draggable="false"></div>`;
     if (x === 'end') return `<div class="page paper end">${shell}<h3>النهاية</h3><p>أحسنت! أنهيت قصة «الأرنب الصادق».</p><p>هل أنت مستعد لأسئلة صغيرة عن القصة؟</p><button class="btn go" type="button" data-quiz>ابدأ الأسئلة</button></div>`;
-    if (x.p) return `<div class="page"><img src="${img(x.p + 1)}" alt="" draggable="false"></div>`;
+    if (x.p) return `<div class="page"><img src="${img(x.p + 1)}" alt="" draggable="false">${faces(x.p - 1)}</div>`;
     if (x.t) return `<div class="page paper">${shell}<p class="story" data-p="${x.t}">${words(x.t - 1)}</p><span class="no">${x.t}</span></div>`;
-    if (x.c) return `<div class="page paper combo"><img src="${img(x.c + 1)}" alt="" draggable="false"><p class="story" data-p="${x.c}">${words(x.c - 1)}</p><span class="no">${x.c}</span></div>`;
+    if (x.c) return `<div class="page paper combo"><img src="${img(x.c + 1)}" alt="" draggable="false">${faces(x.c - 1)}<p class="story" data-p="${x.c}">${words(x.c - 1)}</p><span class="no">${x.c}</span></div>`;
     return '';
   };
 
@@ -263,7 +284,7 @@
   }
 
   // the map and the beach show this story at 60%: page 6
-  const reader = Viewer.pages({ steps: SPREADS.length, key: 'ajyal.story.honest', start: 6, label: (s) => (s === 0 ? 'الغلاف' : s === LAST ? 'النهاية' : `الصفحة ${s}`), onShow: show, onFinish: openQuiz });
+  const reader = Viewer.pages({ steps: SPREADS.length, key: ME ? 'ajyal.story.honest.me' : 'ajyal.story.honest', start: ME ? 0 : 6, label: (s) => (s === 0 ? 'الغلاف' : s === LAST ? 'النهاية' : `الصفحة ${s}`), onShow: show, onFinish: openQuiz });
   $('next').addEventListener('click', () => !pages.busy() && reader.next());
   $('prev').addEventListener('click', () => !pages.busy() && reader.prev());
   let x0 = null;
@@ -271,7 +292,7 @@
   addEventListener('pointerup', (e) => { if (x0 === null || pages.busy()) return; const dx = e.clientX - x0; x0 = null; if (dx > 50) reader.next(); else if (dx < -50) reader.prev(); });
   book.addEventListener('click', (e) => {
     if (e.target.closest('[data-quiz]')) return openQuiz();
-    if (e.target.closest('[data-hero]')) return heroSoon();
+    if (e.target.closest('[data-hero]')) return toHero();
     const g = e.target.closest('.gl'); if (g) showGloss(g);
   });
 
@@ -337,6 +358,8 @@
     { type: 'pics', q: 'اختر صورة صاحب جرّة العسل.', opts: [{ img: 9, name: 'الدبّ دبدوب' }, { img: 3, name: 'زيتون وسلمى' }, { img: 2, name: 'القرية' }], a: 0 },
     { type: 'mcq', q: 'ماذا تعلّم زيتون في نهاية القصة؟', opts: ['أن الصدق شجاعة', 'أن يلعب وحده', 'أن يختبئ عندما يخطئ'], a: 0 }
   ];
+  // the child's copy keeps the same quiz, with the new names
+  QUIZ.forEach((Q) => { Q.q = swap(Q.q); if (Q.opts) Q.opts = Q.opts.map((o) => (typeof o === 'string' ? swap(o) : { ...o, name: swap(o.name) })); });
   // XP and the badge come from the gamification settings when the story is eligible
   const XP = 30;
   const quiz = $('quiz'), qcard = $('qcard');
@@ -372,7 +395,7 @@
     fb.textContent = ok ? 'أحسنت! إجابة صحيحة' : `لا بأس، الإجابة الصحيحة: ${right}`;
     $('q-next').hidden = false; $('q-next').focus();
   }
-  const heroSoon = () => reader.toast('قريباً: اكتب اسمك واختر صورتك، لتصبح أنت بطل الحكاية');
+  const toHero = () => { location.href = 'hero.html?s=honest'; };
   function stopReading() { reading = false; $('say').setAttribute('aria-pressed', 'false'); quiet(); }
   function result() {
     window.Sfx?.play('win');
@@ -381,15 +404,15 @@
     qcard.innerHTML = `<div class="result"><div class="stars" aria-label="${stars} من 3 نجوم">${[0, 1, 2].map((i) => star(i < stars)).join('')}</div>
       <h2 id="q-t">${score >= 3 ? 'رائع يا يوسف!' : 'أحسنت المحاولة يا يوسف!'}</h2>
       <p>أجبت عن ${score} من ${QUIZ.length} أسئلة إجابة صحيحة</p>
-      <div class="gains"><span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span>${perfect ? '<span class="gain badge"><img src="img/forest/S-01.png" alt="">شارة جديدة: صديق الحكايات</span>' : ''}</div>
+      ${ME ? '' : `<div class="gains"><span class="gain"><img src="img/forest/I-06.png" alt="">+${XP} نقطة</span>${perfect ? '<span class="gain badge"><img src="img/forest/S-01.png" alt="">شارة جديدة: صديق الحكايات</span>' : ''}</div>`}
       <div class="btns">
         <a class="btn go" href="beach.html">العودة إلى الشاطئ</a>
         <button class="btn soft" id="q-again" type="button">اقرأ القصة مرة أخرى</button>
         <button class="btn soft hero-me" id="q-hero" type="button"><img src="img/I-15.png" alt="">كن أنت بطل القصة</button>
       </div></div>`;
     $('q-again').addEventListener('click', () => { quiz.hidden = true; reader.go(0); });
-    $('q-hero').addEventListener('click', heroSoon);
-    if (!HERO) $('q-hero').remove();
+    $('q-hero').addEventListener('click', toHero);
+    if (!HERO || ME) $('q-hero').remove();
     reader.clear(); // the quiz is done: the story is finished
   }
   qcard.addEventListener('click', (e) => {

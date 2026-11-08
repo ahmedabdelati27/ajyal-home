@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أنت بطل القصة · ورشة السحر</title>
+<link rel="stylesheet" href="viewer.css">
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill, .tale');</script>
+<style>
+.bg { background: url(img/workshop/workshop-hero.jpg) center 30% / cover; }
+.bg::after { content: ''; position: absolute; inset: 0; background: rgba(244,240,255,.62); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+.app { grid-template-rows: auto 1fr; }
+.ttl img { width: 52px; height: 52px; }
+.ttl h1 { text-shadow: 0 3px 0 #5A44B8, 2px 0 0 #5A44B8, -2px 0 0 #5A44B8, 0 -2px 0 #5A44B8; }
+
+.stage { min-height: 0; display: flex; align-items: center; justify-content: center; overflow-y: auto; }
+.panel { position: relative; width: min(980px, 100%); max-height: 100%; overflow-y: auto; padding: 24px 28px 26px; border-radius: 34px; background: #FFFFFF; box-shadow: 0 10px 0 rgba(90,68,184,.18), 0 24px 40px rgba(0,0,0,.15); display: flex; flex-direction: column; gap: 16px; }
+.panel h2 { margin: 0; font-size: 32px; font-weight: 800; }
+.panel p { margin: 0; font-size: 19px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.btn.magic { background: linear-gradient(#A58FF5, #7B64DA); color: #FFFFFF; box-shadow: 0 5px 0 #5A44B8; }
+.btns { margin: 0; justify-content: flex-start; }
+.center { align-items: center; text-align: center; } .center .btns { justify-content: center; }
+
+/* the stories the admin made personalisable */
+.tales { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.tale { padding: 8px 8px 12px; border: 4px solid #E6DFFC; border-radius: 26px; background: #FFFFFF; font-size: 18px; font-weight: 800; box-shadow: 0 5px 0 #E6DFFC; display: flex; flex-direction: column; gap: 8px; text-align: center; }
+.tale img { width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; object-fit: cover; }
+
+/* the characters already in the story: a name and a picture for each */
+.intro { display: grid; grid-template-columns: 170px 1fr; gap: 18px; align-items: center; }
+.intro img { width: 170px; aspect-ratio: 3 / 4; border-radius: 20px; object-fit: cover; }
+.intro div { display: flex; flex-direction: column; gap: 8px; }
+.roles { display: flex; flex-direction: column; gap: 12px; }
+.role { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; padding: 14px 16px; border-radius: 24px; background: #F6F2FF; }
+.face { position: relative; width: 96px; height: 96px; border-radius: 50%; background: #FFFFFF; border: 4px solid #FFFFFF; box-shadow: 0 4px 0 #DDD3FB; overflow: hidden; display: grid; place-items: center; font-size: 44px; }
+.face img { width: 100%; height: 100%; object-fit: cover; }
+.role .f { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.role label, .role .who { font-size: 18px; font-weight: 800; }
+.line { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.line input[type=text] { flex: 1; min-width: 160px; height: 52px; padding: 0 16px; border: 3px solid #DDD3FB; border-radius: 16px; font: inherit; font-size: 20px; font-weight: 800; color: var(--ink); background: #FFFFFF; }
+.line input[type=text]:focus { outline: none; border-color: #8E76EE; }
+.fixed { height: 52px; padding: 0 16px; border-radius: 16px; background: #FFFFFF; display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; }
+.fixed small { font-size: 14px; color: var(--ink-soft); }
+.pic { display: inline-flex; align-items: center; gap: 6px; height: 52px; padding: 0 18px; border-radius: 999px; background: #FFFFFF; font-size: 17px; font-weight: 800; box-shadow: 0 4px 0 #DDD3FB; cursor: pointer; }
+.pic input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.pic:focus-within { outline: 3px solid #8E76EE; outline-offset: 2px; }
+.pic.off { opacity: .5; cursor: default; box-shadow: none; }
+.drop { border: 0; background: none; font-size: 15px; font-weight: 800; color: #A13A2E; text-decoration: underline; }
+.err { margin: 0; font-size: 15px !important; color: #A13A2E !important; }
+.hint { font-size: 16px !important; }
+.keep { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: 999px; background: #EFEAFF; font-size: 16px; font-weight: 800; color: #5A44B8; }
+
+/* making the copy, then the copy itself */
+.nour { width: 190px; height: 190px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 8px #EFEAFF; }
+.wait .nour { animation: glow 1.6s ease-in-out infinite; }
+@keyframes glow { 50% { box-shadow: 0 0 0 16px #E2D9FF; } }
+.copy { position: relative; width: 240px; }
+.copy > img { width: 240px; aspect-ratio: 3 / 4; border-radius: 22px; object-fit: cover; box-shadow: 0 8px 0 #DDD3FB; }
+.copy .faces { position: absolute; top: 10px; left: 10px; display: flex; gap: 6px; }
+.copy .faces img { width: 62px; height: 62px; border-radius: 50%; border: 4px solid #FFFFFF; object-fit: cover; background: #FFFFFF; }
+
+@media (max-width: 760px) {
+  .panel { padding: 18px 16px 20px; border-radius: 26px; gap: 12px; }
+  .panel h2 { font-size: 25px; } .panel p { font-size: 17px; }
+  .ttl h1 { font-size: 24px; } .ttl img { width: 40px; height: 40px; }
+  .tales { grid-template-columns: 1fr 1fr; }
+  .intro { grid-template-columns: 110px 1fr; } .intro img { width: 110px; }
+  .role { grid-template-columns: 72px 1fr; gap: 12px; padding: 12px; } .face { width: 72px; height: 72px; font-size: 34px; }
+  .btn { height: 54px; padding: 0 22px; font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .wait .nour { animation: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="workshop.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>ورشة السحر</span></a>
+    <div class="ttl"><img src="img/I-15.png" alt=""><h1>أنت بطل القصة</h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span>35 د</span></span>
+  </header>
+  <main class="stage"><section class="panel" id="panel"></section></main>
+  <p class="sr" id="said" role="status"></p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="valley.js"></script>
+<script src="workshop.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { CHILD, HERO, copy, photos } = Workshop;
+  const q = new URLSearchParams(location.search);
+  const tale = HERO.find((h) => h.id === q.get('s') && h.ready);
+  const panel = $('panel');
+  const cover = (t) => `img/stories/cover-${String(t.cover).padStart(2, '0')}.jpg`;
+  const ICON = { hero: '🐰', friend: '🐢', bear: '🐻' };
+  const WORK = 'hero-honest';
+  let draft = null;
+  const said = (s) => { $('said').textContent = ''; setTimeout(() => { $('said').textContent = s; }, 50); };
+
+  // ---- pick one of the stories that can be personalised
+  function choose() {
+    panel.className = 'panel';
+    panel.innerHTML = `<h2>اختر قصة لتكون بطلها</h2>
+      <p>هذه قصص من شاطئ الحكايات، يمكنك أن تضع فيها اسمك وصورتك.</p>
+      <div class="tales">${HERO.map((t) => `<button class="tale" type="button" data-id="${t.id}"><img src="${cover(t)}" alt="">${t.title}</button>`).join('')}</div>`;
+  }
+
+  // ---- the characters of this story, and only them
+  function form() {
+    const had = copy.get(tale.id);
+    draft = draft || { names: { ...(had?.names || {}), hero: CHILD.name }, photos: { ...(had?.photos || {}) } };
+    panel.className = 'panel';
+    panel.innerHTML = `<div class="intro"><img src="${cover(tale)}" alt=""><div>
+        <h2>كن أنت بطل «${tale.title}»</h2>
+        <p>تبقى الحكاية ونهايتها كما هي، ويتغيّر اسم الشخصية وصورتها فقط. اترك أي شخصية كما هي إذا أردت.</p></div></div>
+      <div class="roles">${tale.roles.map(role).join('')}</div>
+      ${photos ? '' : '<p class="hint">رفع الصور يحتاج إذن ولي أمرك، فتظهر صورتك الرمزية بدلاً من صورتك.</p>'}
+      <div class="btns"><button class="btn magic" type="button" id="make">اصنع نسختي ✨</button>${had ? '<button class="btn soft" type="button" id="cancel">إلغاء</button>' : ''}</div>`;
+  }
+  function role(r) {
+    const ph = draft.photos[r.id], face = ph ? `<img src="${ph}" alt="">` : r.me ? '<img src="img/avatar.png" alt="">' : `<span aria-hidden="true">${ICON[r.id]}</span>`;
+    const name = r.me
+      ? `<span class="fixed">${CHILD.name} <small>من ملفك</small></span>`
+      : `<input type="text" id="n-${r.id}" data-id="${r.id}" maxlength="12" placeholder="${r.from}" value="${draft.names[r.id] || ''}" aria-label="${r.hint}، بدلاً من ${r.from}" autocomplete="off">`;
+    const pick = photos
+      ? `<label class="pic">📷 ${ph ? 'غيّر الصورة' : r.me ? 'أضف صورتك' : 'أضف صورة'}<input type="file" accept="image/png, image/jpeg" data-id="${r.id}"></label>${ph ? `<button class="drop" type="button" data-drop="${r.id}">احذف الصورة</button>` : ''}`
+      : `<span class="pic off" aria-disabled="true">📷 ${r.me ? 'أضف صورتك' : 'أضف صورة'}</span>`;
+    return `<div class="role"><span class="face">${face}</span><div class="f"><span class="who">${r.who}</span>
+      <div class="line">${name}${pick}</div><p class="err" id="e-${r.id}" hidden></p></div></div>`;
+  }
+
+  panel.addEventListener('click', (e) => {
+    const t = e.target.closest('.tale');
+    if (t) {
+      if (!HERO.find((h) => h.id === t.dataset.id).ready) return toast('في هذا النموذج جاهزة قصة «الأرنب الصادق» فقط');
+      return void (location.href = `hero.html?s=${t.dataset.id}`);
+    }
+    const d = e.target.closest('[data-drop]'); if (d) { delete draft.photos[d.dataset.drop]; return form(); }
+    if (e.target.closest('#make')) return make();
+    if (e.target.closest('#cancel')) { draft = null; return done(); }
+    if (e.target.closest('#edit')) return form();
+    if (e.target.closest('#save')) return save();
+  });
+  panel.addEventListener('input', (e) => { if (e.target.matches('input[type=text]')) draft.names[e.target.dataset.id] = e.target.value.trim(); });
+
+  // a picture from the device, made small before it is kept
+  panel.addEventListener('change', (e) => {
+    const f = e.target.files?.[0]; if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)) return toast('اختر صورة بصيغة JPG أو PNG');
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas'), s = 240, k = Math.max(s / img.width, s / img.height);
+      c.width = c.height = s;
+      c.getContext('2d').drawImage(img, (s - img.width * k) / 2, (s - img.height * k) / 2, img.width * k, img.height * k);
+      draft.photos[e.target.dataset.id] = c.toDataURL('image/jpeg', .82);
+      URL.revokeObjectURL(img.src); form();
+    };
+    img.onerror = () => toast('لم نستطع فتح هذه الصورة');
+    img.src = URL.createObjectURL(f);
+  });
+
+  // names are letters only, short, and not the same twice
+  function check() {
+    let ok = true;
+    const seen = new Set([CHILD.name]);
+    tale.roles.filter((r) => !r.me).forEach((r) => {
+      const v = draft.names[r.id] || '', el = $(`e-${r.id}`);
+      const bad = v && (!/^[ء-ْa-zA-Z ]{2,12}$/.test(v) ? 'اكتب اسماً من حرفين إلى ١٢ حرفاً، بالحروف فقط' : seen.has(v) ? 'هذا الاسم مستخدم لشخصية أخرى' : '');
+      if (v) seen.add(v);
+      el.hidden = !bad; el.textContent = bad || '';
+      if (bad && ok) { ok = false; $(`n-${r.id}`).focus(); }
+    });
+    return ok;
+  }
+
+  // ---- make the copy: the names go into the text, the pictures into the drawings
+  function make() {
+    if (!check()) return;
+    const v = { names: Object.fromEntries(Object.entries(draft.names).filter(([, n]) => n)), photos: draft.photos, at: Date.now() };
+    if (!copy.set(tale.id, v)) return toast('الصور كبيرة على هذا الجهاز، جرّب صورة أخرى');
+    // a saved copy in «إبداعاتي» is the same copy, so it changes with it
+    const w = Valley.works.read().find((x) => x.id === WORK);
+    if (w) Valley.works.save({ ...w, at: v.at });
+    panel.className = 'panel center wait';
+    panel.innerHTML = `<img class="nour" src="img/workshop/n-magic.webp" alt=""><h2>نور تضعك في القصة…</h2><p>نكتب اسمك في الحكاية، ونضع صورتك في الرسومات</p>`;
+    panel.setAttribute('aria-busy', 'true'); said('نور تضعك في القصة');
+    setTimeout(() => { panel.removeAttribute('aria-busy'); draft = null; Sfx.play('win'); done(true); }, 2600);
+  }
+
+  // ---- the copy: read it, keep it in «إبداعاتي», or change it
+  function done(fresh) {
+    const c = copy.get(tale.id); if (!c) return form();
+    const saved = Valley.works.read().find((x) => x.id === WORK);
+    const ppl = tale.roles.filter((r) => c.photos[r.id] || r.me);
+    panel.className = 'panel center';
+    panel.innerHTML = `<div class="copy"><img src="${cover(tale)}" alt=""><span class="faces">${ppl.map((r) => `<img src="${c.photos[r.id] || 'img/avatar.png'}" alt="">`).join('')}</span></div>
+      <h2>${fresh ? `نسختك من «${tale.title}» جاهزة!` : `نسختك من «${tale.title}»`}</h2>
+      <p>البطل: ${CHILD.name}${tale.roles.filter((r) => !r.me && c.names[r.id]).map((r) => `، و${c.names[r.id]} بدلاً من ${r.from}`).join('')}</p>
+      ${saved ? '<span class="keep">محفوظة في إبداعاتي · خاصة بي</span>' : ''}
+      <div class="btns"><a class="btn go" href="story.html?me=${tale.id}">اقرأ نسختي</a>${saved ? '' : '<button class="btn magic" type="button" id="save">احفظ في إبداعاتي</button>'}<button class="btn soft" type="button" id="edit">غيّر الأسماء أو الصور</button></div>`;
+    said(fresh ? 'نسختك جاهزة' : `نسختك من ${tale.title}`);
+  }
+  function save() {
+    const w = { id: WORK, kind: 'hero', name: `${tale.title} · نسخة ${CHILD.name}`, img: cover(tale), state: 'private', href: `hero.html?s=${tale.id}`, at: Date.now() };
+    if (!Valley.works.save(w)) return toast('لم نستطع الحفظ على هذا الجهاز');
+    Sfx.play('win'); toast('حُفظت في إبداعاتي'); done();
+  }
+
+  // not in the package, or switched off by the parent: a plain message; a copy made before can still be read
+  function closed() {
+    const c = copy.get('honest');
+    panel.className = 'panel center';
+    panel.innerHTML = `<img class="nour" src="img/workshop/n-padlock.webp" alt=""><h2>«أنت بطل القصة» غير متاحة لك الآن</h2>
+      <p>اسأل ولي أمرك أو معلّمك عنها.</p>
+      <div class="btns">${c ? '<a class="btn go" href="story.html?me=honest">اقرأ نسختي</a>' : ''}<a class="btn soft" href="workshop.html">العودة إلى الورشة</a></div>`;
+  }
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
+  if (!Workshop.open('hero')) closed(); else if (!tale) choose(); else if (copy.get(tale.id)) done(); else form();
+})();
+</script>
+</body>
+</html>

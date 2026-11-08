@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>اصنع قصة · ورشة السحر</title>
+<link rel="stylesheet" href="viewer.css">
+<script src="sfx.js"></script>
+<script>Sfx.taps('.btn, .pill, .topic');</script>
+<style>
+.bg { background: url(img/workshop/workshop-hero.jpg) center 30% / cover; }
+.bg::after { content: ''; position: absolute; inset: 0; background: rgba(244,240,255,.62); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+.app { grid-template-rows: auto 1fr; }
+.ttl img { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; }
+.ttl h1 { text-shadow: 0 3px 0 #5A44B8, 2px 0 0 #5A44B8, -2px 0 0 #5A44B8, 0 -2px 0 #5A44B8; }
+
+/* one card in the middle: pick a topic, wait while Nour makes it, then the result */
+.stage { min-height: 0; display: flex; align-items: center; justify-content: center; overflow-y: auto; }
+.panel { position: relative; width: min(980px, 100%); max-height: 100%; overflow-y: auto; padding: 24px 28px 26px; border-radius: 34px; background: #FFFFFF; box-shadow: 0 10px 0 rgba(90,68,184,.18), 0 24px 40px rgba(0,0,0,.15); display: flex; flex-direction: column; gap: 16px; }
+.panel h2 { margin: 0; font-size: 32px; font-weight: 800; }
+.panel p { margin: 0; font-size: 19px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 999px; background: #EFEAFF; color: #5A44B8; font-size: 17px; font-weight: 800; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* the topics: pictures to tap, never a box to type in */
+.topics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.topic { position: relative; padding: 8px 8px 12px; border: 4px solid #E6DFFC; border-radius: 26px; background: #FFFFFF; font-size: 20px; font-weight: 800; box-shadow: 0 5px 0 #E6DFFC; transition: transform .12s; display: flex; flex-direction: column; gap: 8px; text-align: center; }
+.topic img { width: 100%; aspect-ratio: 16 / 10; border-radius: 18px; object-fit: cover; }
+.topic[aria-pressed="true"] { border-color: #8E76EE; background: #F6F2FF; box-shadow: 0 5px 0 #8E76EE; transform: translateY(-3px); }
+.topic[aria-pressed="true"]::after { content: '✓'; position: absolute; top: 14px; left: 14px; width: 40px; height: 40px; border-radius: 50%; background: #8E76EE; color: #FFFFFF; display: grid; place-items: center; font-size: 22px; }
+.who { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 22px; background: #F6F2FF; }
+.who img { width: 56px; height: 56px; border-radius: 50%; }
+.who div { display: flex; flex-direction: column; gap: 2px; }
+.who b { font-size: 19px; } .who small { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.foot small { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.btn.magic { background: linear-gradient(#A58FF5, #7B64DA); color: #FFFFFF; box-shadow: 0 5px 0 #5A44B8; }
+.btn:disabled { opacity: .45; cursor: default; }
+
+/* while Nour makes it: steps, not a percentage */
+.wait { align-items: center; text-align: center; }
+.nour { width: 210px; height: 210px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 8px #EFEAFF; }
+.wait .nour { animation: glow 1.6s ease-in-out infinite; }
+@keyframes glow { 50% { box-shadow: 0 0 0 16px #E2D9FF; } }
+.steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; min-width: 300px; }
+.steps li { display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 18px; border-radius: 18px; background: #F6F2FF; font-size: 20px; font-weight: 800; color: #9A91B8; }
+.steps li i { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-style: normal; background: #E6DFFC; color: #FFFFFF; font-size: 17px; }
+.steps li.on { color: #2E2350; } .steps li.on i { background: #F7B347; animation: pulse 1s ease-in-out infinite; }
+.steps li.done { color: #1F6A1C; } .steps li.done i { background: #5BC236; animation: none; }
+@keyframes pulse { 50% { transform: scale(1.15); } }
+
+/* the made story: a picture and its words, one page at a time */
+.read { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: center; }
+.read img { width: 100%; aspect-ratio: 1; border-radius: 26px; object-fit: cover; }
+.words { display: flex; flex-direction: column; gap: 14px; }
+.words .t { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.7; color: var(--ink) !important; }
+.words h3 { margin: 0; font-size: 38px; font-weight: 800; line-height: 1.3; }
+.no { font-size: 17px; font-weight: 800; color: #8E76EE; }
+.hear { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; height: 48px; padding: 0 18px; border: 0; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-size: 18px; font-weight: 800; }
+.hear svg { width: 22px; height: 22px; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dots { display: flex; gap: 8px; }
+.dots i { width: 14px; height: 14px; border-radius: 50%; background: #E6DFFC; } .dots i.at { background: #8E76EE; }
+.film { width: min(560px, 100%); align-self: center; aspect-ratio: 1; border-radius: 26px; background: #1B1530; }
+/* keep it: saved, then maybe sent for publishing */
+.keep { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 16px; border-radius: 22px; background: #F6F2FF; }
+.keep p { font-size: 17px !important; }
+.keep .btns { margin: 0; justify-content: flex-start; }
+.state { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: 999px; background: #FFFFFF; font-size: 16px; font-weight: 800; }
+.state.review { background: #FFE9C2; color: #8A5A00; }
+
+.center { align-items: center; text-align: center; }
+.center .btns { margin: 4px 0 0; }
+
+@media (max-width: 760px) {
+  .panel { padding: 18px 16px 20px; border-radius: 26px; gap: 12px; }
+  .panel h2 { font-size: 25px; } .panel p { font-size: 17px; }
+  .topics { grid-template-columns: 1fr 1fr; gap: 10px; } .topic { font-size: 17px; }
+  .read { grid-template-columns: 1fr; gap: 12px; }
+  .words .t { font-size: 22px; } .words h3 { font-size: 28px; }
+  .dots { display: none; } .nav .btn { flex: 1; justify-content: center; padding: 0 12px; }
+  .nour { width: 160px; height: 160px; } .steps { min-width: 0; width: 100%; } .steps li { font-size: 18px; height: 50px; }
+  .btn { height: 54px; padding: 0 22px; font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .wait .nour, .steps li.on i { animation: none; } .topic { transition: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="app">
+  <header class="top">
+    <a class="pill back" href="workshop.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>ورشة السحر</span></a>
+    <div class="ttl"><img id="ttl-img" alt=""><h1 id="ttl"></h1></div>
+    <span class="pill time" title="الوقت المتبقي اليوم"><img src="img/forest/I-10.png" alt=""><span>35 د</span></span>
+  </header>
+  <main class="stage"><section class="panel" id="panel"></section></main>
+  <p class="sr" id="said" role="status"></p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="valley.js"></script>
+<script src="workshop.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar, CHILD, KINDS, left, spend, count, TOPICS, MADE, open } = Workshop;
+  const q = new URLSearchParams(location.search);
+  const k = q.get('k') === 'video' ? 'video' : 'story', K = KINDS[k], R = MADE[k];
+  const panel = $('panel');
+  let topic = null, at = 0, work = null;
+  $('ttl').textContent = k === 'story' ? 'اصنع قصة' : 'اصنع فيديو';
+  $('ttl-img').src = `img/workshop/${K.cover}.jpg`;
+  document.title = `${$('ttl').textContent} · ورشة السحر`;
+  const said = (s) => { $('said').textContent = ''; setTimeout(() => { $('said').textContent = s; }, 50); };
+
+  // ---- pick a topic, see who the hero is, then make it
+  function pick() {
+    if (!open(k)) return closed();
+    if (!left(k)) return limit();
+    panel.className = 'panel';
+    panel.innerHTML = `<div class="row"><h2>${k === 'story' ? 'اختر موضوع قصتك' : 'اختر موضوع الفيديو'}</h2><span class="chip">✨ ${count(k)}</span></div>
+      <div class="topics" role="group" aria-label="المواضيع">${TOPICS.map((t) => `<button class="topic" type="button" data-id="${t.id}" aria-pressed="false"><img src="img/workshop/t-${t.id}.jpg" alt="">${t.n}</button>`).join('')}</div>
+      <div class="who"><img src="img/avatar.png" alt=""><div><b>البطل: ${CHILD.name}</b><small>تستخدم نور اسمك وعمرك (${ar(CHILD.age)} سنوات) لتناسبك ${k === 'story' ? 'القصة' : 'الفكرة'}</small></div></div>
+      <div class="foot"><small>${k === 'story' ? 'تُحسب قصة واحدة من القصص المتاحة لك' : 'يُحسب فيديو واحد من الفيديوهات المتاحة لك'}</small>
+        <button class="btn magic" type="button" id="make" disabled>${k === 'story' ? 'اصنع قصتي ✨' : 'اصنع الفيديو ✨'}</button></div>`;
+  }
+  panel.addEventListener('click', (e) => {
+    const t = e.target.closest('.topic');
+    if (t) {
+      // the prototype holds one made result of each kind
+      if (t.dataset.id !== R.topic) return toast(`في هذا النموذج جاهز موضوع «${TOPICS.find((x) => x.id === R.topic).n}» فقط`);
+      topic = t.dataset.id;
+      panel.querySelectorAll('.topic').forEach((x) => x.setAttribute('aria-pressed', String(x === t)));
+      $('make').disabled = false; return;
+    }
+    if (e.target.closest('#make')) return make();
+    if (e.target.closest('#again')) { q.delete('fail'); return make(); }
+    if (e.target.closest('#prev')) return turn(at - 1);
+    if (e.target.closest('#next')) return turn(at + 1);
+    if (e.target.closest('#hear')) return hear();
+    if (e.target.closest('#save')) return save();
+    if (e.target.closest('#send')) return send();
+  });
+
+  // ---- Nour makes it: three steps, then the result (a failed try is not counted)
+  function make() {
+    panel.className = 'panel wait';
+    panel.innerHTML = `<img class="nour" src="img/workshop/n-magic.webp" alt="">
+      <h2>نور ${k === 'story' ? 'تصنع قصتك' : 'تصنع الفيديو'}…</h2>
+      <ol class="steps">${K.steps.map((s) => `<li><i aria-hidden="true">✓</i>${s}</li>`).join('')}</ol>
+      <p>انتظر قليلاً، سيظهر ${k === 'story' ? 'كتابك' : 'الفيديو'} هنا عندما يجهز</p>`;
+    panel.setAttribute('aria-busy', 'true');
+    said(`نور ${k === 'story' ? 'تصنع قصتك' : 'تصنع الفيديو'}`);
+    const items = panel.querySelectorAll('.steps li'), fail = q.get('fail') === '1';
+    let i = 0;
+    const step = () => {
+      items.forEach((li, j) => { li.classList.toggle('done', j < i); li.classList.toggle('on', j === i); });
+      if (fail && i === 2) return setTimeout(failed, 1200);
+      if (i === items.length) {
+        spend(k);
+        try { sessionStorage.setItem(`ajyal.ai.made.${k}`, '1'); } catch {}
+        return setTimeout(() => show(true), 500);
+      }
+      i++; setTimeout(step, 1500);
+    };
+    step();
+  }
+  function failed() {
+    panel.removeAttribute('aria-busy');
+    panel.className = 'panel center';
+    panel.innerHTML = `<img class="nour" src="img/nour.webp" alt="">
+      <h2>لم ${k === 'story' ? 'تكتمل القصة' : 'يكتمل الفيديو'} هذه المرة</h2>
+      <p>لا تقلق، لم ${k === 'story' ? 'نحسبها من قصصك' : 'نحسبه من فيديوهاتك'} المتاحة. جرّب مرة أخرى.</p>
+      <div class="btns"><button class="btn magic" type="button" id="again">حاول مرة أخرى</button><a class="btn soft" href="workshop.html">العودة إلى الورشة</a></div>`;
+    said('لم يكتمل، جرّب مرة أخرى');
+  }
+
+  // ---- the result: read the story page by page, or watch the video
+  function show(fresh) {
+    panel.removeAttribute('aria-busy');
+    panel.className = 'panel';
+    if (fresh) Sfx.play('win');
+    if (k === 'video') {
+      panel.innerHTML = `<h2>${R.title}</h2>
+        <video class="film" src="${R.src}" poster="img/workshop/${R.poster}.jpg" controls controlslist="nodownload noremoteplayback" disablepictureinpicture playsinline aria-label="${R.title}"></video>
+        <div class="keep" id="keep"></div>`;
+      said(`جاهز: ${R.title}`);
+    } else {
+      panel.innerHTML = `<div class="read" id="read"></div><div class="nav"><button class="btn soft" type="button" id="prev">السابقة</button><span class="dots" id="dots" aria-hidden="true"></span><button class="btn go" type="button" id="next">التالية</button></div><div class="keep" id="keep"></div>`;
+      turn(0);
+      said(`جاهزة: ${R.title}`);
+    }
+    keep();
+  }
+  // page 0 is the cover; then the pages; the last one says «النهاية»
+  function turn(n) {
+    const N = R.pages.length;
+    at = Math.max(0, Math.min(N, n)); quiet();
+    const pic = at === 0 ? R.cover : `s-${String(at).padStart(2, '0')}`;
+    $('read').innerHTML = `<img src="img/workshop/${pic}.jpg" alt="">
+      <div class="words">${at === 0
+        ? `<span class="no">قصة صنعتها نور ل${CHILD.name}</span><h3>${R.title}</h3><p>${ar(N)} صفحات، بالصور والصوت</p>`
+        : `<span class="no">الصفحة ${ar(at)} من ${ar(N)}</span><p class="t">${R.pages[at - 1]}</p>${at === N ? '<b class="no">النهاية</b>' : ''}`}
+        <button class="hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>اقرأ لي</button></div>`;
+    $('dots').innerHTML = Array.from({ length: N + 1 }, (_, i) => `<i class="${i === at ? 'at' : ''}"></i>`).join('');
+    $('prev').disabled = at === 0; $('next').disabled = at === N;
+    $('next').textContent = at === 0 ? 'ابدأ القراءة' : 'التالية';
+  }
+  // in the product the story comes with its own voice; the prototype uses the device's Arabic voice
+  const synth = window.speechSynthesis; synth?.getVoices();
+  function hear() {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return toast('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(at === 0 ? R.title : R.pages[at - 1]);
+    u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  }
+  const quiet = () => { if (synth?.speaking) { synth.cancel(); Sfx.hush(false); } };
+
+  // ---- keep it in «إبداعاتي»: private first, publishing only if the child sends it
+  function keep() {
+    const el = $('keep');
+    if (!work) {
+      el.innerHTML = `<p>احفظ ${k === 'story' ? 'قصتك لتجدها' : 'الفيديو لتجده'} في «إبداعاتي»</p><div class="btns"><button class="btn go" type="button" id="save">احفظ في إبداعاتي</button></div>`;
+      return;
+    }
+    // a story is said in the feminine, a video in the masculine
+    const she = k === 'story';
+    if (work.state === 'private') {
+      el.innerHTML = `<p><span class="state">${she ? 'خاصة بك' : 'خاص بك'}</span> ${she ? 'لا يراها أحد غيرك. هل تريد أن يراها أطفال أجيال؟' : 'لا يراه أحد غيرك. هل تريد أن يراه أطفال أجيال؟'}</p>
+        <div class="btns"><button class="btn soft" type="button" id="send">${she ? 'أرسلها للنشر' : 'أرسله للنشر'}</button><a class="btn go" href="workshop.html">العودة إلى الورشة</a></div>`;
+      return;
+    }
+    el.innerHTML = `<p><span class="state ${work.state}">${Valley.STATES[work.state]}</span> ${work.state === 'review' ? `${she ? 'سيراجعها' : 'سيراجعه'} فريق أجيال، ونخبرك بالنتيجة` : ''}</p>
+      <div class="btns"><a class="btn go" href="workshop.html">العودة إلى الورشة</a></div>`;
+  }
+  function save() {
+    const id = `ai-${k}-${Date.now()}`;
+    work = { id, kind: `ai-${k}`, name: R.title, img: `img/workshop/${k === 'story' ? R.cover : R.poster}.jpg`, state: 'private', href: `create.html?k=${k}&w=${id}`, at: Date.now() };
+    if (!Valley.works.save(work)) { work = null; return toast('لم نستطع الحفظ على هذا الجهاز'); }
+    try { sessionStorage.removeItem(`ajyal.ai.made.${k}`); } catch {}
+    Sfx.play('win'); toast('حُفظ في إبداعاتي'); keep();
+  }
+  function send() {
+    work.state = 'review'; Valley.works.save(work);
+    toast(k === 'story' ? 'أرسلناها إلى فريق أجيال لتُراجَع' : 'أرسلناه إلى فريق أجيال ليُراجَع'); keep();
+  }
+
+  // ---- when nothing is left: say so simply, and point to the parent (no prices, no packages)
+  function limit() {
+    panel.className = 'panel center';
+    panel.innerHTML = `<img class="nour" src="img/workshop/n-padlock.webp" alt="">
+      <h2>${k === 'story' ? 'انتهت القصص المتاحة لك الآن' : 'انتهت الفيديوهات المتاحة لك الآن'}</h2>
+      <p>إذا أردت المزيد، اطلب ذلك من ولي أمرك أو معلّمك.${open('hero') ? ' ويمكنك الآن أن تكون بطل قصة من شاطئ الحكايات.' : ''}</p>
+      <div class="btns">${open('hero') ? '<a class="btn magic" href="hero.html">أنت بطل القصة</a>' : ''}<a class="btn soft" href="workshop.html">العودة إلى الورشة</a></div>`;
+  }
+  // not in the package, or switched off by the parent: a plain message, never «انتهت»
+  function closed() {
+    panel.className = 'panel center';
+    panel.innerHTML = `<img class="nour" src="img/workshop/n-padlock.webp" alt="">
+      <h2>${k === 'story' ? 'صنع القصص غير متاح لك الآن' : 'صنع الفيديو غير متاح لك الآن'}</h2>
+      <p>اسأل ولي أمرك أو معلّمك عنه.</p>
+      <div class="btns"><a class="btn soft" href="workshop.html">العودة إلى الورشة</a></div>`;
+  }
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
+
+  // a saved work opens straight on its result; a made but unsaved one comes back after a reload
+  const saved = q.get('w') && Valley.works.read().find((w) => w.id === q.get('w'));
+  let pending = false; try { pending = sessionStorage.getItem(`ajyal.ai.made.${k}`) === '1'; } catch {}
+  if (saved) { work = saved; show(); } else if (pending) show(); else pick();
+})();
+</script>
+</body>
+</html>

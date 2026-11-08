@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ورشة السحر · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #2E2350; --ink-soft: #5E5480; --paper: #FFFFFF; --lilac: #F4F0FF; --go: #2E8B2A; --go-deep: #1F6A1C; --violet: #8E76EE; --violet-deep: #5A44B8; --edge: #DDD3FB; --line: #6B3A1E; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: var(--lilac); font-weight: 500; }
+img { display: block; max-width: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* drawn at 1440 wide like the other regions, then scaled to the window */
+#wrap { position: relative; width: 100%; overflow: hidden; }
+#page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: top left; }
+
+/* hero: the magic tower at dusk, fading into the page */
+.hero { position: relative; height: 500px; background: url(img/workshop/workshop-hero.jpg) 100% 40% / 110% auto; }
+.hero::after { content: ''; position: absolute; inset: auto 0 0 0; height: 150px; background: linear-gradient(rgba(244,240,255,0), var(--lilac) 92%); pointer-events: none; }
+.bar { position: absolute; z-index: 3; top: 20px; left: 32px; right: 32px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 var(--edge); white-space: nowrap; }
+.pill img { width: 30px; height: 30px; margin: -4px 0; }
+.stats { display: flex; gap: 10px; }
+.isle { position: absolute; z-index: 2; left: 60px; top: 40px; width: 400px; animation: float 4.5s ease-in-out infinite; }
+@keyframes float { 50% { translate: 0 -8px; } }
+.say { position: absolute; z-index: 3; left: 430px; top: 110px; max-width: 270px; margin: 0; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--violet); }
+.say::before { content: ''; position: absolute; left: -16px; bottom: 18px; border: 12px solid transparent; border-right-color: var(--paper); border-left: 0; }
+.head { position: absolute; z-index: 3; right: 80px; top: 130px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.head h1 { margin: 0; font-size: 78px; font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--violet-deep), 3px 0 0 var(--violet-deep), -3px 0 0 var(--violet-deep), 0 -3px 0 var(--violet-deep), 3px 3px 0 var(--violet-deep), -3px 3px 0 var(--violet-deep), 3px -3px 0 var(--violet-deep), -3px -3px 0 var(--violet-deep); }
+.head p { margin: 0; font-size: 22px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 4px 18px; }
+
+main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px; display: flex; flex-direction: column; gap: 26px; }
+main h2 { margin: 0; font-size: 30px; font-weight: 800; }
+.note { margin: -12px 0 0; font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+
+/* what the child can make: three big doors */
+.makes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.make { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 14px 14px 20px; border-radius: 34px; background: var(--paper); color: var(--ink); text-decoration: none; box-shadow: 0 7px 0 var(--edge); transition: transform .2s; }
+.make:hover { transform: translateY(-4px); }
+.make .art { width: 100%; aspect-ratio: 4 / 3; border-radius: 24px; object-fit: cover; }
+.make b { padding: 0 8px; font-size: 30px; font-weight: 800; }
+.make p { margin: 0; padding: 0 8px; font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+.left { position: absolute; top: 24px; right: 24px; display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 17px; font-weight: 800; color: var(--violet-deep); box-shadow: 0 3px 0 var(--edge); }
+.left.none { color: #8A5A00; }
+.cta { margin: 6px 8px 0; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 54px; padding: 0 24px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 20px; font-weight: 800; box-shadow: 0 5px 0 var(--go-deep); }
+.make.out .art { filter: saturate(.5); }
+.make.out .cta { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 3px var(--edge), 0 5px 0 var(--edge); }
+
+/* «إبداعاتي» made here */
+.mine { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.work { display: flex; flex-direction: column; gap: 8px; padding: 10px 10px 14px; border-radius: 26px; background: var(--paper); text-decoration: none; color: var(--ink); box-shadow: 0 5px 0 var(--edge); }
+.work img { width: 100%; aspect-ratio: 1; border-radius: 18px; object-fit: cover; }
+.work b { padding: 0 6px; font-size: 19px; font-weight: 800; line-height: 1.3; }
+.work span { padding: 0 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+.work i { font-style: normal; height: 28px; padding: 0 10px; border-radius: 999px; background: #EFEAFF; font-size: 14px; font-weight: 800; display: inline-flex; align-items: center; }
+.work i.review { background: #FFE9C2; color: #8A5A00; } .work i.published { background: #DDF5D2; color: var(--go-deep); } .work i.rejected { background: #FFE0DC; color: #A13A2E; }
+.empty { grid-column: 1 / -1; margin: 0; padding: 26px 30px; border-radius: 28px; background: rgba(255,255,255,.7); font-size: 19px; font-weight: 700; color: var(--ink-soft); }
+
+.toast { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); background: rgba(46,35,80,.92); color: var(--paper); border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: 16px; z-index: 40; opacity: 0; transition: opacity .25s; pointer-events: none; text-align: center; }
+.toast.show { opacity: 1; }
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+  background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
+.dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.dock a img { width: 36px; height: 36px; margin: -6px 0; flex-shrink: 0; }
+.rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
+@media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
+/* phones: the page is drawn 720 wide, one door per row */
+.narrow .hero { height: 620px; }
+.narrow .isle { left: 10px; top: 60px; width: 320px; }
+.narrow .say { left: 330px; top: 110px; max-width: 350px; }
+.narrow .head { right: 32px; left: 32px; top: 390px; }
+.narrow .head h1 { font-size: 64px; }
+.narrow main { padding: 0 32px 150px; }
+.narrow .makes { grid-template-columns: 1fr; }
+.narrow .make { display: grid; grid-template-columns: 250px 1fr; grid-template-rows: auto auto 1fr; column-gap: 16px; row-gap: 8px; align-items: start; }
+.narrow .make .art { grid-row: 1 / 4; aspect-ratio: 1; }
+.narrow .make b { padding: 6px 0 0; } .narrow .make p { padding: 0; } .narrow .make .cta { margin: 4px 0 0; }
+.narrow .left { top: 22px; right: 22px; }
+.narrow .mine { grid-template-columns: 1fr 1fr; }
+@media (prefers-reduced-motion: reduce) { .isle { animation: none; } .make { transition: none; } }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats">
+      <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span>
+      <span class="pill" title="النقاط"><img src="img/forest/I-06.png" alt="">3,240</span>
+      <span class="pill" title="الشارات"><img src="img/forest/S-01.png" alt="">12</span>
+    </div>
+  </div>
+  <img class="isle" src="img/ai.png" alt="نور أمام برج ورشة السحر">
+  <p class="say">أهلاً يا يوسف! أنا نور. ماذا نصنع معاً اليوم؟</p>
+  <div class="head">
+    <h1>ورشة السحر</h1>
+    <p>اختر ما تريد، وتصنعه نور لك</p>
+  </div>
+</header>
+
+<main>
+  <h2>ماذا تريد أن تصنع؟</h2>
+  <p class="note">تختار موضوعاً من المواضيع الجاهزة، وتصنع نور قصتك بالذكاء الاصطناعي. ما تصنعه يبقى خاصاً بك حتى ترسله للنشر.</p>
+  <div class="makes" id="makes"></div>
+  <h2>إبداعاتي من الورشة</h2>
+  <div class="mine" id="mine"></div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+  <a href="#"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="#"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="#" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="valley.js"></script>
+<script src="workshop.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { KINDS, left, count, open } = Workshop;
+  const KIND_OF = { 'ai-story': 'قصة مصورة', 'ai-video': 'فيديو', hero: 'أنت بطل القصة' };
+
+  function render() {
+    // two AI doors show what is left of them; the hero door uses stories already in the library
+    // a closed feature (not in the package, or switched off by the parent) says so without «انتهت» and without prices
+    const door = (k) => {
+      const K = KINDS[k], on = open(k), n = on && left(k);
+      return `<a class="make ${n ? '' : 'out'}" href="create.html?k=${k}">
+        <img class="art" src="img/workshop/${K.cover}.jpg" alt=""><span class="left ${n ? '' : 'none'}">${on ? `✨ ${count(k)}` : '🔒 غير متاحة الآن'}</span>
+        <b>${K.n}</b><p>${K.about}</p><span class="cta">${n ? (k === 'story' ? 'اصنع قصة' : 'اصنع فيديو') : 'لماذا لا أستطيع؟'}</span></a>`;
+    };
+    const hero = open('hero');
+    $('makes').innerHTML = door('story') + door('video') + `<a class="make ${hero ? '' : 'out'}" href="hero.html">
+      <img class="art" src="img/stories/cover-00.jpg" alt="">${hero ? '' : '<span class="left none">🔒 غير متاحة الآن</span>'}<b>أنت بطل القصة</b><p>ضع اسمك وصورتك في قصة من شاطئ الحكايات</p><span class="cta">${hero ? 'اختر قصة' : 'لماذا لا أستطيع؟'}</span></a>`;
+
+    const works = Valley.works.read().filter((w) => KIND_OF[w.kind]);
+    $('mine').innerHTML = works.length ? works.map((w) => `<a class="work" href="${w.href}">
+      <img src="${w.img}" alt=""><b>${w.name}</b><span><i>${KIND_OF[w.kind]}</i><i class="${w.state}">${Valley.STATES[w.state]}</i></span></a>`).join('')
+      : '<p class="empty">لم تصنع شيئاً بعد. اختر من الأعلى، ونبدأ معاً!</p>';
+    fit();
+  }
+
+  // the board is drawn at 1440 wide (720 on phones) and scaled to the window
+  const page = $('page'), wrap = $('wrap');
+  function fit() {
+    const B = innerWidth < 760 ? 720 : 1440;
+    page.style.width = B + 'px'; page.classList.toggle('narrow', B < 1440);
+    const k = Math.min(innerWidth / B, 1.5), x = Math.max(0, (innerWidth - B * k) / 2);
+    page.style.transform = 'translateX(' + x + 'px) scale(' + k + ')';
+    wrap.style.height = page.offsetHeight * k + 'px';
+  }
+  addEventListener('resize', fit);
+  addEventListener('pageshow', (e) => { if (e.persisted) render(); });
+  render();
+})();
+</script>
+</body>
+</html>
