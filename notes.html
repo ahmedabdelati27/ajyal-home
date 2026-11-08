@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إشعاراتي · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<link rel="stylesheet" href="hub.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+.hero { --hero: url(img/room/notes-hero.jpg); background-position: center 50%; }
+:root { --accent-deep: #C2551C; }
+
+.top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.top-row .count { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; }
+.top-row .count img { width: 54px; height: 54px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--paper); font-size: 17px; font-weight: 800; box-shadow: 0 4px 0 var(--edge); }
+.chip[aria-pressed="true"] { background: #FFE2C4; box-shadow: 0 4px 0 #F1B27A; }
+.all-read, .hear { height: 46px; padding: 0 18px; font-size: 16px; }
+.row-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.hear { background: #FFF1C9; color: #8A5A00; box-shadow: none; }
+.hear svg { width: 20px; height: 20px; }
+
+/* a day's notifications together; a new one is tinted and has a dot */
+.day h3 { margin: 6px 0 12px; font-size: 20px; font-weight: 800; color: var(--ink-soft); }
+.list { display: flex; flex-direction: column; gap: 12px; }
+.note { display: grid; grid-template-columns: 84px 1fr auto; gap: 16px; align-items: center; padding: 12px 18px 12px 12px; border-radius: 26px; background: var(--paper); color: var(--ink); text-decoration: none; box-shadow: 0 5px 0 var(--edge); transition: transform .15s; }
+.note:hover { transform: translateY(-2px); }
+.note .pic { width: 84px; height: 84px; border-radius: 20px; object-fit: cover; background: #FFF6E8; }
+.note .pic.round { object-fit: contain; padding: 6px; }
+.note b { display: block; font-size: 20px; font-weight: 800; }
+.note p { margin: 4px 0 0; font-size: 16px; font-weight: 700; line-height: 1.55; color: var(--ink-soft); }
+.note small { display: block; margin-top: 6px; font-size: 14px; font-weight: 800; color: #A89580; }
+.note .go-arrow { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #FFF1DD; }
+.note .go-arrow svg { width: 20px; height: 20px; }
+.note.new { background: #FFF4E4; box-shadow: 0 5px 0 #F3D3A8, inset 0 0 0 2px #F7C88E; }
+.note.new b::after { content: ''; display: inline-block; width: 10px; height: 10px; margin-inline-start: 8px; border-radius: 50%; background: #F0436B; vertical-align: middle; }
+
+.narrow .note { grid-template-columns: 68px 1fr; } .narrow .note .pic { width: 68px; height: 68px; } .narrow .note .go-arrow { display: none; }
+.narrow .note b { font-size: 18px; } .narrow .note p { font-size: 15px; }
+@media (prefers-reduced-motion: reduce) { .note { transition: none; } }
+</style>
+<link rel="stylesheet" href="dock.css">
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats"><span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span></div>
+  </div>
+  <div class="head">
+    <h1>إشعاراتي</h1>
+    <p>كل الأخبار الجديدة في عالمك</p>
+  </div>
+</header>
+
+<main>
+  <div class="top-row">
+    <span class="count" id="count"></span>
+    <span class="row-btns"><button class="btn hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>اقرأ لي الجديد</button><button class="btn soft all-read" type="button" id="all-read">اجعلها كلها مقروءة</button></span>
+  </div>
+  <div class="chips" role="group" aria-label="عرض الإشعارات" id="chips"></div>
+  <div id="days"></div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html" aria-label="الخريطة"><img src="img/nav/map.png" alt=""><span>الخريطة</span></a>
+  <a href="index.html?open=sections" aria-label="كل الأقسام"><img src="img/nav/sections.png" alt=""><span>كل الأقسام</span></a>
+  <a href="index.html?open=room" aria-label="غرفتي"><img src="img/nav/room.png" alt=""><span>غرفتي</span></a>
+  <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="notes.js"></script>
+<script>
+// opening a notification marks it read first; this runs before the panel's own link handling
+addEventListener('click', (e) => { const a = e.target.closest('a.note'); if (a) Notes.mark([a.dataset.id]); }, true);
+</script>
+<script src="hub.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { NOTES, isRead, mark, unread } = Notes;
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const DAYS = [['today', 'اليوم'], ['yesterday', 'أمس'], ['week', 'هذا الأسبوع'], ['older', 'أقدم']];
+  const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="#C2551C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
+  let show = 'all';
+
+  function render() {
+    const n = unread();
+    $('count').innerHTML = `<img src="img/hud/bell.png" alt="">${n ? `لديك ${n === 1 ? 'إشعار جديد واحد' : n === 2 ? 'إشعاران جديدان' : `${ar(n)} إشعارات جديدة`}` : 'قرأت كل إشعاراتك'}`;
+    $('all-read').hidden = !n; $('hear').hidden = !n;
+    $('chips').innerHTML = [['all', 'الكل'], ['new', 'الجديدة']].map(([k, t]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === show}">${t}</button>`).join('');
+    const list = NOTES.filter((x) => show === 'all' || !isRead(x.id));
+    $('days').innerHTML = list.length ? DAYS.map(([d, name]) => {
+      const here = list.filter((x) => x.when === d);
+      return here.length ? `<section class="day" aria-labelledby="d-${d}"><h3 id="d-${d}">${name}</h3><div class="list">${here.map((x) => `<a class="note ${isRead(x.id) ? '' : 'new'}" href="${x.go}" data-id="${x.id}" aria-label="${isRead(x.id) ? '' : 'جديد: '}${x.t}، ${x.p}، ${x.ago}">
+        <img class="pic ${x.kind === 'badge' || x.kind === 'done' ? 'round' : ''}" src="${x.img}" alt="">
+        <span><b>${x.t}</b><p>${x.p}</p><small>${x.ago}</small></span><span class="go-arrow">${ARROW}</span></a>`).join('')}</div></section>` : '';
+    }).join('') : '<p class="empty">لا توجد إشعارات جديدة الآن.</p>';
+    Hub.fit();
+  }
+  $('chips').addEventListener('click', (e) => { const c = e.target.closest('.chip'); if (c) { show = c.dataset.k; render(); } });
+  const synth = window.speechSynthesis; synth?.getVoices();
+  $('hear').addEventListener('click', () => {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return Hub.toast('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(NOTES.filter((x) => !isRead(x.id)).map((x) => `${x.t}. ${x.p}`).join(' '));
+    u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  });
+  $('all-read').addEventListener('click', () => { mark(NOTES.map((x) => x.id)); Hub.toast('قرأت كل إشعاراتك'); render(); });
+  render();
+  addEventListener('load', Hub.fit);
+  addEventListener('pageshow', (e) => { if (e.persisted) render(); });
+})();
+</script>
+</body>
+</html>

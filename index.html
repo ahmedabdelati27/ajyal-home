@@ -9,6 +9,7 @@
 <script src="sfx.js"></script>
 <script src="values.js"></script>
 <script src="workshop.js"></script>
+<script src="notes.js"></script>
 <script>Sfx.taps('a, button:not(.isl-hit):not(#here):not(#resume):not(#mission)');</script>
 <style>
 /* layout: one full-screen camera over a 1440×1024 world; HUD pinned to the screen edges and never zooms */
@@ -220,7 +221,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
       <span class="pill" title="النقاط"><img src="img/hud/points.png" alt="">3,240</span>
       <button type="button" class="pill" id="streak-pill" title="أيام متتالية" aria-label="أيامي المتتالية، 5 أيام"><img src="img/hud/streak.png" alt="">5</button>
       <button type="button" class="pill" id="badges-pill" title="الشارات" aria-label="شاراتي، 6 شارات"><img src="img/hud/badge.png" alt="">6</button>
-      <button type="button" class="pill bell" aria-label="الإشعارات، 3 غير مقروءة"><img src="img/I-09.png" alt=""><b>3</b></button>
+      <button type="button" class="pill bell" id="bell" aria-label="الإشعارات"><img src="img/hud/bell.png" alt=""><b id="bell-n" hidden></b></button>
     </div>
   </div>
   <span class="hud sfx-slot" id="sfx-slot"></span>
@@ -379,7 +380,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   }
   addEventListener('pageshow', () => { flying = false; });
   // ---- the bottom bar's pages open in a panel over the map (?open=room&tab=works&w=… opens one straight away)
-  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'], badges: ['badges.html', 'شاراتي'], streak: ['streak.html', 'أيامي المتتالية'] };
+  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'], badges: ['badges.html', 'شاراتي'], streak: ['streak.html', 'أيامي المتتالية'], notes: ['notes.html', 'إشعاراتي'] };
   const sheet = document.getElementById('sheet'), frame = document.getElementById('sheet-f'), dockLinks = [...document.querySelectorAll('.dock a')];
   const lit = (id) => dockLinks.forEach((a) => (a.dataset.sheet === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   // while the panel is open the map behind it cannot be reached; the bar stays usable
@@ -399,6 +400,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   function closeSheet(fromHistory) {
     if (sheet.hidden) return;
     sheet.hidden = true; frame.contentWindow.location.replace('about:blank'); lit(''); still(false);
+    if (window.Notes) bellCount();
     if (!fromHistory) { if (history.state?.sheet) history.back(); else history.replaceState(null, '', 'index.html'); }
     dockLinks[0].focus({ preventScroll: true });
   }
@@ -424,6 +426,16 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   // the badge count opens every badge and how to earn it
   document.getElementById('badges-pill').addEventListener('click', () => openSheet('badges'));
   document.getElementById('streak-pill').addEventListener('click', () => openSheet('streak'));
+  // the bell shows how many notifications are new, and opens them; reading one in the panel updates it
+  function bellCount() {
+    const n = Notes.unread(), b = document.getElementById('bell-n');
+    b.hidden = !n; b.textContent = n;
+    document.getElementById('bell').setAttribute('aria-label', n ? `الإشعارات، ${n} غير مقروءة` : 'الإشعارات');
+  }
+  bellCount();
+  addEventListener('storage', (e) => { if (e.key === 'ajyal.notes.read') bellCount(); });
+  addEventListener('pageshow', bellCount);
+  document.getElementById('bell').addEventListener('click', () => openSheet('notes'));
   Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen
