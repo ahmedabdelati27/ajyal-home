@@ -8,6 +8,7 @@
 <script src="clouds.js"></script>
 <script src="sfx.js"></script>
 <script src="values.js"></script>
+<script src="workshop.js"></script>
 <script>Sfx.taps('a, button:not(.isl-hit):not(#here):not(#resume):not(#mission)');</script>
 <style>
 /* layout: one full-screen camera over a 1440×1024 world; HUD pinned to the screen edges and never zooms */
@@ -116,14 +117,49 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .dock a[aria-current="page"] { background: linear-gradient(#F4823F, #D6531E); color: #FFFFFF; border-color: var(--dock-line); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); text-shadow: 0 1px 0 rgba(107,58,30,.5); }
 .rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--dock-line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
 
-.mission { right: calc(var(--edge-x) + env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: row-reverse; align-items: center; gap: 4px; }
-.mission .bubble { display: flex; align-items: center; gap: 10px; background: var(--paper); border-radius: 999px; padding: 6px 6px 6px 8px; box-shadow: 0 5px 0 #F1C96B; border: 0; cursor: pointer; text-align: right; }
-.mission .bubble b { display: block; font-size: 19px; }
-.dashes { display: flex; gap: 5px; margin-top: 4px; }
+.mission { right: calc(var(--edge-x) + env(safe-area-inset-right, 0px)); bottom: calc(100px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: row-reverse; align-items: center; gap: 12px; }
+.mission .bubble { display: flex; align-items: center; gap: 16px; background: var(--paper); border-radius: 999px; padding: 8px 22px 8px 8px; box-shadow: 0 5px 0 #F1C96B; border: 0; cursor: pointer; text-align: right; }
+.mtxt { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.mtxt small { font-size: 13px; font-weight: 700; color: var(--ink-soft); line-height: 1.2; }
+.mission .bubble b { display: block; font-size: 19px; line-height: 1.25; }
+.dashes { display: flex; gap: 5px; margin-top: 3px; }
 .dashes i { width: 22px; height: 7px; border-radius: 999px; background: #EFE7DB; }
 .dashes i.ok { background: #4CB944; } .dashes i.next { background: #FF9F1C; }
 .play { width: 46px; height: 46px; border-radius: 999px; background: var(--go); box-shadow: 0 4px 0 var(--go-deep); display: flex; align-items: center; justify-content: center; }
 .nour { width: 110px; height: 110px; transform: scaleX(-1); -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 70%); mask-image: radial-gradient(circle, #000 52%, transparent 70%); }
+.guide { position: relative; display: block; width: 110px; height: 110px; flex-shrink: 0; }
+.guide .nour { display: block; animation: hover-up 3.4s ease-in-out infinite; }
+@keyframes hover-up { 50% { translate: 0 -10px; } }
+.guide .tag { position: absolute; left: 50%; bottom: -6px; translate: -50% 0; padding: 2px 14px 3px; border-radius: 999px; background: linear-gradient(#A58FF5, #7B64DA); color: #FFFFFF; font-size: 15px; font-weight: 800; border: 3px solid #FFFFFF; box-shadow: 0 3px 0 rgba(90,68,184,.35); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .guide .nour { animation: none; } }
+
+/* Nour's tour: everything dims except the place she is talking about */
+.tour { inset: 0; z-index: 9; }
+.tour[hidden] { display: none; }
+.spot { position: absolute; left: 50%; top: 45%; width: 0; height: 0; border-radius: 50%; box-shadow: 0 0 0 200vmax rgba(18,40,58,.58); outline: 4px dashed rgba(255,228,140,.95); outline-offset: 6px; transition: left .45s ease, top .45s ease, width .45s ease, height .45s ease, border-radius .45s ease; pointer-events: none; }
+.spot.off { outline-color: transparent; }
+.tour-skip { position: absolute; top: calc(var(--edge-y) + env(safe-area-inset-top, 0px)); right: calc(var(--edge-x) + env(safe-area-inset-right, 0px)); display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--paper); color: var(--ink); font: inherit; font-size: 17px; font-weight: 800; box-shadow: 0 4px 0 rgba(0,0,0,.18); cursor: pointer; }
+.tour-skip svg { width: 18px; height: 18px; }
+.tour-card { position: absolute; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; width: min(640px, calc(100% - 24px)); display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: center; padding: 16px 22px 18px 16px; border: 5px solid var(--paper); border-radius: 32px; background: #FFF9EE; box-shadow: 0 10px 0 rgba(90,68,184,.25), 0 24px 40px rgba(0,0,0,.25); transition: top .3s, bottom .3s; }
+.tour-card.up { bottom: auto; top: calc(var(--edge-y) + 70px + env(safe-area-inset-top, 0px)); }
+.tour-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tour-n { font-size: 14px; font-weight: 800; color: #7B64DA; }
+.tour-body h2 { margin: 0; font-size: 26px; font-weight: 800; line-height: 1.25; }
+.tour-body p { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.tour-btns { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.tour-btns button { height: 50px; padding: 0 20px; border: 0; border-radius: 999px; font: inherit; font-size: 18px; font-weight: 800; cursor: pointer; }
+.t-hear { display: inline-flex; align-items: center; gap: 6px; background: #FFF1C9; color: #8A5A00; }
+.t-hear svg { width: 22px; height: 22px; }
+.t-back { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 3px #EFE3CF; }
+.t-next { margin-inline-start: auto; background: var(--go); color: var(--paper); box-shadow: 0 5px 0 var(--go-deep); }
+@media (max-width: 760px) {
+  .tour-card { grid-template-columns: 64px 1fr; gap: 10px; padding: 12px 14px 14px 12px; border-radius: 26px; }
+  .tour-card .guide, .tour-card .guide .nour { width: 64px; height: 64px; }
+  .tour-body h2 { font-size: 21px; } .tour-body p { font-size: 16px; }
+  .tour-btns button { height: 46px; padding: 0 14px; font-size: 16px; }
+  .tour-skip { height: 42px; padding: 0 14px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .spot, .tour-card { transition: none; } }
 
 .hint { left: 50%; top: calc(var(--edge-y) + 64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: rgba(58,35,24,.82); color: var(--paper); border-radius: 999px; padding: 8px 18px; font-size: 15px; font-weight: 700; white-space: nowrap; transition: opacity .4s; pointer-events: none; }
 .hint.gone { opacity: 0; }
@@ -149,12 +185,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .back { margin-top: 10px; height: 56px; padding: 0 26px; border: 0; border-radius: 999px; background: var(--go); color: var(--paper); font-weight: 800; font-size: 19px; box-shadow: 0 5px 0 var(--go-deep); cursor: pointer; }
 
 @media (max-width: 760px) {
-  .me .name, .stats .pill:nth-child(3), .time span, .dock a span, .mission .nour, .zbtn.whole span { display: none; }
+  .me .name, .stats .pill:nth-child(3), .time span, .dock a span, .zbtn.whole span { display: none; }
+  .guide, .guide .nour { width: 72px; height: 72px; } .guide .tag { font-size: 12px; padding: 1px 10px 2px; bottom: -8px; }
+  .mission { gap: 6px; } .mission .bubble { padding: 6px 16px 6px 6px; gap: 12px; } .mission .bubble b { font-size: 17px; } .play { width: 42px; height: 42px; }
   .pill { height: 40px; padding: 0 10px; font-size: 16px; }
   .dock a { padding: 0 14px; }
   .zbtn { width: 50px; height: 50px; }
   :root { --edge-x: 14px; }
-  .mission { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  .mission { bottom: calc(106px + env(safe-area-inset-bottom, 0px)); }
   .sheet { padding: calc(10px + env(safe-area-inset-top, 0px)) 8px calc(92px + env(safe-area-inset-bottom, 0px)); }
   .sheet-card { border-width: 4px; border-radius: 26px; } .sheet-x { top: 10px; left: 10px; width: 46px; height: 46px; }
   .hint { white-space: normal; width: max-content; max-width: calc(100% - 32px); text-align: center; border-radius: 18px; }
@@ -197,13 +235,33 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 
   <div class="hud mission">
     <button type="button" class="bubble" id="mission" aria-label="رحلتك مع نور">
-      <span><b id="mission-t">رحلة مع نور</b><span class="dashes" id="mission-d" aria-hidden="true"></span></span>
+      <span class="mtxt"><small>رحلتك مع نور</small><b id="mission-t">حديقة القيم</b><span class="dashes" id="mission-d" aria-hidden="true"></span></span>
       <span class="play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M17 5v14L6 12z" fill="#fff"/></svg></span>
     </button>
-    <img class="nour" src="img/nour.webp" alt="">
+    <!-- Nour floats softly beside her journey, with her name so the child knows who she is -->
+    <span class="guide"><img class="nour" src="img/nour.webp" alt="نور"><span class="tag" aria-hidden="true">نور</span></span>
   </div>
 
   <!-- the bottom bar's pages open in a panel over the map; the map stays behind and the bar stays on top -->
+  <!-- Nour's tour on a child's first visit: the map dims, one island lights at a time, and «تخطَّ الجولة» ends it any time -->
+  <div class="hud tour" id="tour" hidden role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-p">
+    <span class="spot" id="spot" aria-hidden="true"></span>
+    <button type="button" class="tour-skip" id="tour-skip">تخطَّ الجولة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="tour-card" id="tour-card">
+      <span class="guide"><img class="nour" src="img/nour.webp" alt=""><span class="tag" aria-hidden="true">نور</span></span>
+      <div class="tour-body">
+        <span class="tour-n" id="tour-n"></span>
+        <h2 id="tour-t"></h2>
+        <p id="tour-p"></p>
+        <div class="tour-btns">
+          <button type="button" class="t-hear" id="tour-hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button>
+          <button type="button" class="t-back" id="tour-back">السابق</button>
+          <button type="button" class="t-next" id="tour-next">التالي</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="hud sheet" id="sheet" hidden role="dialog" aria-modal="true">
     <div class="sheet-card">
       <button type="button" class="sheet-x" id="sheet-x" aria-label="أغلق وارجع إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="#3A2318" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -325,7 +383,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   const sheet = document.getElementById('sheet'), frame = document.getElementById('sheet-f'), dockLinks = [...document.querySelectorAll('.dock a')];
   const lit = (id) => dockLinks.forEach((a) => (a.dataset.sheet === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   // while the panel is open the map behind it cannot be reached; the bar stays usable
-  const behind = [...stage.children].filter((el) => el !== sheet && !el.classList.contains('dock'));
+  const behind = [...stage.children].filter((el) => el !== sheet && el.id !== 'tour' && !el.classList.contains('dock'));
   const still = (on) => behind.forEach((el) => { el.inert = on; });
   function openSheet(id, q = {}, push = true) {
     if (!SHEETS[id]) return;
@@ -391,7 +449,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   const journey = Values.current();
   if (journey) {
     const s = Values.state(journey);
-    document.getElementById('mission-t').textContent = `رحلة ${journey.name}`;
+    document.getElementById('mission-t').textContent = `قيمة ${journey.name}`;
     document.getElementById('mission-d').innerHTML = Array.from({ length: s.all }, (_, i) => `<i class="${i < s.n ? 'ok' : i === s.n ? 'next' : ''}"></i>`).join('');
     document.getElementById('mission').setAttribute('aria-label', `رحلتك مع نور: ${journey.name}، أكملت ${s.n} من ${s.all}`);
   } else document.getElementById('mission-t').textContent = 'حديقة القيم';
@@ -404,6 +462,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   addEventListener('keydown', (e) => {
     if (!region.hidden) { if (e.key === 'Escape') closeRegion(); return; }
     if (!sheet.hidden) { if (e.key === 'Escape') closeSheet(); return; }
+    if (!tour.hidden) return;
     const step = 80, m = { ArrowLeft: [step, 0], ArrowRight: [-step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] }[e.key];
     if (m) { e.preventDefault(); apply({ ...cam, x: cam.x + m[0], y: cam.y + m[1] }, true); }
     if (e.key === '+' || e.key === '=') zoomAt(1.45, ...centre(), true);
@@ -412,7 +471,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 
   // wheel zoom around the pointer
   stage.addEventListener('wheel', (e) => {
-    if (!region.hidden || !sheet.hidden) return;
+    if (!region.hidden || !sheet.hidden || !tour.hidden) return;
     e.preventDefault(); hideHint();
     const r = stage.getBoundingClientRect();
     zoomAt(Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top, false);
@@ -461,6 +520,86 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   // another page's bar asked for a panel: ?open=room&tab=works
   const asked = new URLSearchParams(location.search);
   if (SHEETS[asked.get('open')]) { history.replaceState({ sheet: asked.get('open') }, '', location.search); openSheet(asked.get('open'), { tab: asked.get('tab'), w: asked.get('w') }, false); }
+
+  // ---- Nour's tour: on a child's first visit she shows every island, the bar and her journey (?tour=1 shows it again)
+  // (in the product «seen» is kept on the child's file; the words, and their voice, would come from the admin)
+  const tour = document.getElementById('tour'), spot = document.getElementById('spot'), card = document.getElementById('tour-card');
+  const SAY = {
+    ai: 'هنا نصنع معاً قصة أو فيديو يُكتب عنك.',
+    forest: 'هنا فيديوهات وكتب وصور، تتعلم منها أشياء جديدة.',
+    beach: 'هنا قصص تقرؤها أو تستمع إليها، ثم تجيب عن أسئلة صغيرة.',
+    quran: 'هنا تستمع إلى سور جزء عمّ، وتردّدها، ثم تسمّعها.',
+    games: 'هنا ألعاب ممتعة، تتعلم وأنت تلعب.',
+    colors: 'هنا ترسم بحرية، وتلوّن الرسومات الجميلة.',
+    peak: 'هنا المسابقات! أجب عن الأسئلة، أو شارك برسمتك.',
+    letters: 'هنا تتعلم الحروف والأرقام: تراها، وتسمعها، وتكتبها.',
+    garden: 'وهذه حديقتي! هنا نزرع القيم معاً، مثل الصدق والتعاون.'
+  };
+  const STEPS = [
+    { t: 'أهلاً يا يوسف! أنا نور', p: 'أنا صديقتك في عالم أجيال. تعال أعرّفك على الجزر، جزيرة بعد جزيرة!' },
+    ...['ai', 'forest', 'beach', 'quran', 'games', 'colors', 'peak', 'letters', 'garden'].map((id) => ({ id, t: ISLANDS.find((x) => x.id === id).title, p: SAY[id] })),
+    { el: '.dock', t: 'الشريط السفلي', p: 'من هنا ترجع إلى الخريطة، وتفتح كل الأقسام، وغرفتك، والمتصدرين.' },
+    { el: '.mission', t: 'رحلتك معي', p: 'اضغط هنا لتكمل معي رحلة القيمة.' },
+    { t: 'أنت جاهز!', p: 'اضغط على أي جزيرة لتبدأ. وأنا معك دائماً.', last: true }
+  ];
+  if (!['story', 'video', 'hero'].some(Workshop.open)) STEPS.find((x) => x.id === 'ai').p = 'هذا المكان غير متاح لك الآن، اسأل ولي أمرك أو معلّمك عنه.';
+  let step = 0;
+  const seen = () => { try { return localStorage.getItem('ajyal.tour') === 'done'; } catch { return true; } };
+  function lightOn(x, y, w, h, round) {
+    const r = stage.getBoundingClientRect();
+    spot.classList.remove('off');
+    Object.assign(spot.style, { left: `${x - r.left - w / 2}px`, top: `${y - r.top - h / 2}px`, width: `${w}px`, height: `${h}px`, borderRadius: round ? '50%' : '999px' });
+    // the card moves away from the light
+    card.classList.toggle('up', y - r.top > r.height * 0.52);
+  }
+  function lightOff() { spot.classList.add('off'); Object.assign(spot.style, { left: '50%', top: '45%', width: '0px', height: '0px' }); card.classList.remove('up'); }
+  function show(n) {
+    step = n; const S = STEPS[n];
+    document.getElementById('tour-n').textContent = n === 0 || S.last ? 'جولة مع نور' : `${n} من ${STEPS.length - 2}`;
+    document.getElementById('tour-t').textContent = S.t;
+    document.getElementById('tour-p').textContent = S.p;
+    document.getElementById('tour-back').hidden = n === 0;
+    document.getElementById('tour-next').textContent = n === 0 ? 'هيا بنا' : S.last ? 'لنبدأ!' : 'التالي';
+    document.getElementById('tour-skip').hidden = !!S.last;
+    quiet();
+    if (S.id) {
+      // the camera flies to the island and keeps it in the upper part of the screen, above the card
+      const i = ISLANDS.find((x) => x.id === S.id), v = view(), s = Math.min(fit() * 1.8, fit() * MAX_ZOOM);
+      apply({ s, x: v.w / 2 - i.x * s, y: v.h * 0.38 - (i.y + 15) * s }, true);
+      // the light covers the island and its name ribbon
+      const r = stage.getBoundingClientRect();
+      lightOn(r.left + cam.x + i.x * cam.s, r.top + cam.y + (i.y + 15) * cam.s, 270 * cam.s, 290 * cam.s, true);
+    } else if (S.el) {
+      if (n > 0 && STEPS[n - 1].id) whole(true);
+      const b = document.querySelector(S.el).getBoundingClientRect();
+      lightOn(b.left + b.width / 2, b.top + b.height / 2, b.width + 28, b.height + 28, false);
+    } else { whole(true); lightOff(); }
+    Sfx.play('page');
+    document.getElementById('tour-next').focus({ preventScroll: true });
+  }
+  function startTour() {
+    hideHint(); still(true); document.querySelector('.dock').inert = true;
+    tour.hidden = false; show(0);
+  }
+  function endTour() {
+    quiet(); tour.hidden = true; still(false); document.querySelector('.dock').inert = false;
+    try { localStorage.setItem('ajyal.tour', 'done'); } catch {}
+    whole(true); dockLinks[0].focus({ preventScroll: true });
+  }
+  document.getElementById('tour-next').addEventListener('click', () => (STEPS[step].last ? endTour() : show(step + 1)));
+  document.getElementById('tour-back').addEventListener('click', () => step > 0 && show(step - 1));
+  document.getElementById('tour-skip').addEventListener('click', endTour);
+  tour.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); endTour(); } });
+  // read aloud for children who do not read yet (in the product: Nour's recorded voice)
+  const synth = window.speechSynthesis; synth?.getVoices();
+  const quiet = () => { if (synth?.speaking) { synth.cancel(); Sfx.hush(false); } };
+  document.getElementById('tour-hear').addEventListener('click', () => {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar')); if (!v) return;
+    quiet(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(`${STEPS[step].t}. ${STEPS[step].p}`); u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  });
+  addEventListener('resize', () => { if (!tour.hidden) show(step); });
+  if (asked.get('tour') === '1' || (!seen() && !asked.get('open'))) setTimeout(startTour, 700);
 })();
 </script>
 </body>
