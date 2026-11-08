@@ -33,5 +33,11 @@
   ].map(([name, avatar, xp, badge], i) => ({ rank: i + 1, name, avatar, xp, badge }));
   const ME_RANK = 12;
 
-  window.Profile = { ar, num, read, save, AVATARS, BADGES, LEADERS, ME_RANK };
+  // days in a row: counted for the child automatically; the last seven days end today (Sunday 8 November in the prototype)
+  // goals: the days the admin may tie to a badge; the others are only steps to aim for
+  const STREAK = { now: 5, best: 9,
+    week: [['الإثنين', 2, true], ['الثلاثاء', 3, false], ['الأربعاء', 4, true], ['الخميس', 5, true], ['الجمعة', 6, true], ['السبت', 7, true], ['الأحد', 8, true]],
+    goals: [{ d: 3 }, { d: 5, badge: 'S-06' }, { d: 7 }, { d: 14 }, { d: 30 }] };
+
+  window.Profile = { ar, num, read, save, AVATARS, BADGES, LEADERS, ME_RANK, STREAK };
 })();

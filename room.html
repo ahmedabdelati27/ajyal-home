@@ -34,6 +34,8 @@
 .lvl-bar { height: 16px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
 .lvl-bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFC93C, #F4823F); }
 .num small { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.num.link { color: var(--ink); text-decoration: none; }
+.num.link small { color: var(--accent-deep); font-weight: 800; }
 .rules-note { margin: 0; padding: 12px 18px; border-radius: 18px; background: #FFF1DD; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
 
 /* badges: the ones earned shine, the others say how to get them */
@@ -199,7 +201,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
         <span class="lvl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="التقدم نحو المستوى ${ar(me.level + 1)}"><i style="width:${pct}%"></i></span>
         <small>باقي ${num(me.to - me.xp)} نقطة للوصول إلى المستوى ${ar(me.level + 1)}</small></div>
       <div class="num card"><span class="k"><img src="img/hud/points.png" alt="">مجموع نقاطي</span><span class="v">${num(me.xp)}</span></div>
-      <div class="num card"><span class="k"><img src="img/hud/streak.png" alt="">أيام متتالية</span><span class="v">${ar(me.streak)}</span></div>`;
+      <a class="num card link" href="index.html?open=streak" aria-label="أيامي المتتالية: ${ar(me.streak)}"><span class="k"><img src="img/hud/streak.png" alt="">أيام متتالية</span><span class="v">${ar(me.streak)}</span><small>شاهد أيامك ←</small></a>`;
     const got = BADGES.filter((b) => b.got).length;
     $('badges-t').textContent = `شاراتي (${ar(got)} من ${ar(BADGES.length)})`;
     $('badges').innerHTML = BADGES.map((b) => `<div class="badge card ${b.got ? '' : 'no'}"><img src="img/badges/${b.id}.png" alt="">

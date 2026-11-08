@@ -218,7 +218,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     <div class="stats">
       <button type="button" class="pill search" aria-label="ابحث"><img src="img/I-05.png" alt=""></button>
       <span class="pill" title="النقاط"><img src="img/hud/points.png" alt="">3,240</span>
-      <span class="pill" title="أيام متتالية"><img src="img/hud/streak.png" alt="">5</span>
+      <button type="button" class="pill" id="streak-pill" title="أيام متتالية" aria-label="أيامي المتتالية، 5 أيام"><img src="img/hud/streak.png" alt="">5</button>
       <button type="button" class="pill" id="badges-pill" title="الشارات" aria-label="شاراتي، 6 شارات"><img src="img/hud/badge.png" alt="">6</button>
       <button type="button" class="pill bell" aria-label="الإشعارات، 3 غير مقروءة"><img src="img/I-09.png" alt=""><b>3</b></button>
     </div>
@@ -379,7 +379,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   }
   addEventListener('pageshow', () => { flying = false; });
   // ---- the bottom bar's pages open in a panel over the map (?open=room&tab=works&w=… opens one straight away)
-  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'], badges: ['badges.html', 'شاراتي'] };
+  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'], badges: ['badges.html', 'شاراتي'], streak: ['streak.html', 'أيامي المتتالية'] };
   const sheet = document.getElementById('sheet'), frame = document.getElementById('sheet-f'), dockLinks = [...document.querySelectorAll('.dock a')];
   const lit = (id) => dockLinks.forEach((a) => (a.dataset.sheet === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   // while the panel is open the map behind it cannot be reached; the bar stays usable
@@ -423,6 +423,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   document.getElementById('me').addEventListener('click', () => openSheet('room'));
   // the badge count opens every badge and how to earn it
   document.getElementById('badges-pill').addEventListener('click', () => openSheet('badges'));
+  document.getElementById('streak-pill').addEventListener('click', () => openSheet('streak'));
   Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen

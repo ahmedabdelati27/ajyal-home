@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أيامي المتتالية · أجيال الصالحية</title>
+<link rel="stylesheet" href="clouds.css">
+<link rel="stylesheet" href="hub.css">
+<script src="clouds.js"></script>
+<script src="sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+.hero { --hero: url(img/room/streak-hero.jpg); background-position: center 60%; }
+:root { --accent-deep: #C2551C; }
+
+/* today's count, big and warm */
+.now { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; padding: 22px 28px; }
+.now .flame { width: 140px; height: 140px; animation: glow 2.6s ease-in-out infinite; }
+@keyframes glow { 50% { transform: scale(1.06) rotate(-2deg); } }
+.now .n { display: flex; align-items: baseline; gap: 10px; font-size: 28px; font-weight: 800; color: var(--accent-deep); }
+.now .n b { font-size: 84px; line-height: 1; }
+.now p { margin: 6px 0 0; font-size: 19px; font-weight: 700; color: var(--ink-soft); }
+.now .best { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; height: 36px; padding: 0 14px; border-radius: 999px; background: #FFF1DD; font-size: 16px; font-weight: 800; }
+
+/* the last seven days */
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; padding: 18px 20px; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.day small { font-size: 15px; font-weight: 800; color: var(--ink-soft); }
+.day .c { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #F5EDE2; }
+.day .c img { width: 46px; height: 46px; }
+.day.on .c { background: #FFE6C9; box-shadow: inset 0 0 0 3px #F7B347; }
+.day.off .c { background: #F2EEE8; }
+.day.off .c::after { content: ''; width: 18px; height: 4px; border-radius: 999px; background: #CFC3B4; }
+.day.today .c { outline: 4px solid #F4823F; outline-offset: 3px; }
+.day b { font-size: 15px; font-weight: 800; }
+
+/* the goals on a path; a goal the admin tied to a badge shows it */
+.goals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; position: relative; }
+.goal { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 10px; text-align: center; }
+.goal .dot { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: #F5EDE2; font-size: 26px; font-weight: 800; color: var(--ink-soft); }
+.goal.done .dot { background: linear-gradient(#FFC93C, #F4823F); color: #FFFFFF; box-shadow: 0 4px 0 #C2551C; }
+.goal.next .dot { background: #FFFFFF; color: var(--accent-deep); box-shadow: inset 0 0 0 4px #F4823F; }
+.goal b { font-size: 17px; font-weight: 800; }
+.goal small { font-size: 14px; font-weight: 700; color: var(--ink-soft); line-height: 1.4; }
+.goal .bdg { width: 54px; height: 54px; }
+
+.how { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 18px 22px; }
+.how p { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.7; color: var(--ink-soft); }
+.hear { background: #FFF1C9; color: #8A5A00; box-shadow: none; }
+.hear svg { width: 22px; height: 22px; }
+
+.narrow .now { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+.narrow .week { gap: 6px; padding: 14px 10px; } .narrow .day .c { width: 52px; height: 52px; } .narrow .day .c img { width: 36px; height: 36px; } .narrow .day small { font-size: 13px; }
+.narrow .goals { grid-template-columns: repeat(3, 1fr); }
+.narrow .how { grid-template-columns: 1fr; }
+@media (prefers-reduced-motion: reduce) { .now .flame { animation: none; } }
+</style>
+<link rel="stylesheet" href="dock.css">
+</head>
+<body>
+<div id="wrap"><div id="page">
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
+    <div class="stats"><span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/forest/I-10.png" alt="">35 د</span></div>
+  </div>
+  <div class="head">
+    <h1>أيامي المتتالية</h1>
+    <p>كل يوم تدخل فيه عالم أجيال يضيء شعلتك</p>
+  </div>
+</header>
+
+<main>
+  <div class="now card" id="now"></div>
+  <h2>آخر سبعة أيام</h2>
+  <div class="week card" id="week"></div>
+  <h2>أهدافك</h2>
+  <div class="goals" id="goals"></div>
+  <h2>كيف تُحسب أيامك؟</h2>
+  <div class="how card">
+    <p id="how-p">كل يوم تدخل فيه عالم أجيال يضيف يوماً إلى سلسلتك. إذا مرّ يوم كامل دون أن تدخل، تبدأ سلسلتك من جديد. لا بأس، يمكنك دائماً أن تبدأ مرة أخرى!</p>
+    <button class="btn hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button>
+  </div>
+</main>
+</div></div>
+
+<nav class="dock" aria-label="التنقل السريع">
+  <a href="index.html" aria-label="الخريطة"><img src="img/nav/map.png" alt=""><span>الخريطة</span></a>
+  <a href="index.html?open=sections" aria-label="كل الأقسام"><img src="img/nav/sections.png" alt=""><span>كل الأقسام</span></a>
+  <a href="index.html?open=room" aria-label="غرفتي"><img src="img/nav/room.png" alt=""><span>غرفتي</span></a>
+  <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="profile.js"></script>
+<script src="hub.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar, STREAK, BADGES } = Profile;
+  const days = (n) => (n === 1 ? 'يوم واحد' : n === 2 ? 'يومان' : n <= 10 ? `${ar(n)} أيام` : `${ar(n)} يوماً`);
+  const next = STREAK.goals.find((g) => g.d > STREAK.now);
+
+  $('now').innerHTML = `<img class="flame" src="img/hud/streak.png" alt="">
+    <div><span class="n"><b>${ar(STREAK.now)}</b>${STREAK.now === 1 ? 'يوم' : STREAK.now === 2 ? 'يومان متتاليان' : STREAK.now <= 10 ? 'أيام متتالية' : 'يوماً متتالياً'}</span>
+      <p>${STREAK.now ? `أحسنت! ادخل غداً لتصبح سلسلتك ${days(STREAK.now + 1)}.` : 'ابدأ اليوم، وأضئ أول يوم في سلسلتك!'}</p>
+      ${next ? '' : '<p><b>أكملت كل الأهداف! أنت بطل الأيام المتتالية.</b></p>'}
+      <span class="best">🏅 أطول سلسلة لك: ${days(STREAK.best)}</span></div>`;
+
+  // the last seven days: lit when the child came, the gap shows the day that was missed
+  $('week').innerHTML = STREAK.week.map(([name, d, on], i) => `<div class="day ${on ? 'on' : 'off'} ${i === STREAK.week.length - 1 ? 'today' : ''}">
+    <small>${i === STREAK.week.length - 1 ? 'اليوم' : name}</small><span class="c">${on ? '<img src="img/hud/streak.png" alt="">' : ''}</span><b>${ar(d)}</b>
+    <span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">${on ? 'دخلت' : 'لم تدخل'}</span></div>`).join('');
+
+  $('goals').innerHTML = STREAK.goals.map((g) => {
+    const done = STREAK.now >= g.d || (STREAK.best >= g.d && g.badge && BADGES.find((b) => b.id === g.badge)?.got);
+    const isNext = g === next, badge = g.badge && BADGES.find((b) => b.id === g.badge);
+    return `<div class="goal card ${done ? 'done' : isNext ? 'next' : ''}"><span class="dot">${ar(g.d)}</span><b>${days(g.d)}</b>
+      ${badge ? `<img class="bdg" src="img/badges/${badge.id}.png" alt=""><small>شارة «${badge.n}»${badge.got ? ' ✓' : ''}</small>` : ''}
+      <small>${done ? 'وصلت إليه' : isNext ? `باقي ${days(g.d - STREAK.now)}` : 'هدف قادم'}</small></div>`;
+  }).join('');
+
+  // read aloud for children who do not read yet
+  const synth = window.speechSynthesis; synth?.getVoices();
+  $('hear').addEventListener('click', () => {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return Hub.toast('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance($('how-p').textContent); u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  });
+  Hub.fit();
+  addEventListener('load', Hub.fit);
+})();
+</script>
+</body>
+</html>
