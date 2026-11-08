@@ -33,7 +33,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes float { 50% { translate: 0 -8px; } }
 .say { position: absolute; z-index: 3; left: 430px; top: 110px; max-width: 270px; margin: 0; background: var(--paper); border-radius: 26px; padding: 14px 20px 16px; font-weight: 800; font-size: 20px; line-height: 1.35; box-shadow: 0 5px 0 var(--violet); }
 .say::before { content: ''; position: absolute; left: -16px; bottom: 18px; border: 12px solid transparent; border-right-color: var(--paper); border-left: 0; }
-.head { position: absolute; z-index: 3; right: 80px; top: 130px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.head { position: absolute; z-index: 3; right: 80px; top: 130px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
 .head h1 { margin: 0; font-size: 78px; font-weight: 800; line-height: 1; color: var(--paper); text-shadow: 0 5px 0 var(--violet-deep), 3px 0 0 var(--violet-deep), -3px 0 0 var(--violet-deep), 0 -3px 0 var(--violet-deep), 3px 3px 0 var(--violet-deep), -3px 3px 0 var(--violet-deep), 3px -3px 0 var(--violet-deep), -3px -3px 0 var(--violet-deep); }
 .head p { margin: 0; font-size: 22px; font-weight: 800; background: rgba(255,255,255,.9); border-radius: 999px; padding: 4px 18px; }
 
@@ -76,7 +76,7 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
 .narrow .hero { height: 620px; }
 .narrow .isle { left: 10px; top: 60px; width: 320px; }
 .narrow .say { left: 330px; top: 110px; max-width: 350px; }
-.narrow .head { right: 32px; left: 32px; top: 390px; }
+.narrow .head { right: 32px; left: auto; max-width: calc(100% - 64px); top: 390px; }
 .narrow .head h1 { font-size: 64px; }
 .narrow main { padding: 0 32px 150px; }
 .narrow .makes { grid-template-columns: 1fr; }
