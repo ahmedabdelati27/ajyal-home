@@ -99,7 +99,7 @@
 <div class="done saved" id="saved" hidden>
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="saved-t">
     <img class="work" id="saved-img" alt="">
-    <h2 id="saved-t">رسمة رائعة يا يوسف!</h2>
+    <h2 id="saved-t">رسمة رائعة يا عمر!</h2>
     <p id="saved-p">حفظناها في «إبداعاتي»، وهي خاصة بك</p>
     <p class="note" id="saved-note">يمكنك إرسالها لينشرها فريق أجيال داخل المنصة بعد مراجعتها</p>
     <div class="btns" id="saved-btns">
@@ -204,7 +204,7 @@
     work = { id: work?.id || `draw-${Date.now()}`, kind: 'draw', name: 'رسمتي', img, state: 'private', at: Date.now() };
     if (!works.save(work)) return toast('لم نستطع الحفظ على هذا الجهاز');
     $('saved-img').src = img;
-    $('saved-t').textContent = 'رسمة رائعة يا يوسف!';
+    $('saved-t').textContent = 'رسمة رائعة يا عمر!';
     $('saved-p').textContent = 'حفظناها في «إبداعاتي»، وهي خاصة بك';
     $('saved-note').hidden = false; $('publish').hidden = false;
     $('saved').hidden = false; $('again').focus();

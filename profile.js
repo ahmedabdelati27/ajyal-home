@@ -7,7 +7,7 @@
 
   // the child may change the name and the picture only; the rest comes from the parent's account
   const KEY = 'ajyal.profile';
-  const BASE = { name: 'يوسف', avatar: 'A-03', age: 8, xp: 3240, level: 7, from: 2800, to: 4000, streak: 5 };
+  const BASE = { name: 'عمر', avatar: 'A-03', age: 8, xp: 3240, level: 7, from: 2800, to: 4000, streak: 5 };
   const read = () => { try { return { ...BASE, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { return { ...BASE }; } };
   const save = (v) => { try { const { name, avatar } = v; localStorage.setItem(KEY, JSON.stringify({ name, avatar })); return true; } catch { return false; } };
   const AVATARS = ['A-01', 'A-02', 'A-03', 'A-04', 'A-05', 'A-06', 'A-07', 'A-08'];
@@ -27,7 +27,7 @@
 
   // the general leaderboard: one list by total points, with child-friendly data only
   const LEADERS = [
-    ['لين', 'A-04', 5860, 'S-02'], ['عمر', 'A-01', 5420, 'S-06'], ['جود', 'A-06', 5105, 'S-01'], ['سلطان', 'A-05', 4790, 'S-05'],
+    ['لين', 'A-04', 5860, 'S-02'], ['يزن', 'A-01', 5420, 'S-06'], ['جود', 'A-06', 5105, 'S-01'], ['سلطان', 'A-05', 4790, 'S-05'],
     ['ريم', 'A-02', 4460, 'S-04'], ['فيصل', 'A-07', 4120, 'S-08'], ['هيا', 'A-08', 3905, 'S-01'], ['ناصر', 'A-05', 3720, 'S-06'],
     ['مريم', 'A-06', 3560, 'S-04'], ['خالد', 'A-01', 3410, 'S-02'], ['دانة', 'A-02', 3300, 'S-05']
   ].map(([name, avatar, xp, badge], i) => ({ rank: i + 1, name, avatar, xp, badge }));

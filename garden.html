@@ -117,7 +117,7 @@ main { position: relative; z-index: 2; margin: -40px 0 0; padding: 0 80px 150px;
     </div>
   </div>
   <img class="isle" src="img/garden.png" alt="نور في حديقة القيم">
-  <p class="say" id="say">أهلاً يا يوسف! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك</p>
+  <p class="say" id="say">أهلاً يا عمر! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك</p>
   <div class="head">
     <h1>حديقة القيم</h1>
     <p>ازرع القيم الجميلة مع نور</p>
@@ -176,7 +176,7 @@ main { position: relative; z-index: 2; margin: -40px 0 0; padding: 0 80px 150px;
       ${now ? `<img class="nour" src="img/garden/nour-point.png" alt="" style="left:calc(${now.v.plot[0]}% + ${now.v.plot[0] > 50 ? 95 : -95}px);top:calc(${now.v.plot[1]}% + 10px);${now.v.plot[0] > 50 ? '' : 'scale:-1 1;'}">` : ''}`;
     $('vlist').innerHTML = all.map(({ v, s }) => `<a class="vcard" href="value.html?v=${v.id}" style="--c:${v.color}"><img src="img/garden/v-${v.id}.jpg" alt=""><b>${v.name}</b><small>${s.complete ? '✓ أزهرت' : s.n ? `أكملت ${ar(s.n)} من ${ar(s.all)}` : 'لم تبدأ بعد'}</small></a>`).join('');
     if (fresh) { seen.set(fresh.v.id); setTimeout(() => toast(`أزهرت شجرة ${fresh.v.name} في حديقتك!`, 4500), 900); $('garden').scrollIntoView({ block: 'center' }); }
-    $('say').textContent = bloom ? `أهلاً يا يوسف! في حديقتك ${ar(bloom)} ${bloom === 1 ? 'شجرة مزهرة' : 'أشجار مزهرة'}، هيا نزرع المزيد` : 'أهلاً يا يوسف! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك';
+    $('say').textContent = bloom ? `أهلاً يا عمر! في حديقتك ${ar(bloom)} ${bloom === 1 ? 'شجرة مزهرة' : 'أشجار مزهرة'}، هيا نزرع المزيد` : 'أهلاً يا عمر! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك';
     fit();
   }
 

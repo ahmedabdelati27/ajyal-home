@@ -195,7 +195,7 @@ main { padding: 0 80px 150px; display: flex; flex-direction: column; gap: 30px; 
     }
     // the gallery: open entries take votes, an ended competition shows the winner first
     const list = open ? c.entries : [...c.entries].sort((a, b) => b.votes - a.votes);
-    const mineLive = open && m.entry?.state === 'live' ? [{ id: 'mine', name: 'يوسف', votes: 0, me: true, src: m.entry.img }] : [];
+    const mineLive = open && m.entry?.state === 'live' ? [{ id: 'mine', name: 'عمر', votes: 0, me: true, src: m.entry.img }] : [];
     $('ent-n').textContent = open ? (m.vote ? 'صوّتّ لمشاركة، ويمكنك تغيير صوتك قبل انتهاء المسابقة' : 'لك صوت واحد، أعطه للمشاركة التي تعجبك') + (showVotes ? '' : ' · تظهر الأصوات عند انتهاء المسابقة') : `${ar(c.entries.length)} مشاركات`;
     $('entries').innerHTML = [...mineLive, ...list].map((e) => {
       const votes = e.votes + (m.vote === e.id ? 1 : 0), isMe = e.me || e.id === c.me;

@@ -161,7 +161,7 @@
     $('count').textContent = 'البحر نظيف!';
     tip('شكراً لك! الكائنات البحرية سعيدة');
     play.innerHTML = LIFE.map((l) => `<span class="thing life" style="top:${l.y}%;--t:${l.t}s;--d:${l.d}s"><img src="img/games/${l.img}.png" alt=""></span>`).join('');
-    result({ id: 'sea', title: 'أحسنت يا يوسف!', text: 'جمعت المخلفات ورتّبتها، وصار البحر نظيفاً وجميلاً', xp: XP, next: 'نظّف الحديقة' });
+    result({ id: 'sea', title: 'أحسنت يا عمر!', text: 'جمعت المخلفات ورتّبتها، وصار البحر نظيفاً وجميلاً', xp: XP, next: 'نظّف الحديقة' });
     game.clear();
   }
   over.addEventListener('click', (e) => {

@@ -3,7 +3,7 @@
 (() => {
   const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
   // the child's profile: the AI uses the name, the age and the gender, nothing more
-  const CHILD = { name: 'يوسف', age: 8, boy: true };
+  const CHILD = { name: 'عمر', age: 8, boy: true };
 
   // what is left of each feature until the subscription renews (the parent may also switch a feature off)
   const KINDS = {
@@ -33,15 +33,15 @@
   ];
   // the prototype holds one made result of each kind
   const MADE = {
-    story: { topic: 'space', title: 'يوسف ورحلة إلى القمر', cover: 's-00', pages: [
-      'في ليلةٍ صافية، نظر يوسف من نافذته إلى القمر الكبير المضيء، وتمنّى أن يزوره.',
+    story: { topic: 'space', title: 'عمر ورحلة إلى القمر', cover: 's-00', pages: [
+      'في ليلةٍ صافية، نظر عمر من نافذته إلى القمر الكبير المضيء، وتمنّى أن يزوره.',
       'وفجأة، هبط صاروخٌ صغيرٌ ملوّن في حديقة البيت، ولمعت أضواؤه بين الأشجار!',
-      'ركب يوسف الصاروخ، ولوّح بيده، وانطلق عالياً عالياً بين النجوم والكواكب.',
-      'على القمر، قفز يوسف قفزاتٍ طويلةً خفيفة، وضحك كثيراً لأنه صار خفيفاً كالريشة.',
-      'جلس يوسف ينظر إلى الأرض من بعيد، زرقاءَ جميلة، فتذكّر أسرته واشتاق إليها.',
-      'عاد يوسف إلى بيته، وحكى لأمه عن رحلته، ثم نام سعيداً يحلم بالنجوم.'
+      'ركب عمر الصاروخ، ولوّح بيده، وانطلق عالياً عالياً بين النجوم والكواكب.',
+      'على القمر، قفز عمر قفزاتٍ طويلةً خفيفة، وضحك كثيراً لأنه صار خفيفاً كالريشة.',
+      'جلس عمر ينظر إلى الأرض من بعيد، زرقاءَ جميلة، فتذكّر أسرته واشتاق إليها.',
+      'عاد عمر إلى بيته، وحكى لأمه عن رحلته، ثم نام سعيداً يحلم بالنجوم.'
     ] },
-    video: { topic: 'sea', title: 'يوسف تحت البحر', src: 'img/workshop/sea.mp4', poster: 'sea-poster' }
+    video: { topic: 'sea', title: 'عمر تحت البحر', src: 'img/workshop/sea.mp4', poster: 'sea-poster' }
   };
 
   // stories from the beach the admin marked as personalisable; only the characters already in the story can be changed

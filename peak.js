@@ -17,14 +17,14 @@
     { id: 'home', kind: 'contest', name: 'أفضل رسمة: بيتي الجميل', cover: 'c-draw', about: 'ارسم بيتك أو البيت الذي تحلم به، وصوّت لأجمل رسمة',
       start: now - 4 * DAY, due: now + 3 * DAY, end: now + 5 * DAY, people: 46, votes: 'end', accepts: 'رسمة: صورة JPG أو PNG، أو رسمة من «إبداعاتي»', mine: 'draw',
       rules: ['رسمة واحدة لكل طفل', 'من عمل الطفل نفسه', 'تراجع إدارة أجيال المشاركة قبل أن تظهر للتصويت'],
-      entries: [kid('سارة', 'entry-01', 24), kid('عمر', 'entry-02', 17), kid('ليان', 'entry-03', 21), kid('حمد', 'entry-04', 30),
+      entries: [kid('سارة', 'entry-01', 24), kid('زياد', 'entry-02', 17), kid('ليان', 'entry-03', 21), kid('حمد', 'entry-04', 30),
         kid('نورة', 'entry-05', 12), kid('فيصل', 'entry-06', 9), kid('جود', 'entry-07', 15), kid('راشد', 'entry-08', 19)] },
     { id: 'letters', kind: 'quiz', name: 'من يعرف الحروف؟', cover: 'c-letters', about: 'أسئلة سريعة عن الحروف العربية وأصواتها',
       start: now - 12 * DAY, end: now - 2 * DAY, people: 203, seconds: 20, done: { score: 86, right: 4, of: 5 }, questions: [] },
     { id: 'desert', kind: 'contest', name: 'أفضل قصة: مغامرة في الصحراء', cover: 'c-story', about: 'اكتب قصة قصيرة عن مغامرة في الصحراء',
       start: now - 20 * DAY, due: now - 4 * DAY, end: now - 1 * DAY, people: 31, votes: 'live', accepts: 'قصة من تأليفك: ملف PDF أو صور صفحاتها', mine: 'story',
       rules: ['قصة واحدة لكل طفل'],
-      entries: [kid('مريم', 'entry-03', 41, 'جمّولي في الصحراء'), kid('يوسف', 'entry-07', 12, 'بيت بين الكثبان'), kid('سلطان', 'entry-04', 27, 'القطة وقوس قزح'), kid('هيا', 'entry-08', 19, 'رحلة إلى الواحة')], me: 'entry-07' }
+      entries: [kid('مريم', 'entry-03', 41, 'جمّولي في الصحراء'), kid('عمر', 'entry-07', 12, 'بيت بين الكثبان'), kid('سلطان', 'entry-04', 27, 'القطة وقوس قزح'), kid('هيا', 'entry-08', 19, 'رحلة إلى الواحة')], me: 'entry-07' }
   ];
   const visible = (c) => c.active !== false && now >= c.start;
   const isOpen = (c) => visible(c) && now < c.end;

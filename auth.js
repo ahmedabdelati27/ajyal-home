@@ -9,9 +9,9 @@ const Auth = (() => {
   // the account the prototype knows before anyone signs up here, with three children, one of them playing on another device
   const DEMO = { type: 'parent', name: 'أحمد العتيبي', email: 'ahmed@example.com', phone: '0551234567' };
   const DEMO_KIDS = [
-    { id: 'k1', name: 'يوسف', birth: '2018-03-14', gender: 'boy', avatar: 'A-03' },
+    { id: 'k1', name: 'عمر', birth: '2018-03-14', gender: 'boy', avatar: 'A-03' },
     { id: 'k2', name: 'مريم', birth: '2020-09-02', gender: 'girl', avatar: 'A-06' },
-    { id: 'k3', name: 'عمر', birth: '2014-11-20', gender: 'boy', avatar: 'A-05', busy: true }
+    { id: 'k3', name: 'سلمان', birth: '2014-11-20', gender: 'boy', avatar: 'A-05', busy: true }
   ];
   // the package in the prototype allows four children
   const LIMIT = 4;

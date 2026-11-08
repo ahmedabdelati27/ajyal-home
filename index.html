@@ -215,7 +215,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   </div>
 
   <div class="hud top">
-    <button type="button" class="pill me" id="me" aria-label="غرفتي: يوسف، المستوى 7"><img src="img/avatar.png" alt=""><span class="name">يوسف</span><span class="lvl"><img src="img/I-08.png" alt="">مستوى 7</span></button>
+    <button type="button" class="pill me" id="me" aria-label="غرفتي: عمر، المستوى 7"><img src="img/avatar.png" alt=""><span class="name">عمر</span><span class="lvl"><img src="img/I-08.png" alt="">مستوى 7</span></button>
     <div class="stats">
       <button type="button" class="pill search" aria-label="ابحث"><img src="img/I-05.png" alt=""></button>
       <button type="button" class="pill" id="points-pill" title="النقاط" aria-label="نقاطي، 3,240 نقطة"><img src="img/hud/points.png" alt="">3,240</button>
@@ -561,7 +561,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     garden: 'وهذه حديقتي! هنا نزرع القيم معاً، مثل الصدق والتعاون.'
   };
   const STEPS = [
-    { t: `أهلاً يا ${kid.name || 'يوسف'}! أنا نور`, p: 'أنا صديقتك في عالم أجيال. تعال أعرّفك على الجزر، جزيرة بعد جزيرة!' },
+    { t: `أهلاً يا ${kid.name || 'عمر'}! أنا نور`, p: 'أنا صديقتك في عالم أجيال. تعال أعرّفك على الجزر، جزيرة بعد جزيرة!' },
     ...['ai', 'forest', 'beach', 'quran', 'games', 'colors', 'peak', 'letters', 'garden'].map((id) => ({ id, t: ISLANDS.find((x) => x.id === id).title, p: SAY[id] })),
     { el: '.dock', t: 'الشريط السفلي', p: 'من هنا ترجع إلى الخريطة، وتفتح كل الأقسام، وغرفتك، والمتصدرين.' },
     { el: '.mission', t: 'رحلتك معي', p: 'اضغط هنا لتكمل معي رحلة القيمة.' },
