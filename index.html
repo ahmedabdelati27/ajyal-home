@@ -128,6 +128,17 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .hint { left: 50%; top: calc(var(--edge-y) + 64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: rgba(58,35,24,.82); color: var(--paper); border-radius: 999px; padding: 8px 18px; font-size: 15px; font-weight: 700; white-space: nowrap; transition: opacity .4s; pointer-events: none; }
 .hint.gone { opacity: 0; }
 
+/* the panel over the map for «كل الأقسام», «غرفتي» and «المتصدرون»; the bar stays above it */
+.dock { z-index: 7; }
+.sheet { inset: 0; z-index: 6; display: flex; justify-content: center; padding: calc(var(--edge-y) + env(safe-area-inset-top, 0px)) 24px calc(104px + env(safe-area-inset-bottom, 0px)); background: rgba(31,58,72,.38); backdrop-filter: blur(3px); }
+.sheet[hidden] { display: none; }
+.sheet-card { position: relative; width: min(1200px, 100%); height: 100%; border: 6px solid var(--paper); border-radius: 36px; overflow: hidden; background: var(--cream); box-shadow: 0 12px 0 rgba(31,58,72,.25), 0 30px 60px rgba(0,0,0,.25); animation: sheet-in .3s cubic-bezier(.2,.9,.3,1.2); }
+.sheet-card iframe { display: block; width: 100%; height: 100%; border: 0; }
+.sheet-x { position: absolute; z-index: 2; top: 14px; left: 14px; width: 54px; height: 54px; border: 0; border-radius: 50%; background: var(--paper); box-shadow: 0 4px 0 rgba(0,0,0,.15); display: grid; place-items: center; cursor: pointer; }
+.sheet-x svg { width: 24px; height: 24px; }
+@keyframes sheet-in { from { transform: translateY(40px) scale(.97); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .sheet-card { animation: none; } .sheet { backdrop-filter: none; } }
+
 /* region page stand-in */
 .region { position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)); background: rgba(31,58,72,.45); }
 .card { isolation: isolate; width: min(440px, 100%); background: var(--cream); border: 6px solid var(--paper); border-radius: 36px; padding: 18px 24px 26px; box-shadow: 0 10px 0 rgba(31,111,209,.25); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
@@ -144,6 +155,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   .zbtn { width: 50px; height: 50px; }
   :root { --edge-x: 14px; }
   .mission { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  .sheet { padding: calc(10px + env(safe-area-inset-top, 0px)) 8px calc(92px + env(safe-area-inset-bottom, 0px)); }
+  .sheet-card { border-width: 4px; border-radius: 26px; } .sheet-x { top: 10px; left: 10px; width: 46px; height: 46px; }
   .hint { white-space: normal; width: max-content; max-width: calc(100% - 32px); text-align: center; border-radius: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -189,11 +202,19 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     <img class="nour" src="img/nour.webp" alt="">
   </div>
 
+  <!-- the bottom bar's pages open in a panel over the map; the map stays behind and the bar stays on top -->
+  <div class="hud sheet" id="sheet" hidden role="dialog" aria-modal="true">
+    <div class="sheet-card">
+      <button type="button" class="sheet-x" id="sheet-x" aria-label="أغلق وارجع إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="#3A2318" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <iframe id="sheet-f" title=""></iframe>
+    </div>
+  </div>
+
   <nav class="hud dock" aria-label="التنقل السريع">
-    <a href="index.html" aria-current="page" aria-label="الخريطة"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
-    <a href="sections.html" aria-label="كل الأقسام"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
-    <a href="room.html" aria-label="غرفتي"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
-    <a href="leaders.html" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+    <a href="index.html" aria-current="page" aria-label="الخريطة" data-sheet=""><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
+    <a href="index.html?open=sections" aria-label="كل الأقسام" data-sheet="sections"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+    <a href="index.html?open=room" aria-label="غرفتي" data-sheet="room"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+    <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12" data-sheet="leaders"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
   </nav>
 
   <div class="hud hint" id="hint">اسحب الخريطة، وقرّب بالعجلة أو بإصبعين أو بزرار +، واضغط على أي جزيرة</div>
@@ -298,8 +319,49 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     setTimeout(() => openRegion(i), reduce.matches ? 0 : 380);
   }
   addEventListener('pageshow', () => { flying = false; });
+  // ---- the bottom bar's pages open in a panel over the map (?open=room&tab=works&w=… opens one straight away)
+  const SHEETS = { sections: ['sections.html', 'كل الأقسام'], room: ['room.html', 'غرفتي'], leaders: ['leaders.html', 'المتصدرون'] };
+  const sheet = document.getElementById('sheet'), frame = document.getElementById('sheet-f'), dockLinks = [...document.querySelectorAll('.dock a')];
+  const lit = (id) => dockLinks.forEach((a) => (a.dataset.sheet === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+  // while the panel is open the map behind it cannot be reached; the bar stays usable
+  const behind = [...stage.children].filter((el) => el !== sheet && !el.classList.contains('dock'));
+  const still = (on) => behind.forEach((el) => { el.inert = on; });
+  function openSheet(id, q = {}, push = true) {
+    if (!SHEETS[id]) return;
+    const [page, title] = SHEETS[id];
+    // replace, so the panel's page never adds a step to «back»
+    frame.contentWindow.location.replace(`${page}?embed=1${q.w ? `&w=${encodeURIComponent(q.w)}` : ''}${q.tab ? `&tab=${q.tab}` : ''}`);
+    frame.title = title; sheet.setAttribute('aria-label', title);
+    sheet.hidden = false; lit(id); still(true); hideHint();
+    if (push) history.pushState({ sheet: id }, '', `?open=${id}`);
+    Sfx.play('open');
+    document.getElementById('sheet-x').focus({ preventScroll: true });
+  }
+  function closeSheet(fromHistory) {
+    if (sheet.hidden) return;
+    sheet.hidden = true; frame.contentWindow.location.replace('about:blank'); lit(''); still(false);
+    if (!fromHistory) { if (history.state?.sheet) history.back(); else history.replaceState(null, '', 'index.html'); }
+    dockLinks[0].focus({ preventScroll: true });
+  }
+  dockLinks.forEach((a) => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (a.dataset.sheet) { if (history.state?.sheet) history.replaceState({ sheet: a.dataset.sheet }, '', `?open=${a.dataset.sheet}`); openSheet(a.dataset.sheet, {}, !history.state?.sheet); }
+    else closeSheet();
+  }));
+  document.getElementById('sheet-x').addEventListener('click', () => closeSheet());
+  sheet.addEventListener('click', (e) => { if (e.target === sheet) closeSheet(); });
+  addEventListener('popstate', (e) => { if (e.state?.sheet) openSheet(e.state.sheet, {}, false); else closeSheet(true); });
+  // a link inside the panel leaves the map through the clouds, like an island does
+  addEventListener('message', (e) => {
+    if (e.origin !== location.origin) return;
+    if (e.data?.ajyal === 'close') return closeSheet();
+    if (e.data?.ajyal !== 'go') return;
+    const u = new URL(e.data.href);
+    if (u.pathname.endsWith('/index.html') && u.searchParams.get('open')) return openSheet(u.searchParams.get('open'), { tab: u.searchParams.get('tab'), w: u.searchParams.get('w') });
+    Sfx.play('open'); Clouds.go(e.data.href);
+  });
   // the child's own card opens «غرفتي»
-  document.getElementById('me').addEventListener('click', () => { Sfx.play('open'); Clouds.go('room.html'); });
+  document.getElementById('me').addEventListener('click', () => openSheet('room'));
   Clouds.warm();
   const region = document.getElementById('region');
   // regions that already have their own screen
@@ -340,6 +402,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   document.getElementById('zall').addEventListener('click', () => whole(true));
   addEventListener('keydown', (e) => {
     if (!region.hidden) { if (e.key === 'Escape') closeRegion(); return; }
+    if (!sheet.hidden) { if (e.key === 'Escape') closeSheet(); return; }
     const step = 80, m = { ArrowLeft: [step, 0], ArrowRight: [-step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] }[e.key];
     if (m) { e.preventDefault(); apply({ ...cam, x: cam.x + m[0], y: cam.y + m[1] }, true); }
     if (e.key === '+' || e.key === '=') zoomAt(1.45, ...centre(), true);
@@ -348,7 +411,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 
   // wheel zoom around the pointer
   stage.addEventListener('wheel', (e) => {
-    if (!region.hidden) return;
+    if (!region.hidden || !sheet.hidden) return;
     e.preventDefault(); hideHint();
     const r = stage.getBoundingClientRect();
     zoomAt(Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top, false);
@@ -394,6 +457,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 
   addEventListener('resize', () => apply(cam, false));
   whole(false);
+  // another page's bar asked for a panel: ?open=room&tab=works
+  const asked = new URLSearchParams(location.search);
+  if (SHEETS[asked.get('open')]) { history.replaceState({ sheet: asked.get('open') }, '', location.search); openSheet(asked.get('open'), { tab: asked.get('tab'), w: asked.get('w') }, false); }
 })();
 </script>
 </body>

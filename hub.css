@@ -46,6 +46,14 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
 .rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; text-shadow: none; }
 @media (max-width: 760px) { .dock a span:not(.rank) { display: none; } .dock a { padding: 0 14px; } }
 
+/* inside the panel over the map: the map's own bar and dock stay, so the page drops its own */
+.embed .dock, .embed .bar, html.embed::before, html.embed::after { display: none !important; }
+.embed .hero { height: 330px; }
+.embed .head { top: 80px; }
+.embed main { padding-bottom: 60px; }
+.embed .narrow .hero { height: 440px; }
+.embed .narrow .head { top: 250px; }
+
 /* phones: the page is drawn 720 wide */
 .narrow .hero { height: 520px; }
 .narrow .head { right: 32px; left: 32px; top: 300px; }

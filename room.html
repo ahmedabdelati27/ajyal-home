@@ -95,6 +95,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
 
 .narrow .me { left: 32px; right: 32px; top: 90px; width: auto; }
 .narrow .head { top: 330px; }
+.embed .me { top: 40px; } .embed .narrow .me { top: 32px; } .embed .narrow .head { top: 270px; }
 .narrow .seg button { padding: 0 16px; font-size: 17px; }
 .narrow .nums { grid-template-columns: 1fr 1fr; } .narrow .nums .num:first-child { grid-column: 1 / -1; }
 .narrow .badges { grid-template-columns: 1fr 1fr; }
@@ -148,9 +149,9 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
 
 <nav class="dock" aria-label="التنقل السريع">
   <a href="index.html" aria-label="الخريطة"><img src="img/I-01.png" alt=""><span>الخريطة</span></a>
-  <a href="sections.html" aria-label="كل الأقسام"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
-  <a href="room.html" aria-current="page" aria-label="غرفتي"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
-  <a href="leaders.html" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+  <a href="index.html?open=sections" aria-label="كل الأقسام"><img src="img/I-02.png" alt=""><span>كل الأقسام</span></a>
+  <a href="index.html?open=room" aria-current="page" aria-label="غرفتي"><img src="img/I-03.png" alt=""><span>غرفتي</span></a>
+  <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/I-04.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
 </nav>
 <div class="toast" id="toast" role="status"></div>
 
@@ -311,7 +312,9 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   function tab(v, focus) {
     ['me', 'progress', 'works'].forEach((x) => { $(`t-${x}`).setAttribute('aria-selected', String(x === v)); $(`t-${x}`).tabIndex = x === v ? 0 : -1; $(`p-${x}`).hidden = x !== v; });
     if (focus) $(`t-${v}`).focus();
-    history.replaceState(null, '', `#${v}`); Hub.fit();
+    // inside the map's panel the hash stays out of the address, or the browser would scroll the map to it
+    if (!Hub.embed) history.replaceState(null, '', `#${v}`);
+    Hub.fit();
   }
   $('tabs').addEventListener('click', (e) => { const b = e.target.closest('[role=tab]'); if (b) tab(b.dataset.v); });
   $('tabs').addEventListener('keydown', (e) => {
@@ -322,7 +325,8 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   });
 
   card(); mine(); progress(); works();
-  const fromHash = () => tab(['me', 'progress', 'works'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'me');
+  // the tab comes from the hash, or from ?tab= inside the map's panel (a hash there would scroll the map behind it)
+  const fromHash = () => { const t = location.hash.slice(1) || new URLSearchParams(location.search).get('tab'); tab(['me', 'progress', 'works'].includes(t) ? t : 'me'); };
   fromHash(); addEventListener('hashchange', fromHash);
   const wanted = new URLSearchParams(location.search).get('w');
   if (wanted) { tab('works'); detail(wanted); }
