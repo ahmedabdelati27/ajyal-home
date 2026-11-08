@@ -48,6 +48,9 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
 
 /* inside the panel over the map: the map's own bar and dock stay, so the page drops its own */
 .embed .dock, .embed .bar, html.embed::before, html.embed::after { display: none !important; }
+/* the panel scrolls without a bar on its edge */
+html.embed { scrollbar-width: none; }
+html.embed::-webkit-scrollbar { display: none; }
 .embed .hero { height: 330px; }
 .embed .head { top: 80px; }
 .embed main { padding-bottom: 60px; }
