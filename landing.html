@@ -185,11 +185,26 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .schools .txt p { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
 .schools img { width: 100%; height: 100%; object-fit: cover; min-height: 100%; }
 
-/* packages: what changes between them, prices come with the account */
-.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 980px; margin: 0 auto 32px; }
-.plans div { padding: 22px; border-radius: 24px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); text-align: center; }
-.plans b { display: block; font-size: 19px; font-weight: 800; }
-.plans small { display: block; margin-top: 4px; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+/* packages: one subscription with everything in it; the kinds of package, what each one shows, and what never changes.
+   Names, prices and limits are the admin's, so prices are shown inside the account */
+.plans-sec { position: relative; background: linear-gradient(var(--page), rgba(255,247,236,0) 140px, rgba(255,247,236,0) calc(100% - 160px), var(--page)), url(img/landing/plans-sky.jpg) center 30% / cover #FBE3D2; }
+.plan-note { margin: -28px 0 34px; text-align: center; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.plan-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 0 0 22px; }
+.plan { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 0 22px 22px; border-radius: 30px; background: rgba(255,255,255,.95); box-shadow: 0 6px 0 rgba(58,35,24,.08), 0 18px 40px rgba(120,80,60,.12); }
+.plan .ball { display: grid; place-items: center; width: 64px; height: 64px; margin: -24px 0 4px; border: 4px solid var(--paper); border-radius: 50%; background: var(--c); box-shadow: 0 5px 0 rgba(58,35,24,.12); }
+.plan .ball svg { width: 34px; height: 34px; }
+.plan h3 { margin: 0; font-size: 23px; font-weight: 800; }
+.plan p { margin: 0; flex: 1; font-size: 16px; font-weight: 600; color: var(--ink-soft); }
+.plan small { display: block; padding-top: 10px; border-top: 2px dashed #F0E4D3; font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.plan-sheet { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 28px; border-radius: 32px; background: rgba(255,255,255,.93); backdrop-filter: blur(6px); box-shadow: 0 6px 0 rgba(58,35,24,.08); }
+.plan-sheet h3 { margin: 0 0 12px; font-size: 21px; font-weight: 800; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.chips li { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px 0 8px; border-radius: 999px; background: var(--page); font-size: 15px; font-weight: 800; }
+.chips li img { width: 26px; height: 26px; }
+.chips.plain li { padding: 0 14px; }
+.keep { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 22px 0 28px; padding: 0; list-style: none; }
+.keep li { display: flex; gap: 12px; align-items: flex-start; padding: 18px; border-radius: 24px; background: rgba(255,255,255,.93); box-shadow: 0 4px 0 rgba(58,35,24,.08); font-size: 16px; font-weight: 700; line-height: 1.5; }
+.keep .ic { flex-shrink: 0; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: #E0F3D6; color: var(--good, #2D7A26); }
 .center { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
 
 /* questions */
@@ -284,7 +299,12 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .schools .txt { padding: 28px 20px; align-items: stretch; }
   .schools .kicker { align-self: flex-start; }
   .schools img { order: -1; aspect-ratio: 16 / 9; }
-  .plans { grid-template-columns: 1fr; }
+  .plan-row { grid-template-columns: 1fr 1fr; gap: 26px 12px; }
+  .plan { padding: 0 16px 18px; }
+  .plan h3 { font-size: 19px; }
+  .plan-sheet { grid-template-columns: 1fr; padding: 20px; }
+  .keep { grid-template-columns: 1fr; }
+  .plans-sec { background-image: linear-gradient(var(--page), rgba(255,247,236,0) 100px, rgba(255,247,236,0) calc(100% - 120px), var(--page)), url(img/landing/plans-sky-m.jpg); background-size: auto 100%; }
   .center .btn { width: 100%; }
   .go-card { grid-template-columns: 1fr; justify-items: center; gap: 12px; padding: 32px 20px; text-align: center; }
   .go-card img { width: 120px; }
@@ -485,19 +505,37 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     </div>
   </section>
 
-  <section class="sec tint" id="plans" aria-labelledby="plans-t">
+  <section class="sec plans-sec" id="plans" aria-labelledby="plans-t">
     <div class="wrap">
       <div class="sec-head">
         <span class="kicker">الباقات</span>
-        <h2 id="plans-t">باقات تناسب أسرتك أو مؤسستك</h2>
-        <p>يمكنك إنشاء حسابك من غير اشتراط باقة مدفوعة، وتجد الباقات وأسعارها داخل حسابك.</p>
+        <h2 id="plans-t">باقة واحدة، فيها مزاياها وحدودها</h2>
+        <p>تختار باقة واحدة تناسب أسرتك أو مؤسستك، فيها المزايا وحدودها. لا محفظة ولا رصيد، ولا دفع لكل ميزة على حدة.</p>
       </div>
-      <div class="plans">
-        <div><b>عدد الأطفال</b><small>كم ملف طفل يمكنك إضافته</small></div>
-        <div><b>ورشة السحر وتحسين الرسم</b><small>عدد القصص والفيديوهات والرسومات المحسّنة</small></div>
-        <div><b>المزايا المتاحة</b><small>مثل المسابقات وطباعة القصص المخصصة</small></div>
+      <p class="plan-note">أمثلة على الباقات، وتحدّد إدارة المنصة أسماءها ومزاياها.</p>
+      <div class="plan-row">
+        <div class="plan" style="--c:#7FD3B4"><span class="ball"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c-4-3-7-6.5-7-10a7 7 0 0 1 14 0c0 3.5-3 7-7 10z"/><path d="M12 7v4l2 2"/></svg></span><h3>المجانية</h3><p>لتبدأ من غير اشتراك مدفوع، بالمزايا المجانية المتاحة لنوع حسابك.</p><small>إذا كانت متاحة لنوع حسابك</small></div>
+        <div class="plan" style="--c:#F7A57A"><span class="ball"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/></svg></span><h3>الفردية</h3><p>لحساب ولي الأمر أو الفرد، بعدد الأطفال الذي تحدده الباقة.</p><small>تجد السعر والمدة وعدد الأطفال داخل حسابك</small></div>
+        <div class="plan" style="--c:#B7A3EE"><span class="ball"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9.5" r="2.5"/><path d="M2.5 20c.8-3.5 3-5.5 5.5-5.5s4.7 2 5.5 5.5M13.5 15.2c.9-.5 1.9-.7 3-.7 2.2 0 4 1.8 4.7 5.5"/></svg></span><h3>العائلية</h3><p>للأسرة، ويشمل اشتراكها أطفال الحساب حسب العدد المسموح في الباقة.</p><small>تجد السعر والمدة وعدد الأطفال داخل حسابك</small></div>
+        <div class="plan" style="--c:#F2C94C"><span class="ball"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/></svg></span><h3>المؤسسات التعليمية</h3><p>للمدارس والحضانات، مع إضافة الأطفال دفعة واحدة بملف Excel.</p><small>تجد السعر والمدة وعدد الأطفال داخل حسابك</small></div>
       </div>
-      <div class="center"><a class="btn main" href="signup.html">أنشئ حسابك</a></div>
+      <div class="plan-sheet">
+        <div>
+          <h3>ماذا تعرض لك كل باقة؟</h3>
+          <ul class="chips plain"><li>اسم الباقة</li><li>السعر</li><li>مدة الاشتراك</li><li>عدد الأطفال</li><li>المزايا المتاحة</li><li>حدود الاستخدام</li></ul>
+          <p class="hint" style="margin:12px 0 0;font-size:15px;font-weight:600;color:var(--ink-soft)">ومنها حدود ورشة السحر وتحسين الرسم بالذكاء الاصطناعي. وتفتح تفاصيل أي باقة قبل أن تشترك.</p>
+        </div>
+        <div>
+          <h3>مزايا تختلف من باقة إلى أخرى</h3>
+          <ul class="chips"><li><img src="img/forest.png" alt="">المحتوى التعليمي</li><li><img src="img/beach.png" alt="">القصص</li><li><img src="img/letters.png" alt="">الحروف والأرقام</li><li><img src="img/quran.png" alt="">القرآن</li><li><img src="img/games.png" alt="">الألعاب</li><li><img src="img/colors.png" alt="">الرسم والتلوين</li><li><img src="img/garden.png" alt="">حديقة القيم</li><li><img src="img/peak.png" alt="">المسابقات</li><li><img src="img/ai.png" alt="">ورشة السحر</li><li><img src="img/hud/badge.png" alt="">طباعة القصص المخصصة</li></ul>
+        </div>
+      </div>
+      <ul class="keep">
+        <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span>إذا انتهى اشتراكك، لا تُحذف بيانات أطفالك ولا تقدّمهم ولا إبداعاتهم.</li>
+        <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6h-2"/><path d="M6 14h12v7H6z"/></svg></span>طباعة القصص المخصصة ورقياً مشمولة في الباقة التي تتضمنها، من غير رسوم إضافية.</li>
+        <li><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4"/></svg></span>يمكنك تجديد اشتراكك أو الانتقال إلى باقة أخرى من الباقات المتاحة لك.</li>
+      </ul>
+      <div class="center"><a class="btn main" href="signup.html">أنشئ حسابك</a><a class="btn soft" href="signup.html?type=school">حساب لمدرسة أو حضانة</a></div>
     </div>
   </section>
 
