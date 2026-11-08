@@ -1,5 +1,5 @@
 // the wooden shelves of the forest and the beach: one shelf per admin category, the child's age group first
-// shelf: { id, title, icon (svg), tint, count, items }
+// shelf: { id, title, count, items }
 // item: { title, href, img, kinds: [{ src, c, name }], meta, clock, tag: 'new' | 'done', done (the word for done), p: '40%', label }
 const Shelf = (() => {
   const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
@@ -11,12 +11,12 @@ const Shelf = (() => {
         <span class="kinds">${it.kinds.map((k) => `<span class="kind" style="--k:${k.c}" title="${k.name}"><img src="${k.src}" alt=""></span>`).join('')}</span>
         ${it.p ? `<span class="prog"><i style="width:${it.p}"></i></span>` : ''}
         ${it.meta ? `<span class="meta">${it.clock ? CLOCK : ''}${it.meta}</span>` : ''}</span>
-      <span class="ledge"><b>${it.title}</b></span></a>`;
+      <span class="ledge"></span><span class="name">${it.title}</span></a>`;
   const all = (sh) => `<a class="item all" href="${sh.all || '#'}" aria-label="عرض كل ${sh.title}، ${ar(sh.count)}">
       <span class="pile">${sh.items.slice(0, 3).map((it, n) => `<img src="${it.img}" alt="" style="--r:${[-9, 8, 0][n]}deg">`).join('')}<span class="n">${ar(sh.count)}</span></span>
-      <span class="ledge"><b>عرض الكل</b></span></a>`;
+      <span class="ledge"></span><span class="name">عرض الكل</span></a>`;
   const shelf = (sh) => `<section class="shelf" data-id="${sh.id}" aria-label="${sh.title}">
-      <div class="shelf-top"><h2 class="sign"><span class="ic" style="background:${sh.tint}">${sh.icon}</span>${sh.title}</h2>
+      <div class="shelf-top"><h2 class="sign">${sh.title}</h2>
         <div class="moves"><button type="button" data-go="1" aria-label="السابق">${svg('<path d="M9 6l6 6-6 6"/>')}</button><button type="button" data-go="-1" aria-label="التالي">${svg('<path d="M15 6l-6 6 6 6"/>')}</button></div></div>
       <div class="track">${sh.items.map(item).join('')}${all(sh)}</div></section>`;
 

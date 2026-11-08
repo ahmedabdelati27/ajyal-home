@@ -142,21 +142,20 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
   };
   const c = (title, kind, t, meta, more = {}) => ({ title, img: `img/forest/t${t}.jpg`, kinds: [K[kind]], meta, clock: kind === 'video' || kind === 'audio', ...more,
     label: [title, K[kind].name, meta.replace(/ د$/, ' دقائق'), more.tag === 'done' ? 'مكتمل' : more.tag === 'new' ? 'جديد' : more.p ? 'جاري' : ''].filter(Boolean).join('، ') });
-  const leaf = (fill) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z M5 19l8-8" fill="${fill}" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg>`;
   Shelf.render(document.getElementById('shelves'), [
-    { id: 'animals', title: 'عالم الحيوان', icon: leaf('#5CB85A'), tint: '#E2F4D6', count: 18, items: [
+    { id: 'animals', title: 'عالم الحيوان', count: 18, items: [
       c('كيف تطير الطيور؟', 'video', '01', '8 د', { href: 'video.html', p: '42%' }),
       c('أصوات الغابة', 'audio', '02', '5 د', { href: 'audio.html', tag: 'done' }),
       c('صغار الحيوانات', 'pics', '03', '12 صورة', { href: 'pictures.html', tag: 'new' }),
       c('البومة الحكيمة', 'book', '04', '10 صفحات', { href: 'book.html' }),
       c('رحلة النحلة', 'video', '05', '6 د')] },
-    { id: 'space', title: 'الفضاء والكواكب', icon: leaf('#7C5BD8'), tint: '#E7E3FF', count: 14, items: [
+    { id: 'space', title: 'الفضاء والكواكب', count: 14, items: [
       c('كواكب مجموعتنا الشمسية', 'video', '06', '7 د', { tag: 'new' }),
       c('لماذا يتغير شكل القمر؟', 'flip', '07', '12 صفحة', { href: 'flipbook.html', p: '50%' }),
       c('صور من الفضاء', 'pics', '08', '15 صورة'),
       c('أغنية الكواكب', 'audio', '09', '3 د', { tag: 'done' }),
       c('رائد فضاء صغير', 'video', '10', '9 د')] },
-    { id: 'body', title: 'جسم الإنسان', icon: leaf('#EE6F8D'), tint: '#FFE4EA', count: 12, items: [
+    { id: 'body', title: 'جسم الإنسان', count: 12, items: [
       c('أسناني اللامعة', 'video', '11', '4 د', { tag: 'done' }),
       c('كيف نتنفس؟', 'book', '12', '8 صفحات'),
       c('حواسنا الخمس', 'pics', '13', '10 صور'),
