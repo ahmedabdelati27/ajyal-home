@@ -87,31 +87,44 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .ticks li::before { content: ''; flex-shrink: 0; width: 22px; height: 22px; margin-top: 3px; border-radius: 50%;
   background: var(--c, #5BC236) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px no-repeat; }
 
-/* the islands: a sea to sail on, one island big in the middle and its neighbours small on each side */
-.isles-sec { position: relative; background: linear-gradient(var(--page), rgba(255,247,236,0) 160px, rgba(255,247,236,0) calc(100% - 160px), var(--page)), url(img/landing/isles-sea.jpg) center / cover #CDEBF2; }
-.reel { position: relative; --sw: 400px; }
+/* the islands: each one brings its own world behind it, big in the middle with its neighbours small at the edges,
+   and what is on it written around it: who guides it and what it is on one side, three things to do on the other */
+.isles-sec { position: relative; overflow: hidden; isolation: isolate; min-height: 860px; background: #CDEBF2; }
+.isles-bg, .isles-bg i { position: absolute; inset: 0; }
+.isles-bg { z-index: -1; }
+.isles-bg i { background: center / cover no-repeat; opacity: 0; transition: opacity .7s ease; }
+.isles-bg i.on { opacity: 1; }
+.isles-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(var(--page), rgba(255,247,236,0) 150px, rgba(255,247,236,0) calc(100% - 150px), var(--page)); }
+.isles-sec .sec-head { width: fit-content; margin-bottom: 20px; padding: 18px 32px 20px; border-radius: 32px; background: rgba(255,255,255,.88); backdrop-filter: blur(8px); box-shadow: 0 6px 0 rgba(58,35,24,.08); }
+.reel { position: relative; --sw: 620px; --iw: 360px; }
 .reel-track { display: flex; overflow-x: auto; overflow-y: hidden; padding: 10px calc(50% - var(--sw) / 2) 20px; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
 .reel-track::-webkit-scrollbar { display: none; }
 .slide { flex: 0 0 var(--sw); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: none; scroll-snap-align: center; transform: scale(var(--s, .55)); opacity: var(--o, .7); transform-origin: 50% 70%; will-change: transform; }
-.slide img { width: 100%; filter: drop-shadow(0 20px 18px rgba(30,90,120,.25)); animation: bob 5s ease-in-out infinite; animation-delay: var(--d); }
-.slide b { margin-top: -14px; padding: 4px 18px 6px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 24px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 rgba(58,35,24,.12); }
-.slide[aria-current="true"] b { background: var(--c); color: var(--paper); text-shadow: 0 1px 0 rgba(0,0,0,.18); }
-.reel-go { position: absolute; z-index: 2; top: 42%; display: grid; place-items: center; width: 56px; height: 56px; border: 0; border-radius: 50%; background: var(--paper); color: var(--line); box-shadow: 0 5px 0 var(--edge), 0 10px 24px rgba(58,35,24,.15); }
+.slide img { width: var(--iw); max-width: 100%; filter: drop-shadow(0 22px 20px rgba(20,60,80,.35)); animation: bob 5s ease-in-out infinite; animation-delay: var(--d); }
+.slide b { margin-top: -14px; padding: 4px 18px 6px; border-radius: 999px; background: rgba(255,255,255,.94); font-size: 24px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 rgba(58,35,24,.12); }
+.slide[aria-current="true"] b { visibility: hidden; }
+.reel-go { position: absolute; z-index: 3; top: 42%; display: grid; place-items: center; width: 56px; height: 56px; border: 0; border-radius: 50%; background: var(--paper); color: var(--line); box-shadow: 0 5px 0 var(--edge), 0 10px 24px rgba(58,35,24,.15); }
 .reel-go:hover { transform: scale(1.06); }
 .reel-go:disabled { opacity: .4; cursor: default; transform: none; }
 .reel-go.prev { right: 4px; } .reel-go.next { left: 4px; }
-.reel-dots { display: flex; justify-content: center; gap: 8px; margin: 4px 0 28px; }
+.reel-dots { display: flex; justify-content: center; gap: 8px; width: fit-content; margin: 6px auto 0; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.85); }
 .reel-dots button { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 999px; background: rgba(58,35,24,.22); transition: width .2s, background .2s; }
 .reel-dots button[aria-current="true"] { width: 32px; background: var(--accent-deep); }
-.reel-info { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: center; max-width: 920px; margin: 0 auto; padding: 18px; border-radius: 32px; background: rgba(255,255,255,.94); box-shadow: 0 6px 0 rgba(58,35,24,.1), 0 24px 48px rgba(30,90,120,.12); }
-.reel-info .pic { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border-radius: 22px; }
-.reel-info .pic img { width: 100%; height: 100%; object-fit: cover; }
-.reel-info .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-inline-end: 12px; }
-.reel-info .guide { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 15px; font-weight: 800; }
-.reel-info h3 { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.2; }
-.reel-info p { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
-.reel-info.swap .pic img, .reel-info.swap .txt { animation: swap .35s ease-out; }
-@keyframes swap { from { opacity: 0; translate: 0 8px; } }
+/* the words around the island in the middle */
+.around { position: absolute; z-index: 2; inset: 0; pointer-events: none; }
+.around > * { position: absolute; top: 46%; width: 290px; translate: 0 -50%; pointer-events: auto; }
+.say-a { left: calc(50% + var(--iw) / 2 + 12px); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 22px 24px; border-radius: 28px; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); box-shadow: 0 6px 0 rgba(58,35,24,.1), 0 20px 40px rgba(20,60,80,.18); }
+.say-a .guide { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 15px; font-weight: 800; }
+.say-a h3 { margin: 0; font-size: 32px; font-weight: 800; line-height: 1.2; color: var(--c); }
+.say-a p { margin: 0; font-size: 17px; font-weight: 600; color: var(--ink-soft); }
+.say-b { right: calc(50% + var(--iw) / 2 + 12px); display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.say-b li { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); font-size: 16px; font-weight: 800; box-shadow: 0 4px 0 rgba(58,35,24,.1), 0 14px 30px rgba(20,60,80,.15); }
+.say-b li:nth-child(2) { margin-inline-start: 26px; }
+.say-b li::before { content: ''; flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat; }
+.around.swap > * { animation: swap .4s ease-out; }
+@keyframes swap { from { opacity: 0; translate: 0 calc(-50% + 10px); } }
+@media (max-width: 1180px) { .reel { --sw: 520px; --iw: 280px; } .around > * { width: 240px; } .say-a h3 { font-size: 26px; } }
 
 /* the app: two phones and the two stores */
 .app-row { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
@@ -249,15 +262,18 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .sec-head { margin-bottom: 32px; }
   .sec-head p { font-size: 17px; }
   .split, .app-row { grid-template-columns: 1fr; gap: 24px; }
-  /* the islands: a smaller one in the middle, a piece of each neighbour peeking in, swiped by finger */
-  .isles-sec { background-image: linear-gradient(var(--page), rgba(255,247,236,0) 120px, rgba(255,247,236,0) calc(100% - 120px), var(--page)), url(img/landing/isles-sea-m.jpg); }
-  .reel { --sw: 52vw; }
+  /* the islands: a smaller one in the middle, a piece of each neighbour peeking in, the words under it */
+  .isles-sec { min-height: 0; }
+  .isles-sec .sec-head { padding: 14px 18px; }
+  .reel { --sw: 58vw; --iw: 100%; }
   .reel-go { display: none; }
   .slide b { font-size: 18px; }
-  .reel-info { grid-template-columns: 1fr; gap: 14px; padding: 12px; }
-  .reel-info .pic { aspect-ratio: 16 / 9; }
-  .reel-info .txt { padding: 0 8px 10px; }
-  .reel-info h3 { font-size: 24px; }
+  .around { position: static; display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+  .around > * { position: static; width: auto; translate: none; }
+  .say-a { padding: 18px; }
+  .say-a h3 { font-size: 26px; }
+  .say-b li:nth-child(2) { margin-inline-start: 0; }
+  @keyframes swap { from { opacity: 0; translate: 0 10px; } }
   .app-row .sec-head { align-items: center; text-align: center; }
   .stores { justify-content: center; }
   .app-note { text-align: center; }
@@ -279,7 +295,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
   .foot .wrap > div:first-child { grid-column: 1 / -1; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour, .go-card img { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .reel-info.swap .pic img, .reel-info.swap .txt { animation: none; } .reel-track { scroll-snap-type: x mandatory; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour, .go-card img { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
 </style>
 </head>
 <body>
@@ -350,6 +366,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   </section>
 
   <section class="sec isles-sec" id="islands" aria-labelledby="islands-t">
+    <div class="isles-bg" id="isles-bg" aria-hidden="true"></div>
     <div class="wrap">
       <div class="sec-head" style="--k:#2F6FA8;--kb:#DDEEFB">
         <span class="kicker">عالم أجيال</span>
@@ -359,10 +376,10 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       <div class="reel" id="reel" role="region" aria-roledescription="شريط متحرك" aria-label="جزر عالم أجيال">
         <button class="reel-go prev" type="button" aria-label="الجزيرة السابقة"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         <div class="reel-track" id="reel-track"></div>
+        <div class="around" id="around" aria-live="polite"></div>
         <button class="reel-go next" type="button" aria-label="الجزيرة التالية"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
       </div>
       <div class="reel-dots" id="reel-dots" aria-label="اختر جزيرة"></div>
-      <article class="reel-info" id="reel-info" aria-live="polite"></article>
     </div>
   </section>
 
@@ -563,11 +580,13 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     { id: 'peak', name: 'قمة الأبطال', guide: 'مع الصقر شاهين', c: '#E0584A', about: 'مسابقات تنظّمها المنصة: أسئلة بوقت، ومسابقات لأجمل رسمة أو قصة.', ticks: ['مسابقات أسئلة سريعة', 'مسابقات للرسم والقصص بالتصويت', 'حسب باقتك وإعداداتك'] },
     { id: 'ai', name: 'ورشة السحر', guide: 'مع نور', c: '#7B64DA', about: 'يصنع طفلك قصة مصوّرة أو فيديو، ويختار الفكرة من خيارات جاهزة.', ticks: ['قصة مصوّرة أو فيديو قصير', 'أفكار جاهزة، من غير كتابة حرة', 'حسب باقتك وإعداداتك'] }
   ];
-  const track = $('reel-track'), dots = $('reel-dots'), info = $('reel-info');
+  const track = $('reel-track'), dots = $('reel-dots'), around = $('around'), bg = $('isles-bg');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   track.innerHTML = ISLES.map((i, n) => `<button class="slide" type="button" data-n="${n}" style="--c:${i.c};--d:${-n * 0.7}s" aria-label="${i.name}"><img src="img/${i.id}.png" alt=""><b>${i.name}</b></button>`).join('');
   dots.innerHTML = ISLES.map((i, n) => `<button type="button" data-n="${n}" aria-label="${i.name}"></button>`).join('');
   const slides = [...track.children];
+  bg.innerHTML = ISLES.map((i) => `<i data-id="${i.id}"></i>`).join('');
+  const worlds = [...bg.children];
   let at = -1;
   // move the row so island n sits in the middle (works the same both ways, right to left included)
   function go(n, now) {
@@ -581,10 +600,13 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     [...dots.children].forEach((d, k) => d.setAttribute('aria-current', String(k === n)));
     document.querySelector('.reel-go.prev').disabled = n === 0;
     document.querySelector('.reel-go.next').disabled = n === ISLES.length - 1;
-    info.style.setProperty('--c', i.c);
-    info.innerHTML = `<div class="pic"><img src="img/landing/r-${i.id}.jpg" alt=""></div>
-      <div class="txt"><span class="guide">${i.guide}</span><h3>${i.name}</h3><p>${i.about}</p><ul class="ticks">${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul></div>`;
-    info.classList.remove('swap'); void info.offsetWidth; info.classList.add('swap');
+    // its world fades in behind it; the next ones are fetched now, so swiping on finds them ready
+    [n - 1, n, n + 1].forEach((k) => { const w = worlds[k]; if (w && !w.style.backgroundImage) w.style.backgroundImage = `url(img/landing/bg-${ISLES[k].id}.jpg)`; });
+    worlds.forEach((w, k) => w.classList.toggle('on', k === n));
+    around.style.setProperty('--c', i.c);
+    around.innerHTML = `<div class="say-a"><span class="guide">${i.guide}</span><h3>${i.name}</h3><p>${i.about}</p></div>
+      <ul class="say-b">${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul>`;
+    around.classList.remove('swap'); void around.offsetWidth; around.classList.add('swap');
   }
   // the island in the middle is full size, the further from the middle the smaller and fainter
   let raf = 0;
