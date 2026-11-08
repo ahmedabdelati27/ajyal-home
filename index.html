@@ -422,7 +422,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     if (u.pathname.endsWith('/index.html') && u.searchParams.get('open')) return openSheet(u.searchParams.get('open'), { tab: u.searchParams.get('tab'), w: u.searchParams.get('w'), b: u.searchParams.get('b') });
     Sfx.play('open'); Clouds.go(e.data.href);
   });
-  // the child's own card opens «غرفتي»
+  // the child's own card: the name and picture of the child the parent chose (or changed in «غرفتي»), and it opens «غرفتي»
+  const kid = (() => { try { return JSON.parse(localStorage.getItem('ajyal.profile') || '{}'); } catch { return {}; } })();
+  if (kid.name) {
+    const me = document.getElementById('me');
+    me.querySelector('.name').textContent = kid.name;
+    me.setAttribute('aria-label', `غرفتي: ${kid.name}، المستوى 7`);
+    if (kid.avatar) me.querySelector('img').src = `img/avatars/${kid.avatar}.png`;
+  }
   document.getElementById('me').addEventListener('click', () => openSheet('room'));
   // the badge count opens every badge and how to earn it
   document.getElementById('badges-pill').addEventListener('click', () => openSheet('badges'));
@@ -554,7 +561,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     garden: 'وهذه حديقتي! هنا نزرع القيم معاً، مثل الصدق والتعاون.'
   };
   const STEPS = [
-    { t: 'أهلاً يا يوسف! أنا نور', p: 'أنا صديقتك في عالم أجيال. تعال أعرّفك على الجزر، جزيرة بعد جزيرة!' },
+    { t: `أهلاً يا ${kid.name || 'يوسف'}! أنا نور`, p: 'أنا صديقتك في عالم أجيال. تعال أعرّفك على الجزر، جزيرة بعد جزيرة!' },
     ...['ai', 'forest', 'beach', 'quran', 'games', 'colors', 'peak', 'letters', 'garden'].map((id) => ({ id, t: ISLANDS.find((x) => x.id === id).title, p: SAY[id] })),
     { el: '.dock', t: 'الشريط السفلي', p: 'من هنا ترجع إلى الخريطة، وتفتح كل الأقسام، وغرفتك، والمتصدرين.' },
     { el: '.mission', t: 'رحلتك معي', p: 'اضغط هنا لتكمل معي رحلة القيمة.' },

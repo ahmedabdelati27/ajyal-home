@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>اختر الطفل · أجيال الصالحية</title>
+<link rel="stylesheet" href="auth.css">
+<link rel="stylesheet" href="clouds.css">
+<script src="clouds.js"></script>
+<style>
+body { background: linear-gradient(rgba(255,247,236,0) 0, var(--page) 520px), url(img/landing/hero-sky.jpg) 30% 0 / 100% auto no-repeat var(--page); }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 1100px; margin: 0 auto; padding: 20px 32px; }
+.who { display: flex; align-items: center; gap: 8px; }
+.who span { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.who .btn { height: 44px; padding: 0 16px; font-size: 15px; }
+.pick-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 32px 80px; text-align: center; }
+.pick-wrap h1 { margin: 0; font-size: clamp(30px, 4vw, 48px); font-weight: 800; line-height: 1.2; }
+.pick-wrap .lead { margin: 10px 0 30px; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
+.search { max-width: 420px; margin: 0 auto 28px; }
+.kids { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; }
+.kid { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 190px; padding: 22px 14px 18px; border: 3px solid transparent; border-radius: 30px; background: var(--paper); box-shadow: 0 6px 0 var(--edge); transition: transform .15s; }
+.kid:hover { transform: translateY(-5px); }
+.kid img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 5px var(--paper), 0 0 0 8px var(--edge); }
+.kid b { margin-top: 6px; font-size: 22px; font-weight: 800; }
+.kid small { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.kid.busy img { filter: grayscale(.6); opacity: .7; }
+.kid .tag { padding: 2px 10px; border-radius: 999px; background: #FFF0D6; color: #8A5A00; font-size: 13px; font-weight: 800; }
+.kid.add { justify-content: center; border: 3px dashed #E2CDAF; background: rgba(255,255,255,.6); box-shadow: none; color: var(--ink-soft); }
+.kid.add .plus { display: grid; place-items: center; width: 120px; height: 120px; border-radius: 50%; background: var(--page); color: var(--accent-deep); }
+.kid.add:disabled { cursor: default; transform: none; opacity: .75; }
+.empty { max-width: 460px; margin: 0 auto; padding: 32px; border-radius: 30px; background: var(--paper); box-shadow: 0 6px 0 var(--edge); }
+.empty img { width: 140px; margin: 0 auto 10px; }
+.empty p { margin: 6px 0 20px; font-size: 17px; font-weight: 600; color: var(--ink-soft); }
+.note { margin: 28px auto 0; max-width: 560px; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+dialog { width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 26px; border: 0; border-radius: 30px; background: var(--page); color: var(--ink); box-shadow: 0 30px 80px rgba(58,35,24,.35); text-align: start; }
+dialog::backdrop { background: rgba(58,35,24,.45); }
+dialog h2 { margin: 0 0 4px; font-size: 26px; font-weight: 800; }
+dialog .lead { margin: 0 0 18px; font-size: 16px; font-weight: 600; color: var(--ink-soft); }
+dialog .x { float: left; width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--paper); font-size: 22px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); }
+@media (max-width: 700px) {
+  .top { padding: 14px 16px; gap: 8px; }
+  .top .logo img { width: 36px; height: 36px; }
+  .top .logo b { display: none; }
+  .who span { display: none; }
+  .who { gap: 2px; }
+  .who .btn { height: 40px; padding: 0 12px; font-size: 14px; white-space: nowrap; }
+  .pick-wrap { padding: 24px 16px 60px; }
+  .kids { gap: 14px; }
+  .kid { width: calc(50% - 7px); padding: 18px 10px 14px; }
+  .kid img, .kid.add .plus { width: 96px; height: 96px; }
+  .kid b { font-size: 19px; }
+}
+@media (prefers-reduced-motion: reduce) { .kid { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="landing.html"><img src="img/garden/nour-cheer.png" alt=""><b>أجيال الصالحية</b></a>
+  <div class="who"><span id="who"></span><button class="btn soft" type="button" id="board">لوحة التحكم</button><button class="btn link" type="button" id="out">تسجيل الخروج</button></div>
+</header>
+
+<main class="pick-wrap">
+  <h1 id="title">من سيدخل عالم أجيال الآن؟</h1>
+  <p class="lead" id="lead">اختر ملف طفلك، فيدخل عالمه ويكمل من حيث توقف.</p>
+  <div class="search field" id="search-box" hidden><div class="input"><input id="search" type="search" placeholder="ابحث باسم الطفل" aria-label="ابحث باسم الطفل"></div></div>
+  <div class="kids" id="kids"></div>
+  <p class="note" id="note">لإيقاف وضع الطفل أو تبديل الطفل لاحقاً، يدخل ولي الأمر أو المؤسسة بالحساب.</p>
+</main>
+
+<dialog id="add" aria-labelledby="add-t">
+  <button class="x" type="button" data-close aria-label="إغلاق">×</button>
+  <h2 id="add-t">أضف طفلاً</h2>
+  <p class="lead">يُحسب عمره تلقائياً من تاريخ الميلاد.</p>
+  <div id="add-form"></div>
+</dialog>
+<dialog id="busy" aria-labelledby="busy-t">
+  <button class="x" type="button" data-close aria-label="إغلاق">×</button>
+  <h2 id="busy-t">الملف مفتوح على جهاز آخر</h2>
+  <p class="lead" id="busy-p"></p>
+  <button class="btn main" type="button" data-close>حسناً</button>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="auth.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const me = Auth.signedIn();
+  // only a signed-in parent or institution chooses a child
+  if (!me) { location.replace('login.html'); return; }
+  $('who').textContent = me.type === 'school' ? (me.org || me.name) : me.name;
+
+  const pic = (k) => (k.photo || `img/avatars/${k.avatar || (k.gender === 'girl' ? 'A-06' : 'A-03')}.png`);
+  function draw() {
+    const all = Auth.kids(), q = $('search').value.trim();
+    // many children: a search by name, for a family or an institution
+    $('search-box').hidden = !all.length || !(me.type === 'school' || all.length > 6);
+    if (!all.length) {
+      $('title').textContent = 'أضف طفلك الأول';
+      $('lead').textContent = 'بعد أن تضيفه، يظهر ملفه هنا وتختاره ليدخل عالمه.';
+      $('note').hidden = true;
+      $('kids').innerHTML = `<div class="empty"><img src="img/garden/nour-wave.png" alt=""><b style="font-size:22px">لا يوجد أطفال في حسابك بعد</b><p>لكل طفل ملف باسمه وعمره، وتقدّمه محفوظ له وحده.</p><button class="btn main" type="button" data-add>أضف طفلاً</button></div>`;
+      return;
+    }
+    $('title').textContent = 'من سيدخل عالم أجيال الآن؟'; $('note').hidden = false;
+    const list = all.filter((k) => !q || k.name.includes(q));
+    const full = all.length >= Auth.LIMIT;
+    $('kids').innerHTML = list.map((k) => {
+      const y = Auth.age(k.birth);
+      return `<button class="kid ${k.busy ? 'busy' : ''}" type="button" data-id="${k.id}" aria-label="${k.name}، ${Auth.years(y)}${k.busy ? '، مفتوح على جهاز آخر' : ''}">
+        <img src="${pic(k)}" alt=""><b>${k.name}</b><small>${Auth.years(y)}</small>${k.busy ? '<span class="tag">مفتوح على جهاز آخر</span>' : ''}</button>`;
+    }).join('') + (q ? '' : `<button class="kid add" type="button" data-add ${full ? 'disabled' : ''}><span class="plus"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><b>أضف طفلاً</b>${full ? '<small>وصلت إلى الحد المسموح في باقتك الحالية</small>' : ''}</button>`)
+      + (q && !list.length ? `<p class="lead">لا يوجد طفل بهذا الاسم.</p>` : '');
+  }
+  $('search').addEventListener('input', draw);
+  draw();
+
+  // a tap on a child: their name and picture go with them into the world, through the clouds
+  $('kids').addEventListener('click', (e) => {
+    if (e.target.closest('[data-add]')) return openAdd();
+    const b = e.target.closest('.kid[data-id]'); if (!b) return;
+    const k = Auth.kids().find((x) => x.id === b.dataset.id);
+    if (k.busy) {
+      $('busy-p').textContent = `ملف ${k.name} مفتوح الآن على جهاز آخر. أغلقه من هناك، ثم حاول مرة أخرى.`;
+      return $('busy').showModal();
+    }
+    try { localStorage.setItem('ajyal.profile', JSON.stringify({ name: k.name, avatar: k.avatar || (k.gender === 'girl' ? 'A-06' : 'A-03') })); } catch {}
+    Clouds.go('index.html');
+  });
+
+  function openAdd() {
+    Auth.kidForm($('add-form'), { onDone: (k) => { Auth.addKid(k); $('add').close(); draw(); Auth.toast(`أُضيف ${k.name}`); } });
+    $('add').showModal();
+  }
+  document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => { if (e.target.closest('[data-close]') || e.target === d) d.close(); }));
+
+  $('board').addEventListener('click', () => Auth.toast('في النموذج: لوحة تحكم ولي الأمر والمؤسسة تأتي لاحقاً'));
+  $('out').addEventListener('click', () => { Auth.signOut(); location.href = 'landing.html'; });
+})();
+</script>
+</body>
+</html>
