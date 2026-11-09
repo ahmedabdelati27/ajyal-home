@@ -98,6 +98,9 @@ h1 .w { display: inline-block; animation: rise .8s cubic-bezier(.2,.8,.2,1) both
 /* the sections below the hero share one rhythm: a small coloured label, a title, one short line */
 .sec { padding: 96px 0; scroll-margin-top: 64px; }
 .sec.tint { background: #FFF1DE; }
+/* a light dreamy sky behind a section, melting into the page at its top and bottom */
+.sec.soft { position: relative; isolation: isolate; background: var(--page); }
+.sec.soft::before { content: ''; position: absolute; z-index: -1; inset: 0; background: url(img/landing/soft-sky.jpg) 50% 30% / cover no-repeat; -webkit-mask-image: linear-gradient(transparent, #000 16%, #000 80%, transparent); mask-image: linear-gradient(transparent, #000 16%, #000 80%, transparent); }
 .sec-head { display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 760px; margin: 0 auto 48px; text-align: center; }
 .kicker { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--kb, #FFE3CC); color: var(--k, var(--accent-deep)); font-size: 15px; font-weight: 800; }
 h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-height: 1.2; }
@@ -161,9 +164,9 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 
 /* the app: two phones and the two stores */
 /* the app: a banner like the closing call to action, its phone standing up out of the top of it */
-.go-card.app-card { grid-template-columns: 300px 1fr; padding-block: 36px; overflow: visible; margin-top: 70px; }
-.app-card .phones { position: relative; align-self: stretch; }
-.app-card .phone { position: absolute; left: 50%; bottom: -36px; width: 230px; translate: -50% 0; rotate: -5deg; }
+.go-card.app-card { grid-template-columns: 1fr 300px; padding-block: 36px; overflow: visible; margin-top: 70px; }
+.app-card .phones { position: relative; align-self: stretch; order: 2; }
+.app-card .phone { position: absolute; left: 50%; bottom: -36px; width: 230px; translate: -50% 0; rotate: 5deg; }
 .app-card h2 { margin: 10px 0 0; }
 .app-card .kicker { align-self: flex-start; }
 .app-card p { max-width: 52ch; }
@@ -175,13 +178,11 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .app-note { margin: 18px 0 0; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
 .phone { position: absolute; width: 250px; aspect-ratio: 9 / 19.5; padding: 10px; border-radius: 42px; background: #22202B; box-shadow: inset 0 0 0 2px #3A3746, 0 30px 60px rgba(58,35,24,.25); }
 .phone .screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 33px; background: url(img/landing/hero-sky-m.jpg) 30% 100% / cover #CDE9F7; }
+.app-card .phone .screen { background: url(img/landing/app-screen.jpg) 50% 0 / cover #CFC6F2; }
+.app-title { position: absolute; z-index: 2; top: 34px; inset-inline: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.go-card .app-title img { width: 38px; animation: none; filter: drop-shadow(0 4px 6px rgba(240,160,40,.35)); }
+.app-title b { padding: 2px 14px 4px; border-radius: 999px; background: rgba(255,255,255,.88); font-size: 18px; font-weight: 800; color: #3A2318; box-shadow: 0 3px 0 rgba(123,100,218,.25); }
 .phone .screen::before { content: ''; position: absolute; z-index: 3; top: 8px; left: 50%; translate: -50% 0; width: 76px; height: 20px; border-radius: 999px; background: #22202B; }
-.mini-hud { position: absolute; z-index: 2; top: 38px; inset-inline: 10px; display: flex; justify-content: space-between; }
-.mini-hud span { display: inline-flex; align-items: center; gap: 3px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--paper); font-size: 11px; font-weight: 800; box-shadow: 0 2px 0 var(--edge); }
-.mini-hud img { width: 16px; height: 16px; }
-.mini-isle { position: absolute; z-index: 1; width: var(--w); left: var(--x); top: var(--y); }
-.mini-dock { position: absolute; z-index: 2; bottom: 12px; inset-inline: 12px; display: flex; justify-content: space-around; padding: 6px; border-radius: 999px; background: rgba(255,246,232,.97); box-shadow: 0 0 0 2px #F3DDBB; }
-.mini-dock img { width: 28px; height: 28px; }
 
 /* how the child grows: a bento, one big card for points and levels and four smaller ones, each on a corner of the child's world;
    once the section shows, each card plays out what it means (the page script adds .play) */
@@ -292,7 +293,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .bars small { font-size: 11px; font-weight: 800; color: var(--ink-soft); }
 .bars i { width: 18px; height: var(--h); border-radius: 6px 6px 3px 3px; background: linear-gradient(#FFC93C, #F59E1B); transform-origin: 50% 100%; transform: scaleY(.15); transition: transform .6s cubic-bezier(.3,1.3,.6,1); transition-delay: calc(.3s + var(--i) * .08s); }
 .safe.play .bars i { transform: none; }
-#how { background: linear-gradient(var(--page), rgba(255,247,236,.7) 18%, rgba(255,247,236,0) 40%), linear-gradient(to top, #FFF1DE, rgba(255,241,222,0) 10%), url(img/landing/how-meadow.jpg) 50% 100% / cover no-repeat var(--page); }
+#how { background: linear-gradient(var(--page), rgba(255,247,236,.7) 18%, rgba(255,247,236,0) 40%), linear-gradient(to top, var(--page), rgba(255,247,236,0) 10%), url(img/landing/how-meadow.jpg) 50% 100% / cover no-repeat var(--page); }
 /* how it works: a winding path with three stops; Nour walks it as the page scrolls and explains each stop as she reaches it.
    Without the page script, or with reduced motion, the stops stand in a row with their words under them */
 .trail { position: relative; }
@@ -447,7 +448,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .sec-head p { font-size: 17px; }
   .split { grid-template-columns: 1fr; gap: 24px; }
   .go-card.app-card { grid-template-columns: 1fr; margin-top: 40px; }
-  .app-card .phones { height: 220px; overflow: hidden; margin: -36px -20px 0; border-radius: 40px 40px 0 0; }
+  .app-card .phones { order: 0; height: 220px; overflow: hidden; margin: -36px -20px 0; border-radius: 40px 40px 0 0; }
   .app-card .phone { top: 24px; bottom: auto; width: 200px; rotate: 0deg; }
   /* the islands: a smaller one in the middle, a piece of each neighbour peeking in, the words under it */
   .isles-sec { min-height: 0; background: var(--page); }
@@ -573,7 +574,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     <div class="wrap"><div class="around" id="around" aria-live="polite"></div></div>
   </section>
 
-  <section class="sec tint" id="grow" aria-labelledby="grow-t">
+  <section class="sec soft" id="grow" aria-labelledby="grow-t">
     <div class="wrap">
       <div class="sec-head">
         <span class="kicker">تقدّم طفلك</span>
@@ -636,7 +637,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     </div>
   </section>
 
-  <section class="sec tint" id="safety" aria-labelledby="safety-t">
+  <section class="sec soft" id="safety" aria-labelledby="safety-t">
     <div class="wrap">
       <div class="sec-head" style="--k:#7B4FC7;--kb:#EDE3FF">
         <span class="kicker">الأمان والتحكم</span>
@@ -727,15 +728,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     <div class="wrap">
       <div class="go-card app-card">
         <div class="phones" aria-hidden="true">
-          <div class="phone front"><div class="screen">
-          <div class="mini-hud"><span><img src="img/hud/points.png" alt="">3,240</span><span><img src="img/hud/streak.png" alt="">5</span></div>
-          <img class="mini-isle" src="img/ai.png" alt="" style="--w:44%;--x:4%;--y:16%">
-          <img class="mini-isle" src="img/colors.png" alt="" style="--w:44%;--x:52%;--y:22%">
-          <img class="mini-isle" src="img/forest.png" alt="" style="--w:58%;--x:22%;--y:38%">
-          <img class="mini-isle" src="img/beach.png" alt="" style="--w:44%;--x:0%;--y:60%">
-          <img class="mini-isle" src="img/games.png" alt="" style="--w:44%;--x:54%;--y:58%">
-          <div class="mini-dock"><img src="img/nav/map.png" alt=""><img src="img/nav/sections.png" alt=""><img src="img/nav/room.png" alt=""><img src="img/nav/leaders.png" alt=""></div>
-        </div></div>
+          <div class="phone front"><div class="screen"><div class="app-title"><img src="img/garden/nour-cheer.png" alt=""><b>أجيال الصالحية</b></div></div></div>
         </div>
         <div>
           <span class="kicker" style="--k:#2F6FA8;--kb:#FFFFFF">تطبيق أجيال</span>
