@@ -88,8 +88,8 @@ main { position: relative; z-index: 2; margin-top: -40px; padding: 0 var(--side-
 .list li.gap { display: block; padding: 0; text-align: center; font-size: 20px; font-weight: 800; line-height: 1; color: var(--ink-soft); letter-spacing: 6px; }
 
 /* the bar at the bottom, as on the phone's home */
-.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
-.tabs a, .tabs button { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 999px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 999px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
 .tabs img { width: 34px; height: 34px; }
 .tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
 
@@ -138,10 +138,10 @@ main { position: relative; z-index: 2; margin-top: -40px; padding: 0 var(--side-
 </main>
 
 <nav class="tabs" aria-label="التنقل">
-  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
-  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
-  <a href="room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
-  <button type="button" aria-current="page"><img src="../img/nav/leaders.png" alt="">المتصدرون</button>
+  <a href="../index.html"><img src="../img/tabs/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/tabs/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html"><img src="../img/tabs/room.png" alt="">غرفتي</a>
+  <button type="button" aria-current="page"><img src="../img/tabs/leaders.png" alt="">المتصدرون</button>
 </nav>
 <div class="toast" id="toast" role="status"></div>
 

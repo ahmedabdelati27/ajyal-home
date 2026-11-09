@@ -96,8 +96,8 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
 #shelves .item { flex-basis: 152px; }
 
 /* the bar at the bottom, as on the phone's home */
-.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
-.tabs a, .tabs button { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 999px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 999px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
 .tabs img { width: 34px; height: 34px; }
 
 .toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
@@ -165,10 +165,10 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
 </main>
 
 <nav class="tabs" aria-label="التنقل">
-  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
-  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
-  <a href="room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
-  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+  <a href="../index.html"><img src="../img/tabs/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/tabs/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html"><img src="../img/tabs/room.png" alt="">غرفتي</a>
+  <a href="leaders.html"><img src="../img/tabs/leaders.png" alt="">المتصدرون</a>
 </nav>
 <div class="toast" id="toast" role="status"></div>
 

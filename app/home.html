@@ -110,8 +110,8 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 .mark img { width: 16px; height: 16px; }
 
 /* the bar at the bottom: the map, all sections, my room, the board */
-.tabs { position: fixed; z-index: 6; left: 12px; right: 12px; bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(20,70,80,.22); }
-.tabs a, .tabs button { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); }
+.tabs { position: fixed; z-index: 6; left: 12px; right: 12px; bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 999px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(20,70,80,.22); }
+.tabs a, .tabs button { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 999px; font-size: 12px; font-weight: 800; color: var(--ink-soft); }
 .tabs img { width: 34px; height: 34px; }
 .tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
 
@@ -157,10 +157,10 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 </main>
 
 <nav class="tabs" aria-label="التنقل">
-  <button type="button" aria-current="page"><img src="../img/nav/map.png" alt="">الخريطة</button>
-  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
-  <a href="room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
-  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+  <button type="button" aria-current="page"><img src="../img/tabs/map.png" alt="">الخريطة</button>
+  <a href="sections.html"><img src="../img/tabs/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html"><img src="../img/tabs/room.png" alt="">غرفتي</a>
+  <a href="leaders.html"><img src="../img/tabs/leaders.png" alt="">المتصدرون</a>
 </nav>
 <div class="toast" id="toast" role="status"></div>
 <script src="../values.js"></script>
