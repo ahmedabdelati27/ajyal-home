@@ -47,7 +47,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .menu { display: none; }
 
 /* hero: the sky and sea, the words in the middle, the islands floating on both sides */
-.hero { position: relative; overflow: hidden; background: url(img/landing/hero-sky.jpg) 30% 100% / cover no-repeat #CDE9F7; }
+.hero { position: relative; overflow-x: clip; background: url(img/landing/hero-sky.jpg) 30% 100% / cover no-repeat #CDE9F7; }
 .hero::after { content: ''; position: absolute; z-index: 4; inset: auto 0 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page)); pointer-events: none; }
 .hero .wrap { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; min-height: min(100svh, 880px); padding-top: 96px; padding-bottom: 110px; pointer-events: none; }
 .say { display: flex; flex-direction: column; align-items: center; gap: 22px; max-width: min(720px, 56vw); text-align: center; pointer-events: auto; }
@@ -76,8 +76,6 @@ h1 .w { display: inline-block; animation: rise .8s cubic-bezier(.2,.8,.2,1) both
 /* a bank of cloud at the foot of the hero, behind the islands; scrolling down, it swells up as if the page sinks into it */
 .bank { position: absolute; z-index: 0; left: 50%; bottom: -2px; display: flex; height: clamp(100px, 12vw, 200px); transform-origin: 50% 100%; transform: translateX(-50%) scale(calc(1 + var(--h, 0) * .6)); pointer-events: none; }
 /* the one picture laid side by side, every other one turned around so the joins match */
-/* a second bank in front of the islands, out of sight at first; it rises as the page scrolls and the islands drop into it */
-.bank.front { z-index: 3; transform: translateX(-50%) translateY(calc((1 - var(--fb, 0)) * 105%)) scale(calc(1 + var(--h, 0) * .6)); }
 .bank img { flex-shrink: 0; height: 100%; width: auto; max-width: none; margin: 0 -1px; }
 .bank img:nth-child(even) { transform: scaleX(-1); }
 
@@ -85,8 +83,8 @@ h1 .w { display: inline-block; animation: rise .8s cubic-bezier(.2,.8,.2,1) both
 /* on wider screens they draw in toward the words, never onto them */
 @keyframes pop { from { opacity: 0; scale: .6; } }
 .isles { position: absolute; z-index: 1; inset: 0 clamp(0px, (100vw - 1200px) * .25, 150px); }
-/* scrolling down, each island drops, tips a little and shrinks into the clouds (the numbers come from the page script) */
-.isle { position: absolute; left: var(--x); top: var(--y); width: min(var(--w), 200px); transform: translateY(var(--fy, 0px)) rotate(var(--fr, 0deg)) scale(var(--fs, 1)); animation: pop .8s cubic-bezier(.3,1.4,.6,1) both, bob 5s ease-in-out infinite; animation-delay: var(--p), var(--d); }
+/* scrolling down, each island flies down to the middle island of the row below and melts into it (the numbers come from the page script) */
+.isle { position: absolute; left: var(--x); top: var(--y); width: min(var(--w), 200px); transform: translate(var(--fx, 0px), var(--fy, 0px)) rotate(var(--fr, 0deg)) scale(var(--fs, 1)); filter: opacity(var(--fo, 1)); animation: pop .8s cubic-bezier(.3,1.4,.6,1) both, bob 5s ease-in-out infinite; animation-delay: var(--p), var(--d); }
 .isle img { width: 100%; filter: drop-shadow(0 14px 14px rgba(40,90,130,.18)); transition: transform .2s; }
 .isle:hover img, .isle:focus-visible img { transform: scale(1.07); }
 .isle span { position: absolute; left: 50%; bottom: 4%; translate: -50% 0; padding: 2px 12px; border-radius: 999px; background: var(--paper); font-size: 14px; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 var(--edge); opacity: 0; transition: opacity .2s; pointer-events: none; }
@@ -124,11 +122,18 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .veil i { position: absolute; top: 0; width: 62%; height: 100%; background: url(img/landing/cloud-bank.webp) 50% 100% / cover no-repeat; -webkit-mask-image: linear-gradient(to right, #000 60%, transparent); mask-image: linear-gradient(to right, #000 60%, transparent); opacity: calc(1.15 - var(--v, 0) * 1.3); }
 .veil i:first-child { left: 0; transform: scaleY(-1) translateX(calc(var(--v, 0) * -80%)); }
 .veil i:last-child { right: 0; transform: scale(-1, -1) translateX(calc(var(--v, 0) * -80%)); }
-/* the first time the section shows, the middle island rises from below and the others glide in from the sides */
-@keyframes arrive { from { opacity: 0; translate: var(--fx, 0) 140px; } }
-.isles-sec.wait .slide, .isles-sec.wait .reel-dots, .isles-sec.wait .around { opacity: 0; }
-.isles-sec.in .slide { animation: arrive 1s cubic-bezier(.25,1.25,.5,1) calc(.15s + var(--k, 0) * .1s) backwards; }
-.isles-sec.in .reel-dots, .isles-sec.in .around { animation: rise .8s cubic-bezier(.2,.8,.2,1) .65s backwards; }
+/* once the hero's islands have landed: the middle island is there, the others glide in from the sides, the island's world fades in, and the words come last */
+@keyframes arrive { from { opacity: 0; translate: var(--fx, 0) 0; } }
+@keyframes land { from { opacity: 0; scale: .9; } }
+@keyframes world { from { opacity: 0; } }
+.isles-sec.wait { background: var(--page); }
+.isles-sec.wait .slide, .isles-sec.wait .isles-bg, .isles-sec.wait .sec-head, .isles-sec.wait .reel-go, .isles-sec.wait .reel-dots, .isles-sec.wait .around { opacity: 0; }
+.isles-sec.in .slide { animation: arrive .9s cubic-bezier(.25,1.1,.5,1) calc(.1s + var(--k, 0) * .1s) backwards; }
+.isles-sec.in .slide[aria-current="true"] { animation: land .45s ease-out backwards; }
+.isles-sec.in .isles-bg { animation: world 1s ease .35s backwards; }
+.isles-sec.in .sec-head { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.1s backwards; }
+.isles-sec.in .around { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.25s backwards; }
+.isles-sec.in .reel-go, .isles-sec.in .reel-dots { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.35s backwards; }
 /* a puff of cloud drifts past behind them when another island comes to the middle */
 .puff { position: absolute; top: 34%; left: 50%; width: min(520px, 50vw); opacity: 0; }
 .puff.go { animation: puff 1.2s ease-in-out; }
@@ -368,7 +373,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
   .foot .wrap > div:first-child { grid-column: 1 / -1; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .cloud { animation: none; transform: none; } .bank { transform: translateX(-50%); } .bank.front { display: none; } .isle { transform: none; } .veil, .puff { display: none; } .isle, .hello img, .go-card img, .foot-isles img, .say > *, h1 .w { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .cloud { animation: none; transform: none; } .bank { transform: translateX(-50%); } .isle { transform: none; filter: none; } .veil, .puff { display: none; } .isle, .hello img, .go-card img, .foot-isles img, .say > *, h1 .w { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
 </style>
 </head>
 <body>
@@ -437,7 +442,6 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       <a class="isle" href="#islands" style="--x:87%;--y:66%;--w:12vw;--d:-3.5s;--p:1.8s"><img src="img/quran.png" alt="واحة القرآن"><span>واحة القرآن</span></a>
     </div>
     <div class="bank" aria-hidden="true"><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""></div>
-    <div class="bank front" aria-hidden="true"><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""><img src="img/landing/cloud-bank.webp" alt=""></div>
   </section>
 
   <section class="sec isles-sec" id="islands" aria-labelledby="islands-t">
@@ -761,44 +765,49 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   track.addEventListener('focusin', (e) => { const s = e.target.closest('.slide'); if (s && +s.dataset.n !== at) go(+s.dataset.n); });
   // start on the second island, so there is a smaller one on each side from the first look
   go(1, true); paint();
-  // the clouds: the hero's rise a little faster than the page, the bank at its foot swells, and the clouds over the islands part
+  // on scroll: the hero's clouds rise a little faster than the page and the bank at its foot swells; the hero's islands fly down
+  // into the middle island of the row below; the clouds over the row part; and once the islands land, the section comes in
   if (!reduce) {
-    const hero = $('hero'), isles = [...hero.querySelectorAll('.isle')], front = hero.querySelector('.bank.front'); let sky = 0, drop = [];
-    // how far each island has to fall to land in the bank, measured without the fall itself
+    const hero = $('hero'), isles = [...hero.querySelectorAll('.isle')]; let sky = 0, fly = [], end = 1;
+    // where each island starts and where the middle island of the row sits, both measured on the page itself, so scrolling moves them alike
     const measure = () => {
-      const box = hero.querySelector('.isles'), base = box.offsetParent === hero ? box.offsetTop : 0;
-      // the top of each island ends up deep in the thick of the bank, so the whole island is gone
-      const land = hero.offsetHeight - front.offsetHeight * 0.4;
-      drop = isles.map((el, k) => ({ el, d: Math.max(60, land - (base + el.offsetTop)), at: [0.06, 0.14, 0.02, 0.1, 0.18, 0.04, 0.12, 0.08][k % 8], tip: k % 2 ? 1 : -1 }));
+      isles.forEach((el) => ['--fx', '--fy', '--fs', '--fr'].forEach((v) => el.style.removeProperty(v)));
+      const img = slides[at].querySelector('img').getBoundingClientRect();
+      const tx = img.left + img.width / 2 + scrollX, ty = img.top + img.height / 2 + scrollY;
+      // they land when the middle island is a little below the middle of the screen
+      end = Math.max(1, ty - innerHeight * 0.55);
+      fly = isles.map((el, k) => {
+        const r = el.getBoundingClientRect(), beat = [0.06, 0.14, 0.02, 0.1, 0.16, 0.04, 0.12, 0.08][k % 8];
+        return { el, dx: tx - (r.left + r.width / 2 + scrollX), dy: ty - (r.top + r.height / 2 + scrollY), grow: img.width / el.offsetWidth * 0.9, from: beat, to: 0.8 + beat, tip: k % 2 ? 1 : -1 };
+      });
     };
     const lift = () => {
       sky = 0;
       const y = scrollY, h = hero.offsetHeight, t = isec.getBoundingClientRect().top, vh = innerHeight;
       hero.style.setProperty('--sy', Math.min(y, h).toFixed(0));
-      const p = Math.min(1, y / h);
-      hero.style.setProperty('--h', p.toFixed(3));
-      // the front bank is up by the time a third of the hero has scrolled; each island falls on its own beat, faster as it goes
-      hero.style.setProperty('--fb', Math.min(1, p / 0.3).toFixed(3));
-      drop.forEach(({ el, d, at, tip }) => {
-        const q = Math.min(1, Math.max(0, (p - at) / 0.4)), g = q * q;
-        el.style.setProperty('--fy', (g * d).toFixed(1) + 'px');
-        el.style.setProperty('--fr', (g * 10 * tip).toFixed(2) + 'deg');
-        el.style.setProperty('--fs', (1 - g * 0.25).toFixed(3));
-        // an island sunk in the clouds is out of the keyboard's way too
-        const gone = g > 0.9; if (el.tabIndex !== (gone ? -1 : 0)) el.tabIndex = gone ? -1 : 0;
+      hero.style.setProperty('--h', Math.min(1, y / h).toFixed(3));
+      // each island sets off on its own beat and lands a little before the last one, easing in and out; it melts away as it lands
+      fly.forEach(({ el, dx, dy, grow, from, to, tip }) => {
+        const q = Math.min(1, Math.max(0, (y / end - from) / (to - from))), e = q < 0.5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2;
+        el.style.setProperty('--fx', (e * dx).toFixed(1) + 'px');
+        el.style.setProperty('--fy', (e * dy).toFixed(1) + 'px');
+        el.style.setProperty('--fs', (1 + e * (grow - 1)).toFixed(3));
+        el.style.setProperty('--fr', (Math.sin(Math.PI * q) * 8 * tip).toFixed(2) + 'deg');
+        el.style.setProperty('--fo', Math.min(1, Math.max(0, (1 - q) / 0.2)).toFixed(3));
+        // an island on its way is out of the keyboard's way too
+        const gone = q > 0.5; if (el.tabIndex !== (gone ? -1 : 0)) el.tabIndex = gone ? -1 : 0;
       });
       isec.style.setProperty('--v', Math.min(1, Math.max(0, (vh * 0.7 - t) / (vh * 0.55))).toFixed(3));
+      // the islands have landed: the middle one is there, the others glide in from the sides, then the world and the words
+      if (isec.classList.contains('wait') && y >= end * 0.92) {
+        const tr = track.getBoundingClientRect(), mid = tr.left + tr.width / 2;
+        slides.forEach((sl, k) => { const r = sl.getBoundingClientRect(); sl.style.setProperty('--k', Math.abs(k - at)); sl.style.setProperty('--fx', Math.max(-400, Math.min(400, (r.left + r.width / 2 - mid) * 0.5)).toFixed(0) + 'px'); });
+        isec.classList.replace('wait', 'in');
+      }
     };
+    isec.classList.add('wait');
     addEventListener('scroll', () => { if (!sky) sky = requestAnimationFrame(lift); }, { passive: true });
     addEventListener('resize', () => { measure(); lift(); }); addEventListener('load', () => { measure(); lift(); }); measure(); lift();
-    // the islands arrive the first time their section shows: the middle one first, then outwards (a browser that cannot tell just shows them)
-    if ('IntersectionObserver' in window) isec.classList.add('wait');
-    if ('IntersectionObserver' in window) new IntersectionObserver((seen, io) => {
-      if (!seen[0].isIntersecting) return; io.disconnect();
-      const t = track.getBoundingClientRect(), mid = t.left + t.width / 2;
-      slides.forEach((sl, k) => { const r = sl.getBoundingClientRect(); sl.style.setProperty('--k', Math.abs(k - at)); sl.style.setProperty('--fx', Math.max(-400, Math.min(400, (r.left + r.width / 2 - mid) * 0.5)).toFixed(0) + 'px'); });
-      isec.classList.replace('wait', 'in');
-    }, { threshold: 0.3 }).observe(isec);
   }
 
   // an island in the hero sails to its place in the row
