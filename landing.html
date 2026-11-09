@@ -82,7 +82,7 @@ h1 .w { display: inline-block; animation: rise .8s cubic-bezier(.2,.8,.2,1) both
 /* the islands: four on each side of the words, each pops in and then floats on its own beat; a tap leads down to what is on it */
 /* on wider screens they draw in toward the words, never onto them */
 @keyframes pop { from { opacity: 0; scale: .6; } }
-.isles { position: absolute; z-index: 1; inset: 0 clamp(0px, (100vw - 1200px) * .25, 150px); }
+.isles { position: absolute; z-index: 5; inset: 0 clamp(0px, (100vw - 1200px) * .25, 150px); }
 /* scrolling down, each island flies down to the middle island of the row below and melts into it (the numbers come from the page script) */
 .isle { position: absolute; left: var(--x); top: var(--y); width: min(var(--w), 200px); transform: translate(var(--fx, 0px), var(--fy, 0px)) rotate(var(--fr, 0deg)) scale(var(--fs, 1)); filter: opacity(var(--fo, 1)); animation: pop .8s cubic-bezier(.3,1.4,.6,1) both, bob 5s ease-in-out infinite; animation-delay: var(--p), var(--d); }
 .isle img { width: 100%; filter: drop-shadow(0 14px 14px rgba(40,90,130,.18)); transition: transform .2s; }
@@ -124,12 +124,11 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .veil i:last-child { right: 0; transform: scale(-1, -1) translateX(calc(var(--v, 0) * -80%)); }
 /* once the hero's islands have landed: the middle island is there, the others glide in from the sides, the island's world fades in, and the words come last */
 @keyframes arrive { from { opacity: 0; translate: var(--fx, 0) 0; } }
-@keyframes land { from { opacity: 0; scale: .9; } }
 @keyframes world { from { opacity: 0; } }
-.isles-sec.wait { background: var(--page); }
+.isles-sec.wait, .isles-sec.in { background: var(--page); }
 .isles-sec.wait .slide, .isles-sec.wait .isles-bg, .isles-sec.wait .sec-head, .isles-sec.wait .reel-go, .isles-sec.wait .reel-dots, .isles-sec.wait .around { opacity: 0; }
 .isles-sec.in .slide { animation: arrive .9s cubic-bezier(.25,1.1,.5,1) calc(.1s + var(--k, 0) * .1s) backwards; }
-.isles-sec.in .slide[aria-current="true"] { animation: land .45s ease-out backwards; }
+.isles-sec.in .slide[aria-current="true"] { animation: none; }
 .isles-sec.in .isles-bg { animation: world 1s ease .35s backwards; }
 .isles-sec.in .sec-head { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.1s backwards; }
 .isles-sec.in .around { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.25s backwards; }
@@ -776,9 +775,11 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       const tx = img.left + img.width / 2 + scrollX, ty = img.top + img.height / 2 + scrollY;
       // they land when the middle island is a little below the middle of the screen
       end = Math.max(1, ty - innerHeight * 0.55);
+      // the island in the middle of the row (the story beach at first) lands last, at full size, and becomes it; the others land before it and melt away
+      const keep = ISLES[at].id;
       fly = isles.map((el, k) => {
-        const r = el.getBoundingClientRect(), beat = [0.06, 0.14, 0.02, 0.1, 0.16, 0.04, 0.12, 0.08][k % 8];
-        return { el, dx: tx - (r.left + r.width / 2 + scrollX), dy: ty - (r.top + r.height / 2 + scrollY), grow: img.width / el.offsetWidth * 0.9, from: beat, to: 0.8 + beat, tip: k % 2 ? 1 : -1 };
+        const r = el.getBoundingClientRect(), beat = [0.06, 0.14, 0.02, 0.1, 0.16, 0.04, 0.12, 0.08][k % 8], last = el.querySelector('img').getAttribute('src') === 'img/' + keep + '.png';
+        return { el, last, dx: tx - (r.left + r.width / 2 + scrollX), dy: ty - (r.top + r.height / 2 + scrollY), grow: img.width / el.offsetWidth * (last ? 1 : 0.85), from: last ? 0.18 : beat, to: last ? 1 : 0.7 + beat, tip: k % 2 ? 1 : -1 };
       });
     };
     const lift = () => {
@@ -787,19 +788,22 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       hero.style.setProperty('--sy', Math.min(y, h).toFixed(0));
       hero.style.setProperty('--h', Math.min(1, y / h).toFixed(3));
       // each island sets off on its own beat and lands a little before the last one, easing in and out; it melts away as it lands
-      fly.forEach(({ el, dx, dy, grow, from, to, tip }) => {
+      const landed = y >= end;
+      fly.forEach(({ el, last, dx, dy, grow, from, to, tip }) => {
         const q = Math.min(1, Math.max(0, (y / end - from) / (to - from))), e = q < 0.5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2;
         el.style.setProperty('--fx', (e * dx).toFixed(1) + 'px');
         el.style.setProperty('--fy', (e * dy).toFixed(1) + 'px');
         el.style.setProperty('--fs', (1 + e * (grow - 1)).toFixed(3));
         el.style.setProperty('--fr', (Math.sin(Math.PI * q) * 8 * tip).toFixed(2) + 'deg');
-        el.style.setProperty('--fo', Math.min(1, Math.max(0, (1 - q) / 0.2)).toFixed(3));
+        el.style.setProperty('--fo', last ? (landed ? 0 : 1) : Math.min(1, Math.max(0, (1 - q) / 0.2)).toFixed(3));
         // an island on its way is out of the keyboard's way too
         const gone = q > 0.5; if (el.tabIndex !== (gone ? -1 : 0)) el.tabIndex = gone ? -1 : 0;
       });
       isec.style.setProperty('--v', Math.min(1, Math.max(0, (vh * 0.7 - t) / (vh * 0.55))).toFixed(3));
-      // the islands have landed: the middle one is there, the others glide in from the sides, then the world and the words
-      if (isec.classList.contains('wait') && y >= end * 0.92) {
+      // the last island has landed: it is the middle one now, the others glide in from the sides, then the world and the words;
+      // scrolling back up takes them away again, so the islands can fly back up to the hero
+      if (!landed && isec.classList.contains('in')) isec.classList.replace('in', 'wait');
+      if (landed && isec.classList.contains('wait')) {
         const tr = track.getBoundingClientRect(), mid = tr.left + tr.width / 2;
         slides.forEach((sl, k) => { const r = sl.getBoundingClientRect(); sl.style.setProperty('--k', Math.abs(k - at)); sl.style.setProperty('--fx', Math.max(-400, Math.min(400, (r.left + r.width / 2 - mid) * 0.5)).toFixed(0) + 'px'); });
         isec.classList.replace('wait', 'in');
