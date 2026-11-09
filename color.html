@@ -68,6 +68,29 @@
   .legend { display: none; }
   .num { width: 32px; height: 32px; font-size: 16px; border-width: 4px; }
 }
+/* a phone upright: every color in two rows, their numbers in view, nothing hidden off to the side */
+@media (max-width: 600px) and (min-height: 501px) {
+  .colors { grid-auto-flow: row; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-template-rows: none; justify-items: center; width: 100%; overflow: visible; padding: 12px 8px; gap: 10px 4px; }
+  .sw { width: 42px; height: 42px; }
+  .sw[data-n]::after { top: -6px; left: -6px; width: 22px; height: 22px; font-size: 13px; }
+  .saved .card h2 { font-size: 28px; }
+}
+/* a phone on its side: tools on the right, the picture as big as the height allows, the colors in a block on the left */
+@media (max-height: 500px) {
+  .studio { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: minmax(0, 1fr); gap: 12px; }
+  .board { width: auto; height: 100%; max-width: 100%; border-width: 5px; border-radius: 20px; box-shadow: 0 5px 0 rgba(168,46,102,.18), 0 12px 20px rgba(0,0,0,.18); }
+  .tools { order: 0; flex-direction: column; flex-wrap: nowrap; width: 136px; gap: 8px; }
+  .tool { height: 44px; padding: 0 12px; font-size: 15px; box-shadow: 0 4px 0 rgba(168,46,102,.18); }
+  .tool svg { width: 22px; height: 22px; }
+  .tool.save { height: 50px; font-size: 17px; }
+  .colors { order: 2; grid-auto-flow: row; grid-template-columns: repeat(3, 44px); grid-template-rows: none; overflow: visible; padding: 10px; gap: 8px; border-radius: 22px; }
+  .sw { width: 44px; height: 44px; }
+  .sw[data-n]::after { top: -6px; left: -6px; width: 20px; height: 20px; font-size: 12px; }
+  .num { width: 30px; height: 30px; font-size: 15px; }
+  .ttl img { width: 34px; height: 34px; border-radius: 10px; }
+  .saved .card img.work { width: 120px; height: 120px; border-radius: 16px; }
+  .saved .card { padding-top: 16px; }
+}
 @media (prefers-reduced-motion: reduce) { .splash { display: none; } .num { transition: none; } }
 </style>
 </head>

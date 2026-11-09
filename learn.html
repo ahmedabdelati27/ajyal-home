@@ -128,6 +128,53 @@
   .stars svg { width: 56px; height: 56px; }
   .won { font-size: 26px; }
 }
+/* an upright phone: the long «ask for more time» button may take two lines */
+@media (max-width: 600px) {
+  .stop .btn { height: auto; min-height: 52px; padding: 8px 22px; justify-content: center; text-align: center; line-height: 1.3; }
+}
+/* a phone on its side: the camel and his words in a slim column, the lesson card fills the height,
+   and a step with a picture puts its words beside it */
+@media (max-height: 500px) {
+  .ttl { flex-direction: row; gap: 8px; }
+  .ttl h1 { white-space: nowrap; }
+  .mini { width: 36px; height: 36px; border-radius: 11px; font-size: 24px; box-shadow: 0 3px 0 #C98A1E; }
+  .stage { flex-direction: row; justify-content: center; gap: 12px; align-items: stretch; }
+  .helper { width: 150px; align-self: flex-end; margin: 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 12px; }
+  .helper img { width: 120px; }
+  .tip { position: relative; bottom: auto; left: auto; right: auto; width: 100%; margin: 0; padding: 8px 10px 9px; border-radius: 16px; font-size: 13px; box-shadow: 0 4px 0 #E0B000; }
+  .tip::after { display: block; left: 50%; translate: -50% 0; border-width: 9px; }
+  .lesson { width: min(640px, 100%); padding: 8px 14px 10px; border-radius: 24px; gap: 6px; }
+  .steps li span { display: none; }
+  .steps button { width: 30px; height: 30px; font-size: 14px; }
+  .body { min-height: 0; gap: 8px; }
+  .body:has(.big), .body:has(.word), .body:has(.speak), .body:has(.trace), .body:has(.count) { flex-direction: row; gap: 22px; }
+  .body:has(.count) { flex-direction: column; }
+  .big { width: 160px; height: 160px; border-radius: 34px; font-size: 116px; }
+  .cap { font-size: 22px; }
+  .hear { width: 44px; height: 44px; } .hear svg { width: 24px; height: 24px; }
+  .obj { width: 150px; height: 150px; border-radius: 26px; }
+  .word { font-size: 34px; }
+  .count { gap: 10px; } .count button { width: 92px; height: 92px; border-radius: 20px; }
+  .count b { width: 34px; height: 34px; font-size: 20px; }
+  .speak { width: 110px; height: 110px; border-width: 5px; } .speak svg { width: 56px; height: 56px; }
+  .said { font-size: 18px; } .said b { font-size: 32px; }
+  .trace { width: min(220px, calc(100dvh - 160px)); border-radius: 26px; }
+  .trace canvas { border-radius: 26px; }
+  .tools { flex-direction: column; gap: 10px; }
+  .tools .meter { width: 140px; }
+  .tools .btn { height: 40px; padding: 0 14px; font-size: 14px; }
+  .q { font-size: 18px; } .q .hear { width: 38px; height: 38px; }
+  .picks { gap: 10px; }
+  .pick { padding: 5px; border-radius: 18px; font-size: 14px; gap: 2px; }
+  .pick .obj { width: 84px; height: 84px; border-radius: 14px; }
+  .pick .grp { grid-template-columns: repeat(2, 36px); gap: 4px; min-height: 78px; } .pick .grp img { width: 36px; height: 36px; border-radius: 10px; }
+  .fb { min-height: 22px; font-size: 16px; }
+  .stars { gap: 6px; } .stars svg { width: 44px; height: 44px; }
+  .won { font-size: 22px; }
+  .gain { height: 38px; font-size: 15px; } .gain img { width: 28px; height: 28px; }
+  .body .btns { margin-top: 2px; }
+  .nav .btn { height: 40px; padding: 0 20px; font-size: 16px; }
+}
 @media (prefers-reduced-motion: reduce) { .helper img, .big, .speak.on, .confetti i { animation: none; } }
 </style>
 </head>

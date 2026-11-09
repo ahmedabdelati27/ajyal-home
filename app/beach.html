@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Story Beach made for a phone, upright or on its side; a tablet and a computer get the web's beach
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../beach.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF6E6">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>شاطئ الحكايات · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<link rel="stylesheet" href="../shelf.css">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --sand: #FFF6E6; --edge: #EED6B0;
+  --coral: #E0607F; --coral-deep: #B8405F; --go: #2E8B2A; --go-deep: #1F6A1C; --leaf: #5BC236;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--sand); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the storybook beach at the top, fading into the sand; the turtle Salma reads on her island */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 34% 70%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,246,230,0), var(--sand) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--coral-deep), 2px 0 0 var(--coral-deep), -2px 0 0 var(--coral-deep), 0 -2px 0 var(--coral-deep), 2px 2px 0 var(--coral-deep), -2px 2px 0 var(--coral-deep), 2px -2px 0 var(--coral-deep), -2px -2px 0 var(--coral-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+/* the island picture has room around it: it is drawn larger than its spot and pulled into place */
+.guide { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) - 22px); bottom: -24px; width: 184px; height: 184px; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 150px); bottom: 58px; max-width: 190px; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.35; box-shadow: 0 4px 0 var(--coral); }
+.say svg { position: absolute; left: -14px; bottom: 12px; }
+@keyframes float { 50% { translate: 0 -7px; } }
+
+/* the categories: one chip each, «الكل» first */
+.chips { position: sticky; z-index: 4; top: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 8px var(--side-r) 10px var(--side-l); background: var(--sand); }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; height: 42px; padding: 0 16px; border: 3px solid transparent; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); }
+.chip[aria-pressed="true"] { border-color: #6B3A1E; background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+
+main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+
+/* where the child stopped reading */
+.cont { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.cont .thumb { position: relative; flex-shrink: 0; width: 74px; height: 92px; overflow: hidden; border-radius: 14px; }
+.cont .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cont .thumb i { position: absolute; inset: auto 0 0; height: 5px; background: rgba(255,255,255,.6); }
+.cont .thumb i::before { content: ""; display: block; width: 60%; height: 100%; background: var(--leaf); }
+.cont .txt { flex: 1; min-width: 0; }
+.cont small { display: block; font-size: 12px; font-weight: 800; color: var(--coral-deep); }
+.cont b { display: block; font-size: 18px; font-weight: 800; line-height: 1.25; }
+.cont .when { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.cont .meter { display: block; max-width: 260px; height: 7px; margin-top: 6px; border-radius: 999px; background: #F2E6D2; overflow: hidden; }
+.cont .meter i { display: block; width: 60%; height: 100%; border-radius: inherit; background: var(--leaf); }
+.cont .go { flex-shrink: 0; display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.cont .go svg { width: 14px; height: 14px; }
+
+/* what the two little icons on a cover mean */
+.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin: 16px 0 0; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend img { width: 24px; height: 24px; }
+
+/* the shelves on sand, sized for a finger, running to the screen's edges */
+#shelves { --u: .72px; display: flex; flex-direction: column; gap: 22px; margin-top: 14px; }
+#shelves .track { margin: 0 calc(-1 * var(--side-r)) 0 calc(-1 * var(--side-l)); padding-inline: var(--side-r) var(--side-l); scroll-padding-inline: var(--side-r); }
+#shelves .item { flex-basis: 152px; }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low beach with the name beside Salma, smaller covers, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 66%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 290px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .guide { width: 150px; height: 150px; bottom: -22px; left: calc(env(safe-area-inset-left) - 8px); }
+  .say { left: calc(env(safe-area-inset-left) + 128px); bottom: 46px; max-width: 170px; padding: 7px 12px 8px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .chips { justify-content: center; padding-top: 4px; padding-bottom: 8px; }
+  .chip { height: 38px; font-size: 14px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .cont { padding: 8px; } .cont .thumb { width: 58px; height: 72px; }
+  .legend { margin-top: 12px; }
+  #shelves { --u: .64px; gap: 16px; margin-top: 10px; }
+  #shelves .item { flex-basis: 140px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .guide { animation: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/stories/beach-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+  </div>
+  <div class="title">
+    <h1>شاطئ الحكايات</h1>
+    <p>اقرأ واستمع لقصص ممتعة مع السلحفاة سلمى</p>
+  </div>
+  <img class="guide" src="../img/beach.png" alt="السلحفاة سلمى على جزيرة شاطئ الحكايات">
+  <p class="say">أهلاً يا <span id="kid">عمر</span>! أي حكاية نقرأ اليوم؟<svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
+</header>
+
+<div class="chips" role="group" aria-label="تصنيف القصص" id="chips"></div>
+
+<main>
+  <a class="cont" href="../story.html?resume=1" aria-label="أكمل قراءة الأرنب الصادق، الصفحة 6 من 10، قصة مسموعة">
+    <span class="thumb"><img src="../img/stories/cover-00.jpg" alt=""><i></i></span>
+    <span class="txt"><small>أكمل من حيث توقفت</small><b>الأرنب الصادق</b><span class="when">الصفحة 6 من 10 · قصة مسموعة</span><span class="meter"><i></i></span></span>
+    <span class="go">أكمل<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span>
+  </a>
+
+  <div class="legend" aria-hidden="true">
+    <span><img src="../img/forest/I-12.png" alt="">قصة مسموعة</span>
+    <span><img src="../img/I-15.png" alt="">أنت بطل القصة</span>
+  </div>
+
+  <!-- one shelf per category the admin made (shelf.js, the same as the web's beach) -->
+  <div id="shelves" class="small"></div>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../shelf.js"></script>
+<script src="../beach-data.js"></script>
+<script>
+(() => {
+  // the categories and their stories, as on the web's beach
+  const host = document.getElementById('shelves');
+  Shelf.render(host, Beach.shelves('../'));
+
+  // a category chip keeps only its shelf
+  const chips = document.getElementById('chips');
+  chips.innerHTML = [{ id: '', title: 'الكل' }, ...Beach.cats()].map((c) => `<button class="chip" type="button" data-id="${c.id}" aria-pressed="${c.id === ''}">${c.title}</button>`).join('');
+  chips.addEventListener('click', (e) => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+    host.querySelectorAll('.shelf').forEach((sh) => { sh.hidden = !!b.dataset.id && sh.dataset.id !== b.dataset.id; sh.querySelector('.track').scrollTo({ left: 0 }); });
+    Shelf.sync(host);
+  });
+
+  // the child the parent chose carries over (a visitor stays a visitor)
+  try {
+    const kid = JSON.parse(localStorage.getItem('ajyal.profile') || '{}');
+    if (kid.name && !(window.Guest && Guest.on)) document.getElementById('kid').textContent = kid.name;
+  } catch {}
+
+  // the other screens of the app come next; stories not built yet say so
+  const toast = document.getElementById('toast');
+  const say = (s) => { toast.textContent = s; toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200); };
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-soon]')) return say('في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة');
+    const it = e.target.closest('#shelves a[href="#"]');
+    if (it) say(it.classList.contains('all') ? 'في النموذج: صفحة كل القصص تأتي في الخطوات القادمة' : 'في النموذج: جرّب قصة «الأرنب الصادق»');
+  });
+})();
+</script>
+</body>
+</html>

@@ -2,8 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the workshop made for it; a tablet and a computer keep this one
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/workshop.html' + location.search);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -52,7 +56,7 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
 /* what the child can make: three big doors */
 .makes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
 .make { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 14px 14px 20px; border-radius: 34px; background: var(--paper); color: var(--ink); text-decoration: none; box-shadow: 0 7px 0 var(--edge); transition: transform .2s; }
-.make:hover { transform: translateY(-4px); }
+@media (hover: hover) { .make:hover { transform: translateY(-4px); } }
 .make .art { width: 100%; aspect-ratio: 4 / 3; border-radius: 24px; object-fit: cover; }
 .make b { padding: 0 8px; font-size: 30px; font-weight: 800; }
 .make p { margin: 0; padding: 0 8px; font-size: 17px; font-weight: 700; color: var(--ink-soft); }
@@ -81,7 +85,7 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
 .rank { background: #FFF6E6; color: #C9372C; border: 2px solid var(--line); border-radius: 999px; padding: 0 9px; height: 26px; display: flex; align-items: center; font-size: 15px; }
 @media (max-width: 760px) { .dock a span { display: none; } .dock a { padding: 0 14px; } }
 /* phones: the page is drawn 720 wide, one door per row */
-.narrow .hero { height: 620px; }
+.narrow .hero { height: 620px; background-size: cover; }
 .narrow .isle { left: 10px; top: 60px; width: 320px; }
 .narrow .say { left: 330px; top: 110px; max-width: 350px; }
 .narrow .head { right: 32px; left: auto; max-width: calc(100% - 64px); top: 390px; }
@@ -135,28 +139,20 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
 
 <script src="valley.js"></script>
 <script src="workshop.js"></script>
+<script src="workshop-data.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  const { KINDS, left, count, open } = Workshop;
-  const KIND_OF = { 'ai-story': 'قصة مصورة', 'ai-video': 'فيديو', hero: 'أنت بطل القصة' };
 
+  // the three doors and «إبداعاتي», as on the phone's workshop (workshop-data.js)
   function render() {
-    // two AI doors show what is left of them; the hero door uses stories already in the library
-    // a closed feature (not in the package, or switched off by the parent) says so without «انتهت» and without prices
-    const door = (k) => {
-      const K = KINDS[k], on = open(k), n = on && left(k);
-      return `<a class="make ${n ? '' : 'out'}" href="create.html?k=${k}">
-        <img class="art" src="img/workshop/${K.cover}.jpg" alt=""><span class="left ${n ? '' : 'none'}">${on ? `✨ ${count(k)}` : '🔒 غير متاحة الآن'}</span>
-        <b>${K.n}</b><p>${K.about}</p><span class="cta">${n ? (k === 'story' ? 'اصنع قصة' : 'اصنع فيديو') : 'لماذا لا أستطيع؟'}</span></a>`;
-    };
-    const hero = open('hero');
-    $('makes').innerHTML = door('story') + door('video') + `<a class="make ${hero ? '' : 'out'}" href="hero.html">
-      <img class="art" src="img/workshop/k-hero.jpg" alt="">${hero ? '' : '<span class="left none">🔒 غير متاحة الآن</span>'}<b>أنت بطل القصة</b><p>ضع اسمك وصورتك في قصة من شاطئ الحكايات</p><span class="cta">${hero ? 'اختر قصة' : 'لماذا لا أستطيع؟'}</span></a>`;
+    $('makes').innerHTML = WorkshopBoard.doors().map((d) => `<a class="make ${d.out ? 'out' : ''}" href="${d.href}">
+      <img class="art" src="${d.art}" alt="">${d.badge ? `<span class="left ${d.out ? 'none' : ''}">${d.badge}</span>` : ''}
+      <b>${d.name}</b><p>${d.about}</p><span class="cta">${d.cta}</span></a>`).join('');
 
-    const works = Valley.works.read().filter((w) => KIND_OF[w.kind]);
+    const works = WorkshopBoard.works();
     $('mine').innerHTML = works.length ? works.map((w) => `<a class="work" href="${w.href}">
-      <img src="${w.img}" alt=""><b>${w.name}</b><span><i>${KIND_OF[w.kind]}</i><i class="${w.state}">${Valley.STATES[w.state]}</i></span></a>`).join('')
+      <img src="${w.img}" alt=""><b>${w.name}</b><span><i>${w.kind}</i><i class="${w.state}">${w.said}</i></span></a>`).join('')
       : '<p class="empty">لم تصنع شيئاً بعد. اختر من الأعلى، ونبدأ معاً!</p>';
     fit();
   }

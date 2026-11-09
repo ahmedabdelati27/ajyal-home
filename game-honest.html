@@ -41,6 +41,18 @@
   .choices { grid-template-columns: 1fr; gap: 1.4cqh; }
   .choice { font-size: 4.2cqw; border-radius: 4cqw; }
 }
+/* a phone upright: the listen button is tall enough for a finger */
+@media (max-width: 600px) and (min-height: 501px) { .hear { height: 38px; } }
+/* a phone on its side: the fox sits under the counters, and the question, the listen button and the choices stay readable */
+@media (max-height: 500px) {
+  .fox-up .fox { top: 48px; }
+  .panel { padding: 8px 14px 10px; gap: 8px; }
+  .q { font-size: 15px; }
+  .hear { height: 32px; gap: 4px; padding: 0 12px; font-size: 13px; } .hear svg { width: 16px; height: 16px; }
+  .choices { gap: 10px; }
+  .choice { min-height: 44px; padding: 4px 10px; border-width: 2px; border-radius: 14px; font-size: 14px; box-shadow: 0 4px 0 #EADBC4; }
+  .choice.right { box-shadow: 0 4px 0 #5BC236; }
+}
 </style>
 </head>
 <body>

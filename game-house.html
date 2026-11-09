@@ -57,6 +57,14 @@
   .blk::before { top: -1cqh; height: 1.1cqh; background-size: 4cqw 100%; }
   .tray .blk { width: calc(var(--pw) * var(--bw) / 100 * .5); height: calc(var(--ph) * var(--bh) / 100 * .5); }
 }
+/* a phone, upright or on its side: thin blocks in the tray still get a place big enough for a finger */
+@media (max-width: 600px), (max-height: 500px) {
+  .tray .thing.piece { display: grid; place-items: center; min-width: 52px; min-height: 52px; }
+}
+@media (max-height: 500px) {
+  .tray .blk { width: calc(var(--pw) * var(--bw) / 100 * .55); height: calc(var(--ph) * var(--bh) / 100 * .55); }
+  .tray .thing.piece { min-width: 46px; min-height: 46px; padding: 0 4px; }
+}
 @media (prefers-reduced-motion: reduce) { .slot.next, .slot .blk.in, .shine { animation: none; } }
 </style>
 </head>

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Valley of Colors made for a phone, upright or on its side; a tablet and a computer get the web's valley
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../colors.html' + location.search + location.hash);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF2F6">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>وادي الألوان · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF2F6; --pink: #E0559A; --pink-deep: #A82E66; --edge: #F2CFDD;
+  --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; scroll-padding-top: 8px; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 3px; }
+
+/* the rainbow valley at the top, fading into soft pink; the cat greets the child from her island */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,242,246,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--pink-deep), 2px 0 0 var(--pink-deep), -2px 0 0 var(--pink-deep), 0 -2px 0 var(--pink-deep), 2px 2px 0 var(--pink-deep), -2px 2px 0 var(--pink-deep), 2px -2px 0 var(--pink-deep), -2px -2px 0 var(--pink-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+.cat { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) - 4px); bottom: -6px; width: 150px; height: 150px; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 140px); bottom: 64px; max-width: 190px; margin: 0; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.35; box-shadow: 0 4px 0 var(--pink); }
+.say svg { position: absolute; left: -14px; bottom: 12px; }
+@keyframes float { 50% { translate: 0 -7px; } }
+
+main { display: flex; flex-direction: column; gap: 22px; padding: 4px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+h2.sec { margin: 0 0 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 22px; font-weight: 800; }
+h2.sec small { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+h2.sec .pill { height: 34px; font-size: 14px; }
+
+/* the picture the child left half colored */
+.cont { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.cont[hidden] { display: none; }
+.cont .art { position: relative; flex-shrink: 0; width: 66px; height: 66px; overflow: hidden; border-radius: 14px; background: var(--paper); box-shadow: inset 0 0 0 2px #F6DCE6; }
+.cont .art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+/* the lines over the child's colors, like on the coloring screen */
+.cont .art img.ink { mix-blend-mode: multiply; }
+.cont .txt { flex: 1; min-width: 0; }
+.cont small { display: block; font-size: 12px; font-weight: 800; color: var(--pink-deep); }
+.cont b { display: block; font-size: 17px; font-weight: 800; line-height: 1.25; }
+.cont .when { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.go { flex-shrink: 0; display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.go svg { width: 14px; height: 14px; }
+
+/* the two things to do here: draw freely, or color a picture; the art on the left, the words on the calm right */
+.modes { display: grid; gap: 14px; }
+.mode { position: relative; display: flex; align-items: center; min-height: 148px; padding: 14px 16px; border: 4px solid var(--paper); border-radius: 26px; overflow: hidden; background: var(--art) left center / cover no-repeat; box-shadow: 0 6px 0 var(--edge-c); }
+.mode.draw { --art: url(../img/colors/mode-draw.jpg); --ink-on: #3E3290; --deep: #6656D8; --edge-c: #B9AEF2; }
+.mode.paint { --art: url(../img/colors/mode-paint.jpg); --ink-on: #9E2A5E; --deep: #E0559A; --edge-c: #F5B9CF; }
+.mode .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; max-width: 54%; }
+.mode b { font-size: 24px; font-weight: 800; line-height: 1.1; color: var(--ink-on); }
+.mode small { font-size: 13px; font-weight: 700; line-height: 1.45; }
+.mode .cta { display: inline-flex; align-items: center; gap: 6px; height: 40px; margin-top: 4px; padding: 0 16px; border-radius: 999px; background: var(--deep); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--ink-on); }
+.mode .cta svg { width: 14px; height: 14px; }
+.mode:active { translate: 0 2px; }
+
+/* the coloring pictures; the kinds stay at hand while the child scrolls through them */
+.chips { position: sticky; z-index: 4; top: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--side-r)) 6px calc(-1 * var(--side-l)); padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; height: 42px; padding: 0 16px; border: 3px solid transparent; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); }
+.chip[aria-pressed="true"] { border-color: var(--pink-deep); background: linear-gradient(#F07AB2, #D6407F); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+.pics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.pic { position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 8px 8px 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.pic .sheet { aspect-ratio: 1; overflow: hidden; border-radius: 16px; background: var(--paper); box-shadow: inset 0 0 0 2px #F6E3EA; }
+.pic .sheet img { width: 100%; height: 100%; object-fit: contain; }
+.pic b { padding: 0 4px; font-size: 16px; font-weight: 800; }
+.pic:active { translate: 0 2px; }
+.tag { position: absolute; top: 12px; left: 12px; display: flex; align-items: center; height: 26px; padding: 0 9px; border: 2px solid var(--paper); border-radius: 999px; font-size: 12px; font-weight: 800; box-shadow: 0 3px 0 rgba(0,0,0,.12); }
+.tag.ok { background: #4CB944; color: var(--paper); }
+.tag.on { background: #FFC93C; color: #5A3A00; }
+.tag.num { background: #7B6CF0; color: var(--paper); }
+
+/* the child's works from the valley, each with its state */
+.works { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.work { position: relative; display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 6px 6px 8px; border-radius: 18px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); }
+.work img { width: 100%; aspect-ratio: 1; border-radius: 12px; object-fit: cover; background: var(--paper); }
+.work b { padding: 0 2px; font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.work small { padding: 0 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.state { position: absolute; top: 10px; left: 10px; right: 10px; width: max-content; max-width: calc(100% - 20px); height: 22px; padding: 0 7px; border-radius: 999px; display: flex; align-items: center; font-size: 11px; font-weight: 800; white-space: nowrap; background: var(--paper); box-shadow: 0 2px 0 rgba(0,0,0,.12); }
+.state.review { background: #FFF1C9; color: #8A5A00; } .state.published { background: #DDF5D3; color: #2E7D32; } .state.rejected { background: #FBE3E3; color: #B23B3B; }
+.empty { margin: 0; padding: 16px 18px; border-radius: 20px; background: rgba(255,255,255,.7); font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--ink-soft); }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(120,40,70,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low valley with the name beside the cat, the two modes side by side, more pictures per row, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 55%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 260px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .cat { width: 124px; height: 124px; bottom: -6px; left: calc(env(safe-area-inset-left) + 4px); }
+  .say { left: calc(env(safe-area-inset-left) + 118px); bottom: 46px; max-width: 170px; padding: 7px 12px 8px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  main { gap: 18px; padding-bottom: calc(var(--bottom) + 70px); }
+  .cont { padding: 8px; } .cont .art { width: 54px; height: 54px; }
+  .modes { grid-template-columns: 1fr 1fr; }
+  .mode { min-height: 124px; }
+  .mode b { font-size: 22px; }
+  .chips { justify-content: center; padding-top: 4px; padding-bottom: 8px; }
+  .chip { height: 38px; font-size: 14px; }
+  .pics { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .works { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .cat { animation: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/colors/valley-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+  </div>
+  <div class="title">
+    <h1>وادي الألوان</h1>
+    <p>ارسم ولوّن مع القطة مشمش</p>
+  </div>
+  <img class="cat" src="../img/colors.png" alt="القطة مشمش على جزيرة وادي الألوان">
+  <p class="say">أهلاً يا <span id="kid">عمر</span>! ماذا نرسم اليوم؟<svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
+</header>
+
+<main>
+  <a class="cont" id="cont" hidden></a>
+
+  <section class="modes" aria-label="ماذا تفعل">
+    <a class="mode draw" href="../draw.html">
+      <span class="txt"><b>ارسم بحرية</b><small>لوحة بيضاء وأقلام وألوان، ارسم ما تحب</small><span class="cta">ابدأ الرسم <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span></span>
+    </a>
+    <a class="mode paint" href="#pics" id="to-pics">
+      <span class="txt"><b>لوّن رسمة</b><small>اختر رسمة جاهزة، واضغط على أي جزء لتلوّنه</small><span class="cta">اختر رسمة <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span></span>
+    </a>
+  </section>
+
+  <section id="pics" aria-labelledby="pics-t">
+    <h2 class="sec"><span id="pics-t">رسومات للتلوين</span><small id="pics-n"></small></h2>
+    <div class="chips" id="chips" role="group" aria-label="اختر نوع الرسومات"></div>
+    <div class="pics" id="grid"></div>
+  </section>
+
+  <section aria-labelledby="works-t">
+    <h2 class="sec"><span id="works-t">إبداعاتي من الوادي</span><button type="button" class="pill" data-soon>كل إبداعاتي</button></h2>
+    <div id="works"></div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../valley.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // the pictures and the child's works, as in the web's valley; valley.js and the saved works give paths from the site's root
+  const { PICS, CATS, works, STATES, progress } = Valley;
+  const up = (s) => (/^(data:|blob:|https?:|\/)/.test(s) ? s : '../' + s);
+  const thumb = (p) => up(Valley.thumb(p));
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const play = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg>';
+  let cat = 'all';
+
+  function render() {
+    const mine = works.read();
+    const colored = new Set(mine.filter((w) => w.kind === 'color').map((w) => w.pic));
+    // carry on with the last picture the child left half colored
+    const open = PICS.find((p) => progress.get(p.id) && !colored.has(p.id));
+    $('cont').hidden = !open;
+    if (open) {
+      $('cont').href = `../color.html?pic=${open.id}`;
+      $('cont').setAttribute('aria-label', `أكمل تلوين ${open.name}`);
+      $('cont').innerHTML = `<span class="art" aria-hidden="true"><img src="${progress.get(open.id)}" alt=""><img class="ink" src="${thumb(open)}" alt=""></span>
+        <span class="txt"><small>أكمل من حيث توقفت</small><b>${open.name}</b><span class="when">بدأت تلوينها ولم تحفظها بعد</span></span>
+        <span class="go">أكمل${play}</span>`;
+    }
+
+    $('chips').innerHTML = CATS.map((c) => `<button class="chip" type="button" data-id="${c.id}" aria-pressed="${c.id === cat}">${c.n}</button>`).join('');
+    const list = PICS.filter((p) => cat === 'all' || p.cat === cat);
+    $('pics-n').textContent = `لوّنت ${ar(colored.size)} من ${ar(PICS.length)}`;
+    $('grid').innerHTML = list.map((p) => {
+      const state = colored.has(p.id) ? 'لوّنتها' : progress.get(p.id) ? 'بدأت تلوينها' : p.parts ? 'بالأرقام' : '';
+      const tag = colored.has(p.id) ? '<span class="tag ok">✓ لوّنتها</span>' : progress.get(p.id) ? '<span class="tag on">بدأت تلوينها</span>' : p.parts ? '<span class="tag num">١٢٣ بالأرقام</span>' : '';
+      return `<a class="pic" href="../color.html?pic=${p.id}" aria-label="${[p.name, state].filter(Boolean).join('، ')}"><span class="sheet"><img src="${thumb(p)}" alt=""></span>${tag}<b>${p.name}</b></a>`;
+    }).join('');
+
+    // the valley's works: drawings and colorings, each with its state
+    const here = mine.filter((w) => w.kind === 'draw' || w.kind === 'color');
+    $('works').innerHTML = here.length
+      ? `<div class="works">${here.slice(0, 6).map((w) => `<div class="work"><img src="${up(w.img)}" alt="${w.name}"><span class="state ${w.state}">${STATES[w.state]}</span><b>${w.name}</b><small>${w.kind === 'draw' ? 'رسمة حرة' : 'تلوين'}</small></div>`).join('')}</div>`
+      : '<p class="empty">لم تحفظ أي عمل بعد. ارسم أو لوّن، واحفظ عملك ليظهر هنا وفي غرفتك.</p>';
+  }
+
+  // the kinds: the grid changes, and stays where the child is looking
+  $('chips').addEventListener('click', (e) => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    cat = b.dataset.id; render();
+    $('chips').querySelector(`[data-id="${cat}"]`).focus({ preventScroll: true });
+  });
+  // «لوّن رسمة» goes down to the pictures
+  $('to-pics').addEventListener('click', (e) => { e.preventDefault(); $('pics').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); });
+
+  // the child the parent chose carries over (a visitor stays a visitor)
+  try {
+    const kid = JSON.parse(localStorage.getItem('ajyal.profile') || '{}');
+    if (kid.name && !(window.Guest && Guest.on)) $('kid').textContent = kid.name;
+  } catch {}
+
+  // the other screens of the app come next
+  const toast = $('toast');
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-soon]')) return;
+    toast.textContent = 'في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة';
+    toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200);
+  });
+
+  // coming back from coloring or drawing shows the new work and state
+  addEventListener('pageshow', (e) => { if (e.persisted) render(); });
+  render();
+})();
+</script>
+</body>
+</html>

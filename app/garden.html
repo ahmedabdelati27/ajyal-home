@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Values Garden made for a phone, upright or on its side; a tablet and a computer get the web's garden
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../garden.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#F1F8E8">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>حديقة القيم · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #F1F8E8; --mint: #D3E6C1;
+  --go: #2E8B2A; --go-deep: #1F6A1C; --leaf: #5BC236; --leaf-deep: #2F7A23; --sun: #F7B347;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+  /* the garden's height; its width follows the picture */
+  --gh: 430px;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the garden at morning at the top, fading into the page; Nour greets the child from her island */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(241,248,232,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--mint); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--mint); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--leaf-deep), 2px 0 0 var(--leaf-deep), -2px 0 0 var(--leaf-deep), 0 -2px 0 var(--leaf-deep), 2px 2px 0 var(--leaf-deep), -2px 2px 0 var(--leaf-deep), 2px -2px 0 var(--leaf-deep), -2px -2px 0 var(--leaf-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+.isle { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 2px); bottom: 2px; width: 136px; height: 136px; object-fit: contain; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 140px); right: var(--side-r); bottom: 40px; max-width: 220px; margin: 0; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 14px; font-weight: 800; line-height: 1.4; box-shadow: 0 4px 0 var(--sun); }
+.say svg { position: absolute; left: -14px; bottom: 12px; }
+@keyframes float { 50% { translate: 0 -7px; } }
+
+/* garden or list */
+.views { position: sticky; z-index: 4; top: 0; display: flex; justify-content: center; padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+.seg { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--mint); }
+.seg button { display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; font-size: 15px; font-weight: 800; }
+.seg button[aria-pressed="true"] { border-color: #6B3A1E; background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+
+main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+.meter { display: inline-block; width: 90px; height: 8px; border-radius: 999px; background: #E3EFD6; overflow: hidden; vertical-align: middle; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--leaf); }
+
+/* the journey the child is on */
+.cont { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--mint); }
+.cont[hidden] { display: none; }
+.cont .thumb { flex-shrink: 0; width: 96px; height: 66px; overflow: hidden; border-radius: 14px; }
+.cont .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cont .txt { flex: 1; min-width: 0; }
+.cont small { display: block; font-size: 12px; font-weight: 800; color: var(--leaf-deep); }
+.cont b { display: block; font-size: 17px; font-weight: 800; line-height: 1.25; }
+.cont .when { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.cont .meter { margin-top: 5px; width: 100%; }
+.cont .go { flex-shrink: 0; display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.cont .go svg { width: 14px; height: 14px; }
+
+/* how much of the garden is in bloom */
+.g-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 20px 0 8px; }
+.g-head b { font-size: 21px; font-weight: 800; }
+.g-head small { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.g-hint { margin: 0 0 10px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.g-hint .wide { display: none; }
+
+/* the garden: the picture keeps its beds, so it is as tall as a finger needs and slides sideways */
+.field { position: relative; overflow-x: auto; overflow-y: hidden; margin: 0 calc(-1 * var(--side-r)) 0 calc(-1 * var(--side-l)); padding: 0 var(--side-r) 12px var(--side-l); scrollbar-width: none; overscroll-behavior-x: contain; }
+.field::-webkit-scrollbar { display: none; }
+.field[hidden], .vlist[hidden] { display: none; }
+.scene { position: relative; height: var(--gh); aspect-ratio: 2560 / 1429; margin-inline: auto; border: 6px solid var(--paper); border-radius: 28px; overflow: hidden; background: url(../img/garden/garden-scene.jpg) center / cover; box-shadow: 0 6px 0 var(--mint), 0 14px 26px rgba(40,80,20,.15); }
+.bed { position: absolute; z-index: 3; left: var(--x); top: var(--y); width: 0; height: 0; }
+.bed .plant { position: absolute; left: 0; bottom: -12px; width: var(--w); max-width: none; translate: -50% 0; transform-origin: 50% 100%; filter: drop-shadow(0 5px 5px rgba(40,60,10,.25)); }
+.bed .plant.sway { animation: sway 4s ease-in-out infinite; }
+@keyframes sway { 50% { rotate: 2deg; } }
+.bed .plant.grow { animation: grow 1.4s cubic-bezier(.3, 1.4, .6, 1) .4s both; }
+@keyframes grow { from { scale: .2; opacity: 0; } }
+.bed:active .plant { scale: 1.06; }
+.sign { position: absolute; left: 0; top: 20px; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 12px 6px; border-radius: 14px; background: var(--paper); border-top: 5px solid var(--c); white-space: nowrap; box-shadow: 0 3px 0 rgba(40,60,10,.2); }
+.sign b { font-size: 16px; font-weight: 800; }
+.sign small { font-size: 12px; font-weight: 800; color: var(--ink-soft); }
+.sign small.ok { color: var(--leaf-deep); }
+.bed.now .sign { box-shadow: 0 0 0 3px var(--sun), 0 3px 0 rgba(40,60,10,.2); }
+/* Nour waits by the plant the child is growing now */
+.nour { position: absolute; z-index: 4; width: 72px; max-width: none; pointer-events: none; translate: -50% -100%; animation: hover 3s ease-in-out infinite; }
+@keyframes hover { 50% { translate: -50% calc(-100% - 8px); } }
+
+/* the list: one card per value */
+.vlist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+.vcard { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding-bottom: 10px; border-radius: 20px; overflow: hidden; background: var(--paper); border-top: 6px solid var(--c); box-shadow: 0 5px 0 var(--mint); }
+.vcard img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.vcard b { padding: 4px 12px 0; font-size: 17px; font-weight: 800; }
+.vcard small { padding: 0 12px; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.vcard small.ok { color: var(--leaf-deep); }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(40,70,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low hero with the name beside Nour, the whole garden in one view, more cards in a row */
+@media (max-height: 500px) {
+  :root { --gh: 340px; }
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 45%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 300px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .isle { width: 112px; height: 112px; bottom: 0; left: calc(env(safe-area-inset-left) + 8px); }
+  .say { left: calc(env(safe-area-inset-left) + 118px); right: auto; bottom: 30px; max-width: 200px; padding: 7px 12px 8px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .views { padding-top: 4px; padding-bottom: 8px; }
+  .seg button { height: 38px; font-size: 14px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .cont { padding: 8px; } .cont .thumb { width: 88px; height: 54px; }
+  .g-head { margin-top: 14px; }
+  .g-hint .narrow { display: none; } .g-hint .wide { display: inline; }
+  .vlist { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .vcard b { font-size: 15px; } .vcard small { font-size: 12px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .isle, .nour, .bed .plant.sway, .bed .plant.grow { animation: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/garden/garden-scene.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+    <span class="pill" title="الشارات" role="img" aria-label="الشارات: 6"><img src="../img/hud/badge.png" alt="">6</span>
+  </div>
+  <div class="title">
+    <h1>حديقة القيم</h1>
+    <p>ازرع القيم الجميلة مع نور</p>
+  </div>
+  <img class="isle" src="../img/garden.png" alt="نور في حديقة القيم">
+  <p class="say"><span id="say">أهلاً يا عمر! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك</span><svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
+</header>
+
+<div class="views">
+  <div class="seg" role="group" aria-label="طريقة العرض" id="views"><button type="button" data-v="garden" aria-pressed="true">🌳 الحديقة</button><button type="button" data-v="list" aria-pressed="false">☰ قائمة</button></div>
+</div>
+
+<main>
+  <a class="cont" id="cont" hidden></a>
+  <div class="g-head"><b>حديقتك</b><small id="bloom"></small></div>
+  <p class="g-hint">🌱 اضغط على أي نبتة لتبدأ رحلتها<span class="narrow">، واسحب لترى الحديقة كلها</span><span class="wide"></span></p>
+  <section class="field" id="field" aria-label="حديقتك"><div class="scene" id="scene"></div></section>
+  <section class="vlist" id="vlist" aria-label="القيم" hidden></section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../values.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { VALUES, state, stage, current } = Values;
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  // the plant's width at each stage, sized for the phone's garden
+  const WIDTH = [52, 48, 80, 142];
+  const seen = { get: (v) => { try { return localStorage.getItem(`ajyal.value.seen.${v}`); } catch { return '1'; } }, set: (v) => { try { localStorage.setItem(`ajyal.value.seen.${v}`, '1'); } catch {} } };
+  const mine = (v) => { try { return !!localStorage.getItem(`ajyal.value.${v}`); } catch { return false; } };
+
+  // the child the parent chose carries over (a visitor stays a visitor)
+  let kid = 'عمر';
+  try { const p = JSON.parse(localStorage.getItem('ajyal.profile') || '{}'); if (p.name && !(window.Guest && Guest.on)) kid = p.name; } catch {}
+
+  const toast = (s, ms = 2400) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), ms); };
+
+  function render() {
+    const all = VALUES.map((v) => ({ v, s: state(v), g: stage(v) }));
+    const bloom = all.filter((x) => x.s.complete).length;
+    // the journey under way: the last one the child worked on
+    const cur = current(), now = cur && all.find((x) => x.v === cur);
+    $('cont').hidden = !now;
+    if (now) {
+      const next = now.v.stations.find((x) => x.req && !now.s.done.includes(x.id));
+      $('cont').href = `value.html?v=${now.v.id}`;
+      $('cont').setAttribute('aria-label', `أكمل رحلة ${now.v.name} مع نور، أكملت ${now.s.n} من ${now.s.all}، التالية: ${next.name}`);
+      $('cont').innerHTML = `<span class="thumb"><img src="../img/garden/v-${now.v.id}.jpg" alt=""></span>
+        <span class="txt"><small>أكمل رحلتك مع نور</small><b>رحلة ${now.v.name}</b><span class="when">أكملت ${ar(now.s.n)} من ${ar(now.s.all)} · التالية: ${next.name}</span><span class="meter" style="--p:${(now.s.n / now.s.all) * 100}%"><i></i></span></span>
+        <span class="go">أكمل<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span>`;
+    }
+    $('bloom').innerHTML = `أزهرت ${ar(bloom)} من ${ar(VALUES.length)} قيم <span class="meter" style="--p:${(bloom / VALUES.length) * 100}%"><i></i></span>`;
+    // a value the child just completed grows in front of them, once
+    const fresh = all.find((x) => x.s.complete && mine(x.v.id) && !seen.get(x.v.id));
+    const status = (s) => (s.complete ? 'أزهرت' : s.n ? `${s.n} من ${s.all}` : 'لم تبدأ بعد');
+    $('scene').innerHTML = all.map(({ v, s, g }) => {
+      const label = s.complete ? '<small class="ok">✓ أزهرت</small>' : s.n ? `<small>${ar(s.n)} من ${ar(s.all)}</small>` : '<small>لم تبدأ بعد</small>';
+      return `<a class="bed ${now && now.v === v ? 'now' : ''}" href="value.html?v=${v.id}" data-id="${v.id}" style="--x:${v.plot[0]}%;--y:${v.plot[1]}%;--c:${v.color};--w:${WIDTH[g]}px" aria-label="${v.name}، ${status(s)}">
+        <img class="plant ${g === 3 ? 'sway' : ''} ${fresh && fresh.v === v ? 'grow' : ''}" src="../img/garden/plant-${g}.png" alt="">
+        <span class="sign"><b>${v.name}</b>${label}</span></a>`;
+    }).join('') + (now ? `<img class="nour" src="../img/garden/nour-point.png" alt="" style="left:calc(${now.v.plot[0]}% + ${now.v.plot[0] > 50 ? 60 : -60}px);top:calc(${now.v.plot[1]}% + 6px);${now.v.plot[0] > 50 ? '' : 'scale:-1 1;'}">` : '');
+    $('vlist').innerHTML = all.map(({ v, s }) => `<a class="vcard" href="value.html?v=${v.id}" style="--c:${v.color}" aria-label="${v.name}، ${status(s)}"><img src="../img/garden/v-${v.id}.jpg" alt=""><b>${v.name}</b><small class="${s.complete ? 'ok' : ''}">${s.complete ? '✓ أزهرت' : s.n ? `أكملت ${ar(s.n)} من ${ar(s.all)}` : 'لم تبدأ بعد'}</small></a>`).join('');
+    $('say').textContent = bloom ? `أهلاً يا ${kid}! في حديقتك ${ar(bloom)} ${bloom === 1 ? 'شجرة مزهرة' : 'أشجار مزهرة'}، هيا نزرع المزيد` : `أهلاً يا ${kid}! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك`;
+    // the garden opens on the plant that matters now: the one that just bloomed, or the one being grown
+    const focus = fresh || now;
+    requestAnimationFrame(() => {
+      const bed = focus && $('scene').querySelector(`[data-id="${focus.v.id}"]`), field = $('field');
+      if (!bed || field.hidden) return;
+      const f = field.getBoundingClientRect(), b = bed.getBoundingClientRect();
+      field.scrollLeft += b.left - (f.left + f.width / 2);
+      if (fresh) field.scrollIntoView({ block: 'center' });
+    });
+    if (fresh) { seen.set(fresh.v.id); setTimeout(() => toast(`أزهرت شجرة ${fresh.v.name} في حديقتك!`, 4500), 900); }
+  }
+
+  // garden or list
+  $('views').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    $('views').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    $('field').hidden = b.dataset.v !== 'garden'; $('vlist').hidden = b.dataset.v !== 'list';
+    document.querySelectorAll('.g-hint').forEach((x) => { x.hidden = b.dataset.v !== 'garden'; });
+  });
+
+  // the other screens of the app come next
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-soon]')) return;
+    toast('في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة', 2200);
+  });
+
+  // coming back from a journey with the browser's back button shows the garden as it is now
+  addEventListener('pageshow', (e) => { if (e.persisted) render(); });
+  render();
+})();
+</script>
+</body>
+</html>

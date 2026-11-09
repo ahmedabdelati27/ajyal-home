@@ -2,8 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the beach made for it; a tablet and a computer keep this one
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/beach.html' + location.search);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -130,40 +134,12 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
 </nav>
 
 <script src="shelf.js"></script>
+<script src="beach-data.js"></script>
 <script>
 (() => {
-  // a: has a voiceover · hero: can be personalised through «أنت بطل القصة» · status: '' / '40%' / 'done' · fresh: «جديد»
-  const s = (title, about, cover, pages, a, hero, status = '', fresh = false, href = '#') => ({ title, about, cover, pages, a, hero, status, fresh, href });
-  const SHELVES = [
-    { id: 'values', title: 'قيم وأخلاق', items: [
-      s('الأرنب الصادق', 'زيتون يتعلّم أن الصدق شجاعة', 0, 10, true, true, '60%', false, 'story.html?resume=1'),
-      s('السلحفاة الصبورة', 'سلمى تنتظر الزهرة حتى تتفتّح', 1, 8, true, false, 'done'),
-      s('مشاركة الكعكة', 'الفرح يكبر عندما نتقاسمه', 2, 6, false, true, '', true),
-      s('النملة المجتهدة', 'نملة صغيرة وبذرة كبيرة', 3, 8, true, false)
-    ] },
-    { id: 'animals', title: 'حيوانات وأصدقاء', items: [
-      s('صداقة القطة والعصفور', 'صديقان مختلفان يتعلّمان اللعب معاً', 5, 7, true, false),
-      s('الفيل الذي يخاف من الفأر', 'حتى الكبار يخافون أحياناً', 6, 6, false, true, '', true),
-      s('البطريق الذي يحب الدفء', 'بطريق صغير يبحث عن مكان دافئ', 7, 8, true, false, '30%'),
-      s('الحوت الصغير يبحث عن أمه', 'رحلة في البحر الأزرق الكبير', 4, 9, true, false, 'done')
-    ] },
-    { id: 'trips', title: 'مغامرات ورحلات', items: [
-      s('رحلة إلى قاع البحر', 'غوّاصة صفراء بين المرجان', 8, 10, true, false),
-      s('القارب الورقي', 'ضفدع يبحر في الجدول', 9, 6, false, false, 'done'),
-      s('سرّ الجزيرة الملوّنة', 'صندوق غامض على الرمال', 10, 12, false, true, '', true),
-      s('الطائرة الورقية الحمراء', 'دبدوب يطيّر طائرته عالياً', 11, 7, true, false)
-    ] }
-  ];
-  const AUDIO = { src: 'img/forest/I-12.png', c: '#EC6A93', name: 'قصة مسموعة' }, HERO = { src: 'img/I-15.png', c: '#F4823F', name: 'أنت بطل القصة' };
-  const COUNT = { values: 12, animals: 9, trips: 10 };
-  const item = (it) => {
-    const going = it.status && it.status !== 'done';
-    return { title: it.title, href: it.href, img: `img/stories/cover-${String(it.cover).padStart(2, '0')}.jpg`, kinds: [it.a && AUDIO, it.hero && HERO].filter(Boolean),
-      meta: `${it.pages} صفحات`, tag: it.status === 'done' ? 'done' : it.fresh && !it.status ? 'new' : '', done: 'مكتملة', p: going ? it.status : '',
-      label: [it.title, it.about, `${it.pages} صفحات`, it.a ? 'مسموعة' : '', it.hero ? 'يمكنك أن تكون بطلها' : '', it.status === 'done' ? 'مكتملة' : going ? 'جارية' : it.fresh ? 'جديدة' : ''].filter(Boolean).join('، ') };
-  };
+  // the categories and their stories, the same as the phone's beach
   const host = document.getElementById('shelves');
-  Shelf.render(host, SHELVES.map((sh) => ({ ...sh, look: 'sand', count: COUNT[sh.id], items: sh.items.map(item) })));
+  Shelf.render(host, Beach.shelves(''));
   host.style.cssText = 'display:flex;flex-direction:column;gap:40px';
 
   // the board is drawn at 1440 wide; scale it to the window like the forest
@@ -181,7 +157,7 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
 
   // category chips filter the shelves
   const chips = document.getElementById('chips');
-  chips.innerHTML = [{ id: '', title: 'الكل' }, ...SHELVES].map((c) => `<button class="chip" type="button" data-id="${c.id}" aria-pressed="${c.id === ''}">${c.title}</button>`).join('');
+  chips.innerHTML = [{ id: '', title: 'الكل' }, ...Beach.cats()].map((c) => `<button class="chip" type="button" data-id="${c.id}" aria-pressed="${c.id === ''}">${c.title}</button>`).join('');
   chips.addEventListener('click', (e) => {
     const b = e.target.closest('.chip'); if (!b) return;
     chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c === b));

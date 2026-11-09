@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Letters Oasis made for a phone, upright or on its side; a tablet and a computer get the web's oasis
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../oasis.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF4DE">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>واحة الحروف · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF4DE; --sandy: #E8CFA6;
+  --go: #2E8B2A; --go-deep: #1F6A1C; --gold: #E0B000; --gold-deep: #A87800; --line: #6B3A1E; --leaf: #5BC236;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the storybook oasis at the top, fading into the sand; the camel greets the child from his island */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 32% 70%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,244,222,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--sandy); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--sandy); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--gold-deep), 2px 0 0 var(--gold-deep), -2px 0 0 var(--gold-deep), 0 -2px 0 var(--gold-deep), 2px 2px 0 var(--gold-deep), -2px 2px 0 var(--gold-deep), 2px -2px 0 var(--gold-deep), -2px -2px 0 var(--gold-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+.isle { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 2px); bottom: 2px; width: 136px; height: 136px; object-fit: contain; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 140px); bottom: 56px; max-width: 200px; margin: 0; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.35; box-shadow: 0 4px 0 var(--gold); }
+.say svg { position: absolute; left: -14px; bottom: 12px; }
+@keyframes float { 50% { translate: 0 -7px; } }
+
+/* two switches: the language, then letters or numbers */
+.switches { position: sticky; z-index: 4; top: 0; display: flex; justify-content: center; gap: 8px; padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+.seg { display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--sandy); }
+.seg button { height: 42px; padding: 0 13px; border: 3px solid transparent; border-radius: 999px; font-size: 15px; font-weight: 800; white-space: nowrap; }
+.seg button[aria-pressed="true"] { border-color: var(--line); background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+.seg button[lang="en"] { font-family: system-ui, sans-serif; }
+
+main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+.meter { display: block; width: 100%; height: 8px; margin-top: 5px; border-radius: 999px; background: #F2E6D2; overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--leaf); }
+
+/* continue learning */
+.cont { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 #EED6B0; }
+.cont[hidden] { display: none; }
+.cont .glyph { flex-shrink: 0; display: grid; place-items: center; width: 66px; height: 66px; border-radius: 18px; background: linear-gradient(#FFF3C4, #FFD978); color: #8A4F00; font-size: 44px; font-weight: 800; line-height: 1; box-shadow: 0 0 0 3px #F7B347, 0 4px 0 #C98A1E; }
+.cont .txt { flex: 1; min-width: 0; }
+.cont small { display: block; font-size: 12px; font-weight: 800; color: var(--gold-deep); }
+.cont b { display: block; font-size: 17px; font-weight: 800; line-height: 1.25; }
+.cont .when { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.cont .go { flex-shrink: 0; display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.cont .go svg { width: 14px; height: 14px; }
+
+/* the journey: one sand stone per letter or number */
+.trail { margin-top: 20px; }
+.trail h2 { margin: 0; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 21px; font-weight: 800; }
+.trail h2 small { font-size: 13px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 6px 0 14px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 14px; height: 14px; border-radius: 5px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 12px; }
+.tile { position: relative; aspect-ratio: 1; border-radius: 22px; background: linear-gradient(#FFFBF2, #F7E7C6); box-shadow: inset 0 -5px 0 rgba(168,120,0,.12), 0 5px 0 #E3C893; display: flex; align-items: center; justify-content: center; padding-bottom: 6px; font-size: 44px; font-weight: 800; line-height: 1; color: #8A5A1E; }
+.tile:active { translate: 0 2px; }
+.tile[lang="en"] { font-family: system-ui, sans-serif; font-size: 38px; }
+.tile.done { background: linear-gradient(#F3FCEB, #D9F2C7); color: #2E7D32; box-shadow: inset 0 -5px 0 rgba(46,125,50,.12), 0 5px 0 #A9D98E; padding-bottom: 16px; }
+.tile.now { background: linear-gradient(#FFF3C4, #FFD978); color: #8A4F00; box-shadow: 0 0 0 4px #F7B347, 0 5px 0 #C98A1E, 0 0 22px rgba(247,179,71,.8); animation: glow 2s ease-in-out infinite; }
+@keyframes glow { 50% { box-shadow: 0 0 0 4px #F7B347, 0 5px 0 #C98A1E, 0 0 6px rgba(247,179,71,.4); } }
+.stars { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; gap: 1px; }
+.stars svg { width: 15px; height: 15px; }
+.stars svg.off path { fill: #E3D8C2; stroke: #CDBF9F; }
+.badge { position: absolute; top: -8px; left: -6px; width: 32px; height: 32px; border-radius: 50%; background: var(--paper); box-shadow: 0 2px 0 rgba(58,35,24,.2); overflow: hidden; }
+.badge img { width: 40px; height: 40px; max-width: none; margin: -4px 0 0 -4px; object-fit: cover; object-position: 30% 35%; }
+.tick { position: absolute; top: -6px; left: -6px; width: 26px; height: 26px; border-radius: 50%; background: #4CB944; border: 3px solid var(--paper); display: grid; place-items: center; }
+.tick svg { width: 13px; height: 13px; }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low hero with the name beside the camel, more stones in a row, the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 30% 62%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 300px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .isle { width: 112px; height: 112px; bottom: 0; left: calc(env(safe-area-inset-left) + 8px); }
+  .say { left: calc(env(safe-area-inset-left) + 118px); bottom: 46px; max-width: 170px; padding: 7px 12px 8px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .switches { gap: 14px; padding-top: 4px; padding-bottom: 8px; }
+  .seg button { height: 38px; font-size: 14px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .cont { padding: 8px; } .cont .glyph { width: 56px; height: 56px; font-size: 38px; }
+  .trail { margin-top: 16px; }
+  .trail h2 { justify-content: flex-start; gap: 14px; }
+  .legend { margin-bottom: 12px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 10px; }
+  .tile { border-radius: 20px; font-size: 40px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .isle, .tile.now { animation: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/letters/oasis-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+    <span class="pill" title="الشارات" role="img" aria-label="الشارات: 6"><img src="../img/hud/badge.png" alt="">6</span>
+  </div>
+  <div class="title">
+    <h1>واحة الحروف</h1>
+    <p>تعلّم الحروف والأرقام مع الجمل جمّول</p>
+  </div>
+  <img class="isle" src="../img/letters.png" alt="الجمل جمّول في واحة الحروف">
+  <p class="say"><span id="say">أهلاً يا عمر! أي حرف نتعلّم اليوم؟</span><svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
+</header>
+
+<div class="switches">
+  <div class="seg" role="group" aria-label="اللغة" id="lang">
+    <button type="button" data-v="ar" aria-pressed="true">العربية</button>
+    <button type="button" data-v="en" lang="en" aria-pressed="false">English</button>
+  </div>
+  <div class="seg" role="group" aria-label="ماذا تتعلّم" id="kind">
+    <button type="button" data-v="l" aria-pressed="true">الحروف</button>
+    <button type="button" data-v="n" aria-pressed="false">الأرقام</button>
+  </div>
+</div>
+
+<main>
+  <a class="cont" id="cont" hidden></a>
+  <section class="trail" aria-labelledby="trail-t">
+    <h2><span id="trail-t"></span><small id="done-count"></small></h2>
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:#D9F2C7"></i>أكملته</span>
+      <span><i style="background:#FFD978"></i>أتعلّمه الآن</span>
+      <span><i style="background:#F7E7C6"></i>لم أبدأ بعد</span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../oasis-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // the letters and numbers, as in the web's oasis
+  const SETS = Oasis.sets(), LEARN = Oasis.learn('../'), NAME = Oasis.NAME, RESUME = Oasis.RESUME;
+  let lang = 'ar', kind = 'l';
+
+  // the child the parent chose carries over (a visitor stays a visitor)
+  let kid = 'عمر';
+  try { const p = JSON.parse(localStorage.getItem('ajyal.profile') || '{}'); if (p.name && !(window.Guest && Guest.on)) kid = p.name; } catch {}
+
+  const star = (on) => `<svg class="${on ? '' : 'off'}" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="#FFC93C" stroke="#E0A01E" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+  const tick = '<span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>';
+
+  function render() {
+    const set = SETS[`${lang}-${kind}`];
+    $('trail-t').textContent = set.title;
+    $('trail-t').lang = lang;
+    $('grid').dir = lang === 'en' ? 'ltr' : 'rtl'; // English reads left to right
+    const done = set.items.filter((x) => typeof set.state[x] === 'number').length;
+    $('done-count').textContent = `أكملت ${done} من ${set.items.length}`;
+    $('grid').innerHTML = set.items.map((x) => {
+      const s = set.state[x], cls = s === 'now' ? 'now' : typeof s === 'number' ? 'done' : '';
+      const label = `${set.unit} ${x}، ${cls === 'done' ? `مكتمل بـ ${s} نجوم` : cls === 'now' ? 'جاري التعلم' : 'لم يبدأ'}`;
+      return `<a class="tile ${cls}" href="${LEARN[x] || '#'}" ${lang === 'en' ? 'lang="en"' : ''} aria-label="${label}">${x}
+        ${cls === 'done' ? tick + `<span class="stars">${[0, 1, 2].map((i) => star(i < s)).join('')}</span>` : ''}
+        ${cls === 'now' ? '<span class="badge" aria-hidden="true"><img src="../img/letters.png" alt=""></span>' : ''}</a>`;
+    }).join('');
+    // the last letter or number the child reached, so they can carry on
+    const now = set.last;
+    $('cont').hidden = !now;
+    if (now) {
+      $('cont').href = `${LEARN[now] || '#'}&resume=1`;
+      $('cont').setAttribute('aria-label', `أكمل تعلّم ${NAME[now] || now}، ${RESUME.step}`);
+      $('cont').innerHTML = `<span class="glyph" aria-hidden="true">${now}</span>
+        <span class="txt"><small>أكمل من حيث توقفت</small><b>${NAME[now] || now}</b><span class="when">${RESUME.step}</span><span class="meter" style="--p:${RESUME.p}%"><i></i></span></span>
+        <span class="go">أكمل<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span>`;
+    }
+    $('say').textContent = kind === 'l' ? `أهلاً يا ${kid}! أي حرف نتعلّم اليوم؟` : `أهلاً يا ${kid}! هيا نعدّ معاً!`;
+  }
+
+  const seg = (id, set) => $(id).addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    $(id).querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    set(b.dataset.v); render();
+  });
+  seg('lang', (v) => { lang = v; });
+  seg('kind', (v) => { kind = v; });
+
+  const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
+  $('grid').addEventListener('click', (e) => {
+    const t = e.target.closest('.tile'); if (!t || t.getAttribute('href') !== '#') return;
+    e.preventDefault(); toast('في النموذج: جرّب حرف الباء أو رقم ثلاثة');
+  });
+  // the other screens of the app come next
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-soon]')) return;
+    toast('في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة');
+  });
+  render();
+})();
+</script>
+</body>
+</html>

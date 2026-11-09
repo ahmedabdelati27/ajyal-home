@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Game Dunes made for a phone, upright or on its side; a tablet and a computer get the web's dunes
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../games.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF1E2">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>كثبان الألعاب · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF1E2; --rust: #E2762E; --rust-deep: #A8481A; --edge: #EED3B4; --leaf: #5BC236;
+  --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+  /* the world picture's height; its width follows the picture */
+  --sh: 320px;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--rust-deep); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+
+/* the dunes at sunset, fading into the sand; the fox greets the child from his island */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 65%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,241,226,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--rust-deep), 2px 0 0 var(--rust-deep), -2px 0 0 var(--rust-deep), 0 -2px 0 var(--rust-deep), 2px 2px 0 var(--rust-deep), -2px 2px 0 var(--rust-deep), 2px -2px 0 var(--rust-deep), -2px -2px 0 var(--rust-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+.fox { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) - 4px); bottom: -6px; width: 150px; height: 150px; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 140px); bottom: 64px; max-width: 190px; margin: 0; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.35; box-shadow: 0 4px 0 var(--rust); }
+.say svg { position: absolute; left: -14px; bottom: 12px; }
+@keyframes float { 50% { translate: 0 -7px; } }
+
+main { display: flex; flex-direction: column; gap: 20px; padding: 4px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+.meter { display: inline-block; width: 52px; height: 7px; border-radius: 999px; background: #F2E1CC; overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--leaf); }
+
+/* the game the child left in the middle */
+.cont { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.cont .thumb { flex-shrink: 0; width: 104px; height: 66px; overflow: hidden; border-radius: 14px; }
+.cont .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cont .txt { flex: 1; min-width: 0; }
+.cont small { display: block; font-size: 12px; font-weight: 800; color: var(--rust-deep); }
+.cont b { display: block; font-size: 17px; font-weight: 800; line-height: 1.25; }
+.cont .when { display: flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.go { flex-shrink: 0; display: flex; align-items: center; justify-content: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.go svg { width: 14px; height: 14px; }
+
+/* the admin's worlds, only a way to group the games: each a small floating island, the chosen one on a lit tile */
+.sec-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; }
+h2.sec { margin: 0; font-size: 22px; font-weight: 800; }
+.view { display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.view button { height: 36px; padding: 0 12px; border-radius: 999px; font-size: 14px; font-weight: 800; white-space: nowrap; }
+.view button[aria-pressed="true"] { background: #FFF1C9; color: #8A5A00; }
+.worlds { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.world { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; padding: 2px 2px 8px; border: 3px solid transparent; border-radius: 22px; }
+.world .pad { position: relative; display: grid; place-items: center; width: 100%; height: 70px; }
+.world .pad::after { content: ''; position: absolute; bottom: 2px; width: 50%; height: 9px; border-radius: 50%; background: rgba(58,35,24,.16); }
+.world img { position: relative; z-index: 1; width: 84px; height: 84px; max-width: 100%; object-fit: contain; margin-top: -12px; animation: float 4.5s ease-in-out infinite; animation-delay: var(--d); }
+.world .txt { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+.world b { position: relative; z-index: 2; font-size: 15px; font-weight: 800; line-height: 1.2; }
+.world small { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.world .meter { width: 26px; height: 6px; }
+.world[aria-pressed="true"] { background: #FFF3D1; border-color: #F7B347; box-shadow: 0 4px 0 #D99A2B; }
+.world[aria-pressed="true"] b { color: #7A4A00; }
+.world[aria-pressed="true"]::after { content: ''; position: absolute; left: 50%; bottom: -14px; width: 20px; height: 11px; translate: -50% 0; background: #F7B347; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+
+/* the chosen world: its name and how much is done, then its picture */
+#world { scroll-margin-top: 8px; }
+.s-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; padding: 8px 14px; border-radius: 18px; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.s-head b { font-size: 18px; font-weight: 800; }
+.s-head small { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.s-hint { margin: 0 0 8px; text-align: center; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.place[hidden], .list[hidden] { display: none; }
+
+/* the picture is wider than the phone: the child swipes it sideways, and each game is a place in it */
+.pan { margin: 0 calc(-1 * var(--side-r)) 0 calc(-1 * var(--side-l)); padding: 0 var(--side-r) 12px var(--side-l); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; direction: ltr; }
+.pan::-webkit-scrollbar { display: none; }
+.scene { direction: rtl; position: relative; height: var(--sh); aspect-ratio: 16 / 9; margin-inline: auto; overflow: hidden; border: 5px solid var(--paper); border-radius: 24px; background: #CFE8F5; box-shadow: 0 6px 0 var(--edge); --k: .45; }
+.scene > .bgimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: fadein .5s ease-out; }
+@keyframes fadein { from { opacity: 0; transform: scale(1.03); } }
+.spot { position: absolute; z-index: 4; left: var(--x); top: var(--y); transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.spot .pin { position: relative; width: 64px; height: 64px; border-radius: 50%; border: 4px solid var(--paper); background: var(--paper); box-shadow: 0 4px 0 rgba(58,35,24,.35), 0 8px 16px rgba(0,0,0,.25); transition: transform .2s; }
+.spot .pin img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.spot[aria-expanded="true"] .pin { transform: scale(1.08) translateY(-3px); }
+.spot.call .pin::before { content: ''; position: absolute; inset: -9px; border-radius: 50%; border: 4px solid rgba(255,255,255,.95); animation: ring 1.8s ease-out infinite; }
+@keyframes ring { from { transform: scale(.85); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
+.spot .name { padding: 2px 10px 4px; border-radius: 999px; background: var(--paper); font-size: 14px; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 #EBC9A5; }
+.tag { position: absolute; top: -8px; left: -12px; display: flex; align-items: center; height: 22px; padding: 0 7px; border: 2px solid var(--paper); border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; box-shadow: 0 2px 0 rgba(0,0,0,.15); }
+.tag.ok { background: #4CB944; color: var(--paper); }
+.tag.new { background: #D0335A; color: var(--paper); }
+.tag.on { background: #FFC93C; color: #5A3A00; }
+
+/* what the picture shows of the child's progress, drawn for a picture 1280 wide and scaled to this one */
+.life { position: absolute; z-index: 3; left: var(--x); top: var(--y); width: var(--w); transform: translate(-50%, -50%) scale(calc(var(--k) * 1.3)); pointer-events: none; }
+.life img { width: 100%; height: auto; filter: drop-shadow(0 4px 4px rgba(0,40,60,.25)); }
+.bob { animation: bob 3s ease-in-out infinite; animation-delay: var(--d, 0s); }
+@keyframes bob { 50% { translate: 0 -8px; rotate: 5deg; } }
+.happy::after { content: '❤'; position: absolute; top: -18px; left: 50%; color: #F0507A; font-size: 26px; animation: love 2.4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+@keyframes love { 0% { opacity: 0; translate: -50% 10px; } 30%, 60% { opacity: 1; } 100% { opacity: 0; translate: -50% -26px; } }
+.life.fresh { animation: fresh 1.2s cubic-bezier(.3,1.4,.6,1) .3s both; }
+@keyframes fresh { from { opacity: 0; scale: .3; } }
+.sparkle::after { content: '✦'; position: absolute; top: -6px; right: -4px; color: #FFE38A; font-size: 30px; text-shadow: 0 0 10px #FFF; animation: twinkle 1.8s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .3; scale: .7; } }
+/* toy blocks on the mat: a pile before the house game, a little house after it */
+.blocks { height: 140px; }
+.blocks i { position: absolute; display: block; border-radius: 6px; background: var(--c); box-shadow: inset 0 -5px 0 rgba(0,0,0,.16), inset 0 3px 0 rgba(255,255,255,.35), 0 4px 6px rgba(0,0,0,.18); }
+.blocks i.roof { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); box-shadow: inset 0 -6px 0 rgba(0,0,0,.16); }
+.blocks i.win::after { content: ''; position: absolute; inset: 22% 22% 40%; border-radius: 3px; background: #BFE6FF; box-shadow: 0 0 0 3px #FFFFFF; }
+.blocks i.door::after { content: ''; position: absolute; left: 26%; right: 26%; bottom: 0; height: 72%; border-radius: 40% 40% 0 0 / 22% 22% 0 0; background: #8A4B22; }
+
+/* the same games as a list */
+.list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.card { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding-bottom: 10px; overflow: hidden; border-radius: 20px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.card .cov { position: relative; display: block; aspect-ratio: 16 / 9; }
+.card .cov img { width: 100%; height: 100%; object-fit: cover; }
+.card .tag { top: 8px; left: 8px; }
+.card b { padding: 6px 10px 0; font-size: 16px; font-weight: 800; }
+.card small { padding: 0 10px; font-size: 12px; font-weight: 700; line-height: 1.4; color: var(--ink-soft); }
+.card:active { translate: 0 2px; }
+
+/* a closer look at a game before playing: a card that rises above the bar at the bottom */
+.peek { position: fixed; z-index: 8; left: 50%; bottom: calc(var(--bottom) + 84px); translate: -50% 0; width: min(380px, calc(100% - 28px)); display: flex; flex-direction: column; gap: 6px; padding: 10px 10px 14px; border-radius: 26px; background: var(--paper); box-shadow: 0 6px 0 var(--edge), 0 20px 40px rgba(0,0,0,.28); animation: peek .25s cubic-bezier(.3,1.4,.6,1); }
+@keyframes peek { from { opacity: 0; scale: .9; } }
+.peek[hidden] { display: none; }
+.peek > img { width: 100%; aspect-ratio: 2 / 1; border-radius: 18px; object-fit: cover; }
+.peek .txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.peek b { padding: 0 6px; font-size: 20px; font-weight: 800; }
+.peek small { padding: 0 6px; font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.peek .go { height: 50px; margin-top: 4px; font-size: 18px; }
+.peek .x { position: absolute; top: 16px; left: 16px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.92); font-size: 22px; font-weight: 800; line-height: 1; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(120,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low hero with the name beside the fox, the whole picture on the screen, and the bar as one slim row */
+@media (max-height: 500px) {
+  :root { --sh: min(300px, calc(100dvh - 150px)); }
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 62%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 260px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .fox { width: 124px; height: 124px; bottom: -6px; left: calc(env(safe-area-inset-left) + 4px); }
+  .say { left: calc(env(safe-area-inset-left) + 118px); bottom: 46px; max-width: 170px; padding: 7px 12px 8px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  main { gap: 16px; padding-bottom: calc(var(--bottom) + 70px); }
+  .cont { padding: 8px; } .cont .thumb { width: 88px; height: 54px; }
+  .worlds { gap: 10px; }
+  .world { flex-direction: row; justify-content: center; gap: 6px; padding: 4px 8px; }
+  .world .pad { width: 58px; height: 52px; flex-shrink: 0; }
+  .world img { width: 62px; height: 62px; margin-top: -8px; }
+  .world .pad::after { height: 7px; }
+  .world .txt { align-items: flex-start; }
+  .s-head { max-width: 640px; margin-inline: auto; padding: 6px 14px; }
+  .s-hint { margin-bottom: 6px; }
+  .list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .peek { flex-direction: row; align-items: center; gap: 12px; width: min(560px, calc(100% - 28px)); bottom: calc(var(--bottom) + 56px); padding: 10px; }
+  .peek > img { width: 150px; flex-shrink: 0; aspect-ratio: 16 / 10; }
+  .peek .txt { flex: 1; }
+  .peek b { font-size: 18px; } .peek small { font-size: 13px; }
+  .peek .go { margin: 0 0 0 44px; height: 46px; font-size: 16px; }
+  .peek .x { top: 50%; left: 10px; translate: 0 -50%; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .fox, .world img, .bob, .life.fresh, .happy::after, .sparkle::after, .spot.call .pin::before, .scene > .bgimg, .peek { animation: none; } .spot .pin { transition: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/games/dunes-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+  </div>
+  <div class="title">
+    <h1>كثبان الألعاب</h1>
+    <p>العب وتعلّم مع الثعلب فنّوش</p>
+  </div>
+  <img class="fox" src="../img/games.png" alt="الثعلب فنّوش على جزيرة كثبان الألعاب">
+  <p class="say">أهلاً يا <span id="kid">عمر</span>! أي لعبة نلعب اليوم؟<svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
+</header>
+
+<main>
+  <a class="cont" href="../game.html?resume=1" aria-label="أكمل لعب نظّف البحر، المرحلة ٢ من ٢">
+    <span class="thumb"><img src="../img/games/g-01.jpg" alt=""></span>
+    <span class="txt"><small>أكمل من حيث توقفت</small><b>نظّف البحر</b><span class="when">المرحلة ٢ من ٢ <span class="meter" style="--p:50%"><i></i></span></span></span>
+    <span class="go">أكمل<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span>
+  </a>
+
+  <section aria-labelledby="w-t">
+    <div class="sec-row"><h2 class="sec" id="w-t">اختر عالماً</h2>
+      <div class="view" role="group" aria-label="طريقة العرض"><button type="button" data-v="place" aria-pressed="true">🏝️ صورة</button><button type="button" data-v="list" aria-pressed="false">☰ قائمة</button></div></div>
+    <div class="worlds" id="worlds" role="group" aria-labelledby="w-t"></div>
+  </section>
+
+  <section id="world">
+    <div class="s-head" id="s-head"></div>
+    <p class="sr" id="said" role="status"></p>
+    <div class="place" id="place">
+      <p class="s-hint" id="s-hint">👆 اسحب الصورة، واضغط على مكان لتلعب</p>
+      <div class="pan" id="pan"><div class="scene" id="scene" role="group"></div></div>
+    </div>
+    <div class="list" id="list" hidden></div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="peek" id="sheet" role="dialog" aria-labelledby="peek-t" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../games-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // the worlds, their games and what each game leaves in the picture, as in the web's dunes
+  const WORLDS = Dunes.worlds('../'), ART = Dunes.art('../'), { ar, label, tag, SAY } = Dunes;
+  const seen = Dunes.progress(WORLDS);
+  let at = seen.at || 'env', fresh = seen.fresh;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const meter = (done, n) => `<span class="meter" style="--p:${(done / n) * 100}%"><i></i></span>`;
+
+  function render() {
+    // each world floats on its own island, out of step with the others; built once, so switching keeps the focus where it is
+    if ($('worlds').children.length) $('worlds').querySelectorAll('.world').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === at)));
+    else $('worlds').innerHTML = WORLDS.map((w, n) => {
+      const done = w.games.filter((x) => x.state === 'ok').length;
+      return `<button class="world" type="button" data-id="${w.id}" aria-pressed="${w.id === at}" aria-label="عالم ${w.name}، أكملت ${ar(done)} من ${Dunes.count(w.games.length)}" style="--d:${-n * 1.1}s">
+        <span class="pad"><img src="${w.island}" alt=""></span><span class="txt"><b>${w.name}</b><small>${ar(done)} من ${ar(w.games.length)} ${meter(done, w.games.length)}</small></span></button>`;
+    }).join('');
+
+    const w = WORLDS.find((x) => x.id === at);
+    const done = w.games.filter((x) => x.state === 'ok').length;
+    $('s-head').innerHTML = `<b>عالم ${w.name}</b><small>أكملت ${ar(done)} من ${Dunes.count(w.games.length)} ${meter(done, w.games.length)}</small>`;
+    $('scene').setAttribute('aria-label', `عالم ${w.name}`);
+    $('scene').innerHTML = `<img class="bgimg" src="${w.scene}" alt="">
+      ${w.games.map((x) => (ART[x.id] ? ART[x.id](x.state).replaceAll('class="life', x === fresh ? 'class="life fresh' : 'class="life') : '')).join('')}
+      ${w.games.map((x, n) => `<button class="spot ${x.state && x.state !== 'ok' ? 'call' : ''}" type="button" data-n="${n}" aria-expanded="false" aria-label="${x.name}، ${label(x.state) || 'لم تبدأ بعد'}" style="--x:${x.at[0]}%;--y:${x.at[1]}%">
+        <span class="pin"><img src="${x.cover}" alt="">${tag(x.state)}</span><span class="name">${x.name}</span></button>`).join('')}`;
+    $('said').textContent = `عالم ${w.name}، أكملت ${ar(done)} من ${Dunes.count(w.games.length)}`;
+    $('list').innerHTML = w.games.map((x) => `<a class="card" href="${x.href}" aria-label="${x.name}، ${x.how}، ${label(x.state) || 'لم تبدأ بعد'}"><span class="cov"><img src="${x.cover}" alt="">${tag(x.state)}</span><b>${x.name}</b><small>${x.how}</small></a>`).join('');
+    fit();
+
+    // the picture opens on the game that waits for the child: the one just finished, else one in progress or new
+    const focus = w.games.find((x) => x === fresh) || w.games.find((x) => x.state && x.state !== 'ok');
+    show(focus ? focus.at[0] : 50);
+    if (fresh && w.games.includes(fresh)) {
+      seen.seen(fresh);
+      $('world').scrollIntoView({ block: 'start' });
+      const say = SAY[fresh.id] || 'أحسنت! أكملت اللعبة';
+      setTimeout(() => toast(say, 4500), 600);
+      fresh = null;
+    }
+  }
+  // the picture's size: the places stay the same size for a finger, what the games left in it follows the picture
+  function fit() {
+    const sc = $('scene');
+    sc.style.setProperty('--k', (sc.clientWidth / 1280).toFixed(3));
+    // a picture that fits the screen needs no swiping
+    $('s-hint').textContent = $('pan').scrollWidth > $('pan').clientWidth + 2 ? '👆 اسحب الصورة، واضغط على مكان لتلعب' : '👆 اضغط على مكان في الصورة لتلعب';
+  }
+  // swipe the picture so a place (in % from the picture's left) sits in the middle
+  function show(x) {
+    const pan = $('pan'), sc = $('scene');
+    const left = sc.getBoundingClientRect().left - pan.getBoundingClientRect().left + pan.scrollLeft;
+    pan.scrollLeft = left + (x / 100) * sc.offsetWidth - pan.clientWidth / 2;
+  }
+
+  // tapping a place opens a closer look with one big button
+  function open(btn) {
+    const w = WORLDS.find((x) => x.id === at), x = w.games[+btn.dataset.n], peek = $('sheet');
+    $('scene').querySelectorAll('.spot').forEach((s) => s.setAttribute('aria-expanded', String(s === btn)));
+    peek.innerHTML = `<img src="${x.cover}" alt=""><span class="txt"><b id="peek-t">${x.name}</b><small>${x.how}</small>${x.state ? `<small>${label(x.state)}</small>` : ''}</span>
+      <a class="go" href="${x.href}">${Dunes.act(x.state)} <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></a>
+      <button class="x" type="button" aria-label="إغلاق">×</button>`;
+    peek.hidden = false;
+    peek.querySelector('.go').focus({ preventScroll: true });
+  }
+  function close() {
+    if ($('sheet').hidden) return;
+    $('sheet').hidden = true;
+    const s = $('scene').querySelector('.spot[aria-expanded="true"]'); s?.setAttribute('aria-expanded', 'false'); s?.focus({ preventScroll: true });
+  }
+
+  $('worlds').addEventListener('click', (e) => { const b = e.target.closest('.world'); if (b) { close(); at = b.dataset.id; render(); } });
+  $('scene').addEventListener('click', (e) => {
+    const spot = e.target.closest('.spot');
+    if (spot) return spot.getAttribute('aria-expanded') === 'true' ? close() : open(spot);
+  });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  document.querySelector('.view').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    close();
+    document.querySelectorAll('.view button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    $('place').hidden = b.dataset.v !== 'place'; $('list').hidden = b.dataset.v !== 'list';
+    if (!$('place').hidden) fit();
+  });
+  // a game not built in the prototype yet says so instead of opening
+  const soon = (e) => { const a = e.target.closest('.go, .card'); if (a && a.getAttribute('href') === '#') { e.preventDefault(); toast(Dunes.SOON, 3200); } };
+  $('list').addEventListener('click', soon);
+  // the card lives outside the picture: its own buttons, and a tap anywhere else closes it
+  $('sheet').addEventListener('click', (e) => { if (e.target.closest('.x')) return close(); soon(e); });
+  document.addEventListener('click', (e) => { if (!$('sheet').hidden && !e.target.closest('#sheet, .spot')) close(); });
+
+  const toast = (s, ms = 2400) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), ms); };
+  // the other screens of the app come next
+  document.addEventListener('click', (e) => { if (e.target.closest('[data-soon]')) toast('في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة', 2200); });
+
+  // the child the parent chose carries over (a visitor stays a visitor)
+  try {
+    const kid = JSON.parse(localStorage.getItem('ajyal.profile') || '{}');
+    if (kid.name && !(window.Guest && Guest.on)) $('kid').textContent = kid.name;
+  } catch {}
+
+  addEventListener('resize', fit);
+  render();
+})();
+</script>
+</body>
+</html>

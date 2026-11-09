@@ -2,8 +2,12 @@
 <html lang="ar" dir="rtl" data-sfx="none">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the oasis made for it; a tablet and a computer keep this one
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/quran.html' + location.search);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -148,30 +152,16 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
 </nav>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="quran-data.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  // Juz' Amma, from An-Nas up to An-Naba' (the admin sets the order): number, name, verses
-  const SURAS = [[114, 'الناس', 6], [113, 'الفلق', 5], [112, 'الإخلاص', 4], [111, 'المسد', 5], [110, 'النصر', 3], [109, 'الكافرون', 6], [108, 'الكوثر', 3], [107, 'الماعون', 7], [106, 'قريش', 4], [105, 'الفيل', 5], [104, 'الهمزة', 9], [103, 'العصر', 3], [102, 'التكاثر', 8], [101, 'القارعة', 11], [100, 'العاديات', 11], [99, 'الزلزلة', 8], [98, 'البينة', 8], [97, 'القدر', 5], [96, 'العلق', 19], [95, 'التين', 8], [94, 'الشرح', 8], [93, 'الضحى', 11], [92, 'الليل', 21], [91, 'الشمس', 15], [90, 'البلد', 20], [89, 'الفجر', 30], [88, 'الغاشية', 26], [87, 'الأعلى', 19], [86, 'الطارق', 17], [85, 'البروج', 22], [84, 'الانشقاق', 25], [83, 'المطففين', 36], [82, 'الانفطار', 19], [81, 'التكوير', 29], [80, 'عبس', 42], [79, 'النازعات', 46], [78, 'النبأ', 40]];
-  // the child's memorisation: 'ok' complete, a percentage while memorising, nothing when not started
-  // percentage = (completed stages + share of verses in the current stage) / 3 stages
-  const STATE = { 114: 'ok', 113: 'ok', 112: 83 };
-  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
-  const verses = (n) => `${ar(n)} ${n >= 3 && n <= 10 ? 'آيات' : 'آية'}`;
-
-  const done = SURAS.filter(([n]) => STATE[n] === 'ok').length;
-  const suras = (n) => (n === 1 ? 'سورة واحدة' : n === 2 ? 'سورتين' : n <= 10 ? `${ar(n)} سور` : `${ar(n)} سورة`);
-  $('sum').innerHTML = `حفظت ${suras(done)} من ${ar(SURAS.length)} <span class="meter" style="--p:${(done / SURAS.length) * 100}%"><i></i></span>`;
+  // the surahs and the child's memorisation, the same as the phone's oasis
+  $('sum').innerHTML = Quran.sum();
 
   let filter = '';
   function render() {
-    $('grid').innerHTML = SURAS.filter(([n]) => !filter || (filter === 'ok' ? STATE[n] === 'ok' : typeof STATE[n] === 'number')).map(([n, name, v]) => {
-      const s = STATE[n], on = typeof s === 'number';
-      return `<a class="sura ${s === 'ok' ? 'done' : on ? 'now' : ''}" href="${n === 112 ? 'surah.html?s=112' : '#'}" aria-label="سورة ${name}، ${verses(v)}، ${s === 'ok' ? 'مكتملة' : on ? `جاري الحفظ ${s}%` : 'لم يبدأ'}">
-        <span class="num" aria-hidden="true"><span>${ar(n)}</span></span>
-        <span class="t"><b>سورة ${name}</b><small>${verses(v)}</small>${on ? `<span class="meter" style="--p:${s}%"><i></i></span>` : ''}</span>
-        ${s === 'ok' ? '<span class="state ok">✓ مكتملة</span>' : on ? `<span class="state on">جاري الحفظ ${ar(s)}٪</span>` : ''}</a>`;
-    }).join('');
+    $('grid').innerHTML = Quran.list(filter, '');
     fit();
   }
   $('chips').addEventListener('click', (e) => {

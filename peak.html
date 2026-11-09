@@ -2,8 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the peak made for it; a tablet and a computer keep this one
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/peak.html' + location.search);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -56,7 +60,7 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
 /* a competition: what it is, how long it runs, and where the child stands */
 .comps { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
 .comp { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 14px; border-radius: 32px; background: var(--paper); text-decoration: none; color: var(--ink); box-shadow: 0 6px 0 #F2CFC6; transition: transform .2s; }
-.comp:hover { transform: translateY(-4px); }
+@media (hover: hover) { .comp:hover { transform: translateY(-4px); } }
 .comp .cov { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 16 / 11; }
 .comp .cov img { width: 100%; height: 100%; object-fit: cover; }
 .comp.ended .cov img { filter: saturate(.55); }
@@ -130,40 +134,25 @@ main { position: relative; z-index: 2; margin: -30px 0 0; padding: 0 80px 150px;
 <div class="toast" id="toast" role="status"></div>
 
 <script src="peak.js"></script>
+<script src="peak-data.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  const { COMPS, visible, isOpen, left, ago, ar, mine, winner } = Peak;
+  const { ar } = Peak;
   let tab = 'open';
 
-  // where the child stands in a competition
-  function status(c) {
-    const m = mine(c.id), open = isOpen(c);
-    if (c.kind === 'quiz') {
-      const r = m.result || c.done;
-      if (r) return { cls: 'ok', text: `شاركت · نتيجتك ${ar(r.score)} من ١٠٠`, cta: 'شاهد نتيجتك' };
-      return open ? { cls: '', text: 'لم تشارك بعد', cta: 'ابدأ المسابقة' } : { cls: '', text: 'لم تشارك فيها', cta: 'تفاصيل المسابقة' };
-    }
-    const win = !open && winner(c);
-    if (!open) return c.me ? { cls: win.id === c.me ? 'win' : 'ok', text: win.id === c.me ? '🏆 فازت مشاركتك!' : `حصلت مشاركتك على ${ar(c.entries.find((e) => e.id === c.me).votes)} صوتاً · الفائزة: ${win.name}`, cta: 'شاهد النتيجة' }
-      : { cls: '', text: `الفائزة: مشاركة ${win.name}`, cta: 'شاهد النتيجة' };
-    if (m.entry) return { cls: m.entry.state === 'review' ? 'wait' : 'ok', text: { review: 'مشاركتك تحت المراجعة', live: 'مشاركتك في التصويت', rejected: 'لم تُعتمد مشاركتك' }[m.entry.state], cta: m.vote ? 'شاهد المشاركات' : 'صوّت لمشاركة' };
-    return { cls: '', text: 'لم تشارك بعد', cta: 'شارك الآن' };
-  }
-
+  // the running and the ended competitions, as on the phone's peak (peak-data.js)
   function render() {
-    const open = COMPS.filter(isOpen), ended = COMPS.filter((c) => visible(c) && !isOpen(c));
+    const L = PeakBoard.lists();
     const [b1, b2] = $('seg').querySelectorAll('button');
-    b1.textContent = `جارية الآن (${ar(open.length)})`; b2.textContent = `انتهت (${ar(ended.length)})`;
-    const list = tab === 'open' ? open : ended;
-    $('comps').innerHTML = list.length ? list.map((c) => {
-      const s = status(c), on = isOpen(c);
-      return `<a class="comp ${on ? '' : 'ended'}" href="${c.kind === 'quiz' ? 'quiz' : 'contest'}.html?c=${c.id}">
-        <span class="cov"><img src="img/peak/${c.cover}.jpg" alt=""><span class="type">${c.kind === 'quiz' ? '⏱ مسابقة سريعة' : c.mine === 'story' ? '📖 مسابقة مستمرة' : '🎨 مسابقة مستمرة'}</span></span>
+    b1.textContent = `جارية الآن (${ar(L.open.length)})`; b2.textContent = `انتهت (${ar(L.ended.length)})`;
+    const list = L[tab];
+    $('comps').innerHTML = list.length ? list.map((c) => `<a class="comp ${c.on ? '' : 'ended'}" href="${c.href}">
+        <span class="cov"><img src="${c.cover}" alt=""><span class="type">${c.type}</span></span>
         <span class="txt"><b>${c.name}</b><p>${c.about}</p>
-          <span class="meta"><span class="${on ? 'soon' : ''}">${on ? left(c) : ago(c)}</span><span>👥 ${ar(c.people)} مشاركاً</span></span>
-          <span class="me ${s.cls}">${s.text}</span><span class="cta">${s.cta}</span></span></a>`;
-    }).join('') : '<p class="empty">لا توجد مسابقات هنا الآن، تابع القمة قريباً</p>';
+          <span class="meta"><span class="${c.on ? 'soon' : ''}">${c.when}</span><span>${c.people}</span></span>
+          <span class="me ${c.cls}">${c.me}</span><span class="cta">${c.cta}</span></span></a>`).join('')
+      : '<p class="empty">لا توجد مسابقات هنا الآن، تابع القمة قريباً</p>';
     fit();
   }
   $('seg').addEventListener('click', (e) => {

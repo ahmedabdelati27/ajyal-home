@@ -62,7 +62,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 main { padding: 2px 14px calc(var(--bottom) + 104px); }
 
 /* today with Nour: her journey card */
-.nour-card { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 14px 12px 12px; border-radius: 24px; background: var(--paper); text-align: start; box-shadow: 0 5px 0 var(--nour); }
+.nour-card { display: flex; color: inherit; text-decoration: none; align-items: center; gap: 10px; width: 100%; padding: 12px 14px 12px 12px; border-radius: 24px; background: var(--paper); text-align: start; box-shadow: 0 5px 0 var(--nour); }
 .nour-card .face { flex-shrink: 0; width: 62px; animation: bob 3.2s ease-in-out infinite; }
 .nour-card small { display: block; font-size: 13px; font-weight: 800; color: #B07A00; }
 .nour-card b { display: block; font-size: 18px; font-weight: 800; line-height: 1.3; }
@@ -72,7 +72,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 @keyframes bob { 50% { translate: 0 -5px; } }
 
 /* where they stopped */
-.cont { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 10px; border-radius: 22px; background: rgba(255,255,255,.94); text-align: start; box-shadow: 0 4px 0 rgba(58,35,24,.08); }
+.cont { display: flex; color: inherit; text-decoration: none; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 10px; border-radius: 22px; background: rgba(255,255,255,.94); text-align: start; box-shadow: 0 4px 0 rgba(58,35,24,.08); }
 .cont .cover { flex-shrink: 0; width: 62px; height: 62px; overflow: hidden; border-radius: 16px; }
 .cont .cover img { width: 100%; height: 100%; object-fit: cover; }
 .cont small { display: block; font-size: 12px; font-weight: 800; color: #2E7D32; }
@@ -109,7 +109,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 
 /* the bar at the bottom: the map, all sections, my room, the board */
 .tabs { position: fixed; z-index: 6; left: 12px; right: 12px; bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(20,70,80,.22); }
-.tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); }
 .tabs img { width: 34px; height: 34px; }
 .tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
 
@@ -138,17 +138,17 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 </header>
 
 <main>
-  <button class="nour-card" type="button" data-soon aria-label="رحلتك مع نور: قيمة التعاون">
+  <a class="nour-card" id="journey" href="value.html?v=cooperation" aria-label="رحلتك مع نور: قيمة التعاون">
     <img class="face" src="../img/garden/nour-wave.png" alt="">
-    <span><small>رحلتك مع نور</small><b>قيمة التعاون</b><span class="p">شاهد القصة، ثم ساعد الأصدقاء في اللعبة</span></span>
+    <span><small>رحلتك مع نور</small><b id="journey-name">قيمة التعاون</b><span class="p" id="journey-about">شاهد القصة، ثم ساعد الأصدقاء في اللعبة</span></span>
     <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-  </button>
+  </a>
 
-  <button class="cont" type="button" data-soon aria-label="أكمل قصة الأرنب الصادق، الصفحة 6 من 10">
+  <a class="cont" href="../story.html?resume=1" aria-label="أكمل قصة الأرنب الصادق، الصفحة 6 من 10">
     <span class="cover"><img src="../img/stories/cover-01.jpg" alt=""></span>
     <span class="txt"><small>أكمل من حيث توقفت</small><b>الأرنب الصادق</b><span class="bar"><i></i></span></span>
     <span class="go">أكمل</span>
-  </button>
+  </a>
 
   <div class="world-head"><h2>جزر عالمك</h2><small>اضغط على جزيرة لتدخلها</small></div>
   <div class="world" id="world"></div>
@@ -156,25 +156,26 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 
 <nav class="tabs" aria-label="التنقل">
   <button type="button" aria-current="page"><img src="../img/nav/map.png" alt="">الخريطة</button>
-  <button type="button" data-soon><img src="../img/nav/sections.png" alt="">كل الأقسام</button>
-  <button type="button" data-soon><img src="../img/nav/room.png" alt="">غرفتي</button>
-  <button type="button" data-soon><img src="../img/nav/leaders.png" alt="">المتصدرون</button>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
 </nav>
 <div class="toast" id="toast" role="status"></div>
+<script src="../values.js"></script>
 
 <script>
 (() => {
   // the islands, as on the map of the web, one under another on the phone
   const ISLANDS = [
     { id: 'forest', c: '#5CB8F5', title: 'غابة المعرفة', sub: 'فيديوهات وكتب تعليمية', d: '#3D96D6', href: 'forest.html' },
-    { id: 'beach', c: '#FF8FA8', title: 'شاطئ الحكايات', sub: 'اقرأ واستمع لقصص ممتعة', d: '#E0607F' },
-    { id: 'garden', c: '#67CFA9', title: 'حديقة القيم', sub: 'رحلتك الآن: قيمة التعاون', d: '#3FB396' },
-    { id: 'letters', c: '#FFD43B', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', d: '#E0B000' },
-    { id: 'colors', c: '#FFA94D', title: 'وادي الألوان', sub: 'ارسم ولوّن', d: '#E58A2B', tip: true },
-    { id: 'games', c: '#9C86F2', title: 'كثبان الألعاب', sub: 'ألعاب تعليمية', d: '#7B64DA', tip: true },
-    { id: 'quran', c: '#7CCB4C', title: 'واحة القرآن', sub: 'جزء عمّ', d: '#5DAA33' },
-    { id: 'ai', c: '#B9A8F7', title: 'ورشة السحر', sub: 'قصة أو فيديو تُكتب عنك', d: '#7B64DA', left: true },
-    { id: 'peak', c: '#FF7A6B', title: 'قمة الأبطال', sub: 'شارك في المسابقات', d: '#E0584A' }
+    { id: 'beach', c: '#FF8FA8', title: 'شاطئ الحكايات', sub: 'اقرأ واستمع لقصص ممتعة', d: '#E0607F', href: 'beach.html' },
+    { id: 'garden', c: '#67CFA9', title: 'حديقة القيم', sub: 'رحلتك الآن: قيمة التعاون', d: '#3FB396', href: 'garden.html' },
+    { id: 'letters', c: '#FFD43B', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', d: '#E0B000', href: 'oasis.html' },
+    { id: 'colors', c: '#FFA94D', title: 'وادي الألوان', sub: 'ارسم ولوّن', d: '#E58A2B', tip: true, href: 'colors.html' },
+    { id: 'games', c: '#9C86F2', title: 'كثبان الألعاب', sub: 'ألعاب تعليمية', d: '#7B64DA', tip: true, href: 'games.html' },
+    { id: 'quran', c: '#7CCB4C', title: 'واحة القرآن', sub: 'جزء عمّ', d: '#5DAA33', href: 'quran.html' },
+    { id: 'ai', c: '#B9A8F7', title: 'ورشة السحر', sub: 'قصة أو فيديو تُكتب عنك', d: '#7B64DA', left: true, href: 'workshop.html' },
+    { id: 'peak', c: '#FF7A6B', title: 'قمة الأبطال', sub: 'شارك في المسابقات', d: '#E0584A', href: 'peak.html' }
   ];
   const world = document.getElementById('world');
   world.innerHTML = ISLANDS.map((i, n) => `<a class="isl" href="${i.href || '#'}"${i.href ? '' : ' data-soon'} style="--d:${-n * 0.6}s;--c2:${i.c};--d2:${i.d}" aria-label="${i.title}، ${i.sub}">
@@ -191,6 +192,15 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
     world.insertAdjacentHTML('afterbegin', `<svg class="way" aria-hidden="true"><path d="${d}"/></svg>`);
   };
   addEventListener('load', way); addEventListener('resize', way);
+
+  // Nour's card offers the journey under way in the garden, as the map's mission does (values.js)
+  const j = window.Values && Values.current();
+  if (j) {
+    document.getElementById('journey').href = `value.html?v=${j.id}`;
+    document.getElementById('journey').setAttribute('aria-label', `رحلتك مع نور: قيمة ${j.name}`);
+    document.getElementById('journey-name').textContent = `قيمة ${j.name}`;
+    if (j.id !== 'cooperation') document.getElementById('journey-about').textContent = j.about;
+  }
 
   // the child the parent chose carries over (a visitor stays a visitor)
   try {

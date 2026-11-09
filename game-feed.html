@@ -52,6 +52,18 @@
   .tray .thing { width: 13cqw; }
   .bowl { width: 17cqw; height: 5cqh; bottom: 31cqh; }
 }
+/* a phone on its side: the fox talks from the top corner, under the counters, so he never hides the rabbit */
+@media (max-height: 500px) {
+  .fox-up .fox, .lift.fox-up .fox { top: 48px; bottom: auto; flex-direction: row-reverse; align-items: center; gap: 6px; }
+  .fox-up .fox img { width: 10cqw; height: 10cqw; }
+  .fox-up .fox p { margin: 0; max-width: 44cqw; }
+  .fox-up .fox p::before { left: -7px; top: 50%; bottom: auto; margin-top: -7px; border-width: 7px 7px 7px 0; border-color: transparent #FFFFFF transparent transparent; }
+  .meal i { width: max(1.4cqw, 8px); height: max(1.4cqw, 8px); }
+  /* the bowls stay big enough to tap */
+  .bowl { width: max(11cqw, 64px); height: 30px; }
+}
+/* a phone upright: the bowls stay tall enough to tap */
+@media (max-width: 600px) and (min-height: 501px) { .bowl { height: max(5cqh, 34px); } }
 @media (prefers-reduced-motion: reduce) { .bowl.ready { animation: none; } .pen > img { animation-duration: .01s !important; } }
 </style>
 </head>

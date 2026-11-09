@@ -124,6 +124,46 @@
   .result h2 { font-size: 28px; }
   .pager .say span { display: none; }
 }
+/* «السؤال التالي» waits for an answer: .btn would otherwise show it while hidden */
+.qcard .btn[hidden] { display: none; }
+
+/* a phone on its side: the open book as tall as the screen allows, bigger words on its pages,
+   a slim pager, and a quiz card that fits the low screen (choices side by side) */
+@media (max-height: 500px) {
+  .stage { gap: 14px; }
+  .book { height: 89%; }
+  .story { font-size: 4.5cqw; line-height: 1.95; }
+  .paper { padding: 5cqh 3.4cqw 6cqh; }
+  .no { font-size: 1.9cqw; }
+  .title small { font-size: 2.4cqw; }
+  .end p { font-size: 3.1cqw; } .end .btn { font-size: 3cqw; }
+  .cover-hero { font-size: 2.3cqw; } .cover-hero img { width: 3.2cqw; height: 3.2cqw; }
+  .pager { height: 42px; gap: 10px; padding: 0 6px 0 16px; } .pager b { font-size: 15px; }
+  .pager .track { width: 120px; }
+  .pager .say { height: 34px; padding: 0 12px; font-size: 14px; } .pager .say svg { width: 20px; height: 20px; }
+  .gloss { padding: 10px 14px 12px; } .gloss b { font-size: 20px; } .gloss p { font-size: 16px; line-height: 1.5; }
+  .resume > div { padding: 14px 18px; border-radius: 22px; }
+  .resume p { margin-bottom: 10px; font-size: 17px; }
+  .resume .btns { flex-wrap: nowrap; gap: 8px; }
+  .resume .btn { height: 44px; padding: 0 16px; font-size: 15px; }
+  .quiz { align-items: safe center; overflow-y: auto; padding: 10px 16px; }
+  .qcard { max-height: none; overflow: visible; padding: 12px 20px 14px; border-radius: 26px; }
+  .qtop img { width: 56px; height: 56px; margin: -6px 0 -8px; }
+  .dots i { width: 13px; height: 13px; }
+  .qhead { margin: 4px 0 10px; } .qhead h2 { font-size: 20px; }
+  .qhead .hear { width: 38px; height: 38px; }
+  .opts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .opt { min-height: 52px; padding: 6px 12px; border-width: 3px; border-radius: 18px; font-size: 16px; text-align: center; box-shadow: 0 4px 0 #E0C9A6; }
+  .opts.tf .opt { min-height: 64px; font-size: 20px; } .opts.tf svg { width: 30px; height: 30px; }
+  .opts.pics .opt { padding: 5px; gap: 4px; font-size: 14px; }
+  .opts.pics img { aspect-ratio: auto; height: 104px; border-radius: 12px; }
+  .fb { min-height: 24px; margin-top: 8px; font-size: 16px; }
+  .qcard .btns { margin-top: 4px; }
+  .stars svg { width: 42px; height: 42px; } .stars { margin: 0; }
+  .result h2 { font-size: 24px; } .result p { margin-top: 2px; font-size: 15px; }
+  .gains { margin-top: 8px; gap: 8px; } .gain { height: 38px; padding: 0 14px 0 8px; font-size: 15px; } .gain img { width: 28px; height: 28px; }
+  .result .btns { flex-wrap: nowrap; }
+}
 </style>
 </head>
 <body>

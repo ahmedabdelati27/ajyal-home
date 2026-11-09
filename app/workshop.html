@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Magic Workshop made for a phone, upright or on its side; a tablet and a computer get the web's workshop
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../workshop.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#F4F0FF">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>ورشة السحر · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #2E2350; --ink-soft: #5E5480; --paper: #FFFFFF; --lilac: #F4F0FF; --edge: #DDD3FB;
+  --violet: #8E76EE; --violet-deep: #5A44B8; --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--lilac); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the magic tower at dusk, fading into the page; Nour greets the child from her island */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% 40%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(244,240,255,0), var(--lilac) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--violet-deep), 2px 0 0 var(--violet-deep), -2px 0 0 var(--violet-deep), 0 -2px 0 var(--violet-deep), 2px 2px 0 var(--violet-deep), -2px 2px 0 var(--violet-deep), 2px -2px 0 var(--violet-deep), -2px -2px 0 var(--violet-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+.guide { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 2px); bottom: 0; width: 140px; height: 140px; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 142px); bottom: 54px; max-width: 200px; margin: 0; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.35; box-shadow: 0 4px 0 var(--violet); }
+.say svg { position: absolute; left: -14px; bottom: 12px; }
+@keyframes float { 50% { translate: 0 -7px; } }
+
+main { padding: 4px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+h2 { margin: 0; font-size: 22px; font-weight: 800; }
+h2 + .note { margin-top: 4px; }
+.note { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.55; color: var(--ink-soft); }
+.sec { margin-top: 26px; }
+
+/* what the child can make: three doors, each one tap */
+.makes { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+.make { display: flex; align-items: stretch; gap: 12px; padding: 10px; border-radius: 26px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.make .art { flex-shrink: 0; width: 112px; height: 112px; border-radius: 18px; object-fit: cover; }
+.make .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding-top: 2px; }
+.make b { font-size: 20px; font-weight: 800; line-height: 1.2; }
+.make p { margin: 0; font-size: 13px; font-weight: 700; line-height: 1.45; color: var(--ink-soft); }
+/* what is left until the subscription renews, or why the door is closed */
+.left { display: inline-flex; align-items: center; height: 26px; margin-top: 2px; padding: 0 10px; border-radius: 999px; background: #EFEAFF; color: var(--violet-deep); font-size: 13px; font-weight: 800; white-space: nowrap; }
+.left.none { background: #FFF1D6; color: #8A5A00; }
+.cta { display: inline-flex; align-items: center; gap: 6px; height: 40px; margin-top: auto; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.cta svg { width: 14px; height: 14px; }
+.left + .cta { margin-top: 8px; }
+.make.out .art { filter: saturate(.5); }
+.make.out .cta { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 2px var(--edge), 0 4px 0 var(--edge); }
+.make:active { translate: 0 2px; }
+
+/* «إبداعاتي» made here */
+.mine { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.work { min-width: 0; display: flex; flex-direction: column; gap: 6px; padding: 8px 8px 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 4px 0 var(--edge); }
+.work img { width: 100%; aspect-ratio: 1; border-radius: 16px; object-fit: cover; }
+.work b { padding: 0 4px; font-size: 15px; font-weight: 800; line-height: 1.3; }
+.work span { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 4px; }
+.work i { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 999px; background: #EFEAFF; font-size: 12px; font-weight: 800; font-style: normal; }
+.work i.review { background: #FFE9C2; color: #8A5A00; } .work i.published { background: #DDF5D2; color: var(--go-deep); } .work i.rejected { background: #FFE0DC; color: #A13A2E; }
+.empty { grid-column: 1 / -1; margin: 0; padding: 18px 20px; border-radius: 22px; background: rgba(255,255,255,.75); font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--ink-soft); }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(60,40,120,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(46,35,80,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low hero with the name beside Nour, the three doors side by side, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 42%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 280px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .guide { width: 116px; height: 116px; left: calc(env(safe-area-inset-left) + 8px); }
+  .say { left: calc(env(safe-area-inset-left) + 124px); bottom: 40px; max-width: 180px; padding: 7px 12px 8px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  h2 { font-size: 20px; }
+  .makes { flex-direction: row; gap: 12px; margin-top: 10px; }
+  .make { flex: 1; min-width: 0; gap: 10px; padding: 8px; }
+  .make .art { width: 84px; height: 84px; border-radius: 14px; }
+  .make b { font-size: 17px; }
+  .make p { font-size: 12px; }
+  .left { height: auto; min-height: 24px; padding: 2px 8px; font-size: 12px; white-space: normal; }
+  .cta { height: 36px; padding: 0 12px; font-size: 14px; }
+  .left + .cta { margin-top: 6px; }
+  .mine { grid-template-columns: repeat(4, 1fr); }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .guide { animation: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/workshop/workshop-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+    <span class="pill" title="الشارات" role="img" aria-label="الشارات: 6"><img src="../img/hud/badge.png" alt="">6</span>
+  </div>
+  <div class="title">
+    <h1>ورشة السحر</h1>
+    <p>اختر ما تريد، وتصنعه نور لك</p>
+  </div>
+  <img class="guide" src="../img/ai.png" alt="نور أمام برج ورشة السحر">
+  <p class="say">أهلاً يا <span id="kid">عمر</span>! أنا نور. ماذا نصنع معاً اليوم؟<svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
+</header>
+
+<main>
+  <h2>ماذا تريد أن تصنع؟</h2>
+  <p class="note">تختار موضوعاً من المواضيع الجاهزة، وتصنع نور قصتك بالذكاء الاصطناعي. ما تصنعه يبقى خاصاً بك حتى ترسله للنشر.</p>
+  <!-- the two AI doors with what is left of them, and «أنت بطل القصة» (workshop-data.js, the same as the web's workshop) -->
+  <div class="makes" id="makes"></div>
+
+  <section class="sec" aria-labelledby="mine-t">
+    <h2 id="mine-t">إبداعاتي من الورشة</h2>
+    <div class="mine" id="mine"></div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../valley.js"></script>
+<script src="../workshop.js"></script>
+<script src="../workshop-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // the doors and «إبداعاتي», as in the web's workshop
+  function render() {
+    $('makes').innerHTML = WorkshopBoard.doors('../').map((d) => `<a class="make ${d.out ? 'out' : ''}" href="${d.href}">
+      <img class="art" src="${d.art}" alt=""><span class="txt"><b>${d.name}</b><p>${d.about}</p>
+      ${d.badge ? `<span class="left ${d.out ? 'none' : ''}">${d.badge}</span>` : ''}<span class="cta">${d.cta}${d.out ? '' : ARROW}</span></span></a>`).join('');
+
+    const works = WorkshopBoard.works('../');
+    $('mine').innerHTML = works.length ? works.map((w) => `<a class="work" href="${w.href}">
+      <img src="${w.img}" alt=""><b>${w.name}</b><span><i>${w.kind}</i><i class="${w.state}">${w.said}</i></span></a>`).join('')
+      : '<p class="empty">لم تصنع شيئاً بعد. اختر من الأعلى، ونبدأ معاً!</p>';
+  }
+  // coming back from making something shows what is left and the new work
+  addEventListener('pageshow', (e) => { if (e.persisted) render(); });
+  render();
+
+  // the child the parent chose carries over (a visitor stays a visitor)
+  try {
+    const kid = JSON.parse(localStorage.getItem('ajyal.profile') || '{}');
+    if (kid.name && !(window.Guest && Guest.on)) document.getElementById('kid').textContent = kid.name;
+  } catch {}
+
+  // the other screens of the app come next
+  const toast = $('toast');
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-soon]')) return;
+    toast.textContent = 'في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة';
+    toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200);
+  });
+})();
+</script>
+</body>
+</html>

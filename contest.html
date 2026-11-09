@@ -116,6 +116,70 @@ main { padding: 0 80px 150px; display: flex; flex-direction: column; gap: 30px; 
 .narrow .mine { flex-wrap: wrap; }
 .narrow .entries { grid-template-columns: repeat(2, 1fr); }
 .narrow .row { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+/* a phone, upright or on its side: the page is laid out for its screen instead of the board scaled down (fit() sets html.phone);
+   like the other content pages it has no bottom bar, the back button leads home */
+.phone #page { position: relative; width: auto; transform: none; }
+.phone .dock { display: none; }
+.phone .bar { padding: max(env(safe-area-inset-top), 12px) calc(14px + env(safe-area-inset-right)) 10px calc(14px + env(safe-area-inset-left)); }
+.phone .pill { height: 40px; padding: 0 12px; font-size: 15px; box-shadow: 0 3px 0 #F2CFC6; }
+.phone .pill img { width: 24px; height: 24px; }
+.phone .pill svg { width: 18px; height: 18px; }
+.phone .stats { gap: 6px; }
+.phone main { gap: 22px; padding: 0 calc(14px + env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left)); }
+.phone .about { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.phone .about .cov { border-radius: 22px; box-shadow: 0 5px 0 #F2CFC6; }
+.phone .type { top: 10px; right: 10px; height: 30px; padding: 0 10px; font-size: 13px; }
+.phone .about .txt { gap: 10px; }
+.phone .about h1 { font-size: 28px; }
+.phone .about p { font-size: 16px; line-height: 1.55; }
+.phone .meta { gap: 6px; }
+.phone .meta span { height: 30px; padding: 0 10px; font-size: 13px; }
+.phone .rules { gap: 6px; padding: 12px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+.phone .mine { flex-wrap: wrap; gap: 12px; padding: 14px; border-radius: 24px; box-shadow: 0 5px 0 #F2CFC6; }
+.phone .mine .t { min-width: 0; flex-basis: 170px; gap: 4px; }
+.phone .mine b { font-size: 20px; }
+.phone .mine small { font-size: 14px; line-height: 1.5; }
+.phone .state { height: 28px; font-size: 13px; }
+.phone .go { justify-content: center; height: 48px; padding: 0 22px; font-size: 17px; box-shadow: 0 4px 0 var(--go-deep); }
+.phone .soft { height: 44px; padding: 0 18px; font-size: 15px; }
+.phone .art.small { width: 96px; }
+.phone .art.small img { height: 96px; border-radius: 14px; }
+.phone .row { flex-direction: column; align-items: flex-start; gap: 4px; }
+.phone .row h2 { font-size: 22px; }
+.phone .row small { font-size: 14px; line-height: 1.5; }
+.phone .entries { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+.phone .entry { gap: 8px; padding: 8px 8px 10px; border-radius: 22px; box-shadow: 0 4px 0 #F2CFC6; }
+.phone .art img { border-radius: 14px; }
+.phone .art .title { left: 6px; right: 6px; bottom: 6px; padding: 4px 6px; border-radius: 10px; font-size: 13px; }
+.phone .entry b { font-size: 16px; }
+.phone .votes { font-size: 13px; }
+.phone .vote { height: 44px; font-size: 15px; }
+.phone .entry.win { box-shadow: 0 0 0 4px #F7B347, 0 5px 0 #C98A1E, 0 0 20px rgba(247,179,71,.5); }
+.phone .crown { top: -14px; height: 30px; padding: 0 10px; font-size: 13px; }
+.phone .sheet { padding: 12px; }
+.phone .sheet .box { gap: 12px; padding: 18px 16px; border-radius: 26px; }
+.phone .sheet h2 { padding-left: 48px; font-size: 22px; }
+.phone .sheet p { font-size: 15px; line-height: 1.5; }
+.phone .x { top: 12px; left: 12px; }
+.phone .picks { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.phone .pick { padding: 4px; border-width: 3px; border-radius: 14px; }
+.phone .upload { height: 56px; font-size: 16px; }
+.phone .preview img { width: 88px; height: 88px; }
+.phone .toast { bottom: calc(24px + env(safe-area-inset-bottom)); max-width: calc(100% - 32px); font-size: 14px; }
+/* on its side: the picture beside the details, four entries a row, and a shorter sheet */
+@media (max-height: 500px) {
+  .phone .bar { padding-top: max(env(safe-area-inset-top), 8px); padding-bottom: 8px; }
+  .phone .about { grid-template-columns: 300px minmax(0, 1fr); gap: 18px; }
+  .phone .about h1 { font-size: 26px; }
+  .phone .entries { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .phone .sheet .box { gap: 8px; padding: 12px 16px; }
+  .phone .sheet h2 { font-size: 20px; }
+  .phone .picks { grid-template-columns: repeat(6, 1fr); }
+  .phone .upload { height: 46px; }
+  .phone .preview img { width: 64px; height: 64px; }
+  .phone #submit { height: 44px; }
+}
 </style>
 <link rel="stylesheet" href="dock.css">
 </head>
@@ -266,7 +330,11 @@ main { padding: 0 80px 150px; display: flex; flex-direction: column; gap: 30px; 
 
   const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2600); };
   const page = $('page'), wrap = $('wrap');
+  // a phone, upright or on its side, gets the page laid out for its screen; a tablet and a computer get the board scaled to the window
+  const PHONE = matchMedia('(max-width: 600px), (max-height: 500px)');
   function fit() {
+    document.documentElement.classList.toggle('phone', PHONE.matches);
+    if (PHONE.matches) { page.classList.remove('narrow'); page.style.width = page.style.transform = wrap.style.height = ''; return; }
     const B = innerWidth < 760 ? 720 : 1440;
     page.style.width = B + 'px'; page.classList.toggle('narrow', B < 1440);
     const k = Math.min(innerWidth / B, 1.5), x = Math.max(0, (innerWidth - B * k) / 2);

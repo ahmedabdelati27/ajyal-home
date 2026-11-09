@@ -186,7 +186,8 @@
   const drop = Game.place({ root: play, items: '.tray .thing', targets: '.pot',
     onPick: () => tip('الآن اضغط على الأصيص'),
     onDrop(item, target) {
-      if (busy) return;
+      // nothing to do between the last step and the next stage
+      if (busy || !stage.steps[at]) return;
       const s = stage.steps[at];
       if (item.dataset.tool !== s.tool) {
         const right = s.tool === 'sun' ? play.querySelector('.sun') : play.querySelector(`.tray [data-tool="${s.tool}"]`);
@@ -202,7 +203,7 @@
     } });
 
   play.addEventListener('click', (e) => {
-    const sun = e.target.closest('.sun'); if (!sun || !stage || busy) return;
+    const sun = e.target.closest('.sun'); if (!sun || !stage || busy || !stage.steps[at]) return;
     const s = stage.steps[at];
     // the sun out of turn shakes and counts as a miss; the tool that comes next is what glows
     if (s.tool !== 'sun') return miss(sun, play.querySelector(`.tray [data-tool="${s.tool}"]`), `الشمس تنتظر دورها! الخطوة الآن: ${s.text}`, 'هذه هي الأداة المناسبة الآن');

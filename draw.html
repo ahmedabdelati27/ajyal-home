@@ -63,6 +63,27 @@
   .size { width: 40px; height: 40px; }
   .tool.save { grid-column: span 2; height: 48px; font-size: 17px; }
 }
+/* a phone upright: every color in two rows, nothing hidden off to the side */
+@media (max-width: 600px) and (min-height: 501px) {
+  .colors { grid-auto-flow: row; grid-template-columns: repeat(6, 46px); grid-template-rows: none; overflow: visible; padding: 10px; gap: 10px 8px; }
+  .sw { width: 46px; height: 46px; }
+  .tool, .sizes, .tool.save { height: 52px; }
+  .saved .card h2 { font-size: 28px; }
+}
+/* a phone on its side: tools on the right, the sheet as big as the height allows, the colors in a block on the left */
+@media (max-height: 500px) {
+  .studio { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: minmax(0, 1fr); gap: 12px; }
+  .board { width: auto; height: 100%; max-width: 100%; border-width: 5px; border-radius: 20px; box-shadow: 0 5px 0 rgba(75,63,147,.18), 0 12px 20px rgba(0,0,0,.18); }
+  .tools { order: 0; width: 132px; grid-template-columns: repeat(2, 1fr); grid-auto-flow: row dense; gap: 8px; }
+  .tool { height: 44px; box-shadow: 0 4px 0 rgba(75,63,147,.18); }
+  .sizes { height: 46px; padding: 0 4px; box-shadow: 0 4px 0 rgba(75,63,147,.18); }
+  .size { width: 38px; height: 38px; }
+  .tool.save { height: 48px; font-size: 16px; }
+  .colors { order: 2; grid-auto-flow: row; grid-template-columns: repeat(3, 44px); grid-template-rows: none; overflow: visible; padding: 10px; gap: 8px; border-radius: 22px; }
+  .saved .card img.work { width: 150px; border-radius: 14px; }
+  .saved .card { padding-top: 16px; }
+  .saved .note { font-size: 13px; }
+}
 </style>
 </head>
 <body>
@@ -78,11 +99,11 @@
   <main class="studio">
     <div class="tools">
       <div class="row" role="group" aria-label="الأداة">
-        <button class="tool" type="button" data-tool="pen" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.5-5L16 4.5l3.5 3.5L9 18.5z" fill="#FFC93C"/><path d="M14 6.5l3.5 3.5"/></svg><span>القلم</span></button>
-        <button class="tool" type="button" data-tool="brush" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M14 4l6 6-6 4-4-4z" fill="#B88A5A"/><path d="M10 10c-4 0-6 3-6 6 0 2-1 3-1 4 4 0 9-1 9-6"/></svg><span>الفرشاة</span></button>
+        <button class="tool" type="button" data-tool="pen" aria-pressed="true" aria-label="القلم"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.5-5L16 4.5l3.5 3.5L9 18.5z" fill="#FFC93C"/><path d="M14 6.5l3.5 3.5"/></svg><span>القلم</span></button>
+        <button class="tool" type="button" data-tool="brush" aria-pressed="false" aria-label="الفرشاة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M14 4l6 6-6 4-4-4z" fill="#B88A5A"/><path d="M10 10c-4 0-6 3-6 6 0 2-1 3-1 4 4 0 9-1 9-6"/></svg><span>الفرشاة</span></button>
       </div>
       <div class="row">
-        <button class="tool" type="button" data-tool="eraser" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M8 20l-4-4 10-10 6 6-8 8z" fill="#F7A8C4"/><path d="M8 20h12"/></svg><span>الممحاة</span></button>
+        <button class="tool" type="button" data-tool="eraser" aria-pressed="false" aria-label="الممحاة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M8 20l-4-4 10-10 6 6-8 8z" fill="#F7A8C4"/><path d="M8 20h12"/></svg><span>الممحاة</span></button>
       </div>
       <div class="sizes" role="group" aria-label="حجم القلم">
         <button class="size" type="button" data-size="8" aria-label="رفيع" aria-pressed="false"><i style="--d:8px"></i></button>
@@ -93,7 +114,7 @@
         <button class="tool" type="button" id="undo" disabled aria-label="تراجع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7H8.5a4.5 4.5 0 0 0 0 9H17"/><path d="M12 3l3.5 4L12 11"/></svg></button>
         <button class="tool" type="button" id="redo" disabled aria-label="إعادة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7h6.5a4.5 4.5 0 0 1 0 9H7"/><path d="M12 3L8.5 7 12 11"/></svg></button>
       </div>
-      <button class="tool" type="button" id="clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="13" height="15" rx="2" fill="#FFFFFF"/><path d="M19 3l.8 1.7 1.7.8-1.7.8L19 8l-.8-1.7-1.7-.8 1.7-.8z" fill="#F7B347" stroke="none"/></svg><span>امسح اللوحة</span></button>
+      <button class="tool" type="button" id="clear" aria-label="امسح اللوحة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="13" height="15" rx="2" fill="#FFFFFF"/><path d="M19 3l.8 1.7 1.7.8-1.7.8L19 8l-.8-1.7-1.7-.8 1.7-.8z" fill="#F7B347" stroke="none"/></svg><span>امسح اللوحة</span></button>
       <button class="tool save" type="button" id="save">احفظ رسمتي</button>
     </div>
     <div class="board" id="board" role="img" aria-label="لوحة الرسم">

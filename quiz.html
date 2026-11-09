@@ -38,7 +38,8 @@
 .qhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .dots { display: flex; gap: 8px; }
 .dots i { width: 16px; height: 16px; border-radius: 50%; background: #F2DCD5; }
-.dots i.done { background: #FF9384; } .dots i.at { background: #F7B347; box-shadow: 0 0 0 4px rgba(247,179,71,.3); }
+/* an answered question's dot is «did»: «.done» is the finished overlay of viewer.css */
+.dots i.did { background: #FF9384; } .dots i.at { background: #F7B347; box-shadow: 0 0 0 4px rgba(247,179,71,.3); }
 .clock { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; }
 .timer { height: 14px; border-radius: 999px; background: #F2DCD5; overflow: hidden; }
 .timer i { display: block; height: 100%; width: 100%; border-radius: 999px; background: linear-gradient(90deg, #5BC236, #F7B347); transform-origin: right; }
@@ -73,6 +74,32 @@
   .q { font-size: 22px; } .hear { height: 40px; padding: 0 12px; font-size: 15px; }
   .opts { grid-template-columns: repeat(var(--m, 1), 1fr); } .opt { min-height: 60px; font-size: 19px; }
   .score b { font-size: 60px; } .res .falcon { width: 150px; }
+}
+/* a phone on its side: the cover beside the rules, smaller picture answers so a whole question fits, Shaheen beside the result */
+@media (max-height: 500px) {
+  .panel { padding: 12px 16px; border-radius: 22px; gap: 8px; }
+  .panel h2 { font-size: 22px; } .panel p { font-size: 15px; line-height: 1.5; }
+  .ttl img { border-radius: 10px; }
+  .panel:has(> .cover) { display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: 18px; align-content: start; }
+  .panel:has(> .cover) > * { grid-column: 2; }
+  .panel:has(> .cover) > .cover { grid-column: 1; grid-row: 1 / span 6; align-self: start; aspect-ratio: 4 / 3; border-radius: 16px; }
+  .rules { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .rules li { gap: 8px; padding: 7px 10px; border-radius: 14px; font-size: 14px; } .rules li i { font-size: 18px; }
+  .btn.big { justify-self: start; height: 46px; padding: 0 24px; font-size: 17px; }
+  .qhead { font-size: 14px; } .dots i { width: 12px; height: 12px; } .clock { font-size: 17px; }
+  .timer { height: 10px; }
+  .q { font-size: 19px; line-height: 1.35; } .hear { height: 36px; padding: 0 12px; font-size: 14px; } .hear svg { width: 18px; height: 18px; }
+  .opts { gap: 10px; }
+  .opt { min-height: 50px; padding: 6px 10px; border-width: 3px; border-radius: 18px; font-size: 18px; box-shadow: 0 4px 0 #F2DCD5; }
+  .opt[aria-pressed="true"] { box-shadow: 0 4px 0 #FF7A6B; }
+  .opt img { width: 100%; height: 72px; aspect-ratio: auto; }
+  .opt span { margin-top: 2px; font-size: 15px; }
+  .foot small { font-size: 13px; }
+  .panel.res { display: grid; grid-template-columns: auto minmax(0, 460px); justify-content: center; align-items: center; column-gap: 24px; row-gap: 8px; text-align: start; }
+  .res .falcon { grid-row: 1 / span 6; width: 140px; margin: 0; }
+  .score { font-size: 20px; } .score b { font-size: 50px; }
+  .facts { justify-content: flex-start; gap: 6px; } .facts span { height: 36px; padding: 0 12px; font-size: 15px; } .facts img { width: 24px; height: 24px; }
+  .res .btns { justify-content: flex-start; margin: 2px 0 0; }
 }
 </style>
 </head>
@@ -135,7 +162,7 @@
   function ask() {
     const Q = c.questions[at], last = at === c.questions.length - 1;
     const opts = Q.type === 'tf' ? ['صح', 'خطأ'] : Q.opts;
-    panel.innerHTML = `<div class="qhead"><span class="dots" aria-hidden="true">${c.questions.map((_, i) => `<i class="${i < at ? 'done' : i === at ? 'at' : ''}"></i>`).join('')}</span>
+    panel.innerHTML = `<div class="qhead"><span class="dots" aria-hidden="true">${c.questions.map((_, i) => `<i class="${i < at ? 'did' : i === at ? 'at' : ''}"></i>`).join('')}</span>
         <span>السؤال ${ar(at + 1)} من ${ar(c.questions.length)}</span><span class="clock" id="clock">⏱ ${ar(c.seconds)}</span></div>
       <div class="timer" id="timer"><i id="bar"></i></div>
       <div class="qrow"><p class="q">${Q.q}</p><button class="hear" type="button" id="hear">${SPEAKER}استمع</button></div>

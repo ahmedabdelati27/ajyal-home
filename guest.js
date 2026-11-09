@@ -25,8 +25,9 @@
 
   // the places that belong to a child's account
   const SHEETS = ['room', 'leaders', 'points', 'badges', 'streak', 'notes', 'settings'];
-  const PAGES = /(^|\/)(room|leaders|points|badges|streak|notes|settings|create|hero|contest)\.html/;
-  const CONTENT = /(^|\/)(story|video|audio|book|flipbook|pictures|learn|surah|game[a-z-]*|value|color|quiz)\.html/;
+  // a contest, quick quizzes included, is taking part, so it asks to sign in like the other account places
+  const PAGES = /(^|\/)(room|leaders|points|badges|streak|notes|settings|create|hero|contest|quiz)\.html/;
+  const CONTENT = /(^|\/)(story|video|audio|book|flipbook|pictures|learn|surah|game[a-z-]*|value|color)\.html/;
   const FREE = 2;
   const end = () => { Object.keys(sessionStorage).filter((k) => k === KEY || k.startsWith('visit:')).forEach((k) => sessionStorage.removeItem(k)); };
 

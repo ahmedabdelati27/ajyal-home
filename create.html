@@ -55,7 +55,8 @@
 .steps li { display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 18px; border-radius: 18px; background: #F6F2FF; font-size: 20px; font-weight: 800; color: #9A91B8; }
 .steps li i { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-style: normal; background: #E6DFFC; color: #FFFFFF; font-size: 17px; }
 .steps li.on { color: #2E2350; } .steps li.on i { background: #F7B347; animation: pulse 1s ease-in-out infinite; }
-.steps li.done { color: #1F6A1C; } .steps li.done i { background: #5BC236; animation: none; }
+/* a finished step is «did»: «.done» is the finished overlay of viewer.css */
+.steps li.did { color: #1F6A1C; } .steps li.did i { background: #5BC236; animation: none; }
 @keyframes pulse { 50% { transform: scale(1.15); } }
 
 /* the made story: a picture and its words, one page at a time */
@@ -92,6 +93,41 @@
   .btn { height: 54px; padding: 0 22px; font-size: 18px; }
 }
 @media (prefers-reduced-motion: reduce) { .wait .nour, .steps li.on i { animation: none; } .topic { transition: none; } }
+/* a phone: the topics scroll under the make button, which stays in reach at the bottom of the card */
+@media (max-width: 760px), (max-height: 500px) {
+  .foot { position: sticky; z-index: 1; bottom: 0; margin: 0 -16px -20px; padding: 10px 16px 16px; background: #FFFFFF; box-shadow: 0 -10px 12px -6px rgba(90,68,184,.12); }
+}
+/* a phone on its side: six topics in one row, Nour beside her words, the story's picture beside its page, the video beside its title */
+@media (max-height: 500px) {
+  .panel { padding: 12px 16px; border-radius: 22px; gap: 10px; }
+  .panel h2 { font-size: 22px; } .panel p { font-size: 15px; line-height: 1.5; }
+  .ttl img { border-radius: 10px; }
+  .chip { height: 30px; padding: 0 12px; font-size: 14px; }
+  .topics { grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .topic { gap: 5px; padding: 5px 5px 8px; border-width: 3px; border-radius: 18px; font-size: 14px; line-height: 1.3; box-shadow: 0 3px 0 #E6DFFC; }
+  .topic img { border-radius: 12px; }
+  .topic[aria-pressed="true"] { box-shadow: 0 3px 0 #8E76EE; }
+  .topic[aria-pressed="true"]::after { top: 8px; left: 8px; width: 28px; height: 28px; font-size: 16px; }
+  .who { gap: 10px; padding: 8px 12px; border-radius: 18px; } .who img { width: 40px; height: 40px; }
+  .who b { font-size: 16px; } .who small { font-size: 13px; }
+  .foot { margin: 0 -16px -12px; padding: 8px 16px 12px; }
+  .foot small { font-size: 13px; }
+  .panel.wait, .panel.center { display: grid; grid-template-columns: auto minmax(0, 440px); justify-content: center; align-items: center; column-gap: 22px; row-gap: 8px; text-align: start; }
+  .panel.wait > .nour, .panel.center > .nour { grid-row: 1 / 5; width: 120px; height: 120px; box-shadow: 0 0 0 6px #EFEAFF; }
+  .center .btns { justify-content: flex-start; margin: 0; }
+  .steps { min-width: 0; gap: 6px; }
+  .steps li { height: 40px; padding: 0 12px; border-radius: 14px; font-size: 16px; } .steps li i { width: 24px; height: 24px; font-size: 14px; }
+  .read { grid-template-columns: 170px 1fr; gap: 16px; }
+  .read img { width: 170px; height: 170px; border-radius: 18px; }
+  .words { gap: 8px; } .words .t { font-size: 19px; line-height: 1.6; } .words h3 { font-size: 26px; }
+  .no { font-size: 14px; } .hear { height: 38px; padding: 0 14px; font-size: 15px; }
+  .nav .btn { min-width: 120px; justify-content: center; }
+  .keep { gap: 8px; padding: 8px 12px; border-radius: 18px; } .keep p { font-size: 14px !important; }
+  .state { height: 28px; font-size: 13px; }
+  .panel:has(> .film) { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 18px; align-items: start; }
+  .panel:has(> .film) > .film { grid-row: 1 / 3; width: auto; height: min(290px, calc(100dvh - 104px)); border-radius: 18px; }
+  .panel:has(> .film) > .keep { flex-direction: column; align-items: flex-start; }
+}
 </style>
 </head>
 <body>
@@ -163,7 +199,7 @@
     const items = panel.querySelectorAll('.steps li'), fail = q.get('fail') === '1';
     let i = 0;
     const step = () => {
-      items.forEach((li, j) => { li.classList.toggle('done', j < i); li.classList.toggle('on', j === i); });
+      items.forEach((li, j) => { li.classList.toggle('did', j < i); li.classList.toggle('on', j === i); });
       if (fail && i === 2) return setTimeout(failed, 1200);
       if (i === items.length) {
         spend(k);

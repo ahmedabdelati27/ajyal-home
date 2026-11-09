@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-sfx="none">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Quran Oasis made for a phone, upright or on its side; a tablet and a computer get the web's oasis
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../quran.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#F6F8EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>واحة القرآن · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<!-- the Quran pages have no sound effects: no sfx.js here, and data-sfx="none" keeps them silent -->
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --cream: #F6F8EC; --edge: #D8E6C3;
+  --green-deep: #2F6B2A; --go: #2E8B2A; --go-deep: #1F6A1C; --leaf: #5BC236; --line: #6B3A1E;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--cream); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* a calm courtyard at dusk, fading into the page; the oasis has no character (D-007), only its island with the mushaf */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 36% 60%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(246,248,236,0), var(--cream) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--green-deep), 2px 0 0 var(--green-deep), -2px 0 0 var(--green-deep), 0 -2px 0 var(--green-deep), 2px 2px 0 var(--green-deep), -2px 2px 0 var(--green-deep), 2px -2px 0 var(--green-deep), -2px -2px 0 var(--green-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+/* the island picture has room around it: it is drawn larger than its spot and pulled into place */
+.isle { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) - 20px); bottom: -24px; width: 184px; height: 184px; animation: float 5s ease-in-out infinite; }
+@keyframes float { 50% { translate: 0 -6px; } }
+/* how much of Juz' Amma the child has memorised */
+.sum { position: absolute; z-index: 2; right: var(--side-r); bottom: 46px; display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: 176px; padding: 9px 14px 11px; border-radius: 20px; background: rgba(255,255,255,.94); font-size: 15px; font-weight: 800; line-height: 1.3; box-shadow: 0 4px 0 var(--edge); }
+.meter { display: block; height: 10px; border-radius: 999px; background: #E5EDD6; overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--leaf); }
+
+/* which surahs to show */
+.chips { position: sticky; z-index: 4; top: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 8px var(--side-r) 10px var(--side-l); background: var(--cream); }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; height: 42px; padding: 0 16px; border: 3px solid transparent; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); }
+.chip[aria-pressed="true"] { border-color: var(--line); background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+
+main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+
+/* the surah number sits in an eight-point star */
+.num { position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--green-deep); }
+.num::before, .num::after { content: ''; position: absolute; inset: 12%; border-radius: 18%; background: linear-gradient(#F3F8E8, #DDEBC6); box-shadow: inset 0 0 0 3px #B9D597; }
+.num::after { transform: rotate(45deg); }
+.num span { position: relative; z-index: 1; }
+
+/* where the child stopped memorising */
+.cont { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.cont .num { width: 70px; height: 70px; font-size: 20px; }
+.cont .txt { flex: 1; min-width: 0; }
+.cont small { display: block; font-size: 12px; font-weight: 800; color: var(--green-deep); }
+.cont b { display: block; font-size: 18px; font-weight: 800; line-height: 1.25; }
+.cont .when { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.cont .meter { max-width: 260px; height: 7px; margin-top: 6px; }
+.cont .go { flex-shrink: 0; display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.cont .go svg { width: 14px; height: 14px; }
+
+/* the surahs of Juz' Amma, in the admin's order: one under another, big enough for a finger */
+.list h2 { margin: 22px 0 14px; font-size: 20px; font-weight: 800; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px 12px; }
+.sura { position: relative; display: flex; align-items: center; gap: 10px; min-height: 76px; padding: 8px 12px 8px 14px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.sura .num { width: 58px; height: 58px; font-size: 18px; }
+.sura .t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.sura b { font-size: 18px; font-weight: 800; }
+.sura small { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.sura .meter { height: 7px; margin-top: 4px; }
+.sura.done { background: linear-gradient(#F3FCEB, #E1F4D2); }
+.sura.done .num::before, .sura.done .num::after { background: linear-gradient(#7FCB5C, #4CB944); box-shadow: none; }
+.sura.done .num { color: var(--paper); }
+.sura.now { box-shadow: 0 0 0 3px #F7B347, 0 5px 0 #C98A1E; }
+.state { position: absolute; top: -10px; left: 12px; display: flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+.state.ok { background: #4CB944; color: var(--paper); }
+.state.on { background: #FFF1C9; color: #8A5A00; }
+@media (hover: hover) { .sura { transition: transform .2s; } .sura:hover { transform: translateY(-3px); } }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(40,70,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low courtyard with the name in the middle, the surahs in three columns, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 40% 55%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 70px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .isle { width: 150px; height: 150px; bottom: -22px; left: calc(env(safe-area-inset-left) - 8px); }
+  .sum { bottom: 26px; width: 200px; padding: 7px 12px 9px; font-size: 13px; gap: 4px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .chips { justify-content: center; padding-top: 4px; padding-bottom: 8px; }
+  .chip { height: 38px; font-size: 14px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .cont { padding: 8px; } .cont .num { width: 58px; height: 58px; font-size: 18px; }
+  .list h2 { margin: 18px 0 12px; font-size: 18px; }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sura { min-height: 68px; padding: 6px 10px 6px 12px; }
+  .sura .num { width: 52px; height: 52px; font-size: 16px; }
+  .sura b { font-size: 16px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .isle { animation: none; } .sura { transition: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/quran/quran-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+  </div>
+  <div class="title">
+    <h1>واحة القرآن</h1>
+    <p>استمع وردّد واحفظ قصار السور من جزء عمّ</p>
+  </div>
+  <img class="isle" src="../img/quran.png" alt="مصحف على حامل خشبي في واحة القرآن">
+  <p class="sum" id="sum"></p>
+</header>
+
+<div class="chips" role="group" aria-label="عرض السور" id="chips">
+  <button class="chip" type="button" data-f="" aria-pressed="true">كل السور</button>
+  <button class="chip" type="button" data-f="on" aria-pressed="false">جاري الحفظ</button>
+  <button class="chip" type="button" data-f="ok" aria-pressed="false">مكتملة</button>
+</div>
+
+<main>
+  <a class="cont" href="../surah.html?s=112&amp;resume=1" aria-label="أكمل حفظ سورة الإخلاص، الآية 3 من 4، مرحلة التسميع">
+    <span class="num" aria-hidden="true"><span>١١٢</span></span>
+    <span class="txt"><small>أكمل من حيث توقفت</small><b>سورة الإخلاص</b><span class="when">الآية ٣ من ٤ · مرحلة التسميع</span><span class="meter" style="--p:83%"><i></i></span></span>
+    <span class="go">أكمل<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span>
+  </a>
+
+  <section class="list" aria-labelledby="list-t">
+    <h2 id="list-t">سور جزء عمّ</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../quran-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // the surahs and the child's memorisation, as on the web's oasis
+  $('sum').innerHTML = Quran.sum();
+  const render = (f) => { $('grid').innerHTML = Quran.list(f, '../'); };
+  render('');
+  $('chips').addEventListener('click', (e) => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    $('chips').querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+    render(b.dataset.f);
+  });
+
+  // the other screens of the app come next; in the prototype only Al-Ikhlas opens
+  const toast = $('toast');
+  const say = (s) => { toast.textContent = s; toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2400); };
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-soon]')) return say('في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة');
+    if (e.target.closest('.sura[href="#"]')) { e.preventDefault(); say('في النموذج: جرّب سورة الإخلاص'); }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a value's journey made for a phone, upright or on its side; a tablet and a computer get the web's journey
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../value.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#F1F8E8">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>رحلة القيمة · حديقة القيم</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #F1F8E8; --mint: #D3E6C1;
+  --go: #2E8B2A; --go-deep: #1F6A1C; --leaf: #5BC236; --leaf-deep: #2F7A23; --sun: #F7B347; --c: #3D96D6;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the value's picture at the top, the words on a soft veil under it */
+.hero { position: relative; height: calc(var(--top) + 210px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 110px; background: linear-gradient(rgba(241,248,232,0), var(--page) 92%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--mint); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--mint); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+
+.head { position: relative; z-index: 2; margin-top: -70px; padding: 0 var(--side-r) 0 var(--side-l); }
+.kicker { display: inline-block; padding: 2px 12px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 13px; font-weight: 800; color: var(--leaf-deep); }
+h1 { margin: 6px 0 2px; font-size: 38px; font-weight: 800; line-height: 1.05; color: var(--c); text-shadow: 0 2px 0 var(--paper), 2px 0 0 var(--paper), -2px 0 0 var(--paper), 0 -2px 0 var(--paper); }
+.head p { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.5; }
+
+/* Nour and her words */
+.nour { display: flex; align-items: flex-end; gap: 8px; margin: 12px var(--side-r) 0 var(--side-l); }
+.nour img { flex-shrink: 0; width: 84px; animation: hover 3s ease-in-out infinite; }
+@keyframes hover { 50% { translate: 0 -6px; } }
+.bub { position: relative; flex: 1; min-width: 0; margin-bottom: 18px; padding: 11px 14px 12px; border-radius: 20px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.5; box-shadow: 0 4px 0 var(--sun); }
+.bub::before { content: ''; position: absolute; right: -11px; bottom: 16px; border: 9px solid transparent; border-left-color: var(--paper); border-right: 0; }
+.listen { display: inline-flex; align-items: center; gap: 6px; height: 40px; margin-top: 8px; padding: 0 14px; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-size: 14px; font-weight: 800; }
+.listen svg { width: 20px; height: 20px; }
+
+main { padding: 10px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+.stations-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 0 24px; }
+.stations-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.stations-head small { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.meter { display: inline-block; width: 70px; height: 9px; border-radius: 999px; background: #E3EFD6; overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--p); border-radius: 999px; background: var(--c); transition: width .6s; }
+
+/* the stations, one under another on a dotted path */
+.path { position: relative; display: flex; flex-direction: column; gap: 16px; }
+.path::before { content: ''; position: absolute; top: 30px; bottom: 30px; right: 8px; border-right: 5px dashed #BFD9A8; }
+.stn { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; min-width: 0; padding: 10px 12px 10px 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--mint); }
+.stn .no { position: absolute; z-index: 2; top: -8px; right: -6px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); color: var(--c); font-size: 16px; font-weight: 800; border: 4px solid var(--c); }
+.stn .cov { position: relative; flex-shrink: 0; width: 112px; aspect-ratio: 16 / 10; border-radius: 14px; overflow: hidden; }
+.stn .cov img { width: 100%; height: 100%; object-fit: cover; }
+.stn .kind { position: absolute; bottom: 5px; right: 5px; height: 22px; padding: 0 8px; border-radius: 999px; background: rgba(255,255,255,.94); font-size: 12px; font-weight: 800; display: flex; align-items: center; }
+.stn .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.stn b { font-size: 17px; font-weight: 800; line-height: 1.25; }
+.stn .st { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+.stn .st small { font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.stn .act { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 999px; background: #EEF6E6; font-size: 14px; font-weight: 800; white-space: nowrap; }
+.stn.ok .no { background: var(--leaf); color: var(--paper); border-color: var(--paper); }
+.stn.ok .st small { color: var(--leaf-deep); }
+.stn.next { box-shadow: 0 0 0 4px var(--sun), 0 5px 0 #C98A1E, 0 0 22px rgba(247,179,71,.55); }
+.stn.next .act { background: var(--go); color: var(--paper); box-shadow: 0 3px 0 var(--go-deep); }
+.stn .pointer { position: absolute; z-index: 2; top: -30px; left: 2px; width: 48px; pointer-events: none; animation: hover 2.4s ease-in-out infinite; }
+.next-tip { margin: 18px 0 0; padding: 12px 14px; border-radius: 18px; background: rgba(255,255,255,.75); font-size: 14px; font-weight: 800; line-height: 1.5; color: var(--ink-soft); }
+
+/* the value is complete: a celebration with Nour */
+.sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: safe center; justify-content: center; overflow-y: auto; padding: calc(var(--top) + 8px) 16px calc(var(--bottom) + 8px); background: rgba(30,60,20,.45); }
+.sheet[hidden] { display: none; }
+.sheet .box { position: relative; width: min(420px, 100%); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 18px 20px; border-radius: 28px; text-align: center; background: radial-gradient(circle at 50% 20%, #FFF8D6, #FBFFF5 60%); box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.party .cheer { width: 150px; }
+.party .tree { width: 110px; margin-top: -16px; }
+.party h2 { margin: 0; font-size: 26px; font-weight: 800; color: var(--leaf-deep); }
+.party p { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.5; }
+.gains { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.gain { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px 0 8px; border-radius: 999px; background: #FFF1C9; color: #8A5A00; font-size: 15px; font-weight: 800; }
+.gain img { width: 28px; height: 28px; }
+.party .btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+.party .btns a, .party .btns button { display: inline-flex; align-items: center; height: 50px; padding: 0 22px; border-radius: 999px; font-size: 17px; font-weight: 800; }
+.party .btns .go { background: var(--go); color: var(--paper); box-shadow: 0 4px 0 var(--go-deep); }
+.party .btns .soft { background: var(--paper); color: var(--ink); box-shadow: 0 4px 0 var(--mint); }
+.confetti { position: fixed; inset: 0; z-index: 31; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: 40%; left: 50%; width: 10px; height: 14px; border-radius: 3px; animation: fly 1.4s ease-out forwards; }
+@keyframes fly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(40,70,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 40; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: the picture as a low band, the name and Nour side by side, the stations in a row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 120px); }
+  .head { margin-top: -78px; padding-inline-end: 46%; }
+  h1 { font-size: 32px; }
+  .head p { font-size: 14px; }
+  .nour { position: absolute; z-index: 3; top: calc(var(--top) + 52px); left: var(--side-l); width: 44%; margin: 0; }
+  .nour img { width: 70px; }
+  .bub { margin-bottom: 10px; padding: 8px 12px 9px; font-size: 13px; line-height: 1.45; }
+  .listen { height: 34px; margin-top: 4px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  main { padding-top: 16px; padding-bottom: calc(var(--bottom) + 70px); }
+  .stations-head { margin: 4px 0 20px; }
+  .path { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .path::before { top: 50%; bottom: auto; right: 12%; left: 12%; border-right: 0; border-top: 5px dashed #BFD9A8; }
+  .stn { gap: 10px; padding: 8px; }
+  .stn .cov { width: 92px; aspect-ratio: 1; }
+  .stn b { font-size: 15px; }
+  .stn .act { height: 34px; padding: 0 12px; font-size: 13px; }
+  .next-tip { margin-top: 14px; padding: 8px 12px; font-size: 13px; }
+  .sheet .box { width: min(560px, 100%); display: grid; grid-template-columns: 150px 1fr; column-gap: 14px; row-gap: 8px; align-items: center; text-align: start; padding: 14px 16px; }
+  .party .cheer, .party .tree { grid-column: 1; }
+  .party .cheer { grid-row: 1 / 4; width: 140px; }
+  .party .tree { display: none; }
+  .party h2, .party p, .gains, .party .btns { grid-column: 2; justify-content: flex-start; }
+  .party h2 { font-size: 22px; } .party p { font-size: 14px; }
+  .party .btns a, .party .btns button { height: 42px; padding: 0 16px; font-size: 15px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .nour img, .stn .pointer, .confetti i { animation: none; } .meter i { transition: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" id="cover" src="../img/garden/v-honesty.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="garden.html" aria-label="العودة إلى حديقة القيم"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+    <span class="pill" title="الشارات" role="img" aria-label="الشارات: 6"><img src="../img/hud/badge.png" alt="">6</span>
+  </div>
+</header>
+<div class="head"><span class="kicker">رحلة قيمة مع نور</span><h1 id="title"></h1><p id="about"></p></div>
+<div class="nour"><div class="bub"><span id="intro" aria-live="polite"></span><br><button class="listen" type="button" id="listen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع لنور</button></div><img src="../img/garden/nour-wave.png" alt="نور"></div>
+
+<main>
+  <div class="stations-head"><h2>محطات الرحلة</h2><small id="prog"></small></div>
+  <div class="path" id="path"></div>
+  <p class="next-tip" id="tip"></p>
+</main>
+
+<!-- the value is complete -->
+<div class="sheet party" id="party" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="party-t">
+    <img class="cheer" src="../img/garden/nour-cheer.png" alt="">
+    <img class="tree" src="../img/garden/plant-3.png" alt="">
+    <h2 id="party-t"></h2>
+    <p id="party-p"></p>
+    <div class="gains" id="gains"></div>
+    <div class="btns"><a class="go" href="garden.html">شاهد حديقتك</a><button class="soft" type="button" id="party-x">ابقَ هنا</button></div>
+  </div>
+</div>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="../sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="../room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="../leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../values.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { VALUES, KIND, state, leave, back, say } = Values;
+  const v = VALUES.find((x) => x.id === new URLSearchParams(location.search).get('v')) || VALUES[0];
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  // values.js names the site's files from the site's root; this page is one folder down
+  const up = (p) => (p === '#' ? p : '../' + p);
+  const XP = 30; // from gamification when completing a value is eligible
+  document.title = `رحلة ${v.name} · حديقة القيم`;
+  document.documentElement.style.setProperty('--c', v.color);
+  $('cover').src = `../img/garden/v-${v.id}.jpg`;
+  $('title').textContent = `رحلة ${v.name}`;
+  $('about').textContent = v.about;
+  const toast = (s, ms = 2600) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), ms); };
+  // Nour reads her words aloud when the device can; the words stay on screen either way
+  $('listen').addEventListener('click', () => { if (!say($('intro').textContent)) toast('لا يوجد صوت عربي على هذا الجهاز، اقرأ كلمات نور'); });
+
+  function render(justDone) {
+    const s = state(v), next = v.stations.find((x) => x.req && !s.done.includes(x.id));
+    $('prog').innerHTML = `أكملت ${ar(s.n)} من ${ar(s.all)} <span class="meter" style="--p:${(s.n / s.all) * 100}%"><i></i></span>`;
+    $('path').innerHTML = v.stations.map((x, i) => {
+      const ok = s.done.includes(x.id), isNext = x === next;
+      return `<a class="stn ${ok ? 'ok' : ''} ${isNext ? 'next' : ''}" href="${up(x.href)}" data-id="${x.id}" aria-label="المحطة ${i + 1}: ${KIND[x.kind]} ${x.name}، ${ok ? 'أكملتها' : isNext ? 'التالية' : 'لم تبدأ'}">
+        <span class="no">${ok ? '✓' : ar(i + 1)}</span>
+        <span class="cov"><img src="${up(x.img)}" alt=""><span class="kind">${KIND[x.kind]}${x.req ? '' : ' · إضافية'}</span></span>
+        <span class="txt"><b>${x.name}</b>
+        <span class="st"><small>${ok ? '✓ أكملتها' : isNext ? 'المحطة التالية' : 'بعدها'}</small><span class="act">${ok ? 'افتح مرة أخرى' : 'ابدأ'}</span></span></span>
+        ${isNext ? '<img class="pointer" src="../img/garden/nour-point.png" alt="">' : ''}</a>`;
+    }).join('');
+    // Nour: the introduction first, then where to go next, then her encouragement at the end
+    $('intro').textContent = s.complete ? v.done : s.n === 0 ? v.intro : justDone ? `أحسنت! أكملت «${justDone}». المحطة التالية: ${KIND[next.kind]} «${next.name}»` : `هيا نكمل! المحطة التالية: ${KIND[next.kind]} «${next.name}»`;
+    $('tip').textContent = s.complete ? `أكملت كل محطات ${v.name}، وأزهرت شجرتها في حديقتك` : `المحطات بالترتيب المقترح، ويمكنك فتح أي محطة. عندما تُكمل المحطات الثلاث تُزهر شجرة ${v.name}.`;
+  }
+
+  // opening a station: the prototype counts it done when the child comes back
+  $('path').addEventListener('click', (e) => {
+    const a = e.target.closest('.stn'); if (!a) return;
+    const x = v.stations.find((s) => s.id === a.dataset.id);
+    if (x.href === '#') { e.preventDefault(); return toast('في النموذج: هذا المحتوى لم يُرسم بعد'); }
+    leave(v.id, x.id);
+  });
+
+  function party() {
+    $('party-t').textContent = `أزهرت شجرة ${v.name}!`;
+    $('party-p').textContent = v.done;
+    // XP and the badge come from gamification when completing a value is eligible
+    $('gains').innerHTML = `<span class="gain"><img src="../img/hud/points.png" alt="">+${ar(XP)} نقطة</span>${v.badge ? `<span class="gain"><img src="../img/hud/badge.png" alt="">شارة جديدة: ${v.badge}</span>` : ''}`;
+    $('party').hidden = false; $('party-x').focus();
+    window.Sfx?.play('win'); burst();
+  }
+  const closeParty = () => { $('party').hidden = true; $('path').querySelector('.stn')?.focus(); };
+  $('party-x').addEventListener('click', closeParty);
+  function burst() {
+    const c = document.createElement('div'); c.className = 'confetti';
+    const colors = ['#F4823F', '#FFC93C', '#5BC236', '#3D96D6', '#F58DA6'];
+    c.innerHTML = Array.from({ length: 34 }, (_, i) => `<i style="background:${colors[i % 5]};--x:${(Math.random() - 0.5) * 420}px;--y:${-100 - Math.random() * 300}px;--r:${Math.random() * 720}deg"></i>`).join('');
+    document.body.appendChild(c); setTimeout(() => c.remove(), 1500);
+  }
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('party').hidden) closeParty(); });
+
+  // the other screens of the app come next
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-soon]')) return;
+    toast('في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة', 2200);
+  });
+
+  // back from a station: it counts as done, and Nour points to what comes next
+  function arrive() {
+    const before = state(v).complete;
+    const p = back();
+    const x = p && p[0] === v.id && v.stations.find((s) => s.id === p[1]);
+    render(x && x.name);
+    if (x && state(v).complete && !before) party();
+    else if (x) toast(`أحسنت! أكملت المحطة: ${x.name}`);
+  }
+  addEventListener('pageshow', (e) => { if (e.persisted) arrive(); });
+  arrive();
+})();
+</script>
+</body>
+</html>
