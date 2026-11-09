@@ -70,8 +70,9 @@ h1 em { font-style: normal; color: var(--accent-deep); }
 h1 .w { display: inline-block; animation: rise .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(.25s + var(--i) * .09s); }
 
 /* the islands: four on each side of the words, each pops in and then floats on its own beat; a tap leads down to what is on it */
+/* on wider screens they draw in toward the words, never onto them */
 @keyframes pop { from { opacity: 0; scale: .6; } }
-.isles { position: absolute; z-index: 1; inset: 0; }
+.isles { position: absolute; z-index: 1; inset: 0 clamp(0px, (100vw - 1200px) * .25, 150px); }
 .isle { position: absolute; left: var(--x); top: var(--y); width: min(var(--w), 200px); animation: pop .8s cubic-bezier(.3,1.4,.6,1) both, bob 5s ease-in-out infinite; animation-delay: var(--p), var(--d); }
 .isle img { width: 100%; filter: drop-shadow(0 14px 14px rgba(40,90,130,.18)); transition: transform .2s; }
 .isle:hover img, .isle:focus-visible img { transform: scale(1.07); }
@@ -382,7 +383,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
         <h1 id="hero-t">عالم ملوّن <em>يتعلّم</em> فيه طفلك ويلعب</h1>
         <p class="lead">قصص وفيديوهات، حروف وأرقام، قرآن وألعاب وقيم، في جزر يتنقّل بينها طفلك مع نور. وأنت تتابع تقدّمه وتحدّد وقته اليومي من حسابك.</p>
         <div class="cta">
-          <a class="btn main" href="signup.html">أنشئ حسابك وأضف طفلك</a>
+          <a class="btn main" href="signup.html">انضم الآن</a>
           <a class="btn soft" href="index.html?guest=1"><img src="img/garden/nour-wave.png" alt="">تصفّح كزائر</a>
         </div>
       </div>
