@@ -46,9 +46,7 @@ header b { font-size: 20px; font-weight: 800; }
 <header>
   <b>تطبيق أجيال</b>
   <div class="pick" role="group" aria-label="الجهاز">
-    <button type="button" data-d="tablet-l">تابلت بالعرض</button>
-    <button type="button" data-d="tablet-p">تابلت</button>
-    <button type="button" data-d="phone-l">جوال بالعرض</button>
+    <button type="button" data-d="tablet-l">تابلت</button>
     <button type="button" data-d="phone-p">جوال</button>
   </div>
 </header>
@@ -102,7 +100,7 @@ header b { font-size: 20px; font-weight: 800; }
   document.querySelector('.pick').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) set(b.dataset.d); });
   addEventListener('resize', fitIn);
   let saved = 'tablet-l'; try { saved = localStorage.getItem('ajyal.mock') || saved; } catch {}
-  set(DEVICES[saved] ? saved : 'tablet-l');
+  set(document.querySelector(`.pick [data-d="${saved}"]`) ? saved : 'tablet-l');
 })();
 </script>
 </body>
