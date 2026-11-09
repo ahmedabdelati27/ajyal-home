@@ -373,9 +373,12 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .faq details p { margin: 0; padding: 0 24px 22px; font-size: 17px; font-weight: 600; color: var(--ink-soft); }
 
 /* last call and footer */
-.go-card { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 32px; padding: 44px 56px; border-radius: 40px; background: url(img/landing/hero-sky-m.jpg) center 30% / cover; box-shadow: 0 6px 0 #BFDDEF; }
+.go-card { position: relative; display: grid; grid-template-columns: auto minmax(0, 600px); justify-content: center; align-items: center; gap: 40px; padding: 44px 56px; border-radius: 40px; background: url(img/landing/hero-sky-m.jpg) center 30% / cover; box-shadow: 0 6px 0 #BFDDEF; }
 .go-card img { width: 170px; animation: bob 4s ease-in-out infinite; }
 .go-card h2 { font-size: clamp(28px, 3vw, 40px); }
+/* Nour and the words sit together in the middle of the card, the buttons lined up under the words */
+.go-card h2 { margin: 0; }
+.go-card .cta { justify-content: flex-start; }
 .go-card p { margin: 8px 0 20px; font-size: 18px; font-weight: 700; color: #4D3A2C; }
 /* the footer: a quiet starry evening over the islands */
 /* the footer: the sky clears into a calm sea, and all nine islands float along it */
@@ -478,6 +481,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .plans-sec { background-image: linear-gradient(var(--page), rgba(255,247,236,0) 100px, rgba(255,247,236,0) calc(100% - 120px), var(--page)), url(img/landing/plans-sky-m.jpg); background-size: auto 100%; }
   .center .btn { width: 100%; }
   .go-card { grid-template-columns: 1fr; justify-items: center; gap: 12px; padding: 32px 20px; text-align: center; }
+  .go-card .cta { justify-content: center; }
   .go-card img { width: 120px; }
   .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
   .foot .wrap > div:first-child { grid-column: 1 / -1; }
