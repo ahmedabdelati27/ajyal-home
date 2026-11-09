@@ -41,8 +41,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .nav a:hover { background: rgba(255,255,255,.7); }
 .acts { display: flex; align-items: center; gap: 10px; }
 .acts .btn { height: 46px; padding: 0 20px; font-size: 17px; }
-.guest-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 6px; font-size: 16px; font-weight: 800; color: var(--sky); text-decoration: none; }
-.guest-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .burger { display: none; width: 46px; height: 46px; border: 0; border-radius: 50%; background: var(--paper); box-shadow: 0 0 0 2px var(--edge); place-items: center; }
 .menu { display: none; }
 
@@ -344,7 +342,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .period button[aria-pressed="true"] em { background: rgba(255,255,255,.22); color: var(--paper); }
 .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; align-items: stretch; max-width: 1120px; margin: 0 auto; }
 .price-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 32px; background: var(--paper); box-shadow: 0 6px 0 rgba(58,35,24,.08), 0 24px 48px rgba(120,80,60,.14); }
-.price-card .top { position: relative; height: 150px; background: center 35% / cover; }
+.price-card .top { position: relative; z-index: 0; height: 150px; background: center 35% / cover; }
 .price-card .top::after { content: ''; position: absolute; inset: 40% 0 0; background: linear-gradient(rgba(255,255,255,0), var(--paper)); }
 .price-card.pop { box-shadow: 0 0 0 4px #2E8B2A, 0 6px 0 4px #1F6A1C, 0 30px 60px rgba(46,139,42,.22); transform: translateY(-14px); }
 .price-card .badge { position: absolute; z-index: 1; top: 14px; right: 14px; padding: 4px 14px; border-radius: 999px; background: #2E8B2A; color: var(--paper); font-size: 14px; font-weight: 800; box-shadow: 0 3px 0 #1F6A1C; }
@@ -396,7 +394,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 
 /* tablets: the links fold into a menu */
 @media (max-width: 1100px) {
-  .nav, .acts .guest-link, .acts .main { display: none; }
+  .nav, .acts .main { display: none; }
   .acts { margin-inline-start: auto; }
   .burger { display: grid; }
   .menu { position: absolute; top: 80px; inset-inline: 16px; display: none; flex-direction: column; gap: 4px; padding: 12px; border-radius: 24px; background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 16px 40px rgba(58,35,24,.18); }
@@ -502,7 +500,6 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       <a href="#faq">الأسئلة</a>
     </nav>
     <div class="acts">
-      <a class="guest-link" href="index.html?guest=1">تصفّح كزائر</a>
       <a class="btn soft" href="login.html" title="دخول ولي الأمر أو المؤسسة">دخول</a>
       <a class="btn main" href="signup.html">إنشاء حساب</a>
       <button class="burger" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="menu">
@@ -515,7 +512,6 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       <a href="#safety">الأمان</a>
       <a href="#plans">الباقات</a>
       <a href="#faq">الأسئلة</a>
-      <a class="btn soft" href="index.html?guest=1">تصفّح كزائر</a>
       <a class="btn main" href="signup.html">إنشاء حساب</a>
     </div>
   </div>
