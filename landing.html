@@ -142,9 +142,10 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .reel { position: relative; --sw: 620px; --iw: 360px; }
 .reel-track { display: flex; overflow-x: auto; overflow-y: hidden; padding: 10px calc(50% - var(--sw) / 2) 20px; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
 .reel-track::-webkit-scrollbar { display: none; }
-.slide { flex: 0 0 var(--sw); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: none; scroll-snap-align: center; transform: scale(var(--s, .55)); opacity: var(--o, .7); transform-origin: 50% 70%; will-change: transform; }
-.slide img { width: var(--iw); max-width: 100%; filter: drop-shadow(0 22px 20px rgba(20,60,80,.35)); animation: bob 5s ease-in-out infinite; animation-delay: var(--d); }
-.slide b { margin-top: -14px; padding: 4px 18px 6px; border-radius: 999px; background: rgba(255,255,255,.94); font-size: 24px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 rgba(58,35,24,.12); }
+.slide { position: relative; flex: 0 0 var(--sw); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: none; scroll-snap-align: center; transform: scale(var(--s, .55)); opacity: var(--o, .7); transform-origin: 50% 70%; will-change: transform; }
+.slide::before { content: ''; position: absolute; left: 50%; bottom: 14%; width: calc(var(--iw) * .7); max-width: 70%; height: 46px; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(20,60,80,.3), rgba(20,60,80,0)); pointer-events: none; }
+.slide img { position: relative; width: var(--iw); max-width: 100%; animation: bob 5s ease-in-out infinite; animation-delay: var(--d); }
+.slide b { position: relative; margin-top: -14px; padding: 4px 18px 6px; border-radius: 999px; background: rgba(255,255,255,.94); font-size: 24px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 rgba(58,35,24,.12); }
 .slide[aria-current="true"] b { visibility: hidden; }
 .reel-go { position: absolute; z-index: 3; top: 42%; display: grid; place-items: center; width: 56px; height: 56px; border: 0; border-radius: 50%; background: var(--paper); color: var(--line); box-shadow: 0 5px 0 var(--edge), 0 10px 24px rgba(58,35,24,.15); }
 .reel-go:hover { transform: scale(1.06); }
@@ -855,20 +856,26 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   }
   // the island in the middle is full size, the further from the middle the smaller and fainter
   let raf = 0;
+  // every distance is read first and every size written after, so the page lays itself out once a frame, not once an island
   function paint() {
     raf = 0;
     const t = track.getBoundingClientRect(), mid = t.left + t.width / 2;
-    let best = 0, near = Infinity;
+    const ds = slides.map((s) => { const r = s.getBoundingClientRect(); return Math.abs(r.left + r.width / 2 - mid) / s.offsetWidth; });
+    let best = 0;
+    ds.forEach((d, k) => { if (d < ds[best]) best = k; });
     slides.forEach((s, k) => {
-      const r = s.getBoundingClientRect(), d = Math.abs(r.left + r.width / 2 - mid) / s.offsetWidth;
+      const d = ds[k];
       s.style.setProperty('--s', (1 - 0.45 * Math.min(d, 1)).toFixed(3));
       s.style.setProperty('--o', Math.max(0, 1 - 0.3 * Math.min(d, 1) - (d > 1.2 ? (d - 1.2) * 2 : 0)).toFixed(3));
-      if (d < near) { near = d; best = k; }
     });
     show(best);
   }
   const queue = () => { if (!raf) raf = requestAnimationFrame(paint); };
   track.addEventListener('scroll', queue, { passive: true });
+  // once the row comes to rest, the middle island is set exactly in the middle, so both neighbours are the same size
+  let settle = 0;
+  const rest = () => { const t = track.getBoundingClientRect(), r = slides[at].getBoundingClientRect(); if (Math.abs(r.left + r.width / 2 - (t.left + t.width / 2)) > 1) go(at); };
+  track.addEventListener('scroll', () => { clearTimeout(settle); settle = setTimeout(rest, 160); }, { passive: true });
   addEventListener('resize', queue);
   track.addEventListener('click', (e) => { const s = e.target.closest('.slide'); if (s) go(+s.dataset.n); });
   document.querySelector('.reel-go.prev').addEventListener('click', () => go(Math.max(0, at - 1)));
