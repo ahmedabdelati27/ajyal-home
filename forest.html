@@ -2,8 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // a phone, upright or on its side, gets the forest made for it; a tablet and a computer keep this one
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/forest.html' + location.search);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -139,37 +143,10 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
   <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
 </nav>
 <script src="shelf.js"></script>
+<script src="forest-data.js"></script>
 <script>
-  // what the admin puts in each category; the icon and its colour say what each thing is
-  const K = {
-    video: { src: 'img/forest/I-14.png', c: '#8E5BE8', name: 'فيديو' },
-    audio: { src: 'img/forest/I-12.png', c: '#EC6A93', name: 'صوت' },
-    pics: { src: 'img/forest/I-19.png', c: '#2EA3D9', name: 'صور' },
-    book: { src: 'img/forest/I-11.png', c: '#E8742B', name: 'كتاب' },
-    flip: { src: 'img/forest/I-13.png', c: '#E8742B', name: 'كتاب تفاعلي' }
-  };
-  const c = (title, kind, t, meta, more = {}) => ({ title, img: `img/forest/t${t}.jpg`, kinds: [K[kind]], meta, clock: kind === 'video' || kind === 'audio', ...more,
-    label: [title, K[kind].name, meta.replace(/ د$/, ' دقائق'), more.tag === 'done' ? 'مكتمل' : more.tag === 'new' ? 'جديد' : more.p ? 'جاري' : ''].filter(Boolean).join('، ') });
-  Shelf.render(document.getElementById('shelves'), [
-    { id: 'animals', title: 'عالم الحيوان', count: 18, items: [
-      c('كيف تطير الطيور؟', 'video', '01', '8 د', { href: 'video.html', p: '42%' }),
-      c('أصوات الغابة', 'audio', '02', '5 د', { href: 'audio.html', tag: 'done' }),
-      c('صغار الحيوانات', 'pics', '03', '12 صورة', { href: 'pictures.html', tag: 'new' }),
-      c('البومة الحكيمة', 'book', '04', '10 صفحات', { href: 'book.html' }),
-      c('رحلة النحلة', 'video', '05', '6 د')] },
-    { id: 'space', title: 'الفضاء والكواكب', count: 14, items: [
-      c('كواكب مجموعتنا الشمسية', 'video', '06', '7 د', { tag: 'new' }),
-      c('لماذا يتغير شكل القمر؟', 'flip', '07', '12 صفحة', { href: 'flipbook.html', p: '50%' }),
-      c('صور من الفضاء', 'pics', '08', '15 صورة'),
-      c('أغنية الكواكب', 'audio', '09', '3 د', { tag: 'done' }),
-      c('رائد فضاء صغير', 'video', '10', '9 د')] },
-    { id: 'body', title: 'جسم الإنسان', count: 12, items: [
-      c('أسناني اللامعة', 'video', '11', '4 د', { tag: 'done' }),
-      c('كيف نتنفس؟', 'book', '12', '8 صفحات'),
-      c('حواسنا الخمس', 'pics', '13', '10 صور'),
-      c('قلبي ينبض', 'audio', '14', '4 د'),
-      c('الغذاء الصحي', 'video', '15', '6 د', { tag: 'new' })] }
-  ]);
+  // the categories and what is in them (forest-data.js, shared with the phone's forest)
+  Shelf.render(document.getElementById('shelves'), Forest.shelves());
 
   // the board is drawn at 1440 wide; scale it to the window, and on phones the shelves grow back so a finger can hit a cover
   const page = document.getElementById('page');

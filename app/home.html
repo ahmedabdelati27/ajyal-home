@@ -89,7 +89,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 .world { position: relative; padding: 4px 0 10px; }
 .way { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .way path { fill: none; stroke: rgba(255,255,255,.95); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1 13; }
-.isl { position: relative; display: flex; flex-direction: column; align-items: center; width: 62%; margin-top: -8px; }
+.isl { position: relative; display: flex; color: inherit; text-decoration: none; flex-direction: column; align-items: center; width: 62%; margin-top: -8px; }
 .isl:first-of-type { margin-top: 0; }
 .isl:nth-of-type(odd) { margin-inline-start: 0; }
 .isl:nth-of-type(even) { margin-inline-start: 38%; }
@@ -166,7 +166,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 (() => {
   // the islands, as on the map of the web, one under another on the phone
   const ISLANDS = [
-    { id: 'forest', c: '#5CB8F5', title: 'غابة المعرفة', sub: 'فيديوهات وكتب تعليمية', d: '#3D96D6' },
+    { id: 'forest', c: '#5CB8F5', title: 'غابة المعرفة', sub: 'فيديوهات وكتب تعليمية', d: '#3D96D6', href: 'forest.html' },
     { id: 'beach', c: '#FF8FA8', title: 'شاطئ الحكايات', sub: 'اقرأ واستمع لقصص ممتعة', d: '#E0607F' },
     { id: 'garden', c: '#67CFA9', title: 'حديقة القيم', sub: 'رحلتك الآن: قيمة التعاون', d: '#3FB396' },
     { id: 'letters', c: '#FFD43B', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', d: '#E0B000' },
@@ -177,9 +177,9 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
     { id: 'peak', c: '#FF7A6B', title: 'قمة الأبطال', sub: 'شارك في المسابقات', d: '#E0584A' }
   ];
   const world = document.getElementById('world');
-  world.innerHTML = ISLANDS.map((i, n) => `<button class="isl" type="button" data-soon style="--d:${-n * 0.6}s;--c2:${i.c};--d2:${i.d}" aria-label="${i.title}، ${i.sub}">
+  world.innerHTML = ISLANDS.map((i, n) => `<a class="isl" href="${i.href || '#'}"${i.href ? '' : ' data-soon'} style="--d:${-n * 0.6}s;--c2:${i.c};--d2:${i.d}" aria-label="${i.title}، ${i.sub}">
       <span class="art"><img src="../img/${i.id}.png" alt="">${i.tip ? '<span class="mark tip">★ مقترح لك</span>' : ''}${i.left ? '<span class="mark left"><img src="../img/I-11.png" alt="">3 <img src="../img/I-14.png" alt="">1</span>' : ''}</span>
-      <span class="name">${i.title}</span><span class="sub">${i.sub}</span></button>`).join('');
+      <span class="name">${i.title}</span><span class="sub">${i.sub}</span></a>`).join('');
 
   // the dotted way from island to island, drawn once they are laid out
   const way = () => {
@@ -205,6 +205,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
   const toast = document.getElementById('toast');
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-soon], .me'); if (!b) return;
+    e.preventDefault();
     toast.textContent = 'في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة';
     toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200);
   });

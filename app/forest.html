@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the Knowledge Forest made for a phone, upright or on its side; a tablet and a computer get the web's forest
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../forest.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#F2F8E6">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>غابة المعرفة · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<link rel="stylesheet" href="../shelf.css">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --leaf: #2F6B2A; --mint: #B9DDA6; --page: #F2F8E6;
+  --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the forest's clearing at the top, fading into the page; the owl greets the child from her island */
+.hero { position: relative; height: calc(var(--top) + 268px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(242,248,230,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--mint); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--mint); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--leaf), 2px 0 0 var(--leaf), -2px 0 0 var(--leaf), 0 -2px 0 var(--leaf), 2px 2px 0 var(--leaf), -2px 2px 0 var(--leaf), 2px -2px 0 var(--leaf), -2px -2px 0 var(--leaf); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+.owl { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 2px); bottom: 2px; width: 136px; height: 136px; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 140px); bottom: 64px; max-width: 190px; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 15px; font-weight: 800; line-height: 1.35; box-shadow: 0 4px 0 #3D96D6; }
+.say svg { position: absolute; left: -14px; bottom: 12px; }
+@keyframes float { 50% { translate: 0 -7px; } }
+
+/* what kind of thing to show: one icon per kind, «كتب» covers PDF and flip books */
+.kinds-bar { position: sticky; z-index: 4; top: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+.kinds-bar::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; display: flex; align-items: center; gap: 5px; height: 42px; padding: 0 14px 0 10px; border: 3px solid transparent; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--mint); }
+.chip img { width: 28px; height: 28px; margin: -4px 0; }
+.chip[aria-pressed="true"] { border-color: #6B3A1E; background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+
+main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+
+/* where the child stopped */
+.cont { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--mint); }
+.cont .thumb { position: relative; flex-shrink: 0; width: 104px; height: 66px; overflow: hidden; border-radius: 14px; }
+.cont .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cont .thumb i { position: absolute; inset: auto 0 0; height: 5px; background: rgba(255,255,255,.6); }
+.cont .thumb i::before { content: ""; display: block; width: 42%; height: 100%; background: #5BC236; }
+.cont .thumb svg { position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; translate: -50% -50%; }
+.cont .txt { flex: 1; min-width: 0; }
+.cont small { display: block; font-size: 12px; font-weight: 800; color: #2E7D32; }
+.cont b { display: block; font-size: 17px; font-weight: 800; line-height: 1.25; }
+.cont .when { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.cont .go { flex-shrink: 0; display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 16px; border-radius: 999px; background: var(--go); color: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 4px 0 var(--go-deep); }
+.cont .go svg { width: 14px; height: 14px; }
+
+/* the shelves, sized for a finger, running to the screen's edges */
+#shelves { --u: .72px; display: flex; flex-direction: column; gap: 22px; margin-top: 22px; }
+#shelves .track { margin: 0 calc(-1 * var(--side-r)) 0 calc(-1 * var(--side-l)); padding-inline: var(--side-r) var(--side-l); scroll-padding-inline: var(--side-r); }
+#shelves .item { flex-basis: 152px; }
+.none { margin: 30px 0 0; text-align: center; font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(40,70,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low clearing with the name beside the owl, smaller covers, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 30%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 260px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .owl { width: 112px; height: 112px; bottom: 0; left: calc(env(safe-area-inset-left) + 8px); }
+  .say { left: calc(env(safe-area-inset-left) + 118px); bottom: 46px; max-width: 170px; padding: 7px 12px 8px; font-size: 13px; }
+  .bar .pill:not(.time) { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .kinds-bar { justify-content: center; padding-top: 4px; padding-bottom: 8px; }
+  .chip { height: 38px; font-size: 14px; } .chip img { width: 24px; height: 24px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .cont { padding: 8px; } .cont .thumb { width: 88px; height: 54px; }
+  #shelves { --u: .64px; gap: 16px; margin-top: 16px; }
+  #shelves .item { flex-basis: 140px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .owl { animation: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/forest/hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
+  </div>
+  <div class="title">
+    <h1>غابة المعرفة</h1>
+    <p>شاهد واستمع واقرأ مع البومة</p>
+  </div>
+  <img class="owl" src="../img/forest/owl-island.png" alt="البومة على جزيرة غابة المعرفة">
+  <p class="say">أهلاً يا <span id="kid">عمر</span>! ماذا نتعلم اليوم؟<svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
+</header>
+
+<div class="kinds-bar" role="group" aria-label="نوع المحتوى" id="kinds">
+  <button type="button" class="chip" data-k="" aria-pressed="true"><img src="../img/forest/I-02.png" alt="">الكل</button>
+  <button type="button" class="chip" data-k="video" aria-pressed="false"><img src="../img/forest/I-14.png" alt="">فيديو</button>
+  <button type="button" class="chip" data-k="audio" aria-pressed="false"><img src="../img/forest/I-12.png" alt="">صوت</button>
+  <button type="button" class="chip" data-k="pics" aria-pressed="false"><img src="../img/forest/I-19.png" alt="">صور</button>
+  <button type="button" class="chip" data-k="book flip" aria-pressed="false"><img src="../img/forest/I-11.png" alt="">كتب</button>
+</div>
+
+<main>
+  <a class="cont" href="../video.html?resume=1" aria-label="أكمل مشاهدة كيف تطير الطيور؟، الدقيقة 3:20 من 8:00">
+    <span class="thumb"><img src="../img/forest/t01.jpg" alt=""><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="rgba(255,255,255,.92)"/><path d="M19 15v18l14-9z" fill="#2E8B2A"/></svg><i></i></span>
+    <span class="txt"><small>أكمل من حيث توقفت</small><b>كيف تطير الطيور؟</b><span class="when">فيديو · الدقيقة 3:20 من 8:00</span></span>
+    <span class="go">أكمل<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z" fill="#FFFFFF"/></svg></span>
+  </a>
+
+  <!-- one shelf per category the admin made, the child's age group first (shelf.js, the same as the web's forest) -->
+  <div id="shelves" class="small"></div>
+  <p class="none" id="none" hidden>لا يوجد محتوى من هذا النوع بعد</p>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <button type="button" data-soon><img src="../img/nav/sections.png" alt="">كل الأقسام</button>
+  <button type="button" data-soon><img src="../img/nav/room.png" alt="">غرفتي</button>
+  <button type="button" data-soon><img src="../img/nav/leaders.png" alt="">المتصدرون</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../shelf.js"></script>
+<script src="../forest-data.js"></script>
+<script>
+(() => {
+  // the categories and what is in them, as in the web's forest
+  const data = Forest.shelves('../'), host = document.getElementById('shelves');
+  Shelf.render(host, data);
+  host.querySelectorAll('.shelf').forEach((sh, n) => sh.querySelectorAll('.item:not(.all)').forEach((a, k) => { a.dataset.kind = data[n].items[k].kind; }));
+
+  // the kinds: only those things stay on the shelves, and a shelf with none of them steps aside
+  const kinds = document.getElementById('kinds');
+  kinds.addEventListener('click', (e) => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    kinds.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+    const want = b.dataset.k.split(' ').filter(Boolean);
+    let any = false;
+    host.querySelectorAll('.shelf').forEach((sh) => {
+      let shown = 0;
+      sh.querySelectorAll('.item:not(.all)').forEach((a) => { const on = !want.length || want.includes(a.dataset.kind); a.hidden = !on; a.style.display = on ? '' : 'none'; shown += on; });
+      sh.hidden = !shown; any ||= shown > 0;
+      sh.querySelector('.track').scrollTo({ left: 0 });
+    });
+    document.getElementById('none').hidden = any;
+    Shelf.sync(host);
+  });
+
+  // the child the parent chose carries over (a visitor stays a visitor)
+  try {
+    const kid = JSON.parse(localStorage.getItem('ajyal.profile') || '{}');
+    if (kid.name && !(window.Guest && Guest.on)) document.getElementById('kid').textContent = kid.name;
+  } catch {}
+
+  // the other screens of the app come next
+  const toast = document.getElementById('toast');
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-soon]')) return;
+    toast.textContent = 'في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة';
+    toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200);
+  });
+})();
+</script>
+</body>
+</html>

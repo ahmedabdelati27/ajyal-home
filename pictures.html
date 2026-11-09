@@ -44,6 +44,15 @@ figcaption { position: absolute; left: 50%; bottom: -26px; transform: translateX
   .arrow.prev { right: -4px; } .arrow.next { left: -4px; }
   .thumb { width: 72px; }
 }
+/* a phone on its side: the picture as tall as the screen allows, a smaller name and film strip */
+@media (max-height: 500px) {
+  .stage { gap: 14px; }
+  .frame { max-width: calc(100% - 2 * (52px + 14px)); }
+  figcaption { bottom: -16px; padding: 3px 18px 5px; font-size: 18px; box-shadow: 0 3px 0 #3D96D6; }
+  .strip { gap: 6px; padding: 5px; border-radius: 16px; }
+  .thumb { width: 60px; border-width: 2px; border-radius: 10px; }
+  .thumb[aria-current="true"] { transform: translateY(-2px); box-shadow: 0 3px 0 var(--line); }
+}
 </style>
 </head>
 <body>

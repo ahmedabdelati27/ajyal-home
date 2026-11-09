@@ -10,7 +10,8 @@
 html, body { margin: 0; height: 100%; }
 body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: #DCEFD6; overflow: hidden; -webkit-user-select: none; user-select: none; }
 button { font: inherit; color: inherit; cursor: pointer; }
-img { display: block; max-width: none; -webkit-user-drag: none; }
+/* no saving a picture by dragging it or by a long press on a phone */
+img { display: block; max-width: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
 
 /* a quiet forest glade: trees frame the edges, the middle stays plain for the picture */
 .bg { position: fixed; inset: 0; background: url(img/pictures/viewer-bg.jpg) center bottom / cover; }
@@ -107,6 +108,35 @@ img { display: block; max-width: none; -webkit-user-drag: none; }
   .act span.lbl { display: none; }
   .acts { gap: 6px; }
   .act { padding: 0 12px; height: 44px; }
+}
+/* a phone on its side: a slim top bar and actions row, so the picture, the player or the page gets the height */
+@media (max-height: 500px) {
+  :root { --edge-x: 16px; --edge-y: 6px; }
+  .app { gap: 6px; padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
+  .top { gap: 8px; }
+  .pill { height: 36px; padding: 0 12px 0 10px; gap: 6px; font-size: 15px; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+  .pill img { width: 24px; height: 24px; }
+  .pill svg { width: 18px; height: 18px; }
+  .ttl { gap: 8px; } .ttl img { width: 30px; height: 30px; }
+  .ttl h1 { font-size: 22px; }
+  .count { height: 26px; padding: 0 10px; font-size: 13px; }
+  .arrow { width: 52px; height: 52px; border-width: 3px; box-shadow: inset 0 3px 0 rgba(255,255,255,.55), 0 4px 0 var(--line); } .arrow svg { width: 26px; height: 26px; }
+  .frame-in { border-width: 5px; border-radius: 18px; box-shadow: 0 5px 0 rgba(0,0,0,.22), 0 12px 20px rgba(0,0,0,.2); }
+  .acts { margin-top: 0; gap: 6px; }
+  .act { height: 34px; padding: 0 12px; gap: 6px; font-size: 14px; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+  .act svg { width: 20px; height: 20px; }
+  .act span.lbl { display: none; }
+  .done { align-items: safe center; overflow-y: auto; padding: 60px 16px 12px; }
+  .card { padding: 56px 22px 16px; border-radius: 26px; }
+  .card .owl { top: -58px; width: 112px; height: 112px; }
+  .card h2 { font-size: 26px; } .card p { font-size: 15px; }
+  .xp { height: 34px; margin-top: 6px; font-size: 15px; } .xp img { width: 24px; height: 24px; }
+  .btns { margin-top: 12px; gap: 8px; }
+  .btn { height: 44px; padding: 0 18px; font-size: 16px; }
+  .more { display: none; }
+  .drawer header { padding: 10px 16px; } .drawer h2 { font-size: 20px; }
+  .write { padding: 8px 16px 10px; } .write input, .write button { height: 44px; }
+  .toast { bottom: 56px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 

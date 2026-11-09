@@ -24,6 +24,17 @@
 .single .txt { font-size: 5cqw; padding: 12cqh 6cqw 5cqh; }
 .single .no { font-size: 3cqw; left: 5cqw; }
 .single .title { font-size: 8cqw; }
+/* a phone on its side: the open book as big as the screen allows, with larger words */
+@media (max-height: 500px) {
+  .stage { gap: 16px; }
+  .book { height: 92%; max-width: calc(100% - 2 * (52px + 30px)); }
+  .txt { font-size: 3.1cqw; padding: 7cqh 5cqw 4cqh; }
+  .no { font-size: 1.8cqw; }
+  .title { font-size: 4.8cqw; }
+  .pager { height: 42px; gap: 10px; padding: 0 6px 0 14px; } .pager b { font-size: 15px; }
+  .resume > div { padding: 14px 18px; } .resume p { margin-bottom: 10px; font-size: 17px; }
+  .resume .btns { flex-wrap: nowrap; gap: 8px; } .resume .btn { height: 44px; padding: 0 16px; font-size: 15px; }
+}
 </style>
 </head>
 <body>

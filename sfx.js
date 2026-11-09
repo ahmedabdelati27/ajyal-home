@@ -7,6 +7,8 @@
   // each sound with its own volume, so a soft page turn and a bright chime come out about equally loud
   const FILES = { tap: 0.49, open: 1.45, clouds: 0.62, right: 0.83, retry: 1.07, pick: 0.75, win: 0.54, page: 2.2, bubble: 0.6 };
   const KEY = 'ajyal.sfx.off', VOLUME = 0.6;
+  // where the site's files are, so the app folder finds the sounds too
+  const BASE = (document.currentScript && document.currentScript.src.replace(/sfx\.js(\?.*)?$/, '')) || '';
   const bufs = {};
   let ctx = null, master = null, hushed = false, off = false;
   try { off = localStorage.getItem(KEY) === '1'; } catch {}
@@ -19,7 +21,7 @@
     if (!AC) return;
     ctx = new AC();
     master = ctx.createGain(); master.gain.value = VOLUME; master.connect(ctx.destination);
-    Object.keys(FILES).forEach((n) => fetch(`sfx/${n}.mp3`).then((r) => r.arrayBuffer())
+    Object.keys(FILES).forEach((n) => fetch(`${BASE}sfx/${n}.mp3`).then((r) => r.arrayBuffer())
       .then((a) => ctx.decodeAudioData(a)).then((b) => { bufs[n] = b; }).catch(() => {}));
   }
   ['pointerdown', 'keydown'].forEach((t) => addEventListener(t, wake, { capture: true, passive: true }));

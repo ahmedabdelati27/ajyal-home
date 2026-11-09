@@ -78,6 +78,22 @@
   .resume .btns { flex-wrap: nowrap; gap: 8px; }
   .resume .btn { height: 46px; padding: 0 16px; font-size: 16px; }
 }
+/* a phone on its side: the cover on one side, what it is and the controls beside it */
+@media (max-height: 500px) {
+  .stage { display: grid; grid-template-columns: auto minmax(0, 420px); align-content: center; justify-content: center; column-gap: 24px; row-gap: 10px; }
+  .deck { grid-row: 1 / 3; gap: 10px; }
+  .cover { width: min(210px, 50vh); border-width: 6px; border-radius: 26px; }
+  .wave { height: 90px; gap: 4px; } .wave i { width: 7px; } .wave i:nth-child(n+5) { display: none; }
+  .about { align-self: end; padding: 5px 16px; border-radius: 18px; font-size: 15px; }
+  .ctrl { align-self: start; width: 100%; gap: 2px; padding: 8px 14px 10px; border-radius: 24px; }
+  .cb { width: 42px; height: 42px; } .cb svg { width: 24px; height: 24px; }
+  .cb.play { width: 58px; height: 58px; border-width: 4px; } .cb.play svg { width: 28px; height: 28px; }
+  .clock { min-width: 44px; font-size: 14px; }
+  .resume > div { padding: 14px 18px; border-radius: 22px; }
+  .resume p { margin-bottom: 10px; font-size: 17px; }
+  .resume .btns { flex-wrap: nowrap; gap: 8px; }
+  .resume .btn { height: 44px; padding: 0 16px; font-size: 15px; }
+}
 </style>
 </head>
 <body>
