@@ -47,7 +47,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .menu { display: none; }
 
 /* hero: the sky and sea, the words in the middle, the islands floating on both sides */
-.hero { position: relative; overflow-x: clip; background: url(img/landing/hero-sky.jpg) 30% 100% / cover no-repeat #CDE9F7; }
+.hero { position: relative; overflow-x: clip; background: url(img/landing/hero-sea.jpg) 40% 100% / cover no-repeat #CDE9F7; }
 .hero::after { content: ''; position: absolute; z-index: 4; inset: auto 0 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page)); pointer-events: none; }
 .hero .wrap { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; min-height: min(100svh, 880px); padding-top: 96px; padding-bottom: 110px; pointer-events: none; }
 .say { display: flex; flex-direction: column; align-items: center; gap: 22px; max-width: min(720px, 56vw); text-align: center; pointer-events: auto; }
@@ -407,7 +407,6 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 }
 /* tablets and phones: the words, then the islands in a row under them */
 @media (max-width: 1100px) {
-  .cloud:nth-child(n+4) { display: none; }
   .cloud { width: calc(var(--w) * 1.8); }
   .hero .wrap { min-height: 0; padding-bottom: 24px; }
   .say { max-width: 640px; }
@@ -423,7 +422,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .logo b { font-size: 20px; }
   .logo small { display: none; }
   .acts .soft { height: 42px; padding: 0 16px; font-size: 16px; }
-  .hero { background-image: url(img/landing/hero-sky-m.jpg); background-position: 20% 100%; }
+  .hero { background-position: 30% 100%; }
   .hero .wrap { min-height: 0; padding-top: 90px; padding-bottom: 20px; }
   .hello img { width: 84px; }
   .hello p { font-size: 14px; }
@@ -527,8 +526,6 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     <div class="sky" aria-hidden="true">
       <img class="cloud" src="img/landing/cloud-1.webp" alt="" style="--x:31%;--y:9%;--w:18vw;--z:.25;--t:70s;--o:.95">
       <img class="cloud" src="img/landing/cloud-4.webp" alt="" style="--x:55%;--y:24%;--w:13vw;--z:.4;--t:55s;--d:-20s;--o:.85">
-      <img class="cloud" src="img/landing/cloud-3.webp" alt="" style="--x:29%;--y:58%;--w:15vw;--z:.15;--t:80s;--d:-50s;--o:.8">
-      <img class="cloud" src="img/landing/cloud-2.webp" alt="" style="--x:57%;--y:66%;--w:14vw;--z:.5;--t:60s;--d:-35s;--o:.85">
     </div>
     <div class="wrap">
       <div class="say">
