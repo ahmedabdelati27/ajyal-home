@@ -179,15 +179,59 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .mini-dock { position: absolute; z-index: 2; bottom: 12px; inset-inline: 12px; display: flex; justify-content: space-around; padding: 6px; border-radius: 999px; background: rgba(255,246,232,.97); box-shadow: 0 0 0 2px #F3DDBB; }
 .mini-dock img { width: 28px; height: 28px; }
 
-/* how the child grows */
-.grow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-.g-card { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 26px 18px 24px; border-radius: 28px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); text-align: center; }
-.g-card .ic { display: flex; justify-content: center; height: 76px; }
-.g-card .ic img { width: 76px; height: 76px; }
-.g-card .ic.trio img { width: 58px; height: 58px; margin: 9px -8px 0; }
-.g-card .ic.trio img:nth-child(2) { margin-top: 0; position: relative; z-index: 1; }
-.g-card h3 { margin: 0; font-size: 21px; font-weight: 800; }
-.g-card p { margin: 0; font-size: 16px; font-weight: 600; color: var(--ink-soft); line-height: 1.55; }
+/* how the child grows: a bento, one big card for points and levels and four smaller ones, each on a corner of the child's world;
+   once the section shows, each card plays out what it means (the page script adds .play) */
+.grow { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 290px; gap: 18px; }
+.g-card { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 28px; background: var(--bg) 50% 50% / cover no-repeat #EAF5FB; box-shadow: 0 5px 0 var(--edge); }
+.g-card.big { grid-column: span 2; grid-row: span 2; background-position: 62% 50%; }
+.g-card .show { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+.g-card .txt { padding: 12px 16px; border-radius: 20px; background: rgba(255,255,255,.93); text-align: center; box-shadow: 0 4px 0 rgba(58,35,24,.08); }
+.g-card h3 { margin: 0 0 2px; font-size: 20px; font-weight: 800; }
+.g-card p { margin: 0; font-size: 15px; font-weight: 600; color: var(--ink-soft); line-height: 1.5; }
+.g-card.big .txt { padding: 16px 22px; } .g-card.big h3 { font-size: 26px; } .g-card.big p { font-size: 17px; }
+/* points and levels: Omar finishes something, his points count up, the bar fills and a new level pops */
+.me { position: relative; display: flex; flex-direction: column; gap: 14px; width: min(360px, 92%); padding: 20px 22px; border-radius: 26px; background: rgba(255,255,255,.94); box-shadow: 0 6px 0 rgba(58,35,24,.1); }
+.me .who { display: flex; align-items: center; gap: 10px; }
+.me .who img { width: 52px; height: 52px; }
+.me .who b { font-size: 21px; font-weight: 800; }
+.me .lvl { margin-inline-start: auto; padding: 4px 12px; border-radius: 999px; background: #EDE3FF; color: #6A45B8; font-size: 15px; font-weight: 800; transition: transform .3s cubic-bezier(.3,1.6,.6,1), background .3s; }
+.me .lvl.up { transform: scale(1.18); background: #FFE7A3; color: #8A5A00; }
+.me .pts { position: relative; display: flex; align-items: center; gap: 10px; }
+.me .pts img { width: 44px; height: 44px; }
+.me .pts b { font-size: 40px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.me .pts small { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.me .plus { position: absolute; inset-inline-end: 0; top: -4px; padding: 3px 12px; border-radius: 999px; background: #E0F3D6; color: var(--good); font-size: 17px; font-weight: 800; opacity: 0; }
+.grow.play .me .plus { animation: plus 1.4s ease-out .3s both; }
+@keyframes plus { 20% { opacity: 1; translate: 0 0; } 70% { opacity: 1; } to { opacity: 0; translate: 0 -26px; } }
+.me .bar { height: 14px; border-radius: 999px; background: #F4E6CF; overflow: hidden; }
+.me .bar i { display: block; width: var(--fill, 62%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #FFC93C, #F59E1B); transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+.me .done { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.me .done::before { content: ''; width: 20px; height: 20px; border-radius: 50%; background: var(--good) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat; }
+/* badges: three drop onto the shelf and turn to face you, one after another */
+.shelf3 { display: flex; gap: 10px; perspective: 600px; }
+.shelf3 img { width: 74px; height: 74px; filter: drop-shadow(0 6px 6px rgba(80,50,20,.25)); }
+.grow.play .shelf3 img { animation: flip .8s cubic-bezier(.3,1.3,.6,1) calc(.2s + var(--i) * .18s) backwards; }
+@keyframes flip { from { opacity: 0; transform: translateY(-36px) rotateY(180deg); } }
+/* days in a row: the week lights up day by day, with the flame on the last one */
+.week { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 22px; background: rgba(255,255,255,.9); }
+.week ol { display: flex; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.week li { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #F1E6D6; color: var(--ink-soft); font-size: 13px; font-weight: 800; transition: background .3s, color .3s, transform .3s; transition-delay: calc(.2s + var(--i) * .16s); }
+.grow.play .week li.on { background: #F59E1B; color: var(--paper); transform: scale(1.08); }
+.week .days { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 800; }
+.week .days img { width: 28px; height: 28px; }
+/* the leaderboard: Omar finishes a story and moves up a place */
+.board { position: relative; width: min(250px, 92%); height: 138px; margin: 0; padding: 0; list-style: none; }
+.board li { position: absolute; inset-inline: 0; top: calc(var(--r) * 46px); display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 14px; background: rgba(255,255,255,.94); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 rgba(58,35,24,.08); transition: top .6s cubic-bezier(.4,0,.2,1); }
+.board li img { width: 28px; height: 28px; }
+.board li .n { width: 18px; color: var(--ink-soft); }
+.board li .p { margin-inline-start: auto; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.board li.me-row { background: #FFF3CC; box-shadow: 0 0 0 2px #F5B82E; }
+/* my creations: his drawing, his story from the magic workshop and his coloured page fan out like cards */
+.fan { position: relative; width: 210px; height: 140px; }
+.fan img { position: absolute; left: 50%; top: 50%; width: 104px; height: 104px; margin: -52px 0 0 -52px; border: 5px solid var(--paper); border-radius: 12px; object-fit: cover; box-shadow: 0 6px 12px rgba(58,35,24,.2); transition: transform .8s cubic-bezier(.3,1.3,.6,1); transition-delay: calc(.2s + var(--i) * .1s); }
+.grow.play .fan img:nth-child(1) { transform: translateX(62px) rotate(10deg); }
+.grow.play .fan img:nth-child(3) { transform: translateX(-62px) rotate(-10deg); }
+.grow.play .fan img:nth-child(2) { transform: translateY(-8px); z-index: 1; }
 
 /* three steps */
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: step; }
@@ -317,7 +361,9 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 }
 /* the sections on tablets and phones */
 @media (max-width: 1100px) {
-  .grow { grid-template-columns: repeat(3, 1fr); }
+  .grow { grid-template-columns: 1fr 1fr; }
+  .g-card.big { grid-row: span 1; min-height: 380px; }
+  .grow { grid-auto-rows: minmax(280px, auto); }
   .rules { grid-template-columns: 1fr; }
   .foot .wrap { grid-template-columns: 1fr 1fr; }
 }
@@ -345,8 +391,8 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .phone .screen { border-radius: 27px; }
   .foot-isles img { width: 24vw; margin: 0 -6px -18px; }
   .foot-isles img:nth-child(n+6) { display: none; }
-  .grow { grid-template-columns: 1fr 1fr; }
-  .grow .g-card:last-child { grid-column: 1 / -1; }
+  .grow { grid-template-columns: 1fr; }
+  .g-card.big { grid-column: auto; }
   .steps { grid-template-columns: 1fr; }
   .split .sec-head { align-items: center; text-align: center; }
   .schools .txt { padding: 28px 20px; align-items: stretch; }
@@ -363,7 +409,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
   .foot .wrap > div:first-child { grid-column: 1 / -1; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .cloud { animation: none; transform: none; } .bank { transform: translateX(-50%); } .isle { transform: none; filter: none; } .veil { display: none; } .isle, .hello img, .go-card img, .foot-isles img, .say > *, h1 .w { animation: none; } .btn, .isle img, .store, .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .grow *, .grow.play * { animation: none !important; transition: none !important; } .cloud { animation: none; transform: none; } .bank { transform: translateX(-50%); } .isle { transform: none; filter: none; } .veil { display: none; } .isle, .hello img, .go-card img, .foot-isles img, .say > *, h1 .w { animation: none; } .btn, .isle img, .store, .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
 </style>
 </head>
 <body>
@@ -459,12 +505,38 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
         <h2 id="grow-t">يتقدّم خطوة بخطوة، ويفرح بكل إنجاز</h2>
         <p>يكسب طفلك النقاط عندما يُنهي شيئاً، لا عندما يفتح صفحة، فيرى ثمرة ما أنجزه.</p>
       </div>
-      <div class="grow">
-        <div class="g-card"><span class="ic"><img src="img/hud/points.png" alt=""></span><h3>النقاط والمستويات</h3><p>نقاط عند إنهاء قصة أو حرف أو سورة أو لعبة، ومستوى بعد مستوى.</p></div>
-        <div class="g-card"><span class="ic trio"><img src="img/badges/S-02.png" alt=""><img src="img/badges/S-05.png" alt=""><img src="img/badges/S-07.png" alt=""></span><h3>الشارات</h3><p>شارات يجمعها كلما أنجز.</p></div>
-        <div class="g-card"><span class="ic"><img src="img/hud/streak.png" alt=""></span><h3>الأيام المتتالية</h3><p>يرى كم يوماً متتالياً زار فيه عالمه.</p></div>
-        <div class="g-card"><span class="ic"><img src="img/nav/leaders.png" alt=""></span><h3>المتصدرون</h3><p>لوحة متصدرين واحدة حسب مجموع النقاط.</p></div>
-        <div class="g-card"><span class="ic"><img src="img/nav/room.png" alt=""></span><h3>إبداعاتي</h3><p>رسوماته وتلويناته وقصصه في مكان واحد.</p></div>
+      <div class="grow" id="grow-cards">
+        <div class="g-card big" style="--bg:url(img/landing/g-points.jpg)">
+          <div class="show" aria-hidden="true">
+            <div class="me">
+              <div class="who"><img src="img/avatars/A-01.png" alt=""><b>عمر</b><span class="lvl">المستوى <span data-lv>3</span></span></div>
+              <div class="pts"><img src="img/hud/points.png" alt=""><b data-pts>240</b><small>نقطة</small><span class="plus">+30</span></div>
+              <div class="bar"><i></i></div>
+              <span class="done">أنهى قصة «القط الصغير»</span>
+            </div>
+          </div>
+          <div class="txt"><h3>النقاط والمستويات</h3><p>نقاط عند إنهاء قصة أو حرف أو سورة أو لعبة، ومستوى بعد مستوى.</p></div>
+        </div>
+        <div class="g-card" style="--bg:url(img/landing/g-badges.jpg)">
+          <div class="show" aria-hidden="true"><div class="shelf3"><img src="img/badges/S-02.png" alt="" style="--i:0"><img src="img/badges/S-05.png" alt="" style="--i:1"><img src="img/badges/S-07.png" alt="" style="--i:2"></div></div>
+          <div class="txt"><h3>الشارات</h3><p>شارات يجمعها كلما أنجز.</p></div>
+        </div>
+        <div class="g-card" style="--bg:url(img/landing/g-streak.jpg);background-position:70% 50%">
+          <div class="show" aria-hidden="true"><div class="week"><ol><li class="on" style="--i:0">س</li><li class="on" style="--i:1">ح</li><li class="on" style="--i:2">ن</li><li class="on" style="--i:3">ث</li><li class="on" style="--i:4">ر</li><li style="--i:5">خ</li><li style="--i:6">ج</li></ol><span class="days"><img src="img/hud/streak.png" alt=""><span><b>5</b> أيام متتالية</span></span></div></div>
+          <div class="txt"><h3>الأيام المتتالية</h3><p>يرى كم يوماً متتالياً زار فيه عالمه.</p></div>
+        </div>
+        <div class="g-card" style="--bg:url(img/landing/g-leaders.jpg);background-position:30% 60%">
+          <div class="show" aria-hidden="true"><ol class="board">
+            <li style="--r:0"><span class="n">1</span><img src="img/avatars/A-02.png" alt="">سارة<span class="p">310</span></li>
+            <li style="--r:1" data-was><span class="n">2</span><img src="img/avatars/A-03.png" alt="">خالد<span class="p">260</span></li>
+            <li class="me-row" style="--r:2"><span class="n">3</span><img src="img/avatars/A-01.png" alt="">عمر<span class="p" data-pts>240</span></li>
+          </ol></div>
+          <div class="txt"><h3>المتصدرون</h3><p>لوحة متصدرين واحدة حسب مجموع النقاط.</p></div>
+        </div>
+        <div class="g-card" style="--bg:url(img/landing/g-room.jpg);background-position:40% 50%">
+          <div class="show" aria-hidden="true"><div class="fan"><img src="img/landing/work-drawing.jpg" alt="" style="--i:0"><img src="img/workshop/s-00.jpg" alt="" style="--i:1"><img src="img/landing/work-coloring.jpg" alt="" style="--i:2"></div></div>
+          <div class="txt"><h3>إبداعاتي</h3><p>رسوماته وتلويناته وقصصه في مكان واحد.</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -798,6 +870,29 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     addEventListener('scroll', () => { if (!sky) sky = requestAnimationFrame(lift); }, { passive: true });
     addEventListener('resize', () => { measure(); lift(); }); addEventListener('load', () => { measure(); lift(); }); measure(); lift();
   }
+
+  // the progress cards play out once the section shows: Omar's points count up and he reaches a new level, he moves up the board
+  const grow = $('grow-cards');
+  const play = () => {
+    grow.classList.add('play');
+    const me = grow.querySelector('.me'), b = me.querySelector('[data-pts]'), bar = me.querySelector('.bar i'), lv = me.querySelector('.lvl');
+    const t0 = performance.now(), from = 240, to = 270, n = (v) => String(v);
+    b.textContent = n(from);
+    if (reduce) { b.textContent = n(to); lv.querySelector('[data-lv]').textContent = n(4); bar.style.setProperty('--fill', '12%'); }
+    else {
+      setTimeout(() => bar.style.setProperty('--fill', '100%'), 300);
+      const tick = (now) => { const k = Math.min(1, (now - t0 - 300) / 1100); if (k > 0) b.textContent = n(Math.round(from + (to - from) * k)); if (k < 1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+      // the bar is full: a new level, and the bar starts again
+      setTimeout(() => { lv.querySelector('[data-lv]').textContent = n(4); lv.classList.add('up'); bar.style.transition = 'none'; bar.style.setProperty('--fill', '0%'); void bar.offsetWidth; bar.style.transition = ''; bar.style.setProperty('--fill', '12%'); }, 1600);
+      setTimeout(() => lv.classList.remove('up'), 2300);
+    }
+    // the board: the same story's 30 points bring Omar to 270, past Khaled
+    const rows = grow.querySelectorAll('.board li'), mine = rows[2];
+    setTimeout(() => { mine.querySelector('[data-pts]').textContent = '270'; mine.style.setProperty('--r', 1); mine.querySelector('.n').textContent = '2'; rows[1].style.setProperty('--r', 2); rows[1].querySelector('.n').textContent = '3'; }, reduce ? 0 : 900);
+  };
+  if ('IntersectionObserver' in window) new IntersectionObserver((seen, io) => { if (seen[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.35 }).observe(grow);
+  else play();
 
   // an island in the hero sails to its place in the row
   document.querySelectorAll('.isle').forEach((a) => a.addEventListener('click', () => {
