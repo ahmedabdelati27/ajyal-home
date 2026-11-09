@@ -140,26 +140,26 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .tour[hidden] { display: none; }
 .spot { position: absolute; left: 50%; top: 45%; width: 0; height: 0; border-radius: 50%; box-shadow: 0 0 0 200vmax rgba(18,40,58,.58); outline: 4px dashed rgba(255,228,140,.95); outline-offset: 6px; transition: left .45s ease, top .45s ease, width .45s ease, height .45s ease, border-radius .45s ease; pointer-events: none; }
 .spot.off { outline-color: transparent; }
-.tour-skip { position: absolute; top: calc(var(--edge-y) + env(safe-area-inset-top, 0px)); right: calc(var(--edge-x) + env(safe-area-inset-right, 0px)); display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--paper); color: var(--ink); font: inherit; font-size: 17px; font-weight: 800; box-shadow: 0 4px 0 rgba(0,0,0,.18); cursor: pointer; }
-.tour-skip svg { width: 18px; height: 18px; }
 .tour-card { position: absolute; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; width: min(640px, calc(100% - 24px)); display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: center; padding: 16px 22px 18px 16px; border: 5px solid var(--paper); border-radius: 32px; background: #FFF9EE; box-shadow: 0 10px 0 rgba(90,68,184,.25), 0 24px 40px rgba(0,0,0,.25); transition: top .3s, bottom .3s; }
 .tour-card.up { bottom: auto; top: calc(var(--edge-y) + 70px + env(safe-area-inset-top, 0px)); }
 .tour-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .tour-n { font-size: 14px; font-weight: 800; color: #7B64DA; }
 .tour-body h2 { margin: 0; font-size: 26px; font-weight: 800; line-height: 1.25; }
 .tour-body p { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
-.tour-btns { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.tour-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 6px; }
 .tour-btns button { height: 50px; padding: 0 20px; border: 0; border-radius: 999px; font: inherit; font-size: 18px; font-weight: 800; cursor: pointer; }
 .t-hear { display: inline-flex; align-items: center; gap: 6px; background: #FFF1C9; color: #8A5A00; }
 .t-hear svg { width: 22px; height: 22px; }
 .t-back { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 3px #EFE3CF; }
+/* skipping sits right by the way on, where the eye already is */
+.t-skip { padding: 0 10px; background: none; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 4px; }
+.t-skip:hover { color: var(--ink); }
 .t-next { margin-inline-start: auto; background: var(--go); color: var(--paper); box-shadow: 0 5px 0 var(--go-deep); }
 @media (max-width: 760px) {
   .tour-card { grid-template-columns: 64px 1fr; gap: 10px; padding: 12px 14px 14px 12px; border-radius: 26px; }
   .tour-card .guide, .tour-card .guide .nour { width: 64px; height: 64px; }
   .tour-body h2 { font-size: 21px; } .tour-body p { font-size: 16px; }
   .tour-btns button { height: 46px; padding: 0 14px; font-size: 16px; }
-  .tour-skip { height: 42px; padding: 0 14px; font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) { .spot, .tour-card { transition: none; } }
 
@@ -246,10 +246,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   </div>
 
   <!-- the bottom bar's pages open in a panel over the map; the map stays behind and the bar stays on top -->
-  <!-- Nour's tour on a child's first visit: the map dims, one island lights at a time, and «تخطَّ الجولة» ends it any time -->
+  <!-- Nour's tour on a child's first visit: the map dims, one island lights at a time, and «تخطَّ الجولة» in her card ends it any time -->
   <div class="hud tour" id="tour" hidden role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-p">
     <span class="spot" id="spot" aria-hidden="true"></span>
-    <button type="button" class="tour-skip" id="tour-skip">تخطَّ الجولة <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="tour-card" id="tour-card">
       <span class="guide"><img class="nour" src="img/nour.webp" alt=""><span class="tag" aria-hidden="true">نور</span></span>
       <div class="tour-body">
@@ -259,6 +258,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
         <div class="tour-btns">
           <button type="button" class="t-hear" id="tour-hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button>
           <button type="button" class="t-back" id="tour-back">السابق</button>
+          <button type="button" class="t-skip" id="tour-skip">تخطَّ الجولة</button>
           <button type="button" class="t-next" id="tour-next">التالي</button>
         </div>
       </div>

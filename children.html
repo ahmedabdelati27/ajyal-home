@@ -79,6 +79,15 @@ dialog .x { float: left; width: 40px; height: 40px; border: 0; border-radius: 50
   <p class="lead" id="busy-p"></p>
   <button class="btn main" type="button" data-close>حسناً</button>
 </dialog>
+<dialog id="check" aria-labelledby="check-t">
+  <h2 id="check-t">تأكيد ولي الأمر</h2>
+  <p class="lead">للخروج من عالم الطفل أو اختيار طفل آخر، أدخل كلمة مرور حسابك.</p>
+  <form class="form" id="check-form" novalidate>
+    <div class="field"><label for="check-pw">كلمة المرور</label><div class="input"><input id="check-pw" type="password" autocomplete="current-password" required></div><p class="err" id="check-err"></p></div>
+    <button class="btn main" type="submit">تأكيد</button>
+    <a class="btn link" href="index.html">رجوع إلى عالم الطفل</a>
+  </form>
+</dialog>
 <div class="toast" id="toast" role="status"></div>
 
 <script src="auth.js"></script>
@@ -132,10 +141,24 @@ dialog .x { float: left; width: 40px; height: 40px; border: 0; border-radius: 50
     Auth.kidForm($('add-form'), { onDone: (k) => { Auth.addKid(k); $('add').close(); draw(); Auth.toast(`أُضيف ${k.name}`); } });
     $('add').showModal();
   }
-  document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => { if (e.target.closest('[data-close]') || e.target === d) d.close(); }));
+  document.querySelectorAll('dialog:not(#check)').forEach((d) => d.addEventListener('click', (e) => { if (e.target.closest('[data-close]') || e.target === d) d.close(); }));
 
   $('board').addEventListener('click', () => Auth.toast('في النموذج: لوحة تحكم ولي الأمر والمؤسسة تأتي لاحقاً'));
   $('out').addEventListener('click', () => { Auth.signOut(); location.href = 'landing.html'; });
+
+  // coming out of the child's world (settings → «خروج وتبديل الطفل»): the parent's password first, nothing else until then.
+  // In the prototype any password of 8 or more characters is right, as on the sign-in page
+  if (new URLSearchParams(location.search).get('check') === '1') {
+    const d = $('check'), pw = $('check-pw'), err = $('check-err');
+    d.addEventListener('cancel', (e) => e.preventDefault());
+    $('check-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (pw.value.length < 8) { err.textContent = 'كلمة المرور غير صحيحة'; pw.closest('.field').classList.add('bad'); pw.focus(); return; }
+      history.replaceState(null, '', 'children.html'); d.close();
+    });
+    pw.addEventListener('input', () => { err.textContent = ''; pw.closest('.field').classList.remove('bad'); });
+    d.showModal();
+  }
 })();
 </script>
 </body>

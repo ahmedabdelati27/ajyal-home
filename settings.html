@@ -128,7 +128,8 @@
   }).join('');
 
   // leaving the child's world asks for the parent (in the product: the parent confirms before it happens)
-  $('leave').addEventListener('click', () => Hub.toast('هنا يطلب التطبيق من ولي الأمر تأكيد دخوله، ثم يعرض قائمة الأطفال'));
+  // leaving the child's world: the parent confirms it is them, then picks a child or signs out (children.html)
+  $('leave').addEventListener('click', () => { (window.top || window).location.href = 'children.html?check=1'; });
   Hub.fit();
   addEventListener('load', Hub.fit);
 })();
