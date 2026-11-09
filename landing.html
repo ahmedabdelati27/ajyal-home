@@ -101,6 +101,10 @@ h1 .w { display: inline-block; animation: rise .8s cubic-bezier(.2,.8,.2,1) both
 .sec-head { display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 760px; margin: 0 auto 48px; text-align: center; }
 .kicker { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--kb, #FFE3CC); color: var(--k, var(--accent-deep)); font-size: 15px; font-weight: 800; }
 h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-height: 1.2; }
+/* a section's heading rises in the first time it shows: the label, the title word by word, then the line (the page script adds .reveal, then .in) */
+.sec-head.reveal .kicker, .sec-head.reveal p, .sec-head.reveal h2 .w { opacity: 0; }
+.sec-head.reveal h2 .w { display: inline-block; }
+.sec-head.reveal.in .kicker, .sec-head.reveal.in p, .sec-head.reveal.in h2 .w { opacity: 1; animation: rise .8s cubic-bezier(.2,.8,.2,1) var(--d, 0s) backwards; }
 .sec-head p { margin: 0; font-size: 19px; font-weight: 600; color: var(--ink-soft); }
 .ticks { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; font-size: 17px; font-weight: 700; }
 .ticks li { display: flex; align-items: flex-start; gap: 10px; }
@@ -871,28 +875,55 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     addEventListener('resize', () => { measure(); lift(); }); addEventListener('load', () => { measure(); lift(); }); measure(); lift();
   }
 
-  // the progress cards play out once the section shows: Omar's points count up and he reaches a new level, he moves up the board
-  const grow = $('grow-cards');
+  // a section's heading rises in the first time it shows: the label, then the title word by word, then the line under it
+  const reveal = (head) => {
+    if (reduce || !('IntersectionObserver' in window)) return;
+    const h = head.querySelector('h2'); let i = 0;
+    [...h.childNodes].forEach((nd) => {
+      if (nd.nodeType !== 3) { nd.classList.add('w'); nd.style.setProperty('--d', (0.15 + i++ * 0.08) + 's'); return; }
+      const fr = document.createDocumentFragment();
+      nd.textContent.split(/(\s+)/).forEach((p) => { if (!p) return; if (/^\s+$/.test(p)) fr.append(p); else { const w = document.createElement('span'); w.className = 'w'; w.style.setProperty('--d', (0.15 + i++ * 0.08) + 's'); w.textContent = p; fr.append(w); } });
+      nd.replaceWith(fr);
+    });
+    const p = head.querySelector('p'); if (p) p.style.setProperty('--d', (0.25 + i * 0.08) + 's');
+    head.classList.add('reveal');
+    new IntersectionObserver((seen, io) => { if (seen[0].isIntersecting) { io.disconnect(); head.classList.add('in'); } }, { threshold: 0.5 }).observe(head);
+  };
+  reveal(document.querySelector('#grow .sec-head'));
+
+  // the progress cards play out while the section is on screen, over and over: Omar finishes a story, his points count up
+  // and he reaches a new level, he moves up the board; then everything settles back and it starts again
+  const grow = $('grow-cards'), me = grow.querySelector('.me'), b = me.querySelector('[data-pts]'), bar = me.querySelector('.bar i'), lv = me.querySelector('.lvl');
+  const rows = grow.querySelectorAll('.board li'), mine = rows[2];
+  const level = (v) => { lv.querySelector('[data-lv]').textContent = v; };
+  const fill = (v, now) => { if (now) { bar.style.transition = 'none'; bar.style.setProperty('--fill', v); void bar.offsetWidth; bar.style.transition = ''; } else bar.style.setProperty('--fill', v); };
+  const place = (row, r, pts) => { row.style.setProperty('--r', r); row.querySelector('.n').textContent = r + 1; if (pts) row.querySelector('.p').textContent = pts; };
+  let steps = [];
+  const later = (fn, ms) => steps.push(setTimeout(fn, ms));
+  const reset = () => {
+    steps.forEach(clearTimeout); steps = [];
+    grow.classList.remove('play'); lv.classList.remove('up');
+    b.textContent = '240'; level(3); fill('62%', true);
+    place(mine, 2, '240'); place(rows[1], 1);
+  };
   const play = () => {
     grow.classList.add('play');
-    const me = grow.querySelector('.me'), b = me.querySelector('[data-pts]'), bar = me.querySelector('.bar i'), lv = me.querySelector('.lvl');
-    const t0 = performance.now(), from = 240, to = 270, n = (v) => String(v);
-    b.textContent = n(from);
-    if (reduce) { b.textContent = n(to); lv.querySelector('[data-lv]').textContent = n(4); bar.style.setProperty('--fill', '12%'); }
-    else {
-      setTimeout(() => bar.style.setProperty('--fill', '100%'), 300);
-      const tick = (now) => { const k = Math.min(1, (now - t0 - 300) / 1100); if (k > 0) b.textContent = n(Math.round(from + (to - from) * k)); if (k < 1) requestAnimationFrame(tick); };
-      requestAnimationFrame(tick);
-      // the bar is full: a new level, and the bar starts again
-      setTimeout(() => { lv.querySelector('[data-lv]').textContent = n(4); lv.classList.add('up'); bar.style.transition = 'none'; bar.style.setProperty('--fill', '0%'); void bar.offsetWidth; bar.style.transition = ''; bar.style.setProperty('--fill', '12%'); }, 1600);
-      setTimeout(() => lv.classList.remove('up'), 2300);
-    }
+    if (reduce) { b.textContent = '270'; level(4); fill('12%', true); place(mine, 1, '270'); place(rows[1], 2); return; }
+    const t0 = performance.now() + 300;
+    later(() => fill('100%'), 300);
+    const tick = (now) => { const k = Math.min(1, (now - t0) / 1100); if (k > 0) b.textContent = String(Math.round(240 + 30 * k)); if (k < 1 && grow.classList.contains('play')) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+    // the bar is full: a new level, and the bar starts again
+    later(() => { level(4); lv.classList.add('up'); fill('0%', true); fill('12%'); }, 1600);
+    later(() => lv.classList.remove('up'), 2300);
     // the board: the same story's 30 points bring Omar to 270, past Khaled
-    const rows = grow.querySelectorAll('.board li'), mine = rows[2];
-    setTimeout(() => { mine.querySelector('[data-pts]').textContent = '270'; mine.style.setProperty('--r', 1); mine.querySelector('.n').textContent = '2'; rows[1].style.setProperty('--r', 2); rows[1].querySelector('.n').textContent = '3'; }, reduce ? 0 : 900);
+    later(() => { place(mine, 1, '270'); place(rows[1], 2); }, 900);
   };
-  if ('IntersectionObserver' in window) new IntersectionObserver((seen, io) => { if (seen[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.35 }).observe(grow);
-  else play();
+  let loop = 0;
+  const cycle = () => { reset(); loop = setTimeout(() => { play(); loop = setTimeout(cycle, 5200); }, 700); };
+  const stop = () => { clearTimeout(loop); loop = 0; };
+  if (reduce || !('IntersectionObserver' in window)) play();
+  else new IntersectionObserver((seen) => { if (seen[0].isIntersecting) { if (!loop) cycle(); } else stop(); }, { threshold: 0.35 }).observe(grow);
 
   // an island in the hero sails to its place in the row
   document.querySelectorAll('.isle').forEach((a) => a.addEventListener('click', () => {
