@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets «شاراتي» made for it; a tablet and a computer keep this one
+  // (the panel over the map, ?embed=1, stays here: it is sized by the panel, not by the phone)
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches && !/[?&]embed=/.test(location.search)) location.replace('app/badges.html' + location.search + location.hash);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -93,46 +98,40 @@
 <script src="profile.js"></script>
 <script src="workshop.js"></script>
 <script src="hub.js"></script>
+<script src="account-data.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  const { ar, BADGES } = Profile;
-  // the badges the admin switched off are not shown; the count is of the active ones
-  const got = BADGES.filter((b) => b.got).length;
-  if (!BADGES.length) { $('sum').innerHTML = '<p class="empty">لا توجد شارات الآن، تابعنا قريباً</p>'; return Hub.fit(); }
-  $('sum').innerHTML = `<span class="big"><b>${ar(got)}</b>من ${ar(BADGES.length)}</span>
-    <div><span class="bar-b" role="progressbar" aria-valuemin="0" aria-valuemax="${BADGES.length}" aria-valuenow="${got}" aria-label="الشارات التي حصلت عليها"><i style="width:${got / BADGES.length * 100}%"></i></span>
+  const { ar } = Profile;
+  // the badges the admin switched off are not shown; the count is of the active ones (account-data.js, as on the phone)
+  const B = Account.badges('');
+  if (!B.of) { $('sum').innerHTML = '<p class="empty">لا توجد شارات الآن، تابعنا قريباً</p>'; return Hub.fit(); }
+  $('sum').innerHTML = `<span class="big"><b>${ar(B.got)}</b>من ${ar(B.of)}</span>
+    <div><span class="bar-b" role="progressbar" aria-valuemin="0" aria-valuemax="${B.of}" aria-valuenow="${B.got}" aria-label="الشارات التي حصلت عليها"><i style="width:${B.got / B.of * 100}%"></i></span>
     <p>كل شارة لها شرط. عندما تحققه تصلك الشارة وحدها، وتظهر هنا وفي غرفتك.</p></div>`;
 
-  const SHOW = [['all', 'كل الشارات'], ['got', 'حصلت عليها'], ['wait', 'لم أحصل عليها بعد']];
   let show = 'all';
   const wanted = new URLSearchParams(location.search).get('b');
   const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
   function render() {
-    $('chips').innerHTML = SHOW.map(([k, n]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === show}">${n}</button>`).join('');
-    const list = BADGES.filter((b) => show === 'all' || (show === 'got' ? b.got : !b.got));
-    $('badges').innerHTML = list.map((b) => `<article class="badge card ${b.got ? '' : 'no'} ${b.id === wanted ? 'lit' : ''}" id="b-${b.id}" aria-labelledby="t-${b.id}">
-      <img src="img/badges/${b.id}.png" alt="">
+    $('chips').innerHTML = Account.SHOW.map(([k, n]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === show}">${n}</button>`).join('');
+    $('badges').innerHTML = B.shown(show).map((b) => `<article class="badge card ${b.got ? '' : 'no'} ${b.id === wanted ? 'lit' : ''}" id="b-${b.id}" aria-labelledby="t-${b.id}">
+      <img src="${b.img}" alt="">
       <h3 id="t-${b.id}">${b.n}</h3><p class="about">${b.about}</p>
       <span class="state ${b.got ? 'ok' : 'wait'}">${b.got ? '✓ حصلت عليها' : 'لم تحصل عليها بعد'}</span>
       <div class="how"><small>${b.got ? 'شرطها' : 'كيف تحصل عليها؟'}</small><b>${b.how}</b>
-        ${!b.got && b.prog ? `<span class="prog"><span class="pb" aria-hidden="true"><i style="width:${b.prog[0] / b.prog[1] * 100}%"></i></span><span>${ar(b.prog[0])} من ${ar(b.prog[1])}</span></span>` : ''}</div>
-      <div class="acts"><button class="btn hear" type="button" data-hear="${b.id}">${SPEAKER}استمع</button>${!b.got && b.go ? (b.need && !Workshop.open(b.need) ? '' : `<a class="btn go" href="${b.go[0]}">اذهب إلى ${b.go[1]}</a>`) : ''}</div>
-      ${!b.got && b.need && !Workshop.open(b.need) ? '<p class="closed">هذا غير متاح لك الآن، اسأل ولي أمرك أو معلّمك عنه.</p>' : ''}
+        ${!b.got && b.prog ? `<span class="prog"><span class="pb" aria-hidden="true"><i style="width:${b.pct}%"></i></span><span>${ar(b.prog[0])} من ${ar(b.prog[1])}</span></span>` : ''}</div>
+      <div class="acts"><button class="btn hear" type="button" data-hear="${b.id}">${SPEAKER}استمع</button>${b.href ? `<a class="btn go" href="${b.href}">اذهب إلى ${b.where}</a>` : ''}</div>
+      ${b.shut ? '<p class="closed">هذا غير متاح لك الآن، اسأل ولي أمرك أو معلّمك عنه.</p>' : ''}
     </article>`).join('');
     Hub.fit();
   }
   $('chips').addEventListener('click', (e) => { const c = e.target.closest('.chip'); if (c) { show = c.dataset.k; render(); } });
 
   // read aloud for children who do not read yet
-  const synth = window.speechSynthesis; synth?.getVoices();
   $('badges').addEventListener('click', (e) => {
     const h = e.target.closest('[data-hear]'); if (!h) return;
-    const b = BADGES.find((x) => x.id === h.dataset.hear), v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
-    if (!v) return Hub.toast('لا يوجد صوت عربي على هذا الجهاز');
-    synth.cancel(); Sfx.hush(true);
-    const u = new SpeechSynthesisUtterance(`${b.n}. ${b.got ? 'حصلت عليها. شرطها' : 'كيف تحصل عليها'}: ${b.how}`);
-    u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+    Account.speak(B.list.find((x) => x.id === h.dataset.hear).say, Hub.toast);
   });
 
   render();

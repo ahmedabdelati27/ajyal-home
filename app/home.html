@@ -122,18 +122,18 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 <div class="sea" aria-hidden="true"></div>
 <header class="top">
   <div class="me-row">
-    <button class="me" type="button" id="me" aria-label="غرفتي: عمر، المستوى 7">
+    <button class="me" type="button" id="me" data-go="room.html" aria-label="غرفتي: عمر، المستوى 7">
       <img src="../img/avatars/A-03.png" alt="" id="me-img">
       <span><b class="name" id="me-name">عمر</b><small>المستوى 7</small></span>
     </button>
     <button class="round search" type="button" aria-label="ابحث" data-soon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-    <button class="round bell" type="button" id="bell" aria-label="الإشعارات، 2 غير مقروءة" data-soon><img src="../img/hud/bell.png" alt=""><i>2</i></button>
+    <button class="round bell" type="button" id="bell" aria-label="الإشعارات، 2 غير مقروءة" data-go="notes.html"><img src="../img/hud/bell.png" alt=""><i>2</i></button>
   </div>
   <div class="stats">
     <button type="button" class="time" title="الوقت المتبقي اليوم" aria-label="الوقت المتبقي اليوم: 35 دقيقة" data-soon><img src="../img/hud/clock.png" alt="">35 د</button>
-    <button type="button" title="النقاط" aria-label="النقاط: 3,240" data-soon><img src="../img/hud/points.png" alt="">3,240</button>
-    <button type="button" title="أيام متتالية" aria-label="أيام متتالية: 5" data-soon><img src="../img/hud/streak.png" alt="">5</button>
-    <button type="button" title="الشارات" aria-label="الشارات: 6" data-soon><img src="../img/hud/badge.png" alt="">6</button>
+    <button type="button" title="النقاط" aria-label="النقاط: 3,240" data-go="points.html"><img src="../img/hud/points.png" alt="">3,240</button>
+    <button type="button" title="أيام متتالية" aria-label="أيام متتالية: 5" data-go="streak.html"><img src="../img/hud/streak.png" alt="">5</button>
+    <button type="button" title="الشارات" aria-label="الشارات: 6" data-go="badges.html"><img src="../img/hud/badge.png" alt="">6</button>
   </div>
 </header>
 
@@ -214,7 +214,9 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
   // the other screens of the app come next
   const toast = document.getElementById('toast');
   document.addEventListener('click', (e) => {
-    const b = e.target.closest('[data-soon], .me'); if (!b) return;
+    // the child's card, the bell and the stats open their pages in the app
+    const go = e.target.closest('[data-go]'); if (go) { location.href = go.dataset.go; return; }
+    const b = e.target.closest('[data-soon]'); if (!b) return;
     e.preventDefault();
     toast.textContent = 'في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة';
     toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200);

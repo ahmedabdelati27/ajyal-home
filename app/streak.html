@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // «الأيام المتتالية» made for a phone, upright or on its side; a tablet and a computer get the web's page
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../streak.html' + location.search + location.hash);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>أيامي المتتالية · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent-deep: #C2551C;
+  --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* the lantern path up the hill at the top, fading into the page */
+.hero { position: relative; height: calc(var(--top) + 236px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 60%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 36px; font-weight: 800; line-height: 1.05; color: var(--paper);
+  text-shadow: 0 4px 0 var(--accent-deep), 2px 0 0 var(--accent-deep), -2px 0 0 var(--accent-deep), 0 -2px 0 var(--accent-deep), 2px 2px 0 var(--accent-deep), -2px 2px 0 var(--accent-deep), 2px -2px 0 var(--accent-deep), -2px -2px 0 var(--accent-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+
+main { position: relative; z-index: 2; margin-top: -40px; padding: 0 var(--side-r) calc(var(--bottom) + 100px) var(--side-l); display: flex; flex-direction: column; gap: 16px; }
+h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.card { border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; padding: 0 16px; border-radius: 999px; font-size: 15px; font-weight: 800; white-space: nowrap; }
+.btn.hear { background: #FFF1C9; color: #8A5A00; }
+.btn.hear svg { width: 20px; height: 20px; }
+.top-row { display: flex; flex-direction: column; gap: 16px; }
+.part { display: flex; flex-direction: column; gap: 10px; }
+
+/* today's count, big and warm */
+.now { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px 16px; }
+.now .head { display: flex; align-items: center; gap: 12px; }
+.now .flame { flex-shrink: 0; width: 80px; height: 80px; animation: glow 2.6s ease-in-out infinite; }
+@keyframes glow { 50% { transform: scale(1.06) rotate(-2deg); } }
+.now .n { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 8px; min-width: 0; font-size: 21px; font-weight: 800; color: var(--accent-deep); }
+.now .n b { font-size: 56px; line-height: 1; }
+.now p { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.now p b { color: var(--ink); }
+.now .best { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 2px 14px; border-radius: 999px; background: #FFF1DD; font-size: 14px; font-weight: 800; }
+
+/* the last seven days, today at the end */
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; padding: 12px 6px; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.day small { font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.day.today small { color: var(--accent-deep); }
+.day .c { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #F5EDE2; }
+.day .c img { width: 28px; height: 28px; }
+.day.on .c { background: #FFE6C9; box-shadow: inset 0 0 0 3px #F7B347; }
+.day.off .c { background: #F2EEE8; }
+.day.off .c::after { content: ''; width: 14px; height: 4px; border-radius: 999px; background: #CFC3B4; }
+.day.today .c { outline: 3px solid #F4823F; outline-offset: 2px; }
+.day b { font-size: 14px; font-weight: 800; }
+
+/* the goals on a path, one under the other; a goal the admin tied to a badge shows it */
+.goals { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; }
+.goals::before { content: ''; position: absolute; top: 40px; bottom: 40px; inset-inline-start: calc(12px + 26px - 2px); border-inline-start: 4px dotted #F1C9A0; }
+.goal { position: relative; display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+.goal .dot { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: #F5EDE2; font-size: 21px; font-weight: 800; color: var(--ink-soft); box-shadow: 0 0 0 4px var(--paper); }
+.goal.done .dot { background: linear-gradient(#FFC93C, #F4823F); color: var(--paper); box-shadow: 0 0 0 4px var(--paper), 0 4px 0 4px #C2551C; }
+.goal.next .dot { background: var(--paper); color: var(--accent-deep); box-shadow: inset 0 0 0 4px #F4823F, 0 0 0 4px var(--paper); }
+.goal .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.goal b { font-size: 17px; font-weight: 800; }
+.goal small { font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.goal.done small { color: var(--go-deep); }
+.goal.next small { color: var(--accent-deep); font-weight: 800; }
+.goal .bdg { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; max-width: 110px; min-width: 0; padding: 4px 8px 6px; border-radius: 16px; background: #FFF6E8; text-align: center; font-size: 12px; font-weight: 800; line-height: 1.3; }
+.goal .bdg img { width: 44px; height: 44px; }
+.goal .bdg.no img { filter: grayscale(1) opacity(.5); }
+
+.how { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 14px 16px 16px; }
+.how p { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.7; color: var(--ink-soft); }
+
+/* the bar at the bottom, as on the phone's home; these pages belong to «غرفتي» */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+.tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low hill with the name in the middle, today beside the week, the goals as one row of steps, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 62%; }
+  .title { top: calc(var(--top) + 4px); right: 160px; left: 160px; gap: 6px; }
+  h1 { font-size: 30px; }
+  .title p { font-size: 13px; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  main { margin-top: -56px; padding-bottom: calc(var(--bottom) + 70px); }
+  .top-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: start; }
+  .now { padding: 12px 14px 14px; }
+  .now .flame { width: 64px; height: 64px; }
+  .now .n b { font-size: 46px; }
+  .week { padding: 12px 8px; }
+  .goals { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding: 12px; }
+  .goals::before { top: 38px; bottom: auto; inset-inline: 10%; border-inline-start: 0; border-top: 4px dotted #F1C9A0; }
+  .goal { flex-direction: column; justify-content: flex-start; gap: 6px; padding: 0; text-align: center; }
+  .goal .txt { align-items: center; }
+  .goal .bdg { flex-direction: row; max-width: none; padding: 3px 8px 3px 4px; }
+  .goal .bdg img { width: 30px; height: 30px; }
+  .how { flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
+  .how .btn { flex-shrink: 0; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .now .flame { animation: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/room/streak-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="room.html" aria-label="العودة إلى غرفتي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+  </div>
+  <div class="title">
+    <h1>أيامي المتتالية</h1>
+    <p>كل يوم تدخل فيه عالم أجيال يضيء شعلتك</p>
+  </div>
+</header>
+
+<main>
+  <div class="top-row">
+    <section class="now card" id="now" aria-label="أيامي المتتالية الآن"></section>
+    <section class="part" aria-labelledby="week-t"><h2 id="week-t">آخر سبعة أيام</h2><div class="week card" id="week"></div></section>
+  </div>
+  <section class="part" aria-labelledby="goals-t"><h2 id="goals-t">أهدافك</h2><div class="goals card" id="goals"></div></section>
+  <section class="part" aria-labelledby="how-t"><h2 id="how-t">كيف تُحسب أيامك؟</h2>
+    <div class="how card">
+      <p id="how-p">كل يوم تدخل فيه عالم أجيال يضيف يوماً إلى سلسلتك. إذا مرّ يوم كامل دون أن تدخل، تبدأ سلسلتك من جديد. لا بأس، يمكنك دائماً أن تبدأ مرة أخرى!</p>
+      <button class="btn hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html" aria-current="page"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../profile.js"></script>
+<script src="../account-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar } = Profile;
+  const toast = $('toast');
+  const say = (s) => { toast.textContent = s; toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2400); };
+
+  // the same days and goals as the web's page (account-data.js)
+  const S = Account.streak('../');
+  $('now').innerHTML = `<div class="head"><img class="flame" src="../img/hud/streak.png" alt=""><span class="n"><b>${ar(S.now)}</b>${S.unit}</span></div>
+    <p>${S.cheer}</p>
+    ${S.all ? '<p><b>أكملت كل الأهداف! أنت بطل الأيام المتتالية.</b></p>' : ''}
+    <span class="best">🏅 أطول سلسلة لك: ${S.best}</span>`;
+
+  // the last seven days: lit when the child came, the gap shows the day that was missed
+  $('week').innerHTML = S.week.map((w) => `<div class="day ${w.on ? 'on' : 'off'} ${w.today ? 'today' : ''}">
+    <small>${w.name}</small><span class="c">${w.on ? '<img src="../img/hud/streak.png" alt="">' : ''}</span><b>${ar(w.d)}</b>
+    <span class="sr">${w.on ? 'دخلت' : 'لم تدخل'}</span></div>`).join('');
+
+  // a goal's badge opens that badge in «شاراتي»
+  $('goals').innerHTML = S.goals.map((g) => `<div class="goal ${g.state}"><span class="dot" aria-hidden="true">${ar(g.d)}</span>
+    <span class="txt"><b>${g.n}</b><small>${g.says}</small></span>
+    ${g.badge ? `<a class="bdg ${g.badge.got ? '' : 'no'}" href="badges.html?b=${g.badge.id}" aria-label="شارة «${g.badge.n}»${g.badge.got ? '، حصلت عليها' : ''}"><img src="${g.badge.img}" alt="">شارة «${g.badge.n}»${g.badge.got ? ' ✓' : ''}</a>` : ''}</div>`).join('');
+
+  // read aloud for children who do not read yet
+  $('hear').addEventListener('click', () => Account.speak($('how-p').textContent, say));
+})();
+</script>
+</body>
+</html>

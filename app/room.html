@@ -208,8 +208,8 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   <div class="bar">
     <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
     <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
-    <a class="round" id="bell" href="../notes.html" aria-label="الإشعارات"><img src="../img/hud/bell.png" alt=""><i id="bell-n" hidden></i></a>
-    <a class="round" id="gear" href="../settings.html" aria-label="الإعدادات"><img src="../img/hud/gear.png" alt=""></a>
+    <a class="round" id="bell" href="notes.html" aria-label="الإشعارات"><img src="../img/hud/bell.png" alt=""><i id="bell-n" hidden></i></a>
+    <a class="round" id="gear" href="settings.html" aria-label="الإعدادات"><img src="../img/hud/gear.png" alt=""></a>
   </div>
   <div class="title">
     <h1>غرفتي</h1>
@@ -234,7 +234,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   <section role="tabpanel" id="p-me" aria-labelledby="t-me">
     <div class="nums" id="nums"></div>
     <p class="rules-note">تاريخ ميلادك، ووقت اللعب، وما يمكنك استخدامه، يحددها ولي أمرك أو معلّمك. أنت تغيّر اسمك وصورتك فقط.</p>
-    <div class="badges-head"><h2 id="badges-t"></h2><a class="btn soft" href="../badges.html" aria-label="كل الشارات وكيف تحصل عليها">كل الشارات</a></div>
+    <div class="badges-head"><h2 id="badges-t"></h2><a class="btn soft" href="badges.html" aria-label="كل الشارات وكيف تحصل عليها">كل الشارات</a></div>
     <div class="badges" id="badges"></div>
   </section>
 
@@ -331,8 +331,8 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
     $('nums').innerHTML = `<div class="num card"><span class="k"><img src="${B}img/I-08.png" alt="">المستوى ${ar(me.level)}</span>
         <span class="lvl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="التقدم نحو المستوى ${ar(me.level + 1)}"><i style="width:${pct}%"></i></span>
         <small>باقي ${num(me.to - me.xp)} نقطة للوصول إلى المستوى ${ar(me.level + 1)}</small></div>
-      <a class="num card link" href="${B}points.html" aria-label="مجموع نقاطي: ${num(me.xp)}، كيف أجمع النقاط"><span class="k"><img src="${B}img/hud/points.png" alt="">مجموع نقاطي</span><span class="v">${num(me.xp)}</span><small>كيف أجمعها ←</small></a>
-      <a class="num card link" href="${B}streak.html" aria-label="أيامي المتتالية: ${ar(me.streak)}"><span class="k"><img src="${B}img/hud/streak.png" alt="">أيام متتالية</span><span class="v">${ar(me.streak)}</span><small>شاهد أيامك ←</small></a>`;
+      <a class="num card link" href="points.html" aria-label="مجموع نقاطي: ${num(me.xp)}، كيف أجمع النقاط"><span class="k"><img src="${B}img/hud/points.png" alt="">مجموع نقاطي</span><span class="v">${num(me.xp)}</span><small>كيف أجمعها ←</small></a>
+      <a class="num card link" href="streak.html" aria-label="أيامي المتتالية: ${ar(me.streak)}"><span class="k"><img src="${B}img/hud/streak.png" alt="">أيام متتالية</span><span class="v">${ar(me.streak)}</span><small>شاهد أيامك ←</small></a>`;
     const got = BADGES.filter((b) => b.got).length;
     $('badges-t').textContent = `شاراتي (${ar(got)} من ${ar(BADGES.length)})`;
     $('badges').innerHTML = BADGES.map((b) => `<div class="badge card ${b.got ? '' : 'no'}"><img src="${B}img/badges/${b.id}.png" alt="">

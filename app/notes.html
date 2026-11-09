@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // «إشعاراتي» made for a phone, upright or on its side; a tablet and a computer get the web's page
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../notes.html' + location.search + location.hash);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>إشعاراتي · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent-deep: #C2551C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+/* the bell's room at the top, fading into the page */
+.hero { position: relative; height: calc(var(--top) + 200px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 60px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--accent-deep), 2px 0 0 var(--accent-deep), -2px 0 0 var(--accent-deep), 0 -2px 0 var(--accent-deep), 2px 2px 0 var(--accent-deep), -2px 2px 0 var(--accent-deep), 2px -2px 0 var(--accent-deep), -2px -2px 0 var(--accent-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+
+/* all or only the new ones, held at the top while scrolling */
+.seg-wrap { position: sticky; z-index: 4; top: 0; padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+.seg { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.seg button { flex: 1; min-width: 0; height: 42px; border-radius: 999px; font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+.seg button[aria-pressed="true"] { background: linear-gradient(#F7A35C, #E07A2E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.3); }
+
+main { padding: 4px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+.card { border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; padding: 0 14px; border-radius: 999px; font-size: 15px; font-weight: 800; white-space: nowrap; }
+.btn.soft { background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 4px 0 var(--edge); }
+.btn.hear { background: #FFF1C9; color: #8A5A00; box-shadow: 0 4px 0 #F2D58A; }
+.btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+/* how many are new, and reading them all or hearing them */
+.top-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 6px; }
+.count { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; }
+.count img { flex-shrink: 0; width: 40px; height: 40px; }
+.row-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.row-btns .btn { flex: 1 1 auto; }
+
+/* a day's notifications together; a new one is tinted and has a dot */
+.day h2 { margin: 14px 4px 10px; font-size: 17px; font-weight: 800; color: var(--ink-soft); }
+.list { display: flex; flex-direction: column; gap: 10px; }
+.note { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); transition: transform .15s; }
+@media (hover: hover) { .note:hover { transform: translateY(-2px); } }
+.note .pic { flex-shrink: 0; width: 64px; height: 64px; border-radius: 16px; object-fit: cover; background: #FFF6E8; }
+.note .pic.round { object-fit: contain; padding: 5px; }
+.note .txt { flex: 1; min-width: 0; }
+.note b { display: block; font-size: 17px; font-weight: 800; line-height: 1.3; }
+.note p { margin: 3px 0 0; font-size: 14px; font-weight: 700; line-height: 1.55; color: var(--ink-soft); }
+.note small { display: block; margin-top: 4px; font-size: 12.5px; font-weight: 800; color: #A89580; }
+.note .go { flex-shrink: 0; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #FFF1DD; }
+.note .go svg { width: 16px; height: 16px; }
+.note.new { background: #FFF4E4; box-shadow: 0 5px 0 #F3D3A8, inset 0 0 0 2px #F7C88E; }
+.note.new b::after { content: ''; display: inline-block; width: 10px; height: 10px; margin-inline-start: 6px; border-radius: 50%; background: #F0436B; vertical-align: middle; }
+@media (prefers-reduced-motion: reduce) { .note { transition: none; } }
+
+/* nothing to show: a friendly word from Nour */
+.empty { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 8px; padding: 20px 18px; text-align: center; }
+.empty img { width: 96px; }
+.empty p { margin: 0; font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+
+/* the bar at the bottom, as on the phone's home; this page is part of «غرفتي», so it is lit */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+.tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low room with the name in the middle, the count and buttons in one row, two notifications side by side, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 110px); }
+  .hero .bg { object-position: 50% 45%; }
+  .title { top: calc(var(--top) + 4px); right: 200px; left: 200px; gap: 6px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .seg-wrap { padding-top: 4px; padding-bottom: 8px; }
+  .seg { max-width: 360px; margin: 0 auto; }
+  .seg button { height: 38px; font-size: 15px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .top-row { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .row-btns .btn { flex: 0 0 auto; }
+  .list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/room/notes-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="room.html" aria-label="العودة إلى غرفتي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+  </div>
+  <div class="title">
+    <h1>إشعاراتي</h1>
+    <p>كل الأخبار الجديدة في عالمك</p>
+  </div>
+</header>
+
+<div class="seg-wrap">
+  <div class="seg" role="group" aria-label="عرض الإشعارات" id="chips"></div>
+</div>
+
+<main>
+  <div class="top-row">
+    <span class="count" id="count"></span>
+    <span class="row-btns"><button class="btn hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>اقرأ لي الجديد</button><button class="btn soft" type="button" id="all-read">اجعلها كلها مقروءة</button></span>
+  </div>
+  <div id="days"></div>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html" aria-current="page"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../notes.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { NOTES, isRead, mark, unread } = Notes;
+  const ar = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const toast = $('toast');
+  const say = (s) => { toast.textContent = s; toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2400); };
+  const DAYS = [['today', 'اليوم'], ['yesterday', 'أمس'], ['week', 'هذا الأسبوع'], ['older', 'أقدم']];
+  const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="#C2551C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
+
+  // where a notification leads, from the app folder (notes.js writes it for the site's root):
+  // a sheet of the map (index.html?open=room&…) is its own page here, a page with a phone version opens it, anything else the site's page
+  const APP = /^(room|sections|leaders|forest|beach|peak|value|garden|colors|games|oasis|quran|workshop)\.html/;
+  const go = (href) => {
+    const m = href.match(/^index\.html\?open=([a-z]+)&?(.*)$/);
+    if (m) href = `${m[1]}.html${m[2] ? `?${m[2]}` : ''}`;
+    return APP.test(href) ? href : `../${href}`;
+  };
+
+  // opening a notification marks it read first, then its link is followed
+  $('days').addEventListener('click', (e) => { const a = e.target.closest('a.note'); if (a) mark([a.dataset.id]); });
+
+  let show = 'all';
+  function render() {
+    const n = unread();
+    $('count').innerHTML = `<img src="../img/hud/bell.png" alt=""><span>${n ? `لديك ${n === 1 ? 'إشعار جديد واحد' : n === 2 ? 'إشعاران جديدان' : `${ar(n)} إشعارات جديدة`}` : 'قرأت كل إشعاراتك'}</span>`;
+    $('all-read').hidden = !n; $('hear').hidden = !n;
+    $('chips').innerHTML = [['all', 'الكل'], ['new', 'الجديدة']].map(([k, t]) => `<button type="button" data-k="${k}" aria-pressed="${k === show}">${t}</button>`).join('');
+    const list = NOTES.filter((x) => show === 'all' || !isRead(x.id));
+    $('days').innerHTML = list.length ? DAYS.map(([d, name]) => {
+      const here = list.filter((x) => x.when === d);
+      return here.length ? `<section class="day" aria-labelledby="d-${d}"><h2 id="d-${d}">${name}</h2><div class="list">${here.map((x) => `<a class="note ${isRead(x.id) ? '' : 'new'}" href="${go(x.go)}" data-id="${x.id}" aria-label="${isRead(x.id) ? '' : 'جديد: '}${x.t}، ${x.p}، ${x.ago}">
+        <img class="pic ${x.kind === 'badge' || x.kind === 'done' ? 'round' : ''}" src="../${x.img}" alt="">
+        <span class="txt"><b>${x.t}</b><p>${x.p}</p><small>${x.ago}</small></span><span class="go">${ARROW}</span></a>`).join('')}</div></section>` : '';
+    }).join('') : '<div class="empty card"><img src="../img/garden/nour-cheer.png" alt=""><p>لا توجد إشعارات جديدة الآن.</p></div>';
+  }
+  $('chips').addEventListener('click', (e) => { const c = e.target.closest('[data-k]'); if (c) { show = c.dataset.k; render(); } });
+
+  // «read to me»: the new ones in an Arabic voice, with the sound effects quiet meanwhile
+  const synth = window.speechSynthesis; synth?.getVoices();
+  $('hear').addEventListener('click', () => {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
+    if (!v) return say('لا يوجد صوت عربي على هذا الجهاز');
+    synth.cancel(); Sfx.hush(true);
+    const u = new SpeechSynthesisUtterance(NOTES.filter((x) => !isRead(x.id)).map((x) => `${x.t}. ${x.p}`).join(' '));
+    u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
+  });
+  $('all-read').addEventListener('click', () => { mark(NOTES.map((x) => x.id)); say('قرأت كل إشعاراتك'); render(); });
+
+  // leaving the page stops the voice
+  addEventListener('pagehide', () => { synth?.cancel(); Sfx.hush(false); });
+  render();
+  addEventListener('pageshow', (e) => { if (e.persisted) render(); });
+})();
+</script>
+</body>
+</html>

@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets «نقاطي» made for it; a tablet and a computer keep this one
+  // (the panel over the map, ?embed=1, stays here: it is sized by the panel, not by the phone)
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches && !/[?&]embed=/.test(location.search)) location.replace('app/points.html' + location.search + location.hash);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -103,39 +108,29 @@
 <script src="profile.js"></script>
 <script src="workshop.js"></script>
 <script src="hub.js"></script>
+<script src="account-data.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  const { ar, num, LEVELS, EARN } = Profile, me = Profile.read();
-  const top = me.level >= LEVELS.length, pct = top ? 100 : Math.round((me.xp - me.from) / (me.to - me.from) * 100);
+  const { ar, num } = Profile;
+  // the same numbers as the phone's «نقاطي» (account-data.js)
+  const P = Account.points('');
   $('total').innerHTML = `<img class="star" src="img/hud/points.png" alt="">
-    <div><span class="n"><b>${num(me.xp)}</b>نقطة</span>
-      <div class="lvl"><span class="row"><span><img src="img/I-08.png" alt="">المستوى ${ar(me.level)}</span>${top ? '' : `<span>المستوى ${ar(me.level + 1)}</span>`}</span>
-        <span class="bar-l" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="التقدم نحو المستوى التالي"><i style="width:${pct}%"></i></span>
-        <small>${top ? 'وصلت إلى أعلى مستوى، رائع!' : `باقي ${num(me.to - me.xp)} نقطة للوصول إلى المستوى ${ar(me.level + 1)}`}</small></div>
-      <a class="btn soft" href="index.html?open=leaders" style="margin-top:14px">ترتيبك في المتصدرين: ${ar(Profile.ME_RANK)}</a></div>`;
+    <div><span class="n"><b>${num(P.xp)}</b>نقطة</span>
+      <div class="lvl"><span class="row"><span><img src="img/I-08.png" alt="">المستوى ${ar(P.level)}</span>${P.top ? '' : `<span>المستوى ${ar(P.level + 1)}</span>`}</span>
+        <span class="bar-l" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${P.pct}" aria-label="التقدم نحو المستوى التالي"><i style="width:${P.pct}%"></i></span>
+        <small>${P.top ? 'وصلت إلى أعلى مستوى، رائع!' : `باقي ${num(P.left)} نقطة للوصول إلى المستوى ${ar(P.level + 1)}`}</small></div>
+      <a class="btn soft" href="${P.leaders}" style="margin-top:14px">ترتيبك في المتصدرين: ${ar(P.rank)}</a></div>`;
 
   // the levels: the points each one needs, the ones reached lit
-  $('steps').innerHTML = LEVELS.map((p, i) => {
-    const n = i + 1, cls = n < me.level ? 'done' : n === me.level ? 'now' : '';
-    return `<div class="step ${cls}"><span class="dot" aria-hidden="true">${ar(n)}</span><small>${num(p)}</small><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">المستوى ${ar(n)}، ${num(p)} نقطة${cls === 'now' ? '، مستواك الآن' : cls === 'done' ? '، وصلت إليه' : ''}</span></div>`;
-  }).join('');
+  $('steps').innerHTML = P.levels.map(({ n, p, state }) => `<div class="step ${state}"><span class="dot" aria-hidden="true">${ar(n)}</span><small>${num(p)}</small><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">المستوى ${ar(n)}، ${num(p)} نقطة${state === 'now' ? '، مستواك الآن' : state === 'done' ? '، وصلت إليه' : ''}</span></div>`).join('');
 
   // a way to earn points that the child cannot use now says so plainly, without prices
-  $('earn').innerHTML = EARN.map((w) => {
-    const shut = w.need && !Workshop.open(w.need);
-    return `<div class="way card"><span class="isl"><img src="${w.img}" alt=""></span>
+  $('earn').innerHTML = P.earn.map((w) => `<div class="way card"><span class="isl"><img src="${w.img}" alt=""></span>
       <div><b>${w.n}</b><span class="xp"><img src="img/hud/points.png" alt="">+${ar(w.xp)} نقطة</span></div>
-      ${shut ? '<span class="closed">غير متاح لك الآن</span>' : `<a class="btn go" href="${w.go[0]}" aria-label="اذهب إلى ${w.go[1]}">ابدأ</a>`}</div>`;
-  }).join('');
+      ${w.shut ? '<span class="closed">غير متاح لك الآن</span>' : `<a class="btn go" href="${w.href}" aria-label="اذهب إلى ${w.where}">ابدأ</a>`}</div>`).join('');
 
-  const synth = window.speechSynthesis; synth?.getVoices();
-  $('hear').addEventListener('click', () => {
-    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
-    if (!v) return Hub.toast('لا يوجد صوت عربي على هذا الجهاز');
-    synth.cancel(); Sfx.hush(true);
-    const u = new SpeechSynthesisUtterance(`كيف تكسب النقاط؟ ${EARN.map((w) => `${w.n}: ${w.xp} نقطة`).join('. ')}. ${$('no-p').textContent}`); u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
-  });
+  $('hear').addEventListener('click', () => Account.speak(P.say($('no-p').textContent), Hub.toast));
   Hub.fit();
   addEventListener('load', Hub.fit);
 })();

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the settings made for a phone, upright or on its side; a tablet and a computer get the web's page
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../settings.html' + location.search + location.hash);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>الإعدادات · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent-deep: #6B4FC7;
+  --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+/* the settings room at the top, fading into the page */
+.hero { position: relative; height: calc(var(--top) + 200px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 60px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--accent-deep), 2px 0 0 var(--accent-deep), -2px 0 0 var(--accent-deep), 0 -2px 0 var(--accent-deep), 2px 2px 0 var(--accent-deep), -2px 2px 0 var(--accent-deep), 2px -2px 0 var(--accent-deep), -2px -2px 0 var(--accent-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+
+main { position: relative; z-index: 2; margin-top: -24px; display: flex; flex-direction: column; gap: 16px; padding: 0 var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+/* upright: what the child changes, then what the parent decides, then the parent's way out; on its side two columns */
+.col { display: contents; }
+.parent { order: 3; }
+.card { border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 42px; padding: 0 14px; border-radius: 999px; font-size: 15px; font-weight: 800; white-space: nowrap; }
+.btn.soft { background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 4px 0 var(--edge); }
+
+/* a group of rows: a picture, what it is, and what can be done with it */
+.group { padding: 12px 0 4px; }
+.group h2 { margin: 0 16px 4px; font-size: 18px; font-weight: 800; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 2px solid #F5EDE2; }
+.group h2 + .row, .group h2 + div > .row:first-child { border-top: 0; }
+.row .ic { flex-shrink: 0; width: 52px; height: 52px; border-radius: 16px; background: #F6F2FF; display: grid; place-items: center; overflow: hidden; }
+.row .ic img { width: 40px; height: 40px; object-fit: contain; }
+.row .ic.face img { width: 52px; height: 52px; border-radius: 50%; }
+.row .ic.round img { width: 44px; height: 44px; border-radius: 50%; }
+.row .ic .cam { font-size: 26px; line-height: 1; }
+.row .txt { flex: 1; min-width: 0; }
+.row b { display: block; font-size: 17px; font-weight: 800; line-height: 1.3; }
+.row small { display: block; margin-top: 2px; font-size: 13.5px; font-weight: 700; line-height: 1.45; color: var(--ink-soft); }
+.row > .btn, .row > .switch, .row > .state { flex-shrink: 0; }
+
+/* an on/off switch the child can flip */
+.switch { position: relative; width: 66px; height: 38px; border: 0; border-radius: 999px; background: #E2D8C8; cursor: pointer; transition: background .2s; }
+.switch::after { content: ''; position: absolute; top: 4px; right: 4px; width: 30px; height: 30px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: right .2s; }
+.switch[aria-checked="true"] { background: var(--go); }
+.switch[aria-checked="true"]::after { right: 32px; }
+.switch:focus-visible { outline: 3px solid var(--accent-deep); outline-offset: 3px; }
+
+/* what the parent or teacher decides: shown, not changed here */
+.lock { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; height: 28px; padding: 0 10px; border-radius: 999px; background: #F2EEE8; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.state { display: inline-flex; align-items: center; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 13px; font-weight: 800; white-space: nowrap; }
+.state.on { background: #DDF5D2; color: var(--go-deep); } .state.off { background: #F2EEE8; color: var(--ink-soft); }
+.note-box { margin: 4px 14px 12px; padding: 10px 14px; border-radius: 16px; background: #FFF6E8; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+
+/* for the parent or teacher: leaving the child's world */
+.parent { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 14px 16px 16px; }
+.parent p { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.parent b { color: var(--ink); }
+
+/* the bar at the bottom, as on the phone's home; this page is part of «غرفتي», so it is lit */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+.tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .switch, .switch::after { transition: none; } }
+
+/* a phone on its side: a low room with the name in the middle, what the child changes beside what the parent decides, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 130px); }
+  .title { top: calc(var(--top) + 4px); right: 200px; left: 200px; gap: 6px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  main { flex-direction: row; align-items: flex-start; margin-top: -50px; padding-bottom: calc(var(--bottom) + 70px); }
+  .col { flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/room/settings-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="room.html" aria-label="العودة إلى غرفتي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+  </div>
+  <div class="title">
+    <h1>الإعدادات</h1>
+    <p>اجعل عالمك كما تحب</p>
+  </div>
+</header>
+
+<main>
+  <div class="col">
+    <section class="group card" aria-labelledby="g1">
+      <h2 id="g1">أنا</h2>
+      <div class="row" id="me-row"></div>
+      <div class="row">
+        <span class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6B4FC7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#6B4FC7"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>
+        <div class="txt"><b id="snd-t">المؤثرات الصوتية</b><small>أصوات صغيرة عندما تضغط أو تفوز</small></div>
+        <button class="switch" type="button" role="switch" id="snd" aria-labelledby="snd-t"></button>
+      </div>
+      <div class="row">
+        <span class="ic round"><img src="../img/nour.webp" alt=""></span>
+        <div class="txt"><b>جولة نور</b><small>تعرّف على جزر عالم أجيال مرة أخرى مع نور</small></div>
+        <a class="btn soft" href="../index.html?tour=1">شاهد الجولة</a>
+      </div>
+    </section>
+
+    <div class="parent card">
+      <p><b>لولي الأمر أو المعلّم:</b> للخروج من حساب الطفل أو اختيار طفل آخر.</p>
+      <button class="btn soft" type="button" id="leave">خروج وتبديل الطفل</button>
+    </div>
+  </div>
+
+  <div class="col">
+    <section class="group card locked" aria-labelledby="g2">
+      <h2 id="g2">يحددها ولي أمرك أو معلّمك</h2>
+      <div class="row">
+        <span class="ic"><img src="../img/hud/clock.png" alt=""></span>
+        <div class="txt"><b>وقت اليوم</b><small id="time-s"></small><span class="lock">🔒 من ولي أمرك أو معلّمك</span></div>
+      </div>
+      <div id="feats"></div>
+      <p class="note-box">لا تستطيع تغيير هذه الأشياء من هنا. إذا أردت شيئاً منها، اطلبه من ولي أمرك أو معلّمك.</p>
+    </section>
+  </div>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html" aria-current="page"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../profile.js"></script>
+<script src="../workshop.js"></script>
+<script src="../settings-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const B = '../';
+  const me = Profile.read();
+  // the child may change only the name and the picture (in «غرفتي»)
+  $('me-row').innerHTML = `<span class="ic face"><img src="${B}img/avatars/${me.avatar}.png" alt=""></span>
+    <div class="txt"><b>${me.name}</b><small>اسمك وصورتك</small></div><a class="btn soft" href="room.html" aria-label="غيّر اسمك وصورتك في غرفتي">غيّر</a>`;
+
+  // sounds: on or off for the whole world, remembered on this device (this is the only switch for them)
+  const paint = () => $('snd').setAttribute('aria-checked', String(!Sfx.isOff()));
+  $('snd').addEventListener('click', () => { Sfx.setOff(!Sfx.isOff()); paint(); });
+  addEventListener('storage', (e) => { if (e.key === 'ajyal.sfx.off') paint(); });
+  addEventListener('pageshow', paint);
+  paint();
+
+  // the time and the features the package has and the parent left on, shown and never switched here (settings-data.js)
+  $('time-s').textContent = Settings.TIME;
+  $('feats').innerHTML = Settings.feats(B).map(({ n, s, img, on }) => `<div class="row"><span class="ic">${img ? `<img src="${img}" alt="">` : '<span class="cam" aria-hidden="true">📷</span>'}</span>
+      <div class="txt"><b>${n}</b><small>${s}</small></div><span class="state ${on ? 'on' : 'off'}">${on ? 'متاح لك' : 'غير متاح الآن'}</span></div>`).join('');
+
+  // leaving the child's world: the parent confirms it is them, then picks a child or signs out
+  $('leave').addEventListener('click', () => { location.href = Settings.leave(B); });
+})();
+</script>
+</body>
+</html>

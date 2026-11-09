@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // «نقاطي» made for a phone, upright or on its side; a tablet and a computer get the web's page
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../points.html' + location.search + location.hash);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>نقاطي · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent-deep: #B7791F;
+  --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* the treasure chest on the hill at the top, fading into the page */
+.hero { position: relative; height: calc(var(--top) + 236px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 63% 50%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--accent-deep), 2px 0 0 var(--accent-deep), -2px 0 0 var(--accent-deep), 0 -2px 0 var(--accent-deep), 2px 2px 0 var(--accent-deep), -2px 2px 0 var(--accent-deep), 2px -2px 0 var(--accent-deep), -2px -2px 0 var(--accent-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+
+main { position: relative; z-index: 2; margin-top: -40px; padding: 0 var(--side-r) calc(var(--bottom) + 100px) var(--side-l); display: flex; flex-direction: column; gap: 16px; }
+h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.card { border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; padding: 0 16px; border-radius: 999px; font-size: 15px; font-weight: 800; white-space: nowrap; }
+.btn.go { background: var(--go); color: var(--paper); box-shadow: 0 4px 0 var(--go-deep); }
+.btn.soft { background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 4px 0 var(--edge); }
+.btn.hear { background: #FFF1C9; color: #8A5A00; }
+.btn.hear svg { width: 20px; height: 20px; }
+.top-row { display: flex; flex-direction: column; gap: 16px; }
+.lv { display: flex; flex-direction: column; gap: 10px; }
+
+/* the total and the level, big */
+.total { display: flex; flex-direction: column; gap: 12px; padding: 14px 16px 16px; }
+.total .head { display: flex; align-items: center; gap: 12px; }
+.total .star { flex-shrink: 0; width: 78px; height: 78px; animation: bob 3s ease-in-out infinite; }
+@keyframes bob { 50% { translate: 0 -5px; } }
+.total .n { display: flex; align-items: baseline; gap: 8px; min-width: 0; font-size: 20px; font-weight: 800; color: var(--accent-deep); }
+.total .n b { font-size: 50px; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.lvl { display: flex; flex-direction: column; gap: 6px; }
+.lvl .row { display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 800; }
+.lvl .row > span { display: flex; align-items: center; gap: 5px; }
+.lvl .row img { width: 26px; height: 26px; }
+.lvl .bar-l { display: block; height: 14px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.lvl .bar-l i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFC93C, #F4823F); }
+.lvl small { font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.total .btn { align-self: stretch; }
+
+/* the levels as a path of steps, two rows of five */
+.steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px 6px; padding: 14px 10px; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; }
+.step .dot { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #F5EDE2; font-size: 19px; font-weight: 800; color: var(--ink-soft); }
+.step.done .dot { background: linear-gradient(#FFD45E, #F4A62A); color: var(--paper); box-shadow: 0 3px 0 #B7791F; }
+.step.now .dot { background: var(--paper); color: var(--accent-deep); box-shadow: inset 0 0 0 4px #F4A62A, 0 0 0 5px #FFE9B8; }
+.step small { font-size: 12px; font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* how to earn points: the activities the admin chose, one row each */
+.earn { display: grid; gap: 12px; }
+.way { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; }
+.way .isl { flex-shrink: 0; display: grid; place-items: center; width: 62px; height: 62px; border-radius: 18px; background: #FFF6E8; }
+.way .isl img { width: 70px; max-width: none; }
+.way .txt { flex: 1; min-width: 0; }
+.way b { display: block; font-size: 16px; font-weight: 800; line-height: 1.3; }
+.way .xp { display: inline-flex; align-items: center; gap: 4px; margin-top: 3px; font-size: 15px; font-weight: 800; color: var(--accent-deep); }
+.way .xp img { width: 22px; height: 22px; }
+.way .btn { flex-shrink: 0; height: 40px; padding: 0 16px; }
+.way .closed { flex-shrink: 0; max-width: 78px; font-size: 13px; font-weight: 700; line-height: 1.35; color: var(--ink-soft); text-align: center; }
+.no-pts { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 14px 16px 16px; }
+.no-pts p { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.7; color: var(--ink-soft); }
+
+/* the bar at the bottom, as on the phone's home; these pages belong to «غرفتي» */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+.tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low hill with the name in the middle, the total beside the levels, the ways in two columns, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 52%; }
+  .title { top: calc(var(--top) + 4px); right: 160px; left: 160px; gap: 6px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  main { margin-top: -56px; padding-bottom: calc(var(--bottom) + 70px); }
+  .top-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .total { padding: 12px 14px 14px; gap: 10px; }
+  .total .star { width: 64px; height: 64px; }
+  .total .n b { font-size: 42px; }
+  .steps { gap: 10px 4px; padding: 12px 8px; }
+  .earn { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .no-pts { flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
+  .no-pts .btn { flex-shrink: 0; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+@media (prefers-reduced-motion: reduce) { .total .star { animation: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/room/points-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="room.html" aria-label="العودة إلى غرفتي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+  </div>
+  <div class="title">
+    <h1>نقاطي</h1>
+    <p>كل إنجاز يضيف نجوماً إلى كنزك</p>
+  </div>
+</header>
+
+<main>
+  <div class="top-row">
+    <section class="total card" id="total" aria-label="مجموع نقاطي ومستواي"></section>
+    <section class="lv" aria-labelledby="lv-t"><h2 id="lv-t">المستويات</h2><div class="steps card" id="steps"></div></section>
+  </div>
+  <h2>كيف تكسب النقاط؟</h2>
+  <div class="earn" id="earn"></div>
+  <div class="no-pts card">
+    <p id="no-p">تكسب النقاط عندما تُنهي شيئاً، لا عندما تفتح صفحة أو تبحث أو تفتح لوحة الرسم. وكلما جمعت نقاطاً أكثر، ارتفع مستواك، وتقدّمت في لوحة المتصدرين.</p>
+    <button class="btn hear" type="button" id="hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button>
+  </div>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html" aria-current="page"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../profile.js"></script>
+<script src="../workshop.js"></script>
+<script src="../account-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar, num } = Profile;
+  const toast = $('toast');
+  const say = (s) => { toast.textContent = s; toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2400); };
+
+  // the same numbers as the web's «نقاطي» (account-data.js)
+  const P = Account.points('../');
+  $('total').innerHTML = `<div class="head"><img class="star" src="../img/hud/points.png" alt=""><span class="n"><b>${num(P.xp)}</b>نقطة</span></div>
+    <div class="lvl"><span class="row"><span><img src="../img/I-08.png" alt="">المستوى ${ar(P.level)}</span>${P.top ? '' : `<span>المستوى ${ar(P.level + 1)}</span>`}</span>
+      <span class="bar-l" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${P.pct}" aria-label="التقدم نحو المستوى التالي"><i style="width:${P.pct}%"></i></span>
+      <small>${P.top ? 'وصلت إلى أعلى مستوى، رائع!' : `باقي ${num(P.left)} نقطة للوصول إلى المستوى ${ar(P.level + 1)}`}</small></div>
+    <a class="btn soft" href="${P.leaders}">ترتيبك في المتصدرين: ${ar(P.rank)}</a>`;
+
+  // the levels: the points each one needs, the ones reached lit
+  $('steps').innerHTML = P.levels.map(({ n, p, state }) => `<div class="step ${state}"><span class="dot" aria-hidden="true">${ar(n)}</span><small aria-hidden="true">${num(p)}</small><span class="sr">المستوى ${ar(n)}، ${num(p)} نقطة${state === 'now' ? '، مستواك الآن' : state === 'done' ? '، وصلت إليه' : ''}</span></div>`).join('');
+
+  // a way to earn points that the child cannot use now says so plainly, without prices
+  $('earn').innerHTML = P.earn.map((w) => `<div class="way card"><span class="isl"><img src="${w.img}" alt=""></span>
+    <div class="txt"><b>${w.n}</b><span class="xp"><img src="../img/hud/points.png" alt="">+${ar(w.xp)} نقطة</span></div>
+    ${w.shut ? '<span class="closed">غير متاح لك الآن</span>' : `<a class="btn go" href="${w.href}" aria-label="اذهب إلى ${w.where}">ابدأ</a>`}</div>`).join('');
+
+  // read aloud for children who do not read yet
+  $('hear').addEventListener('click', () => Account.speak(P.say($('no-p').textContent), say));
+})();
+</script>
+</body>
+</html>

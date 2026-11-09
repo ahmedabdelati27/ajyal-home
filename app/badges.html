@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // «شاراتي» made for a phone, upright or on its side; a tablet and a computer get the web's page
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../badges.html' + location.search + location.hash);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>شاراتي · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent-deep: #8A4B1A;
+  --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+/* the badge shelf in the tree house at the top, fading into the page */
+.hero { position: relative; height: calc(var(--top) + 236px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% 45%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--accent-deep), 2px 0 0 var(--accent-deep), -2px 0 0 var(--accent-deep), 0 -2px 0 var(--accent-deep), 2px 2px 0 var(--accent-deep), -2px 2px 0 var(--accent-deep), 2px -2px 0 var(--accent-deep), -2px -2px 0 var(--accent-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+
+.card { border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; padding: 0 16px; border-radius: 999px; font-size: 15px; font-weight: 800; white-space: nowrap; }
+.btn.go { background: var(--go); color: var(--paper); box-shadow: 0 4px 0 var(--go-deep); }
+.btn.soft { background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 4px 0 var(--edge); }
+.btn.hear { background: #FFF1C9; color: #8A5A00; }
+.btn.hear svg { width: 20px; height: 20px; }
+
+/* how many so far, over the hero's fade */
+.sum { position: relative; z-index: 2; margin: -40px var(--side-r) 0 var(--side-l); display: flex; flex-direction: column; gap: 8px; padding: 14px 16px 16px; }
+.sum .big { display: flex; align-items: baseline; gap: 8px; font-size: 18px; font-weight: 800; color: var(--ink-soft); }
+.sum .big b { font-size: 46px; line-height: 1; color: var(--accent-deep); }
+.sum .bar-b { display: block; height: 14px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.sum .bar-b i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFC93C, #F4823F); }
+.sum p { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.empty { margin: 0; padding: 18px; border-radius: 20px; background: rgba(255,255,255,.75); font-size: 15px; font-weight: 700; line-height: 1.7; color: var(--ink-soft); text-align: center; }
+
+/* which badges to show, held at the top while scrolling */
+.chips { position: sticky; z-index: 4; top: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-top: 8px; padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; height: 40px; padding: 0 14px; border: 3px solid transparent; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); }
+.chip[aria-pressed="true"] { border-color: #6B3A1E; background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+
+main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); display: flex; flex-direction: column; gap: 12px; }
+.hint { margin: 0; font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+
+/* one card per badge: the picture, the name and whether it is earned; a tap opens how to earn it */
+.badges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.badge { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; padding: 12px 10px 14px; text-align: center; transition: transform .15s; }
+@media (hover: hover) { .badge:hover { transform: translateY(-3px); } }
+.badge img { width: 88px; height: 88px; }
+.badge.no img { filter: grayscale(1) opacity(.45); }
+.badge.lit { box-shadow: 0 0 0 4px #F4823F, 0 5px 0 var(--edge); }
+.badge b { font-size: 16px; font-weight: 800; line-height: 1.3; }
+.badge.no b { color: var(--ink-soft); }
+.state { display: inline-flex; align-items: center; gap: 4px; min-height: 26px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; line-height: 1.3; }
+.state.ok { background: #DDF5D2; color: var(--go-deep); } .state.wait { background: #F5EDE2; color: var(--ink-soft); }
+.meter { display: flex; align-items: center; gap: 6px; align-self: stretch; padding: 0 4px; }
+.meter .pb { flex: 1; min-width: 0; height: 10px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.meter .pb i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5BC236, #2E8B2A); }
+.meter span { font-size: 13px; font-weight: 800; white-space: nowrap; }
+
+/* one badge's detail in a small window */
+dialog { width: min(440px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; padding: 0; border: 0; border-radius: 26px; background: #FFFDF8; color: var(--ink); box-shadow: 0 24px 60px rgba(0,0,0,.25); scrollbar-width: none; }
+dialog::backdrop { background: rgba(58,35,24,.45); }
+.detail { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 18px 18px; text-align: center; }
+.detail > img { width: 128px; height: 128px; }
+.detail.no > img { filter: grayscale(1) opacity(.5); }
+.detail .txt { display: flex; flex-direction: column; align-items: center; gap: 8px; align-self: stretch; }
+.detail h3 { margin: 0; font-size: 24px; font-weight: 800; }
+.detail .about { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.detail .state { min-height: 30px; padding: 0 14px; font-size: 14px; }
+.how { align-self: stretch; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 18px; background: #FFF6E8; text-align: start; }
+.how small { font-size: 13px; font-weight: 800; color: var(--accent-deep); }
+.how b { font-size: 17px; font-weight: 800; line-height: 1.45; }
+.how .meter { padding: 0; }
+.closed { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--ink-soft); }
+.dbtns { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 4px; }
+
+/* the bar at the bottom, as on the phone's home; these pages belong to «غرفتي» */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+.tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low shelf with the name in the middle, the count in one row, four badges a row, the window side by side, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 40%; }
+  .title { top: calc(var(--top) + 4px); right: 160px; left: 160px; gap: 6px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .sum { margin-top: -56px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 18px; align-items: center; padding: 12px 18px; }
+  .sum .big { grid-row: 1 / 3; }
+  .sum .big b { font-size: 42px; }
+  .chips { justify-content: center; padding-top: 6px; padding-bottom: 8px; }
+  .chip { height: 38px; font-size: 14px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .hint { text-align: center; }
+  .badges { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .badge img { width: 76px; height: 76px; }
+  dialog { width: min(640px, calc(100vw - 24px)); }
+  .detail { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px 18px; align-items: start; padding: 16px 18px; }
+  .detail > img { width: 140px; height: 140px; margin-top: 6px; }
+  .detail h3 { font-size: 22px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/room/badges-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="room.html" aria-label="العودة إلى غرفتي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+  </div>
+  <div class="title">
+    <h1>شاراتي</h1>
+    <p>اجمع الشارات وأنت تتعلم وتلعب</p>
+  </div>
+</header>
+
+<div class="sum card" id="sum"></div>
+<div class="chips" role="group" aria-label="عرض الشارات" id="chips"></div>
+
+<main>
+  <p class="hint" id="hint">اضغط على أي شارة لتعرف كيف تحصل عليها.</p>
+  <div class="badges" id="badges"></div>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html" aria-current="page"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<dialog id="detail" aria-labelledby="d-t"><div class="detail" id="d-b"></div></dialog>
+
+<script src="../profile.js"></script>
+<script src="../workshop.js"></script>
+<script src="../account-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar } = Profile;
+  const toast = $('toast');
+  // the message shows over the small window too, while one is open
+  const say = (s) => {
+    const host = document.querySelector('dialog[open]') || document.body; if (toast.parentNode !== host) host.append(toast);
+    toast.textContent = s; toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2400);
+  };
+
+  // the badges the admin switched off are not shown; the count is of the active ones (account-data.js, as on the web)
+  const B = Account.badges('../');
+  if (!B.of) { $('sum').innerHTML = '<p class="empty">لا توجد شارات الآن، تابعنا قريباً</p>'; $('chips').hidden = $('hint').hidden = true; return; }
+  $('sum').innerHTML = `<span class="big"><b>${ar(B.got)}</b>من ${ar(B.of)}</span>
+    <span class="bar-b" role="progressbar" aria-valuemin="0" aria-valuemax="${B.of}" aria-valuenow="${B.got}" aria-label="الشارات التي حصلت عليها"><i style="width:${B.got / B.of * 100}%"></i></span>
+    <p>كل شارة لها شرط. عندما تحققه تصلك الشارة وحدها، وتظهر هنا وفي غرفتك.</p>`;
+
+  const meter = (b) => `<span class="meter"><span class="pb" aria-hidden="true"><i style="width:${b.pct}%"></i></span><span>${ar(b.prog[0])} من ${ar(b.prog[1])}</span></span>`;
+  // what a badge's card says under its name: earned, how far along, or closed for now
+  const state = (b) => (b.got ? '<span class="state ok">✓ حصلت عليها</span>'
+    : b.shut ? '<span class="state wait">غير متاح لك الآن</span>'
+    : b.prog ? meter(b) : '<span class="state wait">لم تحصل عليها بعد</span>');
+
+  // a notification or a goal can open one badge (?b=S-06): it is lit, brought into view and opened
+  const wanted = new URLSearchParams(location.search).get('b');
+  let show = 'all';
+  function render() {
+    $('chips').innerHTML = Account.SHOW.map(([k, n]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === show}">${n}</button>`).join('');
+    const list = B.shown(show);
+    $('badges').innerHTML = list.length ? list.map((b) => `<button class="badge card ${b.got ? '' : 'no'} ${b.id === wanted ? 'lit' : ''}" type="button" id="b-${b.id}" data-b="${b.id}" aria-haspopup="dialog"
+        aria-label="${b.n}، ${b.got ? 'حصلت عليها' : b.prog ? `${b.prog[0]} من ${b.prog[1]}` : 'لم تحصل عليها بعد'}">
+      <img src="${b.img}" alt=""><b>${b.n}</b>${state(b)}</button>`).join('')
+      : `<p class="empty" style="grid-column:1/-1">${show === 'got' ? 'لم تحصل على شارة بعد. اضغط على أي شارة لتعرف كيف تحصل عليها!' : 'حصلت على كل الشارات، رائع!'}</p>`;
+  }
+  $('chips').addEventListener('click', (e) => {
+    const c = e.target.closest('.chip'); if (!c) return;
+    show = c.dataset.k; render();
+    // the list starts at its top, under the chips
+    const t = document.querySelector('main').offsetTop - $('chips').offsetHeight; if (scrollY > t) scrollTo(0, t);
+  });
+
+  // ---- one badge: what it is, whether it is earned, how to earn it, and where
+  const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+  const dlg = $('detail');
+  let cur = null;
+  function detail(id) {
+    cur = B.list.find((b) => b.id === id); if (!cur) return;
+    const b = cur;
+    $('d-b').className = `detail ${b.got ? '' : 'no'}`;
+    $('d-b').innerHTML = `<img src="${b.img}" alt="">
+      <div class="txt"><h3 id="d-t">${b.n}</h3><p class="about">${b.about}</p>
+        <span class="state ${b.got ? 'ok' : 'wait'}">${b.got ? '✓ حصلت عليها' : 'لم تحصل عليها بعد'}</span>
+        <div class="how"><small>${b.got ? 'شرطها' : 'كيف تحصل عليها؟'}</small><b>${b.how}</b>${!b.got && b.prog ? meter(b) : ''}</div>
+        ${b.shut ? '<p class="closed">هذا غير متاح لك الآن، اسأل ولي أمرك أو معلّمك عنه.</p>' : ''}
+        <div class="dbtns"><button class="btn hear" type="button" id="d-hear">${SPEAKER}استمع</button>${b.href ? `<a class="btn go" href="${b.href}">اذهب إلى ${b.where}</a>` : ''}<button class="btn soft" type="button" id="d-close">إغلاق</button></div></div>`;
+    if (!dlg.open) dlg.showModal();
+    dlg.scrollTop = 0;
+  }
+  $('badges').addEventListener('click', (e) => { const c = e.target.closest('[data-b]'); if (c) detail(c.dataset.b); });
+  dlg.addEventListener('click', (e) => {
+    // a tap outside the window closes it
+    if (e.target === dlg) return dlg.close();
+    if (e.target.closest('#d-close')) return dlg.close();
+    // read aloud for children who do not read yet
+    if (e.target.closest('#d-hear')) Account.speak(cur.say, say);
+  });
+  // the window gives the focus back to the badge it came from
+  dlg.addEventListener('close', () => { window.speechSynthesis?.cancel(); document.body.append(toast); const c = cur && $(`b-${cur.id}`); if (c) c.focus({ preventScroll: true }); });
+
+  render();
+  if (wanted && B.list.some((b) => b.id === wanted)) {
+    const el = $(`b-${wanted}`);
+    addEventListener('load', () => { el.scrollIntoView({ block: 'center' }); detail(wanted); });
+  }
+})();
+</script>
+</body>
+</html>

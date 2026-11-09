@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets «الأيام المتتالية» made for it; a tablet and a computer keep this one
+  // (the panel over the map, ?embed=1, stays here: it is sized by the panel, not by the phone)
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches && !/[?&]embed=/.test(location.search)) location.replace('app/streak.html' + location.search + location.hash);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -102,40 +107,31 @@
 
 <script src="profile.js"></script>
 <script src="hub.js"></script>
+<script src="account-data.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  const { ar, STREAK, BADGES } = Profile;
-  const days = (n) => (n === 1 ? 'يوم واحد' : n === 2 ? 'يومان' : n <= 10 ? `${ar(n)} أيام` : `${ar(n)} يوماً`);
-  const next = STREAK.goals.find((g) => g.d > STREAK.now);
+  const { ar } = Profile;
+  // the same days and goals as the phone's page (account-data.js)
+  const S = Account.streak('');
 
   $('now').innerHTML = `<img class="flame" src="img/hud/streak.png" alt="">
-    <div><span class="n"><b>${ar(STREAK.now)}</b>${STREAK.now === 1 ? 'يوم' : STREAK.now === 2 ? 'يومان متتاليان' : STREAK.now <= 10 ? 'أيام متتالية' : 'يوماً متتالياً'}</span>
-      <p>${STREAK.now ? `أحسنت! ادخل غداً لتصبح سلسلتك ${days(STREAK.now + 1)}.` : 'ابدأ اليوم، وأضئ أول يوم في سلسلتك!'}</p>
-      ${next ? '' : '<p><b>أكملت كل الأهداف! أنت بطل الأيام المتتالية.</b></p>'}
-      <span class="best">🏅 أطول سلسلة لك: ${days(STREAK.best)}</span></div>`;
+    <div><span class="n"><b>${ar(S.now)}</b>${S.unit}</span>
+      <p>${S.cheer}</p>
+      ${S.all ? '<p><b>أكملت كل الأهداف! أنت بطل الأيام المتتالية.</b></p>' : ''}
+      <span class="best">🏅 أطول سلسلة لك: ${S.best}</span></div>`;
 
   // the last seven days: lit when the child came, the gap shows the day that was missed
-  $('week').innerHTML = STREAK.week.map(([name, d, on], i) => `<div class="day ${on ? 'on' : 'off'} ${i === STREAK.week.length - 1 ? 'today' : ''}">
-    <small>${i === STREAK.week.length - 1 ? 'اليوم' : name}</small><span class="c">${on ? '<img src="img/hud/streak.png" alt="">' : ''}</span><b>${ar(d)}</b>
-    <span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">${on ? 'دخلت' : 'لم تدخل'}</span></div>`).join('');
+  $('week').innerHTML = S.week.map((w) => `<div class="day ${w.on ? 'on' : 'off'} ${w.today ? 'today' : ''}">
+    <small>${w.name}</small><span class="c">${w.on ? '<img src="img/hud/streak.png" alt="">' : ''}</span><b>${ar(w.d)}</b>
+    <span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">${w.on ? 'دخلت' : 'لم تدخل'}</span></div>`).join('');
 
-  $('goals').innerHTML = STREAK.goals.map((g) => {
-    const done = STREAK.now >= g.d || (STREAK.best >= g.d && g.badge && BADGES.find((b) => b.id === g.badge)?.got);
-    const isNext = g === next, badge = g.badge && BADGES.find((b) => b.id === g.badge);
-    return `<div class="goal card ${done ? 'done' : isNext ? 'next' : ''}"><span class="dot">${ar(g.d)}</span><b>${days(g.d)}</b>
-      ${badge ? `<img class="bdg" src="img/badges/${badge.id}.png" alt=""><small>شارة «${badge.n}»${badge.got ? ' ✓' : ''}</small>` : ''}
-      <small>${done ? 'وصلت إليه' : isNext ? `باقي ${days(g.d - STREAK.now)}` : 'هدف قادم'}</small></div>`;
-  }).join('');
+  $('goals').innerHTML = S.goals.map((g) => `<div class="goal card ${g.state}"><span class="dot">${ar(g.d)}</span><b>${g.n}</b>
+      ${g.badge ? `<img class="bdg" src="${g.badge.img}" alt=""><small>شارة «${g.badge.n}»${g.badge.got ? ' ✓' : ''}</small>` : ''}
+      <small>${g.says}</small></div>`).join('');
 
   // read aloud for children who do not read yet
-  const synth = window.speechSynthesis; synth?.getVoices();
-  $('hear').addEventListener('click', () => {
-    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar'));
-    if (!v) return Hub.toast('لا يوجد صوت عربي على هذا الجهاز');
-    synth.cancel(); Sfx.hush(true);
-    const u = new SpeechSynthesisUtterance($('how-p').textContent); u.voice = v; u.lang = v.lang; u.rate = 0.9; u.onend = u.onerror = () => Sfx.hush(false); synth.speak(u);
-  });
+  $('hear').addEventListener('click', () => Account.speak($('how-p').textContent, Hub.toast));
   Hub.fit();
   addEventListener('load', Hub.fit);
 })();

@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the app's settings; a tablet and a computer stay here
+  // (inside the map's panel the page stays, since the map holds it)
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches && !/[?&]embed=/.test(location.search)) location.replace('app/settings.html' + location.search + location.hash);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -87,7 +92,7 @@
     <h2 id="g2" style="padding:0 20px">يحددها ولي أمرك أو معلّمك</h2>
     <div class="row">
       <span class="ic"><img src="img/hud/clock.png" alt=""></span>
-      <div><b>وقت اليوم</b><small>٦٠ دقيقة كل يوم، وباقي لك اليوم ٣٥ دقيقة</small></div>
+      <div><b>وقت اليوم</b><small id="time-s"></small></div>
       <span class="lock">🔒 من ولي أمرك أو معلّمك</span>
     </div>
     <div id="feats"></div>
@@ -111,6 +116,7 @@
 
 <script src="profile.js"></script>
 <script src="workshop.js"></script>
+<script src="settings-data.js"></script>
 <script src="hub.js"></script>
 <script>
 (() => {
@@ -125,18 +131,16 @@
   $('snd').addEventListener('click', () => { Sfx.setOff(!Sfx.isOff()); paint(); });
   paint();
 
-  // the features the package has and the parent left on, shown and never switched here
-  const FEATS = [['ai', 'ورشة السحر', 'اصنع قصة أو فيديو'], ['enhance', 'تحسين الرسم بالذكاء الاصطناعي', 'اجعل رسمتك أجمل'], ['hero', 'أنت بطل القصة', 'ضع اسمك في قصة'], ['contests', 'المسابقات', 'شارك في قمة الأبطال'], ['photos', 'رفع الصور', 'صورك وصور أسرتك في أنت بطل القصة']];
-  $('feats').innerHTML = FEATS.map(([k, n, s]) => {
-    const on = k === 'photos' ? Workshop.photos && Workshop.open('photos') : k === 'ai' ? Workshop.open('story') || Workshop.open('video') : Workshop.open(k);
-    const pic = k === 'photos' ? '<span style="font-size:32px" aria-hidden="true">📷</span>' : `<img src="${{ ai: 'img/ai.png', enhance: 'img/colors.png', hero: 'img/I-15.png', contests: 'img/peak.png' }[k]}" alt="">`;
+  // the time and the features the package has and the parent left on, shown and never switched here (settings-data.js)
+  $('time-s').textContent = Settings.TIME;
+  $('feats').innerHTML = Settings.feats('').map(({ n, s, img, on }) => {
+    const pic = img ? `<img src="${img}" alt="">` : '<span style="font-size:32px" aria-hidden="true">📷</span>';
     return `<div class="row"><span class="ic">${pic}</span>
       <div><b>${n}</b><small>${s}</small></div><span class="state ${on ? 'on' : 'off'}">${on ? 'متاح لك' : 'غير متاح الآن'}</span></div>`;
   }).join('');
 
-  // leaving the child's world asks for the parent (in the product: the parent confirms before it happens)
   // leaving the child's world: the parent confirms it is them, then picks a child or signs out (children.html)
-  $('leave').addEventListener('click', () => { (window.top || window).location.href = 'children.html?check=1'; });
+  $('leave').addEventListener('click', () => { (window.top || window).location.href = Settings.leave(''); });
   Hub.fit();
   addEventListener('load', Hub.fit);
 })();
