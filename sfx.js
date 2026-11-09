@@ -44,28 +44,8 @@
   const ICON_ON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SPEAKER}<path d="M13.5 10a3 3 0 0 1 0 4"/><path class="star" d="M18.5 3.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1z"/></svg>`;
   const ICON_OFF = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SPEAKER}<path d="M14 10.5l4 4M18 10.5l-4 4"/><path class="star" d="M18.5 3.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1z"/></svg>`;
   function paint(b) { b.setAttribute('aria-pressed', String(!off)); b.innerHTML = off ? ICON_OFF : ICON_ON; b.title = off ? 'المؤثرات الصوتية مغلقة' : 'المؤثرات الصوتية تعمل'; }
-  function mount() {
-    document.head.appendChild(css);
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'sfx-btn'; b.setAttribute('aria-label', 'المؤثرات الصوتية'); paint(b);
-    b.addEventListener('click', () => {
-      off = !off; try { localStorage.setItem(KEY, off ? '1' : '0'); } catch {}
-      paint(b); if (!off) { wake(); play('tap'); }
-    });
-    // a page can name the spot for the switch; otherwise it joins the stats bar or the time
-    const slot = document.getElementById('sfx-slot');
-    if (slot) return slot.appendChild(b);
-    const stats = document.querySelector('.stats'), time = document.querySelector('.top .pill.time, [title="الوقت المتبقي اليوم"]');
-    if (stats) return stats.appendChild(b);
-    if (!time) return;
-    // in a grid header the switch shares the time's cell, so the header keeps its columns
-    if (getComputedStyle(time.parentElement).display === 'grid') {
-      const cell = document.createElement('span');
-      cell.style.cssText = `display: flex; align-items: center; gap: 8px; justify-self: ${getComputedStyle(time).justifySelf}`;
-      time.before(cell); cell.append(b, time);
-    } else time.before(b);
-  }
-  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', mount) : mount();
+  // the switch for the sounds lives in the settings only (settings.html), not on every screen
+  document.head.appendChild(css);
   // the settings page turns the sounds on or off too; every open page follows
   function setOff(v) { off = !!v; try { localStorage.setItem(KEY, off ? '1' : '0'); } catch {} document.querySelectorAll('.sfx-btn').forEach(paint); if (!off) { wake(); play('tap'); } }
   addEventListener('storage', (e) => { if (e.key === KEY) { off = e.newValue === '1'; document.querySelectorAll('.sfx-btn').forEach(paint); } });

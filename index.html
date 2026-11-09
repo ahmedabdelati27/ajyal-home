@@ -3,7 +3,21 @@
 <head>
 <meta charset="utf-8">
 <script src="guest.js"></script>
+<script>
+  // inside the app mockup (app/index.html), a phone on its side keeps its buttons clear of the island and the home bar, as a real phone's safe area would
+  if (new URLSearchParams(location.search).get('mock') === 'phone-l') document.documentElement.classList.add('mock-phone-l');
+  // a phone held upright gets the islands in a line (app/home.html); turned sideways, or a tablet, keeps this map
+  if (matchMedia('(max-width: 600px) and (orientation: portrait)').matches) location.replace('app/home.html' + location.search);
+  matchMedia('(max-width: 600px) and (orientation: portrait)').addEventListener('change', (e) => { if (e.matches) location.replace('app/home.html' + location.search); });
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>عالم أجيال · تجربة الزووم</title>
 <link rel="stylesheet" href="clouds.css">
 <script src="clouds.js"></script>
@@ -105,8 +119,6 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .resume { left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; height: 54px; padding: 4px 16px 4px 4px; border: 0; border-radius: 999px; background: var(--paper); box-shadow: 0 4px 0 #E0A35C; cursor: pointer; font-weight: 800; font-size: 16px; }
 .resume i { width: 46px; height: 46px; padding: 4px; box-sizing: border-box; border-radius: 999px; background: conic-gradient(#5BC236 0 60%, #EFE7DB 60% 100%); }
 .resume img { display: block; width: 100%; height: 100%; border-radius: 999px; border: 2px solid var(--paper); box-sizing: border-box; }
-.sfx-slot { top: calc(var(--edge-y) + 104px + env(safe-area-inset-top, 0px)); left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); }
-.sfx-slot .sfx-btn { width: 46px; height: 46px; box-shadow: 0 3px 0 #8CCDE0; }
 .time { top: calc(var(--edge-y) + 60px + env(safe-area-inset-top, 0px)); left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); color: #2D6A12; height: 36px; font-size: 16px; box-shadow: 0 3px 0 #8CCDE0; }
 .time img { width: 26px; height: 26px; }
 
@@ -199,6 +211,21 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   .sheet-card { border-width: 4px; border-radius: 26px; } .sheet-x { top: 10px; left: 10px; width: 46px; height: 46px; }
   .hint { white-space: normal; width: max-content; max-width: calc(100% - 32px); text-align: center; border-radius: 18px; }
 }
+html.mock-phone-l { --edge-x: 66px; }
+html.mock-phone-l .dock { margin-bottom: 12px; }
+html.mock-phone-l .mission { margin-bottom: 12px; }
+/* a phone turned sideways: little height, so the bars and buttons shrink and the hint gives way to the map */
+@media (max-height: 500px) {
+  .dock { bottom: calc(8px + env(safe-area-inset-bottom, 0px)); padding: 4px; border-width: 3px; }
+  .dock a { height: 42px; padding: 0 12px; font-size: 14px; }
+  .dock a img { width: 28px; height: 28px; }
+  .pill { height: 36px; padding: 0 10px; font-size: 15px; }
+  .zbtn { width: 42px; height: 42px; }
+  .hint { display: none; }
+  .guide, .guide .nour { width: 58px; height: 58px; } .guide .tag { font-size: 11px; padding: 0 8px 1px; bottom: -6px; }
+  .mission { bottom: calc(66px + env(safe-area-inset-bottom, 0px)); gap: 6px; }
+  .mission .bubble { padding: 4px 14px 4px 4px; gap: 10px; } .mission .bubble b { font-size: 15px; } .mission .bubble small { font-size: 11px; } .play { width: 36px; height: 36px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .isl-art, .mark.tip, .mark.count, .here { animation: none; }
   .world.flying { transition: none; }
@@ -226,7 +253,6 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
       <button type="button" class="pill bell" id="gear" aria-label="الإعدادات"><img src="img/hud/gear.png" alt=""></button>
     </div>
   </div>
-  <span class="hud sfx-slot" id="sfx-slot"></span>
   <span class="hud pill time" title="باقي 35 دقيقة من وقت اليوم" role="img" aria-label="باقي 35 دقيقة من وقت اليوم"><img src="img/hud/clock.png" alt=""><bdi>35 د</bdi></span>
 
   <div class="hud zoom" role="group" aria-label="التحكم في الخريطة">
@@ -339,7 +365,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 
   // camera
   const view = () => ({ w: stage.clientWidth, h: stage.clientHeight });
-  const fit = () => { const v = view(); return Math.min(v.w / W, v.h / H); };
+  // the whole world fits the screen; on a screen held upright (a phone, a tablet in portrait) the island fills most of its
+  // height instead, and a swipe moves across it, rather than a small island floating in the middle
+  const fit = () => { const v = view(); return v.h > v.w * 1.15 ? Math.min(v.h * 0.72 / H, v.w * 2 / W) : Math.min(v.w / W, v.h / H); };
   function clamp(c) {
     const v = view(), min = fit(), s = Math.min(Math.max(c.s, min), min * MAX_ZOOM);
     const ww = W * s, wh = H * s;
@@ -349,12 +377,15 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
     const y = sh <= v.h ? (v.h - wh) / 2 : Math.min(-SEA_T * s, Math.max(v.h - SEA_B * s, c.y));
     return { s, x, y };
   }
+  let lastFit = 0;
   function apply(c, animate) {
-    cam = clamp(c);
+    cam = clamp(c); lastFit = fit();
     world.classList.toggle('flying', !!animate && !reduce.matches);
     world.style.transform = `translate(${cam.x}px, ${cam.y}px) scale(${cam.s})`;
     // labels keep a readable size on screen, within limits
-    world.style.setProperty('--inv', Math.min(2.2, Math.max(0.55, 1 / cam.s)).toFixed(3));
+    // on a small screen (a phone) the names grow less as the map shrinks, so they keep their ribbons without crowding the islands
+    const small = Math.min(view().w, view().h) < 600;
+    world.style.setProperty('--inv', Math.min(small ? 1.25 : 2.2, Math.max(0.55, 1 / cam.s)).toFixed(3));
     const min = fit(), v = view();
     document.getElementById('zin').disabled = cam.s >= min * MAX_ZOOM - 1e-3;
     document.getElementById('zall').hidden = cam.s <= min * 1.02;
@@ -541,7 +572,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
   function hideHint() { hint.classList.add('gone'); }
   setTimeout(hideHint, 7000);
 
-  addEventListener('resize', () => apply(cam, false));
+  // turning the device: if the whole world was showing, it is fitted again to the new screen; a closer look stays as it was
+  addEventListener('resize', () => (Math.abs(cam.s - lastFit) < 1e-3 ? whole(false) : apply(cam, false)));
   whole(false);
   // another page's bar asked for a panel: ?open=room&tab=works
   const asked = new URLSearchParams(location.search);

@@ -17,4 +17,11 @@ nav.dock .rank { position: absolute; top: 2px; left: calc(50% - 34px); height: 2
   nav.dock a img { width: 40px; height: 40px; }
   nav.dock .rank { left: calc(50% - 30px); }
 }
+/* a phone on its side has little height: the bar lies flat, each icon with its word beside it, so the map keeps the screen */
+@media (max-height: 500px) {
+  nav.dock { gap: 2px; padding: 3px 6px; }
+  nav.dock a { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  nav.dock a img { width: 28px; height: 28px; margin: 0; }
+  nav.dock .rank { top: -8px; left: -2px; }
+}
 @media (prefers-reduced-motion: reduce) { nav.dock a { transition: none; } }

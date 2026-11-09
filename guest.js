@@ -7,6 +7,8 @@
 // Loaded first on every page of the world; the sign-in pages end the visit.
 (() => {
   const KEY = 'ajyal.guest';
+  // where the site's own files are, so this works from the app folder too
+  const BASE = (document.currentScript && document.currentScript.src.replace(/guest\.js(\?.*)?$/, '')) || '';
   const q = new URLSearchParams(location.search);
   if (q.get('guest') === '1') sessionStorage.setItem(KEY, '1');
   const on = sessionStorage.getItem(KEY) === '1';
@@ -63,17 +65,17 @@ html.guest .cont, html.guest [aria-labelledby="cont"] { display: none !important
     // the bar: the visit is not kept, an account keeps it
     const bar = document.createElement('div');
     bar.className = 'visit-bar'; bar.setAttribute('role', 'note');
-    bar.innerHTML = '<img src="img/garden/nour-wave.png" alt=""><span class="long">تتصفّح كزائر، ولا يُحفظ تقدّمك</span><span class="short">زائر</span><a class="join" href="signup.html">أنشئ حساباً</a><a class="out" href="landing.html">خروج</a>';
+    bar.innerHTML = `<img src="${BASE}img/garden/nour-wave.png" alt=""><span class="long">تتصفّح كزائر، ولا يُحفظ تقدّمك</span><span class="short">زائر</span><a class="join" href="${BASE}signup.html">أنشئ حساباً</a><a class="out" href="${BASE}landing.html">خروج</a>`;
     bar.querySelector('.out').addEventListener('click', end);
     document.body.append(bar);
     // the ask: this belongs to a child's account
     const gate = document.createElement('div');
     gate.className = 'visit-gate'; gate.hidden = true;
     gate.innerHTML = `<div class="card" role="dialog" aria-modal="true" aria-labelledby="visit-t">
-      <img src="img/garden/nour-cheer.png" alt="">
+      <img src="${BASE}img/garden/nour-cheer.png" alt="">
       <h2 id="visit-t"></h2>
       <p id="visit-p"></p>
-      <div class="row"><a class="in" href="login.html">دخول ولي الأمر / المؤسسة</a><a class="join" href="signup.html">أنشئ حساباً</a></div>
+      <div class="row"><a class="in" href="${BASE}login.html">دخول ولي الأمر / المؤسسة</a><a class="join" href="${BASE}signup.html">أنشئ حساباً</a></div>
       <button class="stay" type="button">متابعة التصفّح</button></div>`;
     const close = () => { gate.hidden = true; };
     gate.querySelector('.stay').addEventListener('click', close);
@@ -93,7 +95,7 @@ html.guest .cont, html.guest [aria-labelledby="cont"] { display: none !important
 
     // the child's card on the map is a visitor's
     const me = document.getElementById('me');
-    if (me) { const n = me.querySelector('.name'); if (n) n.textContent = 'زائر'; const im = me.querySelector('img'); if (im) im.src = 'img/avatar.png'; me.setAttribute('aria-label', 'زائر'); }
+    if (me) { const n = me.querySelector('.name'); if (n) n.textContent = 'زائر'; const im = me.querySelector('img'); if (im) im.src = BASE + 'img/avatar.png'; me.setAttribute('aria-label', 'زائر'); }
     // the map opened on an account sheet (?open=room) opens plain, with the ask
     if (SHEETS.includes(q.get('open'))) { history.replaceState(null, '', location.pathname); ask(); }
 

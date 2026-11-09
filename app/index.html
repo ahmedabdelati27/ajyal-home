@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>تطبيق أجيال · نموذج الجوال والتابلت</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script>
+  // on a phone or a tablet the app opens itself; on a computer it is shown inside a device
+  if (matchMedia('(pointer: coarse)').matches || matchMedia('(max-width: 500px)').matches) location.replace('../index.html' + location.search);
+</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --page: #FFF7EC; --edge: #F1DEC2; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { display: flex; flex-direction: column; align-items: center; font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: radial-gradient(ellipse at 50% 30%, #FFFFFF, var(--page) 65%); overflow: hidden; }
+header { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 18px; padding: 18px 16px 10px; }
+header b { font-size: 20px; font-weight: 800; }
+.pick { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #FFFFFF; box-shadow: 0 0 0 2px var(--edge); }
+.pick button { height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: none; font: 800 15px 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink-soft); cursor: pointer; }
+.pick button[aria-pressed="true"] { background: linear-gradient(#3FA83A, #2E8B2A); color: #FFFFFF; }
+.stage { position: relative; flex: 1; width: 100%; }
+/* a device, drawn at its real size in points and scaled down to fit the window */
+.device { position: absolute; left: 50%; top: 50%; padding: var(--bezel); border-radius: var(--outer); background: #1D1A22; box-shadow: inset 0 0 0 2px #3A3644, 0 40px 80px rgba(58,35,24,.28); transform: translate(-50%, -50%) scale(var(--k, 1)); }
+.screen { position: relative; width: var(--w); height: var(--h); overflow: hidden; border-radius: var(--inner); background: #8FD3E8; }
+/* the app sits inside the phone's safe area: below the status bar and the island, above the home bar */
+.screen iframe { position: absolute; top: var(--st); right: var(--sr); bottom: var(--sb); left: var(--sl); width: calc(100% - var(--sr) - var(--sl)); height: calc(100% - var(--st) - var(--sb)); border: 0; }
+.status { position: absolute; z-index: 2; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; height: var(--st); padding: 0 var(--sp); direction: ltr; font: 600 var(--sf) / 1 system-ui, -apple-system, sans-serif; color: #111; pointer-events: none; }
+.status .icons { display: flex; gap: 6px; align-items: center; }
+.island { position: absolute; z-index: 3; border-radius: 999px; background: #000; pointer-events: none; }
+.homebar { position: absolute; z-index: 2; bottom: 8px; left: 50%; translate: -50% 0; width: 140px; height: 5px; border-radius: 999px; background: rgba(0,0,0,.7); pointer-events: none; }
+.cap { margin: 0; padding: 0 16px 16px; text-align: center; font-size: 14px; font-weight: 600; color: var(--ink-soft); }
+.cap a { color: #2F6FA8; font-weight: 800; }
+</style>
+</head>
+<body>
+<header>
+  <b>تطبيق أجيال</b>
+  <div class="pick" role="group" aria-label="الجهاز">
+    <button type="button" data-d="tablet-l">تابلت بالعرض</button>
+    <button type="button" data-d="tablet-p">تابلت</button>
+    <button type="button" data-d="phone-l">جوال بالعرض</button>
+    <button type="button" data-d="phone-p">جوال</button>
+  </div>
+</header>
+<div class="stage" id="stage">
+  <div class="device" id="device">
+    <div class="screen">
+      <iframe src="../index.html" title="تطبيق أجيال: الخريطة"></iframe>
+      <div class="status" id="status" aria-hidden="true"><span>9:41</span><span class="icons">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#111"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#111"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#111"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#111"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.5 6.9a6.4 6.4 0 0 1 9 0L11.4 8a4.9 4.9 0 0 0-6.8 0zM1.3 4.7a9.5 9.5 0 0 1 13.4 0l-1.1 1.1a7.9 7.9 0 0 0-11.2 0z" fill="#111"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="#111" opacity=".4"/><rect x="2" y="2" width="19" height="9" rx="2" fill="#111"/><rect x="24" y="4.5" width="2" height="4" rx="1" fill="#111" opacity=".4"/></svg></span></div>
+      <div class="island" id="island" aria-hidden="true"></div>
+      <div class="homebar" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+<p class="cap">النموذج يعمل على الجوال والتابلت بالطول وبالعرض، وهو نفس عالم الطفل في الموقع. <a href="../index.html">افتحه وحده</a></p>
+<script>
+(() => {
+  // each device in points, with the parts of its screen the app keeps clear of
+  const DEVICES = {
+    'phone-p': { w: 393, h: 852, bezel: 12, outer: 68, inner: 56, st: 54, sb: 21, sl: 0, sr: 0, sp: '32px', sf: '17px', island: { w: 126, h: 37, top: 11 } },
+    'phone-l': { w: 852, h: 393, bezel: 12, outer: 68, inner: 56, st: 0, sb: 0, sl: 0, sr: 0, mock: 'phone-l', sp: '0', sf: '0px', island: { w: 37, h: 126, side: 11 } },
+    'tablet-p': { w: 820, h: 1180, bezel: 22, outer: 46, inner: 26, st: 24, sb: 20, sl: 0, sr: 0, sp: '24px', sf: '13px' },
+    'tablet-l': { w: 1180, h: 820, bezel: 22, outer: 46, inner: 26, st: 24, sb: 20, sl: 0, sr: 0, sp: '24px', sf: '13px' }
+  };
+  const dev = document.getElementById('device'), stage = document.getElementById('stage'), island = document.getElementById('island');
+  let cur = 'tablet-l';
+  const set = (id) => {
+    cur = id; const d = DEVICES[id];
+    Object.entries({ w: d.w + 'px', h: d.h + 'px', bezel: d.bezel + 'px', outer: d.outer + 'px', inner: d.inner + 'px', st: d.st + 'px', sb: d.sb + 'px', sl: d.sl + 'px', sr: d.sr + 'px', sp: d.sp, sf: d.sf })
+      .forEach(([k, v]) => dev.style.setProperty('--' + k, v));
+    // a phone on its side: the map runs edge to edge under the island, and the app keeps only its buttons clear of it
+    const frame = document.querySelector('iframe'), src = '../index.html' + (d.mock ? '?mock=' + d.mock : '');
+    if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
+    document.getElementById('status').hidden = !d.st;
+    island.hidden = !d.island;
+    if (d.island) Object.assign(island.style, d.island.side
+      ? { width: d.island.w + 'px', height: d.island.h + 'px', top: '50%', left: d.island.side + 'px', translate: '0 -50%' }
+      : { width: d.island.w + 'px', height: d.island.h + 'px', top: d.island.top + 'px', left: '50%', translate: '-50% 0' });
+    document.querySelectorAll('.pick button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === id)));
+    try { localStorage.setItem('ajyal.mock', id); } catch {}
+    fitIn();
+  };
+  // the device shrinks to fit the window, never grows past its real size
+  const fitIn = () => {
+    const d = DEVICES[cur], r = stage.getBoundingClientRect();
+    const k = Math.min(1, (r.width - 32) / (d.w + d.bezel * 2), (r.height - 24) / (d.h + d.bezel * 2));
+    dev.style.setProperty('--k', k.toFixed(3));
+  };
+  document.querySelector('.pick').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) set(b.dataset.d); });
+  addEventListener('resize', fitIn);
+  let saved = 'tablet-l'; try { saved = localStorage.getItem('ajyal.mock') || saved; } catch {}
+  set(DEVICES[saved] ? saved : 'tablet-l');
+})();
+</script>
+</body>
+</html>
