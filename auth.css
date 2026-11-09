@@ -58,7 +58,7 @@ button { cursor: pointer; }
 /* buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 24px; border: 0; border-radius: 999px; font-size: 18px; font-weight: 800; text-decoration: none; transition: transform .15s; }
 .btn:hover { transform: translateY(-2px); }
-.btn.main { width: 100%; background: linear-gradient(#F79250, var(--accent-deep)); color: var(--paper); box-shadow: inset 0 2px 0 rgba(255,255,255,.3), 0 5px 0 #A9441A; }
+.btn.main { width: 100%; background: linear-gradient(#3FA83A, #2E8B2A); color: var(--paper); box-shadow: inset 0 2px 0 rgba(255,255,255,.25), 0 5px 0 #1F6A1C; }
 .btn.soft { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 2px var(--edge), 0 5px 0 var(--edge); }
 .btn.link { height: auto; padding: 6px; background: none; color: var(--sky); }
 .btn:disabled { opacity: .55; cursor: default; transform: none; }
