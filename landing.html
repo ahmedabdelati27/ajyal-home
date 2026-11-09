@@ -107,7 +107,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   background: var(--c, #5BC236) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px no-repeat; }
 
 /* the islands: each one brings its own world behind it, big in the middle with its neighbours small at the edges,
-   and what is on it written around it: who guides it and what it is on one side, three things to do on the other */
+   and under the middle one a speech bubble with its name and a line on what is on it */
 .isles-sec { position: relative; overflow: hidden; isolation: isolate; min-height: 860px; background: #CDEBF2; }
 .isles-bg, .isles-bg i { position: absolute; inset: 0; }
 .isles-bg { z-index: -1; }
@@ -126,13 +126,13 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 @keyframes arrive { from { opacity: 0; translate: var(--fx, 0) 0; } }
 @keyframes world { from { opacity: 0; } }
 .isles-sec.wait, .isles-sec.in { background: var(--page); }
-.isles-sec.wait .slide, .isles-sec.wait .isles-bg, .isles-sec.wait .sec-head, .isles-sec.wait .reel-go, .isles-sec.wait .reel-dots, .isles-sec.wait .around { opacity: 0; }
+.isles-sec.wait .slide, .isles-sec.wait .isles-bg, .isles-sec.wait .sec-head, .isles-sec.wait .reel-go, .isles-sec.wait .around { opacity: 0; }
 .isles-sec.in .slide { animation: arrive .9s cubic-bezier(.25,1.1,.5,1) calc(.1s + var(--k, 0) * .1s) backwards; }
 .isles-sec.in .slide[aria-current="true"] { animation: none; }
 .isles-sec.in .isles-bg { animation: world 1s ease .35s backwards; }
 .isles-sec.in .sec-head { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.1s backwards; }
 .isles-sec.in .around { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.25s backwards; }
-.isles-sec.in .reel-go, .isles-sec.in .reel-dots { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.35s backwards; }
+.isles-sec.in .reel-go { animation: rise .8s cubic-bezier(.2,.8,.2,1) 1.35s backwards; }
 /* a puff of cloud drifts past behind them when another island comes to the middle */
 .puff { position: absolute; top: 34%; left: 50%; width: min(520px, 50vw); opacity: 0; }
 .puff.go { animation: puff 1.2s ease-in-out; }
@@ -148,18 +148,12 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .reel-go:hover { transform: scale(1.06); }
 .reel-go:disabled { opacity: .4; cursor: default; transform: none; }
 .reel-go.prev { right: 4px; } .reel-go.next { left: 4px; }
-.reel-dots { display: flex; justify-content: center; gap: 8px; width: fit-content; margin: 6px auto 0; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.85); }
-.reel-dots button { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 999px; background: rgba(58,35,24,.22); transition: width .2s, background .2s; }
-.reel-dots button[aria-current="true"] { width: 32px; background: var(--accent-deep); }
 /* the words under the island in the middle: its guide, its name, what it is, and three things to do */
-.around { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 760px; margin: 18px auto 0; text-align: center; }
-.around .guide { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--c); color: var(--paper); font-size: 15px; font-weight: 800; }
-.around h3 { margin: 0; font-size: 36px; font-weight: 800; line-height: 1.2; color: var(--c); }
-.around p { margin: 0; font-size: 19px; font-weight: 600; color: var(--ink-soft); }
-.around ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 8px 0 0; padding: 0; list-style: none; }
-.around li { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--paper); font-size: 16px; font-weight: 800; box-shadow: 0 4px 0 var(--edge); }
-.around li::before { content: ''; flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
-  background: var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.5 12.5l4 4 9-9.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px no-repeat; }
+.around { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; width: fit-content; max-width: min(480px, calc(100% - 32px)); margin: 0 auto 4px; padding: 16px 28px 18px; border: 3px solid var(--c); border-radius: 28px; background: var(--paper); text-align: center; box-shadow: 0 6px 0 rgba(58,35,24,.1); }
+/* its tail points up at the island */
+.around::before { content: ''; position: absolute; top: -12px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-top: 3px solid var(--c); border-left: 3px solid var(--c); border-top-left-radius: 5px; background: var(--paper); transform: rotate(45deg); }
+.around h3 { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.25; color: var(--c); }
+.around p { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.55; color: var(--ink-soft); }
 .around.swap > * { animation: swap .4s ease-out; }
 @keyframes swap { from { opacity: 0; translate: 0 8px; } }
 @media (max-width: 1180px) { .reel { --sw: 520px; --iw: 300px; } }
@@ -337,15 +331,15 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .split, .app-row { grid-template-columns: 1fr; gap: 24px; }
   /* the islands: a smaller one in the middle, a piece of each neighbour peeking in, the words under it */
   .isles-sec { min-height: 0; background: var(--page); }
-  /* the picture stops under the dots, so the island's words read on the page colour */
+  /* the picture stops under the island, so its bubble reads on the page colour */
   .isles-bg { inset: 0 0 auto 0; height: 640px; }
   .isles-bg::after { background: linear-gradient(var(--page), rgba(255,247,236,.75) 26%, rgba(255,247,236,0) 46%, rgba(255,247,236,0) 72%, var(--page)); }
   .isles-sec .sec-head { margin-bottom: 0; }
   .reel { --sw: 58vw; --iw: 100%; }
   .reel-go { display: none; }
   .slide b { font-size: 18px; }
-  .around { position: static; display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-  .around h3 { font-size: 28px; } .around p { font-size: 17px; }
+  .around { padding: 12px 20px 14px; }
+  .around h3 { font-size: 24px; } .around p { font-size: 16px; }
   .app-row .sec-head { align-items: center; text-align: center; }
   .stores { justify-content: center; }
   .app-note { text-align: center; }
@@ -372,7 +366,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
   .foot .wrap > div:first-child { grid-column: 1 / -1; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .cloud { animation: none; transform: none; } .bank { transform: translateX(-50%); } .isle { transform: none; filter: none; } .veil, .puff { display: none; } .isle, .hello img, .go-card img, .foot-isles img, .say > *, h1 .w { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .cloud { animation: none; transform: none; } .bank { transform: translateX(-50%); } .isle { transform: none; filter: none; } .veil, .puff { display: none; } .isle, .hello img, .go-card img, .foot-isles img, .say > *, h1 .w { animation: none; } .btn, .isle img, .store, .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
 </style>
 </head>
 <body>
@@ -458,7 +452,6 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
         <div class="reel-track" id="reel-track"></div>
         <button class="reel-go next" type="button" aria-label="الجزيرة التالية"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
       </div>
-    <div class="reel-dots" id="reel-dots" aria-label="اختر جزيرة"></div>
     <div class="wrap"><div class="around" id="around" aria-live="polite"></div></div>
   </section>
 
@@ -688,23 +681,22 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) { shut(); burger.focus(); } });
   document.addEventListener('click', (e) => { if (!e.target.closest('.menu, .burger')) shut(); });
 
-  // the islands: one picked at a time, what is on it in the card beside them
+  // the islands: one picked at a time, what is on it in the bubble under the middle one
   const ISLES = [
-    { id: 'forest', name: 'غابة المعرفة', guide: 'مع البومة', c: '#3D96D6', about: 'فيديوهات وأصوات وصور وكتب تعليمية، يظهر منها أولاً ما يناسب عمر طفلك.', ticks: ['فيديو وصوت وصور وكتب تقلّب صفحاتها', 'يكمل من حيث توقف', 'تصنيفات واضحة يختار منها ما يحب'] },
-    { id: 'beach', name: 'شاطئ الحكايات', guide: 'مع السلحفاة سلمى', c: '#E0607F', about: 'قصص يقرؤها طفلك أو يستمع إليها، وأسئلة قصيرة بعد كل قصة.', ticks: ['قراءة أو استماع بصوت الراوي', 'يضغط على كلمة ليعرف معناها', 'أنت بطل القصة: اسمه وصورته في قصص مختارة، حسب إعداداتك'] },
-    { id: 'letters', name: 'واحة الحروف', guide: 'مع الجمل جمّول', c: '#D9A400', about: 'الحروف والأرقام بالعربية والإنجليزية، في رحلة قصيرة لكل حرف.', ticks: ['يرى الحرف ومثالاً عليه ويسمع نطقه', 'يتتبّع كتابته بإصبعه', 'نشاط صغير في آخر الرحلة'] },
-    { id: 'quran', name: 'واحة القرآن', guide: 'قصار السور من جزء عمّ', c: '#5DAA33', about: 'يستمع طفلك إلى السورة ويردّدها، ثم يسمّعها والنظام يتابع تلاوته.', ticks: ['استماع وترديد آية بعد آية', 'تسميع يعيد فيه الكلمة إذا أخطأ', 'صفحات هادئة من غير مؤثرات صوتية'] },
-    { id: 'games', name: 'كثبان الألعاب', guide: 'مع الثعلب فنّوش', c: '#7B64DA', about: 'ألعاب قصيرة وبسيطة في عوالم البيئة والمسؤولية والوطن والإتقان.', ticks: ['ألعاب تعليمية سريعة', 'يرى كم لعبة أكمل في كل عالم', 'لا متجر ولا عملات'] },
-    { id: 'garden', name: 'حديقة القيم', guide: 'مع نور', c: '#3FB396', about: 'قيم مثل الصدق والتعاون والرحمة، تكبر شجرة كل قيمة كلما أكمل رحلتها.', ticks: ['قصص وفيديوهات وألعاب مرتبطة بكل قيمة', 'نور ترشده بالصوت والكلمة', 'شجرة تكبر في حديقته'] },
-    { id: 'colors', name: 'وادي الألوان', guide: 'مع القطة مشمش', c: '#E58A2B', about: 'رسم حر بأدوات بسيطة، وتلوين بلمسة واحدة.', ticks: ['رسم حر وصفحات تلوين', 'تُحفظ أعماله في «إبداعاتي»', 'إذا أرسل رسمة للنشر تُراجع أولاً'] },
-    { id: 'peak', name: 'قمة الأبطال', guide: 'مع الصقر شاهين', c: '#E0584A', about: 'مسابقات تنظّمها المنصة: أسئلة بوقت، ومسابقات لأجمل رسمة أو قصة.', ticks: ['مسابقات أسئلة سريعة', 'مسابقات للرسم والقصص بالتصويت', 'حسب باقتك وإعداداتك'] },
-    { id: 'ai', name: 'ورشة السحر', guide: 'مع نور', c: '#7B64DA', about: 'يصنع طفلك قصة مصوّرة أو فيديو، ويختار الفكرة من خيارات جاهزة.', ticks: ['قصة مصوّرة أو فيديو قصير', 'أفكار جاهزة، من غير كتابة حرة', 'حسب باقتك وإعداداتك'] }
+    { id: 'forest', name: 'غابة المعرفة', c: '#3D96D6', about: 'فيديوهات وأصوات وصور وكتب تعليمية، يظهر منها أولاً ما يناسب عمر طفلك.' },
+    { id: 'beach', name: 'شاطئ الحكايات', c: '#E0607F', about: 'قصص يقرؤها طفلك أو يستمع إليها، وأسئلة قصيرة بعد كل قصة.' },
+    { id: 'letters', name: 'واحة الحروف', c: '#D9A400', about: 'الحروف والأرقام بالعربية والإنجليزية، في رحلة قصيرة لكل حرف.' },
+    { id: 'quran', name: 'واحة القرآن', c: '#5DAA33', about: 'يستمع طفلك إلى السورة ويردّدها، ثم يسمّعها والنظام يتابع تلاوته.' },
+    { id: 'games', name: 'كثبان الألعاب', c: '#7B64DA', about: 'ألعاب قصيرة وبسيطة في عوالم البيئة والمسؤولية والوطن والإتقان.' },
+    { id: 'garden', name: 'حديقة القيم', c: '#3FB396', about: 'قيم مثل الصدق والتعاون والرحمة، تكبر شجرة كل قيمة كلما أكمل رحلتها.' },
+    { id: 'colors', name: 'وادي الألوان', c: '#E58A2B', about: 'رسم حر بأدوات بسيطة، وتلوين بلمسة واحدة.' },
+    { id: 'peak', name: 'قمة الأبطال', c: '#E0584A', about: 'مسابقات تنظّمها المنصة: أسئلة بوقت، ومسابقات لأجمل رسمة أو قصة.' },
+    { id: 'ai', name: 'ورشة السحر', c: '#7B64DA', about: 'يصنع طفلك قصة مصوّرة أو فيديو، ويختار الفكرة من خيارات جاهزة.' }
   ];
   const isec = $('islands');
-  const track = $('reel-track'), dots = $('reel-dots'), around = $('around'), bg = $('isles-bg');
+  const track = $('reel-track'), around = $('around'), bg = $('isles-bg');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   track.innerHTML = ISLES.map((i, n) => `<button class="slide" type="button" data-n="${n}" style="--c:${i.c};--d:${-n * 0.7}s" aria-label="${i.name}"><img src="img/${i.id}.png" alt=""><b>${i.name}</b></button>`).join('');
-  dots.innerHTML = ISLES.map((i, n) => `<button type="button" data-n="${n}" aria-label="${i.name}"></button>`).join('');
   const slides = [...track.children];
   bg.innerHTML = ISLES.map((i) => `<i data-id="${i.id}"></i>`).join('');
   const worlds = [...bg.children];
@@ -723,15 +715,13 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     at = n;
     const i = ISLES[n];
     slides.forEach((s, k) => s.setAttribute('aria-current', String(k === n)));
-    [...dots.children].forEach((d, k) => d.setAttribute('aria-current', String(k === n)));
     document.querySelector('.reel-go.prev').disabled = n === 0;
     document.querySelector('.reel-go.next').disabled = n === ISLES.length - 1;
     // its world fades in behind it; the next ones are fetched now, so swiping on finds them ready
     [n - 1, n, n + 1].forEach((k) => { const w = worlds[k]; if (w && !w.style.backgroundImage) w.style.backgroundImage = `url(img/landing/bg-${ISLES[k].id}.jpg)`; });
     worlds.forEach((w, k) => w.classList.toggle('on', k === n));
     around.style.setProperty('--c', i.c);
-    around.innerHTML = `<span class="guide">${i.guide}</span><h3>${i.name}</h3><p>${i.about}</p>
-      <ul>${i.ticks.map((t) => `<li>${t}</li>`).join('')}</ul>`;
+    around.innerHTML = `<h3>${i.name}</h3><p>${i.about}</p>`;
     around.classList.remove('swap'); void around.offsetWidth; around.classList.add('swap');
   }
   // the island in the middle is full size, the further from the middle the smaller and fainter
@@ -752,7 +742,6 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   track.addEventListener('scroll', queue, { passive: true });
   addEventListener('resize', queue);
   track.addEventListener('click', (e) => { const s = e.target.closest('.slide'); if (s) go(+s.dataset.n); });
-  dots.addEventListener('click', (e) => { const d = e.target.closest('button'); if (d) go(+d.dataset.n); });
   document.querySelector('.reel-go.prev').addEventListener('click', () => go(Math.max(0, at - 1)));
   document.querySelector('.reel-go.next').addEventListener('click', () => go(Math.min(ISLES.length - 1, at + 1)));
   // arrow keys on the row (right to left: the left arrow goes on)
