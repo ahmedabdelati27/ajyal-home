@@ -232,16 +232,20 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .go-card h2 { font-size: clamp(28px, 3vw, 40px); }
 .go-card p { margin: 8px 0 20px; font-size: 18px; font-weight: 700; color: #4D3A2C; }
 /* the footer: a quiet starry evening over the islands */
-.foot { padding: 72px 0 200px; color: #EDE6FF; background: linear-gradient(rgba(38,32,82,.55), rgba(38,32,82,.4) 72%, rgba(38,32,82,.12)), url(img/landing/foot-calm.jpg) center bottom / cover #5A5590; }
+/* the footer: the sky clears into a calm sea, and all nine islands float along it */
+.foot { position: relative; overflow: hidden; padding: 72px 0 0; color: var(--ink); background: linear-gradient(var(--page), #E4F2F8 45%, #C9E7F5); }
 .foot .wrap { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; }
-.foot .logo b { color: var(--paper); }
-.foot .logo small, .foot p { color: #C9C2EA; }
+.foot .logo b { color: var(--ink); }
+.foot .logo small, .foot p { color: var(--ink-soft); }
 .foot p { margin: 12px 0 0; font-size: 15px; font-weight: 600; max-width: 30ch; }
-.foot h3 { margin: 0 0 10px; font-size: 16px; font-weight: 800; color: var(--paper); }
+.foot h3 { margin: 0 0 10px; font-size: 16px; font-weight: 800; color: var(--ink); }
 .foot ul { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.foot ul a { font-size: 15px; font-weight: 600; text-decoration: none; color: #DCD6F7; }
-.foot ul a:hover { color: var(--paper); text-decoration: underline; }
-.foot .copy { grid-column: 1 / -1; margin-top: 16px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.16); font-size: 14px; color: #BDB5E4; }
+.foot ul a { font-size: 15px; font-weight: 700; text-decoration: none; color: var(--ink-soft); }
+.foot ul a:hover { color: var(--accent-deep); text-decoration: underline; }
+.foot .copy { grid-column: 1 / -1; margin-top: 16px; padding-top: 20px; border-top: 2px solid rgba(58,35,24,.08); font-size: 14px; color: var(--ink-soft); }
+.foot-isles { position: relative; display: flex; justify-content: center; align-items: flex-end; margin-top: 28px; padding: 0 16px; }
+.foot-isles::after { content: ''; position: absolute; z-index: 0; inset: auto 0 0; height: 70px; background: linear-gradient(rgba(127,203,232,0), #7FCBE8 60%, #5DB7DD); }
+.foot-isles img { position: relative; z-index: 1; width: min(11vw, 158px); margin: 0 -10px -26px; filter: drop-shadow(0 10px 10px rgba(30,90,120,.18)); animation: bob 5s ease-in-out infinite; animation-delay: var(--d); }
 
 /* tablets: the links fold into a menu */
 @media (max-width: 1100px) {
@@ -301,7 +305,8 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .phones { height: 440px; max-width: 360px; width: 100%; margin: 0 auto; }
   .phone { width: 196px; border-radius: 34px; padding: 8px; }
   .phone .screen { border-radius: 27px; }
-  .foot { padding-bottom: 150px; background-image: linear-gradient(rgba(38,32,82,.62), rgba(38,32,82,.45) 75%, rgba(38,32,82,.15)), url(img/landing/foot-calm-m.jpg); }
+  .foot-isles img { width: 24vw; margin: 0 -6px -18px; }
+  .foot-isles img:nth-child(n+6) { display: none; }
   .grow { grid-template-columns: 1fr 1fr; }
   .grow .g-card:last-child { grid-column: 1 / -1; }
   .steps { grid-template-columns: 1fr; }
@@ -320,7 +325,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .foot .wrap { grid-template-columns: 1fr 1fr; gap: 24px; }
   .foot .wrap > div:first-child { grid-column: 1 / -1; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour, .go-card img { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .isle, .nour, .go-card img, .foot-isles img { animation: none; } .btn, .isle img, .store, .reel-dots button { transition: none; } .slide img, .around.swap > * { animation: none; } .isles-bg i { transition: none; } .reel-track { scroll-snap-type: x mandatory; } }
 </style>
 </head>
 <body>
@@ -601,6 +606,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     <div><h3>حسابك</h3><ul><li><a href="login.html">دخول</a></li><li><a href="signup.html">إنشاء حساب</a></li><li><a href="index.html?guest=1">تصفّح كزائر</a></li></ul></div>
     <p class="copy">© 2026 أجيال الصالحية</p>
   </div>
+  <div class="foot-isles" aria-hidden="true"><img src="img/letters.png" alt="" style="--d:-.5s"><img src="img/beach.png" alt="" style="--d:-2s"><img src="img/forest.png" alt="" style="--d:-1s"><img src="img/garden.png" alt="" style="--d:-3s"><img src="img/quran.png" alt="" style="--d:-1.5s"><img src="img/colors.png" alt="" style="--d:-2.5s"><img src="img/games.png" alt="" style="--d:-.8s"><img src="img/peak.png" alt="" style="--d:-3.5s"><img src="img/ai.png" alt="" style="--d:-1.8s"></div>
 </footer>
 
 <div class="toast" id="toast" role="status"></div>
