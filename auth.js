@@ -5,6 +5,8 @@ const Auth = (() => {
   const get = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } };
   const set = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
   const del = (k) => { try { localStorage.removeItem(k); } catch {} };
+  // reaching the sign-in pages ends a visit, and nothing of it is kept (see guest.js)
+  try { Object.keys(sessionStorage).filter((k) => k === 'ajyal.guest' || k.startsWith('visit:')).forEach((k) => sessionStorage.removeItem(k)); } catch {}
 
   // the account the prototype knows before anyone signs up here, with three children, one of them playing on another device
   const DEMO = { type: 'parent', name: 'أحمد العتيبي', email: 'ahmed@example.com', phone: '0551234567' };

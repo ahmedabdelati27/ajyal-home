@@ -31,12 +31,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* header: clear over the sky, then a cream bar once the page scrolls */
 .top { position: fixed; z-index: 20; inset: 0 0 auto 0; transition: background .25s, box-shadow .25s; }
 .top.solid { background: rgba(255,247,236,.94); backdrop-filter: blur(10px); box-shadow: 0 2px 0 var(--edge); }
-.top .wrap { display: flex; align-items: center; gap: 24px; height: 80px; }
-.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.top .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; height: 80px; }
+.top .acts { justify-self: end; }
+.logo { display: flex; align-items: center; gap: 10px; justify-self: start; text-decoration: none; }
 .logo img { width: 48px; height: 48px; }
 .logo b { display: block; font-size: 24px; font-weight: 800; line-height: 1.1; }
 .logo small { display: block; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
-.nav { display: flex; gap: 4px; margin-inline-start: auto; }
+.nav { display: flex; gap: 4px; }
 .nav a { padding: 8px 14px; border-radius: 999px; font-size: 17px; font-weight: 700; text-decoration: none; }
 .nav a:hover { background: rgba(255,255,255,.7); }
 .acts { display: flex; align-items: center; gap: 10px; }
@@ -156,6 +157,8 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 /* its tail points up at the island */
 .around::before { content: ''; position: absolute; top: -12px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-top: 3px solid var(--c); border-left: 3px solid var(--c); border-top-left-radius: 5px; background: var(--paper); transform: rotate(45deg); }
 .around h3 { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.25; color: var(--c); }
+.around .enter { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 7px 18px; border-radius: 999px; background: linear-gradient(#3FA83A, #2E8B2A); color: var(--paper); font-size: 15px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 0 #1F6A1C; }
+.around .enter:hover { transform: translateY(-2px); }
 .around p { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.55; color: var(--ink-soft); }
 .around.swap > * { animation: swap .4s ease-out; }
 @keyframes swap { from { opacity: 0; translate: 0 8px; } }
@@ -399,7 +402,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 /* tablets: the links fold into a menu */
 @media (max-width: 1100px) {
   .nav, .acts .main { display: none; }
-  .acts { margin-inline-start: auto; }
+  .top .wrap { grid-template-columns: 1fr auto; }
   .burger { display: grid; }
   .menu { position: absolute; top: 80px; inset-inline: 16px; display: none; flex-direction: column; gap: 4px; padding: 12px; border-radius: 24px; background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 16px 40px rgba(58,35,24,.18); }
   .menu.open { display: flex; }
@@ -832,6 +835,8 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     { id: 'ai', name: 'ورشة السحر', c: '#7B64DA', about: 'يصنع طفلك قصة مصوّرة أو فيديو، ويختار الفكرة من خيارات جاهزة.' }
   ];
   const isec = $('islands');
+  // each island's own page in the world; from here it opens as a visitor (guest.js)
+  const WORLD = { forest: 'forest.html', beach: 'beach.html', letters: 'oasis.html', quran: 'quran.html', games: 'games.html', garden: 'garden.html', colors: 'colors.html', peak: 'peak.html', ai: 'workshop.html' };
   const track = $('reel-track'), around = $('around'), bg = $('isles-bg');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   track.innerHTML = ISLES.map((i, n) => `<button class="slide" type="button" data-n="${n}" style="--c:${i.c};--d:${-n * 0.7}s" aria-label="${i.name}"><img src="img/${i.id}.png" alt=""><b>${i.name}</b></button>`).join('');
@@ -855,7 +860,7 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     [n - 1, n, n + 1].forEach((k) => { const w = worlds[k]; if (w && !w.style.backgroundImage) w.style.backgroundImage = `url(img/landing/bg-${ISLES[k].id}.jpg)`; });
     worlds.forEach((w, k) => w.classList.toggle('on', k === n));
     around.style.setProperty('--c', i.c);
-    around.innerHTML = `<h3>${i.name}</h3><p>${i.about}</p>`;
+    around.innerHTML = `<h3>${i.name}</h3><p>${i.about}</p><a class="enter" href="${WORLD[i.id]}?guest=1">ادخل الجزيرة ←</a>`;
     around.classList.remove('swap'); void around.offsetWidth; around.classList.add('swap');
   }
   // the island in the middle is full size, the further from the middle the smaller and fainter
