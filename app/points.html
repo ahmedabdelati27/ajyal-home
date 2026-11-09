@@ -203,5 +203,14 @@ h2 { margin: 0; font-size: 20px; font-weight: 800; }
   $('hear').addEventListener('click', () => Account.speak(P.say($('no-p').textContent), say));
 })();
 </script>
+<script>
+  // back goes where the child came from (the home's bell or stats, the room, a notification); opened by its address, it goes to the room
+  (() => {
+    const b = document.querySelector('a.back[href="room.html"]'), from = document.referrer && new URL(document.referrer);
+    if (!b || !from || from.origin !== location.origin || from.pathname === location.pathname) return;
+    b.addEventListener('click', (e) => { e.preventDefault(); history.back(); });
+    if (!/room.html$/.test(from.pathname)) b.setAttribute('aria-label', 'رجوع');
+  })();
+</script>
 </body>
 </html>
