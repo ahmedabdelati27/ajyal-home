@@ -132,6 +132,19 @@
   .stop .owl { width: 112px !important; height: 112px !important; top: -58px !important; }
 }
 @media (prefers-reduced-motion: reduce) { .big.live { animation: none; } }
+/* an upright phone: the play buttons stay in view at the bottom while the verses scroll behind them,
+   and a shorter screen (an iPhone saved to the home screen) gets slightly smaller verses */
+@media (max-width: 600px) {
+  .panel { position: sticky; z-index: 2; bottom: 0; box-shadow: 0 -6px 18px rgba(20,50,40,.18), 0 5px 0 rgba(30,74,58,.25); }
+}
+@media (max-width: 600px) and (max-height: 820px) {
+  .mushaf { margin: 6px 0; padding: 10px 10px 12px; }
+  .band span { font-size: 16px; padding: 4px 18px 6px; }
+  .basmala { font-size: 19px; line-height: 1.8; }
+  .ayat { font-size: 24px; line-height: 2.05; }
+  .panel { gap: 6px; padding: 10px 14px 12px; }
+  .panel p { font-size: 15px; }
+}
 </style>
 </head>
 <body>

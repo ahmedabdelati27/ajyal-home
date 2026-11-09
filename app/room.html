@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // «غرفتي» made for a phone, upright or on its side; a tablet and a computer get the web's room
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../room.html' + location.search + location.hash);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>غرفتي · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2;
+  --accent: #F4823F; --wood: #8A4B1A; --go: #2E8B2A; --go-deep: #1F6A1C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+/* the tree-house room at the top, fading into the page; the child's own card sits in it */
+.hero { position: relative; height: calc(var(--top) + 250px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% 40%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back, .round { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.round img { width: 26px; height: 26px; }
+.round i { position: absolute; top: -3px; left: -3px; display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #E0584A; color: var(--paper); font-style: normal; font-size: 12px; font-weight: 800; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--wood), 2px 0 0 var(--wood), -2px 0 0 var(--wood), 0 -2px 0 var(--wood), 2px 2px 0 var(--wood), -2px 2px 0 var(--wood), 2px -2px 0 var(--wood), -2px -2px 0 var(--wood); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+
+/* the child: picture, name, age and level, and the one thing the child may change */
+.me { position: absolute; z-index: 3; right: var(--side-r); left: var(--side-l); bottom: 12px; display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; border-radius: 24px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.me .face { flex-shrink: 0; width: 66px; height: 66px; border-radius: 50%; box-shadow: 0 0 0 3px #FFE2C4; }
+.me .who { flex: 1; min-width: 0; }
+.me b { display: block; font-size: 21px; font-weight: 800; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.me small { display: inline-flex; margin-top: 3px; padding: 1px 10px; border-radius: 999px; background: #EDE3FF; color: #6A45B8; font-size: 13px; font-weight: 800; }
+.me .edit { flex-shrink: 0; display: flex; align-items: center; gap: 4px; height: 40px; padding: 0 12px; border-radius: 999px; background: #FFF1DD; font-size: 14px; font-weight: 800; box-shadow: 0 3px 0 #F1B27A; }
+
+/* the three parts of the room, held at the top while scrolling */
+.seg-wrap { position: sticky; z-index: 4; top: 0; padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+.seg { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.seg button { flex: 1; min-width: 0; height: 42px; border-radius: 999px; font-size: 16px; font-weight: 800; color: var(--ink-soft); }
+.seg button[aria-selected="true"] { background: linear-gradient(#F7A35C, #E07A2E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.3); }
+
+main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+[role="tabpanel"] { display: flex; flex-direction: column; gap: 16px; }
+h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.card { border-radius: 22px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+.note { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 46px; padding: 0 18px; border-radius: 999px; font-size: 16px; font-weight: 800; white-space: nowrap; }
+.btn.go { background: var(--go); color: var(--paper); box-shadow: 0 4px 0 var(--go-deep); }
+.btn.soft { background: var(--paper); box-shadow: 0 0 0 2px var(--edge), 0 4px 0 var(--edge); }
+.btn.warn { background: #FFE0DC; color: #A13A2E; box-shadow: 0 4px 0 #F2B8B0; }
+
+/* «ملفي»: level, points and days, then the badges */
+.nums { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.num { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 12px 14px; }
+.num:first-child { grid-column: 1 / -1; }
+.num .k { display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; color: var(--ink-soft); }
+.num .k img { width: 28px; height: 28px; flex-shrink: 0; }
+.num .v { font-size: 30px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.num small { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.num.link small { color: var(--wood); font-weight: 800; }
+.lvl-bar { height: 14px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.lvl-bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFC93C, #F4823F); }
+.rules-note { margin: 0; padding: 10px 14px; border-radius: 16px; background: #FFF1DD; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.badges-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.badges-head .btn { height: 40px; padding: 0 14px; font-size: 14px; }
+.badges { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.badge { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; padding: 12px 10px 14px; text-align: center; }
+.badge img { width: 84px; height: 84px; }
+.badge b { font-size: 16px; font-weight: 800; }
+.badge small { font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--ink-soft); }
+.badge.no img { filter: grayscale(1) opacity(.45); }
+.badge.no b { color: var(--ink-soft); }
+
+/* «تقدمي»: one row per journey, with a way back in */
+.progs { display: grid; gap: 12px; }
+.prog { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; }
+.prog .isl { flex-shrink: 0; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 18px; background: var(--c); }
+.prog .isl img { width: 72px; max-width: none; }
+.prog .txt { flex: 1; min-width: 0; }
+.prog b { display: block; font-size: 17px; font-weight: 800; }
+.prog .row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.prog .pbar { flex: 1; min-width: 30px; height: 10px; border-radius: 999px; background: #F2E6D4; overflow: hidden; }
+.prog .pbar i { display: block; height: 100%; border-radius: 999px; background: var(--d); }
+.prog .row span:last-child { font-size: 13px; font-weight: 800; white-space: nowrap; }
+.prog small { display: block; margin-top: 3px; font-size: 13px; font-weight: 700; line-height: 1.35; color: var(--ink-soft); }
+.prog .btn { flex-shrink: 0; height: 40px; padding: 0 14px; font-size: 15px; }
+
+/* «إبداعاتي»: every kind, each with its state */
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--side-r)) 0 calc(-1 * var(--side-l)); padding: 2px var(--side-r) 6px var(--side-l); }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; height: 40px; padding: 0 14px; border: 3px solid transparent; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); }
+.chip[aria-pressed="true"] { border-color: #6B3A1E; background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
+.upload { position: relative; width: 100%; cursor: pointer; }
+.upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.upload:focus-within { outline: 3px solid var(--accent); outline-offset: 3px; }
+.works { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.work { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 8px 8px 12px; text-align: start; transition: transform .15s; }
+@media (hover: hover) { .work:hover { transform: translateY(-3px); } }
+.work .pic { display: block; border-radius: 14px; overflow: hidden; background: var(--paper); box-shadow: inset 0 0 0 2px var(--edge); }
+.work img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.work b { padding: 0 4px; font-size: 15px; font-weight: 800; line-height: 1.3; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 4px; }
+.tags i { font-style: normal; height: 24px; padding: 0 8px; border-radius: 999px; background: #F5EDE2; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; }
+.tags i.review { background: #FFE9C2; color: #8A5A00; } .tags i.published { background: #DDF5D2; color: var(--go-deep); } .tags i.rejected { background: #FFE0DC; color: #A13A2E; }
+.empty { grid-column: 1 / -1; margin: 0; padding: 18px; border-radius: 20px; background: rgba(255,255,255,.75); font-size: 15px; font-weight: 700; line-height: 1.7; color: var(--ink-soft); }
+.empty a { color: var(--wood); font-weight: 800; text-decoration: underline; }
+
+/* a visitor has no room: a friendly word instead */
+.visitor { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 18px; text-align: center; }
+.visitor img { width: 110px; }
+.visitor p { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.visitor .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+/* small windows: change name and picture, one work, delete a work */
+dialog { width: min(520px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; padding: 20px; border: 0; border-radius: 26px; background: #FFFDF8; color: var(--ink); box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+dialog::backdrop { background: rgba(58,35,24,.45); }
+dialog h3 { margin: 0 0 10px; font-size: 22px; font-weight: 800; }
+dialog p { margin: 0 0 12px; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+dialog label { display: block; margin-bottom: 6px; font-size: 15px; font-weight: 800; }
+dialog input[type=text] { width: 100%; height: 50px; padding: 0 14px; border: 3px solid var(--edge); border-radius: 14px; font: inherit; font-size: 20px; font-weight: 800; color: var(--ink); background: var(--paper); }
+dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
+.err { min-height: 20px; margin: 4px 0 4px !important; font-size: 13px !important; color: #A13A2E !important; }
+.faces { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 4px 0 16px; }
+.faces button { min-width: 0; padding: 3px; border: 4px solid transparent; border-radius: 50%; }
+.faces button[aria-pressed="true"] { border-color: var(--accent); }
+.faces img { width: 100%; border-radius: 50%; }
+.dbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+#work-b .big { width: 100%; max-height: 44vh; object-fit: contain; border-radius: 18px; background: var(--paper); box-shadow: inset 0 0 0 2px var(--edge); margin-bottom: 10px; }
+#work-b .tags { padding: 0; margin-bottom: 8px; }
+
+/* the bar at the bottom, as on the phone's home; «غرفتي» is lit */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+.tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low room with the child's card beside the name, wider rows, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 42%; }
+  .title { top: calc(var(--top) + 6px); right: 70px; left: 380px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .me { top: calc(var(--top) + 52px); bottom: auto; right: auto; width: 350px; padding: 8px 10px 8px 8px; }
+  .me .face { width: 54px; height: 54px; }
+  .me b { font-size: 18px; }
+  .bar .round { width: 40px; height: 40px; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  .seg-wrap { padding-top: 4px; padding-bottom: 8px; }
+  .seg { max-width: 460px; margin: 0 auto; }
+  .seg button { height: 38px; font-size: 15px; }
+  main { padding-bottom: calc(var(--bottom) + 70px); }
+  .nums { grid-template-columns: 2fr 1fr 1fr; }
+  .num:first-child { grid-column: auto; }
+  .badges, .works { grid-template-columns: repeat(4, 1fr); }
+  .progs { grid-template-columns: 1fr 1fr; }
+  .works-top { display: flex; align-items: center; gap: 10px; }
+  .works-top .chips { flex: 1; min-width: 0; margin-left: 0; padding-left: 0; }
+  .upload { width: auto; }
+  dialog { padding: 16px 18px; }
+  .faces { grid-template-columns: repeat(8, 1fr); margin-bottom: 12px; }
+  #work-b { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start; }
+  #work-b .big { grid-row: 1 / 4; max-height: calc(100dvh - 110px); margin: 0; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+</style>
+</head>
+<body>
+<header class="hero" id="top">
+  <img class="bg" src="../img/room/room-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <a class="round" id="bell" href="../notes.html" aria-label="الإشعارات"><img src="../img/hud/bell.png" alt=""><i id="bell-n" hidden></i></a>
+    <a class="round" id="gear" href="../settings.html" aria-label="الإعدادات"><img src="../img/hud/gear.png" alt=""></a>
+  </div>
+  <div class="title">
+    <h1>غرفتي</h1>
+    <p>ملفك وتقدمك وإبداعاتك</p>
+  </div>
+  <div class="me" id="mycard">
+    <img class="face" id="my-face" src="../img/avatars/A-03.png" alt="">
+    <span class="who"><b id="my-name">عمر</b><small id="my-sub">٨ سنوات · المستوى ٧</small></span>
+    <button class="edit" type="button" id="edit-open" aria-label="غيّر اسمك وصورتك">✏️ غيّر</button>
+  </div>
+</header>
+
+<div class="seg-wrap" id="seg-wrap">
+  <div class="seg" role="tablist" aria-label="غرفتي" id="tabs">
+    <button type="button" role="tab" id="t-me" aria-controls="p-me" data-v="me">ملفي</button>
+    <button type="button" role="tab" id="t-progress" aria-controls="p-progress" data-v="progress">تقدمي</button>
+    <button type="button" role="tab" id="t-works" aria-controls="p-works" data-v="works">إبداعاتي</button>
+  </div>
+</div>
+
+<main>
+  <section role="tabpanel" id="p-me" aria-labelledby="t-me">
+    <div class="nums" id="nums"></div>
+    <p class="rules-note">تاريخ ميلادك، ووقت اللعب، وما يمكنك استخدامه، يحددها ولي أمرك أو معلّمك. أنت تغيّر اسمك وصورتك فقط.</p>
+    <div class="badges-head"><h2 id="badges-t"></h2><a class="btn soft" href="../badges.html" aria-label="كل الشارات وكيف تحصل عليها">كل الشارات</a></div>
+    <div class="badges" id="badges"></div>
+  </section>
+
+  <section role="tabpanel" id="p-progress" aria-labelledby="t-progress" hidden>
+    <p class="note">اختر نشاطاً لم تكمله، وأكمله من حيث توقفت.</p>
+    <div class="progs" id="progs"></div>
+  </section>
+
+  <section role="tabpanel" id="p-works" aria-labelledby="t-works" hidden>
+    <div class="works-top">
+      <div class="chips" role="group" aria-label="نوع الإبداع" id="chips"></div>
+      <label class="btn soft upload">📷 ارفع رسمة من جهازك<input type="file" accept="image/png, image/jpeg" id="file"></label>
+    </div>
+    <div class="works" id="works"></div>
+  </section>
+
+  <section class="visitor card" id="visitor" hidden>
+    <img src="../img/garden/nour-wave.png" alt="">
+    <h2>غرفتي لحساب الطفل</h2>
+    <p>هنا يجد الطفل نقاطه وشاراته وتقدمه وإبداعاته. اطلب من ولي أمرك أو معلّمك أن يدخل بحسابه، ويمكنك متابعة التصفّح كزائر.</p>
+    <div class="row"><a class="btn soft" href="../login.html">دخول ولي الأمر / المؤسسة</a><a class="btn go" href="../signup.html">أنشئ حساباً</a></div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <button type="button" aria-current="page" id="here"><img src="../img/nav/room.png" alt="">غرفتي</button>
+  <a href="leaders.html"><img src="../img/nav/leaders.png" alt="">المتصدرون</a>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<dialog id="edit" aria-labelledby="edit-t">
+  <h3 id="edit-t">غيّر اسمك وصورتك</h3>
+  <label for="name">اسمك</label>
+  <input type="text" id="name" maxlength="12" autocomplete="off">
+  <p class="err" id="name-err" role="alert"></p>
+  <label id="faces-t">صورتك</label>
+  <div class="faces" role="group" aria-labelledby="faces-t" id="faces"></div>
+  <div class="dbtns"><button class="btn go" type="button" id="edit-ok">احفظ</button><button class="btn soft" type="button" id="edit-no">إلغاء</button></div>
+</dialog>
+<dialog id="work" aria-labelledby="work-t">
+  <h3 id="work-t"></h3>
+  <div id="work-b"></div>
+</dialog>
+<dialog id="ask" aria-labelledby="ask-t">
+  <h3 id="ask-t"></h3>
+  <p id="ask-p"></p>
+  <div class="dbtns"><button class="btn warn" type="button" id="ask-ok">احذف</button><button class="btn soft" type="button" id="ask-no">لا، أبقِها</button></div>
+</dialog>
+
+<script src="../valley.js"></script>
+<script src="../values.js"></script>
+<script src="../profile.js"></script>
+<script src="../notes.js"></script>
+<script src="../room-data.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const { ar, num, AVATARS, BADGES } = Profile;
+  const B = '../', OWN = ['value.html', 'garden.html', 'colors.html', 'workshop.html'];
+  const guest = !!(window.Guest && Guest.on);
+  const toast = $('toast');
+  const say = (s) => { toast.textContent = s; toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2400); };
+
+  // «غرفتي» is the current tab: tapping it again goes back to the top
+  $('here').addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // a visitor has no room: no child's name, points or works, and the ask to sign in
+  if (guest) {
+    $('my-face').src = `${B}img/avatar.png`; $('my-name').textContent = 'زائر'; $('my-sub').textContent = 'تتصفّح كزائر';
+    ['edit-open', 'bell', 'gear', 'seg-wrap', 'p-me'].forEach((id) => { $(id).hidden = true; });
+    $('visitor').hidden = false;
+    document.addEventListener('DOMContentLoaded', () => window.Guest.ask && Guest.ask());
+    return;
+  }
+
+  // the child the parent chose (or the name and picture changed here)
+  let me = Profile.read();
+  function card() {
+    $('my-face').src = `${B}img/avatars/${me.avatar}.png`;
+    $('my-name').textContent = me.name;
+    $('my-sub').textContent = `${ar(me.age)} سنوات · المستوى ${ar(me.level)}`;
+  }
+
+  // the bell says how many notifications are new
+  const n = window.Notes ? Notes.unread() : 0;
+  $('bell-n').hidden = !n; $('bell-n').textContent = n;
+  $('bell').setAttribute('aria-label', n ? `الإشعارات، ${n} غير مقروءة` : 'الإشعارات');
+
+  // ---- «ملفي»: level, points and days in a row, then the badges
+  function mine() {
+    const pct = Math.round((me.xp - me.from) / (me.to - me.from) * 100);
+    $('nums').innerHTML = `<div class="num card"><span class="k"><img src="${B}img/I-08.png" alt="">المستوى ${ar(me.level)}</span>
+        <span class="lvl-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="التقدم نحو المستوى ${ar(me.level + 1)}"><i style="width:${pct}%"></i></span>
+        <small>باقي ${num(me.to - me.xp)} نقطة للوصول إلى المستوى ${ar(me.level + 1)}</small></div>
+      <a class="num card link" href="${B}points.html" aria-label="مجموع نقاطي: ${num(me.xp)}، كيف أجمع النقاط"><span class="k"><img src="${B}img/hud/points.png" alt="">مجموع نقاطي</span><span class="v">${num(me.xp)}</span><small>كيف أجمعها ←</small></a>
+      <a class="num card link" href="${B}streak.html" aria-label="أيامي المتتالية: ${ar(me.streak)}"><span class="k"><img src="${B}img/hud/streak.png" alt="">أيام متتالية</span><span class="v">${ar(me.streak)}</span><small>شاهد أيامك ←</small></a>`;
+    const got = BADGES.filter((b) => b.got).length;
+    $('badges-t').textContent = `شاراتي (${ar(got)} من ${ar(BADGES.length)})`;
+    $('badges').innerHTML = BADGES.map((b) => `<div class="badge card ${b.got ? '' : 'no'}"><img src="${B}img/badges/${b.id}.png" alt="">
+      <b>${b.n}</b><small>${b.got ? 'حصلت عليها' : b.how}</small></div>`).join('');
+  }
+
+  // ---- «تقدمي»: only the journeys, with a simple bar, a count and the last thing done (room-data.js)
+  function progress() {
+    $('progs').innerHTML = Room.journeys(B, OWN).map((p) => `<div class="prog card" style="--c:${p.c};--d:${p.d}">
+      <span class="isl"><img src="${p.img}" alt=""></span>
+      <div class="txt"><b>${p.n}</b><span class="row"><span class="pbar" aria-hidden="true"><i style="width:${p.pct}%"></i></span><span>أكملت ${ar(p.done)} من ${ar(p.of)}</span></span>
+        ${p.last ? `<small>آخر نشاط: ${p.last}</small>` : ''}</div>
+      ${p.last ? `<a class="btn go" href="${p.href}" aria-label="أكمل ${p.last}">أكمل</a>` : `<a class="btn soft" href="${p.href}">ابدأ</a>`}</div>`).join('');
+  }
+
+  // ---- «إبداعاتي»: everything the child made, by kind; only what is not under review or published can be deleted
+  const { KINDS, KIND_N } = Room;
+  let kind = 'all';
+  function works() {
+    $('chips').innerHTML = KINDS.map(([k, n]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === kind}">${n}</button>`).join('');
+    const list = Room.works(kind);
+    $('works').innerHTML = list.length ? list.map((w) => `<button class="work card" type="button" data-w="${w.id}" aria-label="${w.name}، ${KIND_N[w.kind]}، ${Valley.STATES[w.state]}">
+        <span class="pic"><img src="${Room.pic(w, B)}" alt=""></span>
+        <b>${w.name}</b><span class="tags"><i>${KIND_N[w.kind]}</i><i class="${w.state}">${Valley.STATES[w.state]}</i></span></button>`).join('')
+      : `<p class="empty">لا يوجد شيء هنا بعد. ارسم في <a href="colors.html">وادي الألوان</a>، أو اصنع قصة في <a href="workshop.html">ورشة السحر</a>.</p>`;
+  }
+  $('chips').addEventListener('click', (e) => { const c = e.target.closest('.chip'); if (c) { kind = c.dataset.k; works(); } });
+
+  // ---- one work's details: open it, send it for publishing, or delete it (a notification about a work opens here: ?w=id)
+  let cur = null;
+  function detail(id) {
+    cur = Room.find(id); if (!cur) return;
+    const href = Room.open(cur, B, OWN);
+    $('work-t').textContent = cur.name;
+    $('work-b').innerHTML = `<img class="big" src="${Room.pic(cur, B)}" alt="">
+      <span class="tags"><i>${KIND_N[cur.kind]}</i><i class="${cur.state}">${Valley.STATES[cur.state]}</i></span>
+      <div><p>${Room.says(cur)}</p>
+      <div class="dbtns">${href ? `<a class="btn go" href="${href}">افتح</a>` : ''}${Room.canSend(cur) ? '<button class="btn go" type="button" id="w-send">أرسلها للنشر</button>' : ''}${Room.canDelete(cur) ? '<button class="btn warn" type="button" id="w-del">احذف</button>' : ''}<button class="btn soft" type="button" id="w-close">إغلاق</button></div></div>`;
+    if (!$('work').open) $('work').showModal();
+  }
+  $('works').addEventListener('click', (e) => { const w = e.target.closest('[data-w]'); if (w) detail(w.dataset.w); });
+  $('work').addEventListener('click', (e) => {
+    if (e.target.closest('#w-close')) return $('work').close();
+    if (e.target.closest('#w-send')) { Room.send(cur); say('أرسلناها إلى فريق أجيال لتُراجَع'); works(); return detail(cur.id); }
+    if (e.target.closest('#w-del')) {
+      $('ask-t').textContent = `هل تريد حذف «${cur.name}»؟`;
+      $('ask-p').textContent = 'إذا حذفتها فلن تعود إلى «إبداعاتي».';
+      $('ask').showModal(); $('ask-no').focus();
+    }
+  });
+  // delete only after asking, and say it cannot be undone
+  $('ask-no').addEventListener('click', () => $('ask').close());
+  $('ask-ok').addEventListener('click', () => { Room.remove(cur); $('ask').close(); $('work').close(); say('حُذفت'); works(); });
+
+  // a drawing from the device is kept private, like a drawing made here
+  $('file').addEventListener('change', (e) => {
+    const f = e.target.files?.[0]; e.target.value = ''; if (!f) return;
+    Room.upload(f, (ok, s) => { say(s); if (!ok) return; kind = 'all'; Sfx.play('win'); works(); });
+  });
+
+  // ---- change the name and the picture (nothing else)
+  let face = me.avatar;
+  $('edit-open').addEventListener('click', () => {
+    face = me.avatar; $('name').value = me.name; $('name-err').textContent = '';
+    $('faces').innerHTML = AVATARS.map((a) => `<button type="button" data-a="${a}" aria-pressed="${a === face}" aria-label="صورة ${ar(AVATARS.indexOf(a) + 1)}"><img src="${B}img/avatars/${a}.png" alt=""></button>`).join('');
+    $('edit').showModal(); $('name').focus();
+  });
+  $('faces').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    face = b.dataset.a; $('faces').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  });
+  $('edit-no').addEventListener('click', () => $('edit').close());
+  $('edit-ok').addEventListener('click', () => {
+    const v = $('name').value.trim();
+    if (!Room.okName(v)) { $('name-err').textContent = 'اكتب اسماً من حرفين إلى ١٢ حرفاً، بالحروف فقط'; return $('name').focus(); }
+    me = { ...me, name: v, avatar: face };
+    if (!Profile.save(me)) return say('لم نستطع الحفظ على هذا الجهاز');
+    $('edit').close(); card(); say('حُفظ اسمك وصورتك');
+  });
+
+  // ---- tabs: the hash opens one directly (#me, #progress, #works), or ?tab= from a link of the map
+  const ORDER = ['me', 'progress', 'works'];
+  function tab(v, focus) {
+    ORDER.forEach((x) => { $(`t-${x}`).setAttribute('aria-selected', String(x === v)); $(`t-${x}`).tabIndex = x === v ? 0 : -1; $(`p-${x}`).hidden = x !== v; });
+    if (focus) $(`t-${v}`).focus();
+    history.replaceState(null, '', `#${v}`);
+    // a part opened further down starts at its top, under the room
+    const h = $('top').offsetHeight; if (scrollY > h) scrollTo(0, h);
+  }
+  $('tabs').addEventListener('click', (e) => { const b = e.target.closest('[role=tab]'); if (b) tab(b.dataset.v); });
+  $('tabs').addEventListener('keydown', (e) => {
+    const at = ORDER.indexOf(document.activeElement.dataset.v);
+    if (at < 0) return;
+    if (e.key === 'ArrowLeft') tab(ORDER[(at + 1) % 3], true);
+    if (e.key === 'ArrowRight') tab(ORDER[(at + 2) % 3], true);
+  });
+
+  card(); mine(); progress(); works();
+  const fromHash = () => { const t = location.hash.slice(1) || new URLSearchParams(location.search).get('tab'); tab(ORDER.includes(t) ? t : 'me'); };
+  fromHash(); addEventListener('hashchange', fromHash);
+  const wanted = new URLSearchParams(location.search).get('w');
+  if (wanted) { tab('works'); detail(wanted); }
+  addEventListener('pageshow', (e) => { if (e.persisted) { me = Profile.read(); card(); works(); } });
+})();
+</script>
+</body>
+</html>

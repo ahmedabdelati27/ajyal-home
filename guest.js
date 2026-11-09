@@ -42,6 +42,9 @@ html.guest .cont, html.guest [aria-labelledby="cont"] { display: none !important
 .visit-bar .join { background: linear-gradient(#3FA83A, #2E8B2A); color: #fff; }
 .visit-bar .out { color: #FFE7A3; padding-inline: 8px; }
 .visit-bar .short { display: none; }
+/* the phone app keeps its own bar at the bottom of the screen: the visitor's note rests just above it */
+body:has(nav.tabs) .visit-bar { bottom: calc(max(env(safe-area-inset-bottom), 10px) + 84px); }
+@media (max-height: 500px) { body:has(nav.tabs) .visit-bar { bottom: calc(max(env(safe-area-inset-bottom), 10px) + 56px); } }
 @media (max-width: 600px) {
   .visit-bar { left: 10px; bottom: 10px; gap: 6px; padding: 5px 6px 5px 10px; font-size: 13px; }
   .visit-bar img { width: 24px; height: 24px; }
@@ -50,6 +53,7 @@ html.guest .cont, html.guest [aria-labelledby="cont"] { display: none !important
 }
 .visit-gate { position: fixed; z-index: 9001; inset: 0; display: grid; place-items: center; padding: 16px; background: rgba(40,28,20,.45); font-family: 'Thmanyah Sans', system-ui, sans-serif; }
 .visit-gate[hidden] { display: none; }
+.visit-gate.solid { background: rgba(40,28,20,.8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .visit-gate .card { display: flex; flex-direction: column; align-items: center; gap: 10px; width: min(400px, 100%); padding: 26px 24px 22px; border-radius: 28px; background: #FFF7EC; text-align: center; color: #3A2318; box-shadow: 0 20px 50px rgba(0,0,0,.25); }
 .visit-gate img { width: 96px; }
 .visit-gate h2 { margin: 0; font-size: 22px; font-weight: 800; }
@@ -78,7 +82,16 @@ html.guest .cont, html.guest [aria-labelledby="cont"] { display: none !important
       <p id="visit-p"></p>
       <div class="row"><a class="in" href="${BASE}login.html">دخول ولي الأمر / المؤسسة</a><a class="join" href="${BASE}signup.html">أنشئ حساباً</a></div>
       <button class="stay" type="button">متابعة التصفّح</button></div>`;
-    const close = () => { gate.hidden = true; };
+    // an account page itself (opened by its address) is not for a visitor: carrying on leaves it, back where they came from,
+    // so nothing of the demo child's account shows behind the ask
+    const onAccount = PAGES.test(location.pathname) && !q.get('embed');
+    const close = () => {
+      if (!onAccount) { gate.hidden = true; return; }
+      const from = document.referrer && new URL(document.referrer, location.href);
+      if (from && from.origin === location.origin && from.pathname !== location.pathname) history.back();
+      else location.replace(BASE + 'index.html');
+    };
+    gate.classList.toggle('solid', onAccount);
     gate.querySelector('.stay').addEventListener('click', close);
     gate.addEventListener('click', (e) => { if (e.target === gate) close(); });
     addEventListener('keydown', (e) => { if (e.key === 'Escape' && !gate.hidden) close(); });
@@ -99,6 +112,8 @@ html.guest .cont, html.guest [aria-labelledby="cont"] { display: none !important
     if (me) { const n = me.querySelector('.name'); if (n) n.textContent = 'زائر'; const im = me.querySelector('img'); if (im) im.src = BASE + 'img/avatar.png'; me.setAttribute('aria-label', 'زائر'); }
     // the map opened on an account sheet (?open=room) opens plain, with the ask
     if (SHEETS.includes(q.get('open'))) { history.replaceState(null, '', location.pathname); ask(); }
+    // an account page opened straight from its address asks too, not only a tap that leads to it
+    else if (PAGES.test(location.pathname) && !q.get('embed')) ask();
 
     // anything tied to the account, caught before the page acts on it
     document.addEventListener('click', (e) => {

@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the app's «كل الأقسام»; a tablet and a computer stay here
+  // the map opens this page inside its panel (?embed=1), where it stays the web page
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches && !/[?&]embed=/.test(location.search)) location.replace('app/sections.html' + location.search);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -89,25 +94,13 @@
 <script src="values.js"></script>
 <script src="workshop.js"></script>
 <script src="hub.js"></script>
+<script src="sections-data.js"></script>
 <script>
 (() => {
-  const { ar } = Workshop;
-  // the same places as the map, in the order a child meets them
-  const growing = Values.current();
-  const PLACES = [
-    { id: 'forest', bg: 'img/forest/hero.jpg', href: 'forest.html', title: 'غابة المعرفة', sub: 'فيديوهات وكتب وصور تعليمية', c: '#D7EEFC', d: '#3D96D6', tag: '✓ شاهدت كل الجديد' },
-    { id: 'beach', bg: 'img/stories/beach-hero.jpg', href: 'beach.html', title: 'شاطئ الحكايات', sub: 'اقرأ واستمع لقصص ممتعة', c: '#FFE3EA', d: '#E0607F', tag: 'قصة جارية' },
-    { id: 'letters', bg: 'img/letters/oasis-hero.jpg', href: 'oasis.html', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', c: '#FFF2C2', d: '#C99A00' },
-    { id: 'quran', bg: 'img/quran/quran-hero.jpg', href: 'quran.html', title: 'واحة القرآن', sub: 'استمع وردّد وسمّع سور جزء عمّ', c: '#E2F4D6', d: '#5DAA33' },
-    { id: 'games', bg: 'img/games/dunes-hero.jpg', href: 'games.html', title: 'كثبان الألعاب', sub: 'ألعاب تعليمية في أربعة عوالم', c: '#ECE6FD', d: '#7B64DA', tip: true },
-    { id: 'colors', bg: 'img/colors/valley-hero.jpg', href: 'colors.html', title: 'وادي الألوان', sub: 'ارسم بحرية ولوّن الرسومات', c: '#FFE8D1', d: '#E58A2B', tip: true },
-    { id: 'garden', bg: 'img/garden/garden-scene.jpg', href: 'garden.html', title: 'حديقة القيم', sub: 'رحلات مع نور لتزرع القيم', c: '#D9F3EA', d: '#3FB396', tag: growing ? `قيمة ${growing.name} تكبر` : '' },
-    { id: 'peak', bg: 'img/peak/peak-hero.jpg', href: 'peak.html', title: 'قمة الأبطال', sub: 'شارك في المسابقات', c: '#FFE1DC', d: '#E0584A' },
-    { id: 'ai', bg: 'img/workshop/workshop-hero.jpg', href: 'workshop.html', title: 'ورشة السحر', sub: 'اصنع قصة أو فيديو، وكن بطل القصة', c: '#ECE6FD', d: '#7B64DA', tag: `✨ ${Workshop.count('story')}`, gate: 'story' }
-  ];
-  document.getElementById('places').innerHTML = PLACES.map((p) => `<a class="place card" href="${p.href}" style="--c:${p.c};--d:${p.d};--bg:url(${p.bg})">
-    <span class="art"><img src="img/${p.id}.png" alt=""></span>
-    ${p.tip ? '<span class="tag"><img src="img/I-15.png" alt="">مقترح لك</span>' : p.tag && (!p.gate || Workshop.open(p.gate)) ? `<span class="tag">${p.tag}</span>` : ''}
+  // the same places as the map, in the order a child meets them (sections-data.js, shared with the phone's page)
+  document.getElementById('places').innerHTML = Sections.places('').map((p) => `<a class="place card" href="${p.href}" style="--c:${p.c};--d:${p.d};--bg:url(${p.bg})">
+    <span class="art"><img src="${p.art}" alt=""></span>
+    ${p.tip ? '<span class="tag"><img src="img/I-15.png" alt="">مقترح لك</span>' : p.tag ? `<span class="tag">${p.tag}</span>` : ''}
     <b>${p.title}</b><p>${p.sub}</p><span class="go-in">ادخل</span></a>`).join('');
   // tapping a place closes the clouds over the page, like on the map
   document.getElementById('places').addEventListener('click', (e) => {

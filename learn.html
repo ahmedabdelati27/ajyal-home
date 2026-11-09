@@ -176,6 +176,14 @@
   .nav .btn { height: 40px; padding: 0 20px; font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .helper img, .big, .speak.on, .confetti i { animation: none; } }
+/* an upright phone with the app's bars taking some height (an iPhone saved to the home screen): the tracing pad gives way
+   so the clear button and the step buttons stay apart, and anything still taller scrolls inside the card */
+@media (max-width: 600px) {
+  .trace { width: clamp(190px, calc(100dvh - 470px), 320px); border-radius: 30px; }
+  .trace canvas { border-radius: 30px; }
+  .lesson { overflow-y: auto; scrollbar-width: none; }
+  .lesson::-webkit-scrollbar { display: none; }
+}
 </style>
 </head>
 <body>

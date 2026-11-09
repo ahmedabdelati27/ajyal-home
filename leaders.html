@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the board made for it; a tablet and a computer keep this one
+  // (the panel over the map, ?embed=1, stays here: it is sized by the panel, not by the phone)
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches && !/[?&]embed=/.test(location.search)) location.replace('app/leaders.html' + location.search);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -86,27 +91,24 @@
 </nav>
 
 <script src="profile.js"></script>
+<script src="leaders-data.js"></script>
 <script src="hub.js"></script>
 <script>
 (() => {
-  const { ar, num, LEADERS, ME_RANK, BADGES } = Profile;
-  const me = Profile.read();
-  const badge = (id) => BADGES.find((b) => b.id === id)?.n || '';
+  const { ar, num } = Profile;
+  // which rows show is shared with the phone's board (leaders-data.js)
+  const { podium, rows } = Leaders.board('');
   // only what suits children: the display name, the picture, the points and a badge
   const MEDAL = ['#F2A900', '#A7B1BD', '#D0874A'];
   const top = (p, i) => `<div class="top card ${['first', 'second', 'third'][i]}" style="--m:${MEDAL[i]}">
-    <span class="face"><img src="img/avatars/${p.avatar}.png" alt=""><span aria-label="المركز ${ar(p.rank)}">${ar(p.rank)}</span></span>
+    <span class="face"><img src="${p.img}" alt=""><span aria-label="المركز ${ar(p.rank)}">${ar(p.rank)}</span></span>
     <b>${p.name}</b><span class="xp"><img src="img/hud/points.png" alt="">${num(p.xp)}</span>
-    <img class="bdg" src="img/badges/${p.badge}.png" alt="شارة ${badge(p.badge)}"></div>`;
+    <img class="bdg" src="${p.badgeImg}" alt="شارة ${p.badgeName}"></div>`;
   // read in order 1, 2, 3; shown right to left as second, first, third
-  const mine = { rank: ME_RANK, name: me.name, avatar: me.avatar, xp: me.xp, badge: 'S-06' };
-  document.getElementById('podium').innerHTML = LEADERS.slice(0, 3).map((p, i) => top(p.rank === ME_RANK ? mine : p, i)).join('');
-  const row = (p, mine) => `<li class="${mine ? 'me' : ''}" ${mine ? 'aria-current="true"' : ''}><span class="n">${ar(p.rank)}</span><img class="av" src="img/avatars/${p.avatar}.png" alt="">
-    <b>${p.name}</b><span class="xp"><img src="img/hud/points.png" alt="">${num(p.xp)}</span>${p.badge ? `<img class="bdg" src="img/badges/${p.badge}.png" alt="شارة ${badge(p.badge)}">` : '<span></span>'}</li>`;
-  // the top ten, then the child's own place with the one just above when it is further down; a child in the top ten is lit in place
-  const top10 = LEADERS.slice(3, 10).map((p) => (p.rank === ME_RANK ? row(mine, true) : row(p))).join('');
-  const below = ME_RANK > 10 ? `${ME_RANK > 11 ? '<li class="gap" aria-hidden="true">…</li>' : ''}${LEADERS[ME_RANK - 2] && ME_RANK > 11 ? row(LEADERS[ME_RANK - 2]) : ''}${row(mine, true)}` : '';
-  document.getElementById('list').innerHTML = top10 + below;
+  document.getElementById('podium').innerHTML = podium.map(top).join('');
+  const row = (p) => (p.gap ? '<li class="gap" aria-hidden="true">…</li>' : `<li class="${p.mine ? 'me' : ''}" ${p.mine ? 'aria-current="true"' : ''}><span class="n">${ar(p.rank)}</span><img class="av" src="${p.img}" alt="">
+    <b>${p.name}</b><span class="xp"><img src="img/hud/points.png" alt="">${num(p.xp)}</span>${p.badgeImg ? `<img class="bdg" src="${p.badgeImg}" alt="شارة ${p.badgeName}">` : '<span></span>'}</li>`);
+  document.getElementById('list').innerHTML = rows.map(row).join('');
   Hub.fit();
   addEventListener('load', Hub.fit);
 })();

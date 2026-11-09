@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<script src="guest.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the app's «غرفتي»; a tablet and a computer stay here
+  // (inside the map's panel the page stays, since the map holds it)
+  if (!/[?&]embed=/.test(location.search) && matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/room.html' + location.search + location.hash);
+</script>
+<script src="guest.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
@@ -190,6 +195,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
 <script src="valley.js"></script>
 <script src="values.js"></script>
 <script src="profile.js"></script>
+<script src="room-data.js"></script>
 <script src="hub.js"></script>
 <script>
 (() => {
@@ -218,30 +224,19 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
 
   // ---- «تقدمي»: only the journeys, with a simple bar, a count and the last thing done
   function progress() {
-    const vals = Values.VALUES, doneVals = vals.filter((v) => Values.state(v).complete).length, cur = Values.current();
-    const P = [
-      // «أكمل» opens the unfinished thing itself; the counts match what each region shows
-      { isl: 'beach', c: '#FFE3EA', d: '#E0607F', n: 'القصص', done: 3, of: 12, last: 'الأرنب الصادق، الصفحة ٦', href: 'story.html?resume=1' },
-      { isl: 'letters', c: '#FFF2C2', d: '#E0B000', n: 'الحروف والأرقام', done: 7, of: 64, last: 'حرف الباء', href: 'learn.html?k=l&id=ب' },
-      { isl: 'quran', c: '#E2F4D6', d: '#5DAA33', n: 'القرآن الكريم', done: 2, of: 37, last: 'سورة الإخلاص', href: 'surah.html?s=112' },
-      { isl: 'games', c: '#ECE6FD', d: '#7B64DA', n: 'الألعاب', done: 2, of: 9, last: 'نظّف البحر', href: 'game.html?resume=1' },
-      { isl: 'garden', c: '#D9F3EA', d: '#3FB396', n: 'حديقة القيم', done: doneVals, of: vals.length, last: cur ? `قيمة ${cur.name}، ${ar(Values.state(cur).n)} من ${ar(Values.state(cur).all)} خطوات` : '', href: cur ? `value.html?v=${cur.id}` : 'garden.html' }
-    ];
-    $('progs').innerHTML = P.map((p) => `<div class="prog card" style="--c:${p.c};--d:${p.d}">
-      <span class="isl"><img src="img/${p.isl}.png" alt=""></span>
-      <div><b>${p.n}</b><span class="row"><span class="pbar" aria-hidden="true"><i style="width:${Math.round(p.done / p.of * 100)}%"></i></span><span>أكملت ${ar(p.done)} من ${ar(p.of)}</span></span>
+    $('progs').innerHTML = Room.journeys().map((p) => `<div class="prog card" style="--c:${p.c};--d:${p.d}">
+      <span class="isl"><img src="${p.img}" alt=""></span>
+      <div><b>${p.n}</b><span class="row"><span class="pbar" aria-hidden="true"><i style="width:${p.pct}%"></i></span><span>أكملت ${ar(p.done)} من ${ar(p.of)}</span></span>
         ${p.last ? `<small>آخر نشاط: ${p.last}</small>` : ''}</div>
       ${p.last ? `<a class="btn go" href="${p.href}" aria-label="أكمل ${p.last}">أكمل</a>` : `<a class="btn soft" href="${p.href}">ابدأ</a>`}</div>`).join('');
   }
 
-  // ---- «إبداعاتي»: everything the child made, by kind; only what is not under review or published can be deleted
-  const KINDS = [['all', 'الكل'], ['draw', 'رسوماتي'], ['color', 'تلويني'], ['ai-story', 'قصصي'], ['ai-video', 'فيديوهاتي'], ['hero', 'أنت بطل القصة']];
-  const KIND_N = { draw: 'رسمة', color: 'تلوين', 'ai-story': 'قصة مصورة', 'ai-video': 'فيديو', hero: 'أنت بطل القصة' };
+  // ---- «إبداعاتي»: everything the child made, by kind; only what is not under review or published can be deleted (room-data.js)
+  const { KINDS, KIND_N } = Room;
   let kind = 'all';
-  const open = (w) => w.href || (w.kind === 'color' ? `color.html?pic=${w.pic}` : '');
   function works() {
     $('chips').innerHTML = KINDS.map(([k, n]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${k === kind}">${n}</button>`).join('');
-    const list = Valley.works.read().filter((w) => KIND_N[w.kind] && (kind === 'all' || w.kind === kind));
+    const list = Room.works(kind);
     $('works').innerHTML = list.length ? list.map((w) => `<button class="work card" type="button" data-w="${w.id}" aria-label="${w.name}، ${KIND_N[w.kind]}، ${Valley.STATES[w.state]}">
         <span class="pic"><img src="${w.img}" alt=""></span>
         <b>${w.name}</b><span class="tags"><i>${KIND_N[w.kind]}</i><i class="${w.state}">${Valley.STATES[w.state]}</i></span></button>`).join('')
@@ -252,23 +247,21 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
 
   // ---- one work's details: open it, send it for publishing, or delete it (a notification about a work opens here: ?w=id)
   // colorings are only kept, and «أنت بطل القصة» copies are not published (Q-105)
-  const SENDABLE = ['draw', 'ai-story', 'ai-video'];
-  const SAYS = { private: 'خاصة بك، لا يراها أحد غيرك.', review: 'أرسلتها للنشر، وسيراجعها فريق أجيال، ونخبرك بالنتيجة.', published: 'منشورة، يراها أطفال أجيال. المنشور يبقى في المنصة.', rejected: 'لم تُعتمد للنشر، وتبقى خاصة بك.' };
   let cur = null;
   function detail(id) {
-    cur = Valley.works.read().find((w) => w.id === id); if (!cur) return;
-    const href = open(cur), send = cur.state === 'private' && SENDABLE.includes(cur.kind), del = cur.state === 'private' || cur.state === 'rejected';
+    cur = Room.find(id); if (!cur) return;
+    const href = Room.open(cur), send = Room.canSend(cur), del = Room.canDelete(cur);
     $('work-t').textContent = cur.name;
     $('work-b').innerHTML = `<img class="big" src="${cur.img}" alt="">
       <span class="tags"><i>${KIND_N[cur.kind]}</i><i class="${cur.state}">${Valley.STATES[cur.state]}</i></span>
-      <p>${cur.kind === 'color' ? 'أعمال التلوين تُحفظ لك فقط.' : SAYS[cur.state]}</p>
+      <p>${Room.says(cur)}</p>
       <div class="dbtns">${href ? `<a class="btn go" href="${href}">افتح</a>` : ''}${send ? '<button class="btn go" type="button" id="w-send">أرسلها للنشر</button>' : ''}${del ? '<button class="btn warn" type="button" id="w-del">احذف</button>' : ''}<button class="btn soft" type="button" id="w-close">إغلاق</button></div>`;
     if (!$('work').open) $('work').showModal();
   }
   $('works').addEventListener('click', (e) => { const w = e.target.closest('[data-w]'); if (w) detail(w.dataset.w); });
   $('work').addEventListener('click', (e) => {
     if (e.target.closest('#w-close')) return $('work').close();
-    if (e.target.closest('#w-send')) { cur.state = 'review'; Valley.works.save(cur); Hub.toast('أرسلناها إلى فريق أجيال لتُراجَع'); works(); return detail(cur.id); }
+    if (e.target.closest('#w-send')) { Room.send(cur); Hub.toast('أرسلناها إلى فريق أجيال لتُراجَع'); works(); return detail(cur.id); }
     if (e.target.closest('#w-del')) {
       $('ask-t').textContent = `هل تريد حذف «${cur.name}»؟`;
       $('ask-p').textContent = 'إذا حذفتها فلن تعود إلى «إبداعاتي».';
@@ -278,26 +271,17 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   // delete only after asking, and say it cannot be undone
   $('ask-no').addEventListener('click', () => $('ask').close());
   $('ask-ok').addEventListener('click', () => {
-    try { localStorage.setItem('ajyal.works', JSON.stringify(Valley.works.read().filter((w) => w.id !== cur.id))); } catch {}
-    if (cur.kind === 'hero') { try { localStorage.removeItem('ajyal.hero.honest'); } catch {} }
+    Room.remove(cur);
     $('ask').close(); $('work').close(); Hub.toast('حُذفت'); works();
   });
 
   // a drawing from the device is kept private, like a drawing made here
   $('file').addEventListener('change', (e) => {
     const f = e.target.files?.[0]; e.target.value = ''; if (!f) return;
-    if (!/^image\/(png|jpeg)$/.test(f.type)) return Hub.toast('اختر صورة بصيغة JPG أو PNG');
-    const img = new Image();
-    img.onload = () => {
-      const s = 600, k = Math.min(1, s / Math.max(img.width, img.height)), c = document.createElement('canvas');
-      c.width = img.width * k; c.height = img.height * k; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(img.src);
-      const ok = Valley.works.save({ id: `upload-${Date.now()}`, kind: 'draw', name: 'رسمة من جهازي', img: c.toDataURL('image/jpeg', .85), state: 'private', at: Date.now() });
-      if (!ok) return Hub.toast('لم نستطع الحفظ على هذا الجهاز');
-      kind = 'all'; Sfx.play('win'); Hub.toast('حُفظت في إبداعاتي، خاصة بك'); works();
-    };
-    img.onerror = () => Hub.toast('لم نستطع فتح هذه الصورة');
-    img.src = URL.createObjectURL(f);
+    Room.upload(f, (ok, say) => {
+      Hub.toast(say); if (!ok) return;
+      kind = 'all'; Sfx.play('win'); works();
+    });
   });
 
   // ---- change the name and the picture (nothing else)
@@ -315,7 +299,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   $('edit-no').addEventListener('click', () => $('edit').close());
   $('edit-ok').addEventListener('click', () => {
     const v = $('name').value.trim();
-    if (!/^[ء-ْa-zA-Z ]{2,12}$/.test(v)) { $('name-err').textContent = 'اكتب اسماً من حرفين إلى ١٢ حرفاً، بالحروف فقط'; return $('name').focus(); }
+    if (!Room.okName(v)) { $('name-err').textContent = 'اكتب اسماً من حرفين إلى ١٢ حرفاً، بالحروف فقط'; return $('name').focus(); }
     me = { ...me, name: v, avatar: face };
     if (!Profile.save(me)) return Hub.toast('لم نستطع الحفظ على هذا الجهاز');
     $('edit').close(); card(); Hub.toast('حُفظ اسمك وصورتك');

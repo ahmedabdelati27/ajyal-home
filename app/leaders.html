@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the leaderboard made for a phone, upright or on its side; a tablet and a computer get the web's board
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../leaders.html' + location.search);
+</script>
+<script src="../guest.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>المتصدرون · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root {
+  --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent-deep: #C24A3C;
+  /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }
+html, body { margin: 0; }
+body { min-height: 100vh; font-family: 'Thmanyah Sans', system-ui, sans-serif; font-weight: 500; color: var(--ink); background: var(--page); }
+img { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the podium on the hill at the top, fading into the page */
+.hero { position: relative; height: calc(var(--top) + 236px); overflow: hidden; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(rgba(255,247,236,0), var(--page) 90%); }
+.bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
+.back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
+.back svg { width: 22px; height: 22px; }
+.pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill img { width: 22px; height: 22px; }
+.pill.time { margin-inline-start: auto; color: #2D6A12; }
+html.guest .pill.rank { visibility: hidden; }
+.title { position: absolute; z-index: 2; top: calc(var(--top) + 54px); right: var(--side-r); left: var(--side-l); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
+  text-shadow: 0 4px 0 var(--accent-deep), 2px 0 0 var(--accent-deep), -2px 0 0 var(--accent-deep), 0 -2px 0 var(--accent-deep), 2px 2px 0 var(--accent-deep), -2px 2px 0 var(--accent-deep), 2px -2px 0 var(--accent-deep), -2px -2px 0 var(--accent-deep); }
+.title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
+
+main { position: relative; z-index: 2; margin-top: -40px; padding: 0 var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
+.card { border-radius: 24px; background: var(--paper); box-shadow: 0 5px 0 var(--edge); }
+
+/* the first three on their steps: read 1, 2, 3, shown right to left as second, first, third */
+.podium { display: grid; grid-template-columns: 1fr 1.14fr 1fr; gap: 8px; align-items: end; }
+.top { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 6px 12px; text-align: center; }
+.top .face { position: relative; margin-bottom: 6px; }
+.top .face img { width: 60px; height: 60px; border-radius: 50%; border: 4px solid var(--m); }
+.top .face span { position: absolute; bottom: -8px; left: 50%; translate: -50% 0; width: 26px; height: 26px; border-radius: 50%; background: var(--m); color: var(--paper); display: grid; place-items: center; font-size: 15px; font-weight: 800; border: 2px solid var(--paper); }
+.top.first { order: 2; padding-top: 22px; }
+.top.first .face img { width: 76px; height: 76px; }
+.top.first::before { content: '👑'; font-size: 26px; line-height: 1; margin: -12px 0 -2px; }
+.top.second { order: 1; } .top.third { order: 3; }
+.top b { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: 800; }
+.xp { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.xp img { width: 18px; height: 18px; }
+.top .bdg { width: 32px; height: 32px; }
+
+.note { margin: 14px 4px 12px; font-size: 14px; font-weight: 700; line-height: 1.55; color: var(--ink-soft); text-align: center; }
+
+/* everyone else in one list; the child's own row is lit */
+.list { margin: 0; padding: 6px; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.list li { display: grid; grid-template-columns: 28px 44px minmax(0, 1fr) auto 30px; gap: 8px; align-items: center; padding: 6px 10px; border-radius: 18px; }
+.list li:nth-child(odd):not(.me) { background: #FFF8EF; }
+.list .n { font-size: 17px; font-weight: 800; color: var(--ink-soft); text-align: center; }
+.list .av { width: 44px; height: 44px; border-radius: 50%; }
+.list b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: 800; }
+.list .bdg { width: 30px; height: 30px; }
+.list li.me { background: linear-gradient(#FFE7C7, #FFD29A); box-shadow: 0 0 0 3px #F4A35C; }
+.list li.me b::after { content: ' (أنت)'; font-size: 13px; color: var(--accent-deep); }
+.list li.gap { display: block; padding: 0; text-align: center; font-size: 20px; font-weight: 800; line-height: 1; color: var(--ink-soft); letter-spacing: 6px; }
+
+/* the bar at the bottom, as on the phone's home */
+.tabs { position: fixed; z-index: 6; left: var(--side-l); right: var(--side-r); bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(90,60,20,.2); }
+.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.tabs img { width: 34px; height: 34px; }
+.tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
+
+.toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* a phone on its side: a low hill with the name in the middle, the podium held on the right while the list scrolls on the left, and the bar as one slim row */
+@media (max-height: 500px) {
+  .hero { height: calc(var(--top) + 150px); }
+  .hero .bg { object-position: 50% 58%; }
+  .title { top: calc(var(--top) + 4px); right: 200px; left: 200px; gap: 6px; }
+  h1 { font-size: 32px; }
+  .title p { font-size: 13px; }
+  .bar .pill.rank { display: none; }
+  .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 16px; align-items: start; margin-top: -56px; padding-bottom: calc(var(--bottom) + 70px); }
+  .side { position: sticky; top: calc(var(--top) + 4px); }
+  .note { margin: 10px 4px 0; font-size: 13px; }
+  .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
+  .tabs a, .tabs button { flex-direction: row; gap: 5px; min-width: 0; padding: 4px 12px; font-size: 13px; }
+  .tabs img { width: 26px; height: 26px; }
+  .toast { bottom: calc(var(--bottom) + 60px); }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="bg" src="../img/room/leaders-hero.jpg" alt="">
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
+    <span class="pill rank" title="ترتيبك" role="img" aria-label="ترتيبك: 12" id="rank"><img src="../img/I-04.png" alt="">ترتيبك ١٢</span>
+  </div>
+  <div class="title">
+    <h1>المتصدرون</h1>
+    <p>الترتيب حسب مجموع النقاط</p>
+  </div>
+</header>
+
+<main>
+  <div class="side">
+    <div class="podium" id="podium"></div>
+    <p class="note">ترتيب واحد لكل أطفال أجيال. تزيد نقاطك عندما تُكمل نشاطاً، أو تشارك في مسابقة، أو يُعتمد إبداعك للنشر.</p>
+  </div>
+  <ol class="list card" id="list" aria-label="الترتيب"></ol>
+</main>
+
+<nav class="tabs" aria-label="التنقل">
+  <a href="../index.html"><img src="../img/nav/map.png" alt="">الخريطة</a>
+  <a href="sections.html"><img src="../img/nav/sections.png" alt="">كل الأقسام</a>
+  <a href="room.html"><img src="../img/nav/room.png" alt="">غرفتي</a>
+  <button type="button" aria-current="page"><img src="../img/nav/leaders.png" alt="">المتصدرون</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../profile.js"></script>
+<script src="../leaders-data.js"></script>
+<script>
+(() => {
+  const { ar, num } = Profile;
+  // the same board as the web's: the first three, the top ten and the child's own place (leaders-data.js)
+  const { podium, rows, rank } = Leaders.board('../');
+  // only what suits children: the display name, the picture, the points and a badge
+  const MEDAL = ['#F2A900', '#A7B1BD', '#D0874A'];
+  const top = (p, i) => `<div class="top card ${['first', 'second', 'third'][i]}" style="--m:${MEDAL[i]}">
+    <span class="face"><img src="${p.img}" alt=""><span aria-label="المركز ${ar(p.rank)}">${ar(p.rank)}</span></span>
+    <b>${p.name}</b><span class="xp"><img src="../img/hud/points.png" alt="">${num(p.xp)}</span>
+    <img class="bdg" src="${p.badgeImg}" alt="شارة ${p.badgeName}"></div>`;
+  document.getElementById('podium').innerHTML = podium.map(top).join('');
+  const row = (p) => (p.gap ? '<li class="gap" aria-hidden="true">…</li>' : `<li class="${p.mine ? 'me' : ''}" ${p.mine ? 'aria-current="true"' : ''}><span class="n">${ar(p.rank)}</span><img class="av" src="${p.img}" alt="">
+    <b>${p.name}</b><span class="xp"><img src="../img/hud/points.png" alt="">${num(p.xp)}</span>${p.badgeImg ? `<img class="bdg" src="${p.badgeImg}" alt="شارة ${p.badgeName}">` : '<span></span>'}</li>`);
+  document.getElementById('list').innerHTML = rows.map(row).join('');
+
+  // the child's place in the pill at the top
+  const pill = document.getElementById('rank');
+  pill.lastChild.textContent = `ترتيبك ${ar(rank)}`; pill.setAttribute('aria-label', `ترتيبك: ${rank}`);
+
+  // the other screens of the app come next
+  const toast = document.getElementById('toast');
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-soon]')) return;
+    toast.textContent = 'في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة';
+    toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200);
+  });
+})();
+</script>
+</body>
+</html>
