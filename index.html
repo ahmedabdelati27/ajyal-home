@@ -2,15 +2,17 @@
 <html lang="ar">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="guest.js"></script>
 <script>
   // inside the app mockup (app/index.html), a phone on its side keeps its buttons clear of the island and the home bar, as a real phone's safe area would
   if (new URLSearchParams(location.search).get('mock') === 'phone-l') document.documentElement.classList.add('mock-phone-l');
   // a phone held upright gets the islands in a line (app/home.html); turned sideways, or a tablet, keeps this map
-  if (matchMedia('(max-width: 600px) and (orientation: portrait)').matches) location.replace('app/home.html' + location.search);
-  matchMedia('(max-width: 600px) and (orientation: portrait)').addEventListener('change', (e) => { if (e.matches) location.replace('app/home.html' + location.search); });
+  // the two pages send a phone to each other by how it is held; a third hop within a few seconds means the browser is unsure, so it stays
+  const hop = (to) => { try { const s = sessionStorage, now = Date.now(), n = now - (+s.getItem('ajyal.hopAt') || 0) < 3000 ? (+s.getItem('ajyal.hops') || 0) + 1 : 1; s.setItem('ajyal.hops', n); s.setItem('ajyal.hopAt', now); if (n > 2) return; } catch {} location.replace(to); };
+  if (matchMedia('(max-width: 600px) and (orientation: portrait)').matches) hop('app/home.html' + location.search);
+  matchMedia('(max-width: 600px) and (orientation: portrait)').addEventListener('change', (e) => { if (e.matches) hop('app/home.html' + location.search); });
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">

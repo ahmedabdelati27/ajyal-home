@@ -2,14 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>
   // a phone held upright gets the islands in a line; turned sideways, or a tablet, gets the world map of the web
   const UPRIGHT = matchMedia('(max-width: 600px) and (orientation: portrait)');
-  if (!UPRIGHT.matches) location.replace('../index.html' + location.search);
-  UPRIGHT.addEventListener('change', (e) => { if (!e.matches) location.replace('../index.html' + location.search); });
+  // the two pages send a phone to each other by how it is held; a third hop within a few seconds means the browser is unsure, so it stays
+  const hop = (to) => { try { const s = sessionStorage, now = Date.now(), n = now - (+s.getItem('ajyal.hopAt') || 0) < 3000 ? (+s.getItem('ajyal.hops') || 0) + 1 : 1; s.setItem('ajyal.hops', n); s.setItem('ajyal.hopAt', now); if (n > 2) return; } catch {} location.replace(to); };
+  if (!UPRIGHT.matches) hop('../index.html' + location.search);
+  UPRIGHT.addEventListener('change', (e) => { if (!e.matches) hop('../index.html' + location.search); });
 </script>
 <script src="../guest.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
