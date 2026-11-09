@@ -71,7 +71,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .ribbon::before, .ribbon::after { content: ""; position: absolute; top: 9px; width: 24px; height: 31px; background: var(--d); z-index: -1; }
 .ribbon::before { right: -15px; clip-path: polygon(0 0, 100% 0, 72% 50%, 100% 100%, 0 100%); }
 .ribbon::after { left: -15px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 28% 50%); }
-.pill img, .dock a img, .lvl img, .zbtn img { max-width: none; flex-shrink: 0; }
+.pill img, .dock a img, .lvl img { max-width: none; flex-shrink: 0; }
 
 .mark { position: absolute; pointer-events: none; border-radius: 999px; border: 4px solid var(--paper); box-sizing: border-box;
   display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; box-shadow: 0 4px 0 rgba(58,35,24,.18); }
@@ -106,14 +106,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .bell { width: 46px; padding: 0; justify-content: center; position: relative; border: 0; cursor: pointer; }
 .bell b { position: absolute; top: -4px; left: -4px; min-width: 22px; height: 22px; border-radius: 999px; background: var(--rose); color: var(--paper); font-size: 13px; line-height: 22px; text-align: center; border: 2px solid var(--paper); }
 
-.zoom { left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; }
-.zbtn { width: 58px; height: 58px; border-radius: 20px; border: 0; background: var(--paper); box-shadow: 0 5px 0 #C6E6F7; cursor: pointer;
   display: flex; align-items: center; justify-content: center; }
-.zbtn svg { width: 28px; height: 28px; }
-.zbtn:active { transform: translateY(3px); box-shadow: 0 2px 0 #C6E6F7; }
-.zbtn[disabled] { opacity: .45; cursor: default; }
-.zbtn.whole { width: auto; height: 48px; padding: 0 14px; gap: 6px; font-weight: 800; font-size: 15px; border-radius: 999px; }
-.zbtn.whole img { width: 30px; height: 30px; margin: -4px 0; }
 
 .me { border: 0; cursor: pointer; }
 /* shortcut to the unfinished story, shown only when its avatar is off-screen */
@@ -200,12 +193,11 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .back { margin-top: 10px; height: 56px; padding: 0 26px; border: 0; border-radius: 999px; background: var(--go); color: var(--paper); font-weight: 800; font-size: 19px; box-shadow: 0 5px 0 var(--go-deep); cursor: pointer; }
 
 @media (max-width: 760px) {
-  .me .name, .stats .pill:nth-child(3), .time span, .dock a span, .zbtn.whole span { display: none; }
+  .me .name, .stats .pill:nth-child(3), .time span, .dock a span { display: none; }
   .guide, .guide .nour { width: 72px; height: 72px; } .guide .tag { font-size: 12px; padding: 1px 10px 2px; bottom: -8px; }
   .mission { gap: 6px; } .mission .bubble { padding: 6px 16px 6px 6px; gap: 12px; } .mission .bubble b { font-size: 17px; } .play { width: 42px; height: 42px; }
   .pill { height: 40px; padding: 0 10px; font-size: 16px; }
   .dock a { padding: 0 14px; }
-  .zbtn { width: 50px; height: 50px; }
   :root { --edge-x: 14px; }
   .mission { bottom: calc(106px + env(safe-area-inset-bottom, 0px)); }
   .sheet { padding: calc(10px + env(safe-area-inset-top, 0px)) 8px calc(92px + env(safe-area-inset-bottom, 0px)); }
@@ -221,9 +213,6 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
   .dock a { height: 42px; padding: 0 12px; font-size: 14px; }
   .dock a img { width: 28px; height: 28px; }
   .pill { height: 36px; padding: 0 10px; font-size: 15px; }
-  .zbtn { width: 42px; height: 42px; }
-  /* a phone zooms with two fingers, so the zoom button gives its room to the map; «الخريطة كلها» still comes back after a closer look */
-  #zin { display: none; }
   .hint { display: none; }
   .guide, .guide .nour { width: 52px; height: 52px; } .guide .tag { font-size: 10px; padding: 0 7px 1px; bottom: -6px; border-width: 2px; }
   .mission { bottom: calc(66px + env(safe-area-inset-bottom, 0px)); gap: 4px; }
@@ -257,11 +246,6 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
     </div>
   </div>
   <span class="hud pill time" title="باقي 35 دقيقة من وقت اليوم" role="img" aria-label="باقي 35 دقيقة من وقت اليوم"><img src="img/hud/clock.png" alt=""><bdi>35 د</bdi></span>
-
-  <div class="hud zoom" role="group" aria-label="التحكم في الخريطة">
-    <button type="button" class="zbtn" id="zin" aria-label="قرّب"><svg viewBox="0 0 24 24" fill="none" stroke="#3A2318" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
-    <button type="button" class="zbtn whole" id="zall" hidden><img src="img/I-01.png" alt=""><span>الخريطة كلها</span></button>
-  </div>
 
   <button type="button" class="hud resume" id="resume" hidden aria-label="أكمل قصة الأرنب الصادق، أنجزت 60%"><i><img src="img/avatar.png" alt=""></i>أكمل</button>
 
@@ -302,13 +286,13 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
   </div>
 
   <nav class="hud dock" aria-label="التنقل السريع">
-    <a href="index.html" aria-current="page" aria-label="الخريطة" data-sheet=""><img src="img/nav/map.png" alt=""><span>الخريطة</span></a>
-    <a href="index.html?open=sections" aria-label="كل الأقسام" data-sheet="sections"><img src="img/nav/sections.png" alt=""><span>كل الأقسام</span></a>
-    <a href="index.html?open=room" aria-label="غرفتي" data-sheet="room"><img src="img/nav/room.png" alt=""><span>غرفتي</span></a>
-    <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12" data-sheet="leaders"><img src="img/nav/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
+    <a href="index.html" aria-current="page" aria-label="الخريطة" data-sheet=""><img src="img/tabs/map.png" alt=""><span>الخريطة</span></a>
+    <a href="index.html?open=sections" aria-label="كل الأقسام" data-sheet="sections"><img src="img/tabs/sections.png" alt=""><span>كل الأقسام</span></a>
+    <a href="index.html?open=room" aria-label="غرفتي" data-sheet="room"><img src="img/tabs/room.png" alt=""><span>غرفتي</span></a>
+    <a href="index.html?open=leaders" aria-label="المتصدرون، ترتيبك 12" data-sheet="leaders"><img src="img/tabs/leaders.png" alt=""><span>المتصدرون</span><span class="rank">12</span></a>
   </nav>
 
-  <div class="hud hint" id="hint">اسحب الخريطة، وقرّب بالعجلة أو بإصبعين أو بزرار +، واضغط على أي جزيرة</div>
+  <div class="hud hint" id="hint">اسحب الخريطة، وقرّب بالعجلة أو بإصبعين، واضغط على أي جزيرة</div>
 
   <div class="region" id="region" hidden role="dialog" aria-modal="true" aria-labelledby="rg-title">
     <div class="card">
@@ -390,8 +374,6 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
     const small = Math.min(view().w, view().h) < 600;
     world.style.setProperty('--inv', Math.min(small ? 1.25 : 2.2, Math.max(0.55, 1 / cam.s)).toFixed(3));
     const min = fit(), v = view();
-    document.getElementById('zin').disabled = cam.s >= min * MAX_ZOOM - 1e-3;
-    document.getElementById('zall').hidden = cam.s <= min * 1.02;
     // the resume shortcut appears only while the child's avatar on the beach is out of sight
     const hx = cam.x + 1115 * cam.s, hy = cam.y + 668 * cam.s;
     document.getElementById('resume').hidden = hx > 0 && hx < v.w && hy > 70 && hy < v.h - 90;
@@ -517,8 +499,6 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
 
   // buttons and keys
   const centre = () => { const v = view(); return [v.w / 2, v.h / 2]; };
-  document.getElementById('zin').addEventListener('click', () => { hideHint(); zoomAt(1.45, ...centre(), true); });
-  document.getElementById('zall').addEventListener('click', () => whole(true));
   addEventListener('keydown', (e) => {
     if (!region.hidden) { if (e.key === 'Escape') closeRegion(); return; }
     if (!sheet.hidden) { if (e.key === 'Escape') closeSheet(); return; }
