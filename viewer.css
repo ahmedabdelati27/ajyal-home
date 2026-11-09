@@ -1,4 +1,6 @@
 /* shared by the content viewers: pictures, video, audio, books */
+/* coming from or going back to the app's pages fades instead of flashing white (where the browser can) */
+@view-transition { navigation: auto; }
 @font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
 @font-face { font-family: 'Thmanyah Sans'; src: url(fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
 :root {

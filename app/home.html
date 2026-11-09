@@ -23,6 +23,8 @@
 <title>الرئيسية · تطبيق أجيال</title>
 <link rel="icon" href="../img/garden/nour-cheer.png">
 <style>
+/* moving between the app's pages fades instead of flashing white (where the browser can) */
+@view-transition { navigation: auto; }
 @font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
 @font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
 :root {
@@ -109,7 +111,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 
 /* the bar at the bottom: the map, all sections, my room, the board */
 .tabs { position: fixed; z-index: 6; left: 12px; right: 12px; bottom: var(--bottom); display: flex; justify-content: space-around; padding: 8px 6px; border-radius: 28px; background: rgba(255,250,242,.97); box-shadow: 0 0 0 2px #F3DDBB, 0 10px 24px rgba(20,70,80,.22); }
-.tabs a, .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); }
+.tabs a, .tabs button { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; padding: 4px 6px; border-radius: 18px; font-size: 12px; font-weight: 800; color: var(--ink-soft); }
 .tabs img { width: 34px; height: 34px; }
 .tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
 
@@ -127,6 +129,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
       <span><b class="name" id="me-name">عمر</b><small>المستوى 7</small></span>
     </button>
     <button class="round bell" type="button" id="bell" aria-label="الإشعارات، 2 غير مقروءة" data-go="notes.html"><img src="../img/hud/bell.png" alt=""><i>2</i></button>
+    <button class="round gear" type="button" id="gear" aria-label="الإعدادات" data-go="settings.html"><img src="../img/hud/gear.png" alt=""></button>
   </div>
   <div class="stats">
     <button type="button" class="time" title="الوقت المتبقي اليوم" aria-label="الوقت المتبقي اليوم: 35 دقيقة" data-soon><img src="../img/hud/clock.png" alt="">35 د</button>
