@@ -334,11 +334,27 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .split .sec-head { align-items: flex-start; margin: 0 0 28px; text-align: start; }
 
 /* schools */
-.schools { overflow: hidden; border-radius: 40px; background: linear-gradient(135deg, #E3F2FD, #EAF7E4); box-shadow: 0 6px 0 #CFE3EE; }
-.schools .split { gap: 0; }
-.schools .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding: 48px; }
-.schools .txt p { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
-.schools img { width: 100%; height: 100%; object-fit: cover; min-height: 100%; }
+/* schools and nurseries: a subscription of their own. The classroom fills the banner; the words sit on a light veil on one side,
+   and the institution plan stands on the other as a card, its seats filling as it shows */
+.schools { position: relative; overflow: hidden; display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; padding: 56px; border-radius: 40px; background: linear-gradient(to left, rgba(255,250,242,.97) 0, rgba(255,250,242,.92) 46%, rgba(255,250,242,.15) 72%, rgba(255,250,242,0)), url(img/landing/s-school.jpg) 30% 30% / cover; box-shadow: 0 6px 0 #CFE3EE; }
+.schools .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.schools .txt h2 { margin: 0; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; line-height: 1.2; }
+.schools .txt p { margin: 0; max-width: 46ch; font-size: 18px; font-weight: 600; color: var(--ink-soft); }
+.schools .acts2 { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 6px; }
+.schools .acts2 a:not(.btn) { font-size: 17px; font-weight: 800; color: var(--sky); text-decoration: none; }
+.schools .acts2 a:not(.btn):hover { text-decoration: underline; text-underline-offset: 4px; }
+.org-plan { position: relative; display: flex; flex-direction: column; gap: 14px; padding: 26px 26px 22px; border-radius: 30px; background: var(--paper); box-shadow: 0 8px 0 rgba(58,35,24,.08), 0 26px 50px rgba(20,60,90,.22); }
+.org-plan .tag { align-self: flex-start; padding: 5px 14px; border-radius: 999px; background: #E3F2FD; color: #1F5F99; font-size: 15px; font-weight: 800; }
+.org-plan .price { justify-content: flex-start; }
+.org-plan .price b { font-size: 50px; }
+.org-plan .seats { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; border-top: 2px dashed #E3EDF3; }
+.org-plan .seats p { display: flex; justify-content: space-between; margin: 0; font-size: 16px; font-weight: 800; }
+.org-plan .seats p span { color: var(--ink-soft); font-weight: 700; }
+.org-plan .seat-bar { height: 12px; border-radius: 999px; background: #EAF2F7; overflow: hidden; }
+.org-plan .seat-bar i { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5BB0E8, #2F6FA8); transition: width 1.4s cubic-bezier(.4,0,.2,1) .3s; }
+.org-plan.in .seat-bar i { width: 24%; }
+.org-plan .ticks { font-size: 16px; gap: 8px; }
+.org-plan .note { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
 
 /* packages: three price cards, a picture on top of each, the price with the Saudi riyal symbol (SAMA's own drawing,
    placed to the left of the number with a space), monthly or yearly, and a green button */
@@ -477,9 +493,9 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   .g-card.big { grid-column: auto; }
   .stops { grid-template-columns: 1fr; gap: 32px; }
   .split .sec-head { align-items: center; text-align: center; }
-  .schools .txt { padding: 28px 20px; align-items: stretch; }
+  .schools { grid-template-columns: 1fr; gap: 24px; padding: 220px 20px 24px; background: linear-gradient(rgba(255,250,242,0) 0, rgba(255,250,242,0) 150px, rgba(255,250,242,.97) 230px), url(img/landing/s-school.jpg) 50% 0 / 100% auto no-repeat #FFFAF2; }
+  .schools .txt { align-items: stretch; }
   .schools .kicker { align-self: flex-start; }
-  .schools img { order: -1; aspect-ratio: 16 / 9; }
   .pricing { grid-template-columns: 1fr; gap: 22px; max-width: 440px; }
   .price-card.pop { transform: none; }
   .period { margin-top: -8px; margin-bottom: 26px; }
@@ -689,19 +705,22 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   <section class="sec" id="schools" aria-labelledby="schools-t">
     <div class="wrap">
       <div class="schools">
-        <div class="split">
-          <div class="txt">
-            <span class="kicker" style="--k:#2F6FA8;--kb:#FFFFFF">للمدارس والحضانات</span>
-            <h2 id="schools-t">عالم أجيال في صفّك</h2>
-            <p>حساب مؤسسة واحد لكل أطفالك، ومنه تختار ملف الطفل فيدخل عالمه على أي جهاز في الصف.</p>
-            <ul class="ticks" style="--c:#3D96D6">
-              <li>أضف الأطفال دفعة واحدة بملف Excel جاهز</li>
-              <li>وقت يومي ومزايا لكل طفل</li>
-              <li>تتابع تقدّم كل طفل من لوحة المؤسسة</li>
-            </ul>
-            <a class="btn main" href="signup.html?type=school">أنشئ حساب مؤسسة</a>
-          </div>
-          <img src="img/landing/s-school.jpg" alt="معلّمة مع مجموعة أطفال يستخدمون أجهزة لوحية في الصف">
+        <div class="txt">
+          <span class="kicker" style="--k:#2F6FA8;--kb:#FFFFFF">للمدارس والحضانات</span>
+          <h2 id="schools-t">اشتراك خاص بالمؤسسات التعليمية</h2>
+          <p>حساب مؤسسة واحد لكل أطفال مدرستك أو حضانتك، بباقة للمؤسسات تحدّد عدد الأطفال والمزايا وحدودها.</p>
+          <div class="acts2"><a class="btn main" href="signup.html?type=school">اشترك كمؤسسة</a><a href="#plans">قارن الباقات</a></div>
+        </div>
+        <div class="org-plan" id="org-plan">
+          <span class="tag">باقة المؤسسات التعليمية</span>
+          <p class="price" dir="ltr"><small data-per>/ شهرياً</small><svg class="riyal" viewBox="0 0 1124.14 1256.39" fill="currentColor" role="img" aria-label="ريال سعودي"><path d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"/><path d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"/></svg><b data-m="499" data-y="4990">499</b></p>
+          <div class="seats" aria-hidden="true"><p>الأطفال في الحساب<span>24 من 100</span></p><div class="seat-bar"><i></i></div></div>
+          <ul class="ticks" style="--c:#3D96D6">
+            <li>كل طفل تضيفه يُحسب من حد باقتك</li>
+            <li>تدير الاشتراك والدفع من لوحة المؤسسة</li>
+            <li>تنشئ الحساب الآن، وتختار الباقة لاحقاً</li>
+          </ul>
+          <small class="note">في النموذج: الأسعار والحدود للتوضيح.</small>
         </div>
       </div>
     </div>
@@ -1090,6 +1109,11 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 
   // safety and control: the heading rises in, and the cards play out, settle back and play again while they are on screen
   reveal(document.querySelector('#safety .sec-head'));
+
+  // the institution ticket: its seats fill once it shows
+  const ticket = $('org-plan');
+  if (reduce || !('IntersectionObserver' in window)) ticket.classList.add('in');
+  else new IntersectionObserver((seen, io) => { if (seen[0].isIntersecting) { io.disconnect(); ticket.classList.add('in'); } }, { threshold: 0.5 }).observe(ticket);
   (() => {
     const box = $('safe-cards');
     if (reduce || !('IntersectionObserver' in window)) { box.classList.add('play'); return; }
