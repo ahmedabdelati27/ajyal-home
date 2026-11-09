@@ -36,5 +36,14 @@ const Beach = (() => {
     };
     return SHELVES.map((sh) => ({ ...sh, look: 'sand', items: sh.items.map(item) }));
   }
-  return { shelves, cats };
+  // every story on the shelves, for the beach's search: its category and whether it is heard or read; the first shelf comes first
+  function searchItems(base = '') {
+    return SHELVES.flatMap((sh, n) => sh.items.map((it) => ({ title: it.title, rank: n,
+      img: `${base}img/stories/cover-${String(it.cover).padStart(2, '0')}.jpg`, href: it.href ? base + it.href : '',
+      sub: `${it.a ? 'مسموعة' : 'للقراءة'} · ${sh.title}`,
+      // the line about it counts too, without its little words («في»، «أن») that would match almost anything;
+      // no «قصة» or «صوت»: one letter away from «قطة» and «حوت», they would bring every story
+      words: [sh.title, ...it.about.split(' ').filter((w) => w.length > 3), 'قصص حكاية حكايات قراءة مقروءة', it.a ? 'مسموعة استماع' : '', it.hero ? 'أنت البطل' : ''] })));
+  }
+  return { shelves, cats, searchItems };
 })();

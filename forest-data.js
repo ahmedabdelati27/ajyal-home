@@ -34,5 +34,10 @@ const Forest = (() => {
         c('الغذاء الصحي', 'video', '15', '6 د', { tag: 'new' })] }
     ];
   }
-  return { shelves };
+  // everything on the shelves, for the forest's search: the child's age group (the first shelf) comes first
+  function searchItems(base = '') {
+    return shelves(base).flatMap((sh, n) => sh.items.map((it) => ({ title: it.title, img: it.img, href: it.href, rank: n,
+      sub: `${it.kinds[0].name} · ${sh.title}`, words: [it.kinds[0].name, sh.title] })));
+  }
+  return { shelves, searchItems };
 })();

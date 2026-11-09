@@ -107,6 +107,7 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
   <div class="bar">
     <a class="pill back" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>العودة إلى الخريطة</span></a>
     <div class="stats">
+      <button type="button" id="find" aria-label="ابحث في ورشة السحر" style="display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border: 0; border-radius: 999px; background: #FFFFFF; color: #B4531C; box-shadow: 0 4px 0 var(--edge); cursor: pointer;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <span class="pill" title="الوقت المتبقي اليوم" style="color:#2D6A12"><img src="img/hud/clock.png" alt="">35 د</span>
       <span class="pill" title="النقاط"><img src="img/hud/points.png" alt="">3,240</span>
       <span class="pill" title="الشارات"><img src="img/hud/badge.png" alt="">6</span>
@@ -140,9 +141,12 @@ main h2 { margin: 0; font-size: 30px; font-weight: 800; }
 <script src="valley.js"></script>
 <script src="workshop.js"></script>
 <script src="workshop-data.js"></script>
+<script src="search.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
+  // search inside the workshop, by typing or by voice (search.js)
+  IslandSearch.mount({ button: $('find'), where: 'ورشة السحر', items: () => WorkshopBoard.searchItems() });
 
   // the three doors and «إبداعاتي», as on the phone's workshop (workshop-data.js)
   function render() {

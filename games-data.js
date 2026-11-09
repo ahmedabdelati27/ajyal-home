@@ -64,5 +64,21 @@ const Dunes = (() => {
     };
   }
 
-  return { worlds, progress, art, SAY, SOON, ar, count, label, tag, act };
+  // the words a child may use for what each game is like
+  const KIND = {
+    sea: ['تنظيف', 'نظافة', 'بحر', 'فرز', 'مخلفات'], garden: ['تنظيف', 'نظافة', 'حديقة', 'مخلفات'], plant: ['زراعة', 'نبات', 'بذرة', 'سقي'],
+    feed: ['حيوانات', 'طعام', 'إطعام', 'رفق'], room: ['ترتيب', 'ألعاب', 'غرفة'], honest: ['صدق', 'أمانة', 'مواقف', 'اختيار'],
+    trip: ['تراث', 'وطن', 'استكشاف', 'رحلة'], puzzle: ['ألغاز', 'لغز', 'قطع', 'صورة', 'تركيب'], house: ['بناء', 'مكعبات', 'تركيب', 'بيت']
+  };
+  // every game, for the dunes' search: the world waiting for the child (at, the one the page shows) comes first,
+  // and in each world a game in progress or new comes before the others; a game not built yet has no href
+  function searchItems(base = '', at = '') {
+    const all = worlds(base); progress(all);
+    const first = all.findIndex((w) => w.id === at);
+    return all.flatMap((w, n) => w.games.map((x) => ({ title: x.name, img: x.cover, href: x.href === '#' ? '' : x.href,
+      rank: (n === first ? 0 : n + 1) + (x.state && x.state !== 'ok' ? 0 : 0.5),
+      sub: `عالم ${w.name} · ${label(x.state) || x.how}`, words: [w.name, 'لعبة', ...(KIND[x.id] || []), x.how] })));
+  }
+
+  return { worlds, progress, art, searchItems, SAY, SOON, ar, count, label, tag, act };
 })();

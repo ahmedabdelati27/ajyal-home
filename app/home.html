@@ -51,8 +51,8 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .me small { display: inline-flex; margin-top: 2px; padding: 1px 10px; border-radius: 999px; background: #EDE3FF; color: #6A45B8; font-size: 13px; font-weight: 800; }
 .round { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 rgba(58,35,24,.12); }
 .round img { width: 26px; height: 26px; }
-.search { margin-inline-start: auto; color: var(--sky); }
-.search svg { width: 22px; height: 22px; }
+/* search lives inside each island (the client's choice), so the bell takes the far end */
+.bell { margin-inline-start: auto; }
 .bell i { position: absolute; top: -2px; left: -2px; display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #E0584A; color: var(--paper); font-style: normal; font-size: 12px; font-weight: 800; }
 .stats { display: flex; gap: 6px; margin-top: 10px; }
 .stats button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; height: 36px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 rgba(58,35,24,.1); font-variant-numeric: tabular-nums; }
@@ -126,7 +126,6 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
       <img src="../img/avatars/A-03.png" alt="" id="me-img">
       <span><b class="name" id="me-name">عمر</b><small>المستوى 7</small></span>
     </button>
-    <button class="round search" type="button" aria-label="ابحث" data-soon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
     <button class="round bell" type="button" id="bell" aria-label="الإشعارات، 2 غير مقروءة" data-go="notes.html"><img src="../img/hud/bell.png" alt=""><i>2</i></button>
   </div>
   <div class="stats">

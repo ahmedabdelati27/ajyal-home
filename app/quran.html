@@ -44,6 +44,7 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .bar { position: absolute; z-index: 3; top: var(--top); right: var(--side-r); left: var(--side-l); display: flex; align-items: center; gap: 6px; }
 .back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
 .back svg { width: 22px; height: 22px; }
+.find { border: 0; color: #B4531C; cursor: pointer; }
 .pill { display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 11px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; box-shadow: 0 3px 0 var(--edge); font-variant-numeric: tabular-nums; }
 .pill img { width: 22px; height: 22px; }
 .pill.time { margin-inline-start: auto; color: #2D6A12; }
@@ -143,6 +144,7 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
   <img class="bg" src="../img/quran/quran-hero.jpg" alt="">
   <div class="bar">
     <a class="back" href="../index.html" aria-label="العودة إلى الخريطة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    <button class="back find" type="button" id="find" aria-label="ابحث في واحة القرآن"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
     <span class="pill time" title="الوقت المتبقي اليوم" role="img" aria-label="الوقت المتبقي اليوم: 35 دقيقة"><img src="../img/hud/clock.png" alt="">35 د</span>
     <span class="pill" title="النقاط" role="img" aria-label="النقاط: 3,240"><img src="../img/hud/points.png" alt="">3,240</span>
   </div>
@@ -182,11 +184,14 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
 <div class="toast" id="toast" role="status"></div>
 
 <script src="../quran-data.js"></script>
+<script src="../search.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
   // the surahs and the child's memorisation, as on the web's oasis
   $('sum').innerHTML = Quran.sum();
+  // search the surahs, by typing or by voice (search.js plays and speaks nothing, so the oasis stays silent)
+  IslandSearch.mount({ button: $('find'), where: 'واحة القرآن', items: () => Quran.searchItems('../') });
   const render = (f) => { $('grid').innerHTML = Quran.list(f, '../'); };
   render('');
   $('chips').addEventListener('click', (e) => {

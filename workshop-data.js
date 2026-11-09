@@ -23,5 +23,29 @@ const WorkshopBoard = (() => {
   const works = (base = '') => Valley.works.read().filter((w) => KIND_OF[w.kind])
     .map((w) => ({ href: at(base, w.href), img: at(base, w.img), name: w.name, kind: KIND_OF[w.kind], state: w.state, said: Valley.STATES[w.state] }));
 
-  return { doors, works };
+  // everything the child can open in the workshop, for its search: the doors first, then the topics and the stories
+  // to be the hero of, then «إبداعاتي». A closed door still shows and says so, as on the board (a visitor sees «بعد الدخول»).
+  const SAY = { story: ['قصة', 'قصص', 'صور', 'حكاية', 'اصنع', 'ذكاء اصطناعي'], video: ['فيديو', 'فيديوهات', 'فلم', 'فيلم', 'اصنع', 'ذكاء اصطناعي'],
+    hero: ['بطل', 'قصة', 'اسمي', 'صورتي', 'شاطئ الحكايات'] };
+  function searchItems(base = '') {
+    const { TOPICS, HERO, MADE } = Workshop;
+    const guest = window.Guest && Guest.on;
+    const state = (k) => (guest ? 'بعد الدخول' : open(k) ? '' : 'غير متاحة الآن');
+    const ds = doors(base).map((d) => ({ title: d.name, img: d.art, href: d.href, rank: 0, words: SAY[d.k],
+      sub: [d.about, d.badge.replace(/^\S+\s/, '')].filter(Boolean).join(' · ') }));
+    // a topic opens the making of the kind it is ready for in the prototype (the story, unless it is the video's)
+    const topics = TOPICS.map((t) => {
+      const k = MADE.video.topic === t.id ? 'video' : 'story';
+      return { title: t.n, img: `${base}img/workshop/t-${t.id}.jpg`, href: `${base}create.html?k=${k}`, rank: 1, words: ['موضوع', KINDS[k].n, ...SAY[k]],
+        sub: [`موضوع · ${KINDS[k].n}`, state(k)].filter(Boolean).join(' · ') };
+    });
+    // only the ready story opens straight to its characters; the others are not in the prototype yet
+    const tales = HERO.map((t) => ({ title: t.title, img: `${base}img/stories/cover-${String(t.cover).padStart(2, '0')}.jpg`, rank: 1, words: SAY.hero,
+      href: t.ready ? `${base}hero.html?s=${t.id}` : undefined, sub: ['أنت بطل القصة', state('hero')].filter(Boolean).join(' · ') }));
+    const mine = works(base).map((w) => ({ title: w.name, img: w.img, href: w.href, rank: 2, words: ['إبداعاتي', w.kind, w.said],
+      sub: `من إبداعاتي · ${w.kind} · ${w.said}` }));
+    return [...ds, ...topics, ...tales, ...mine];
+  }
+
+  return { doors, works, searchItems };
 })();

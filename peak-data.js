@@ -28,5 +28,18 @@ const PeakBoard = (() => {
   // the running ones and the ended ones (a competition not started yet, or switched off by the admin, is not shown)
   const lists = (base = '') => ({ open: COMPS.filter(isOpen).map((c) => card(c, base)), ended: COMPS.filter((c) => visible(c) && !isOpen(c)).map((c) => card(c, base)) });
 
-  return { lists };
+  // every competition shown on the peak, for its search: the running ones first, each opening as its card does
+  // (a visitor is asked to sign in by guest.js when they open one)
+  function searchItems(base = '') {
+    const L = lists(base), byId = Object.fromEntries(COMPS.map((c) => [c.id, c]));
+    return [...L.open, ...L.ended].map((d) => {
+      const c = byId[d.id], quiz = c.kind === 'quiz', what = quiz ? null : c.mine === 'story' ? 'قصة' : 'رسم';
+      return { title: d.name, img: d.cover, href: d.href, rank: d.on ? 0 : 1,
+        // «جارية · تنتهي بعد ٣ أيام», or «انتهت قبل يومين»
+        sub: [quiz ? 'مسابقة سريعة' : `مسابقة مستمرة · ${what}`, ...(d.on ? ['جارية', d.when] : [d.when])].join(' · '),
+        words: ['مسابقة', 'مسابقات', d.on ? 'جارية' : 'انتهت', d.on ? 'الآن' : 'منتهية', ...(quiz ? ['سريعة', 'أسئلة', 'تحدي'] : ['مستمرة', 'تصويت', 'مشاركة', what, what === 'رسم' ? 'رسمة' : 'كتابة']), d.about] };
+    });
+  }
+
+  return { lists, searchItems };
 })();

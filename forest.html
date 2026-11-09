@@ -63,6 +63,8 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
 </a>
 <div style="display: flex; align-items: center; gap: 10px;">
 
+<button type="button" id="find" aria-label="ابحث في غابة المعرفة" style="display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border: 0; border-radius: 999px; background: #FFFFFF; color: #B4531C; box-shadow: 0 4px 0 #B9DDA6; cursor: pointer;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+
 <span title="الوقت المتبقي اليوم" style="display: flex; align-items: center; gap: 6px; background: #FFFFFF; border-radius: 999px; padding: 0 14px; height: 46px; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #B9DDA6; color: #2D6A12;"><img src="img/hud/clock.png" alt="" style="width: 30px; height: 30px; margin: -4px 0;">35 د</span>
 
 <span title="النقاط" style="display: flex; align-items: center; gap: 6px; background: #FFFFFF; border-radius: 999px; padding: 0 14px; height: 46px; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #B9DDA6; color: #3A2318;"><img src="img/hud/points.png" alt="" style="width: 30px; height: 30px; margin: -4px 0;">3,240</span>
@@ -144,9 +146,12 @@ body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; }
 </nav>
 <script src="shelf.js"></script>
 <script src="forest-data.js"></script>
+<script src="search.js"></script>
 <script>
   // the categories and what is in them (forest-data.js, shared with the phone's forest)
   Shelf.render(document.getElementById('shelves'), Forest.shelves());
+  // search inside the forest, by typing or by voice (search.js)
+  IslandSearch.mount({ button: document.getElementById('find'), where: 'غابة المعرفة', items: () => Forest.searchItems() });
 
   // the board is drawn at 1440 wide; scale it to the window, and on phones the shelves grow back so a finger can hit a cover
   const page = document.getElementById('page');

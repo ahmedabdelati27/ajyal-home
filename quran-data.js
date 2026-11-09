@@ -23,5 +23,22 @@ const Quran = (() => {
   }
   // «حفظت ... من ...» with its meter
   const sum = () => `حفظت ${count(done)} من ${ar(SURAS.length)} <span class="meter" style="--p:${(done / SURAS.length) * 100}%"><i></i></span>`;
-  return { SURAS, STATE, ar, verses, list, sum };
+  // other names and first words children use for a surah, for the search (how hamza, ة and ى are written doesn't matter there)
+  const ALSO = { 114: 'المعوذتين', 113: 'المعوذتين', 112: 'اخلاص التوحيد قل هو الله احد', 111: 'تبت اللهب ابي لهب', 110: 'اذا جاء نصر الله',
+    109: 'الكافرين قل يا ايها الكافرون', 108: 'انا اعطيناك', 107: 'ارايت', 106: 'ايلاف لايلاف', 105: 'اصحاب الفيل الم تر', 104: 'ويل لكل همزة',
+    103: 'والعصر', 102: 'الهاكم', 100: 'والعاديات', 99: 'الزلزال اذا زلزلت', 98: 'لم يكن', 97: 'انا انزلناه ليلة القدر', 96: 'اقرأ',
+    95: 'والتين والزيتون', 94: 'الانشراح الم نشرح', 93: 'والضحى', 92: 'والليل', 91: 'والشمس', 90: 'لا اقسم', 89: 'والفجر', 87: 'سبح اسم ربك',
+    86: 'والسماء والطارق', 85: 'ذات البروج', 84: 'انشقت', 83: 'المطففون ويل للمطففين', 82: 'انفطرت', 81: 'كورت', 80: 'عبس وتولى',
+    79: 'والنازعات', 78: 'عم يتساءلون' };
+  // every surah, for the oasis's search: by name (with or without «سورة»), other names and number, with the child's memorisation.
+  // In the prototype only Al-Ikhlas opens; the others have no page yet.
+  function searchItems(base = '') {
+    return SURAS.map(([n, name], i) => {
+      // a visitor has no memorising kept, so their results show no state
+      const s = window.Guest && Guest.on ? null : STATE[n], state = s === 'ok' ? 'مكتملة' : typeof s === 'number' ? `جاري الحفظ ${ar(s)}٪` : '';
+      return { title: `سورة ${name}`, rank: i, href: n === 112 ? base + 'surah.html?s=112' : '',
+        sub: `السورة رقم ${ar(n)}${state ? ` · ${state}` : ''}`, words: [name, String(n), ALSO[n] || ''] };
+    });
+  }
+  return { SURAS, STATE, ar, verses, list, sum, searchItems };
 })();

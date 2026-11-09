@@ -115,8 +115,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-o
 .zbtn.whole { width: auto; height: 48px; padding: 0 14px; gap: 6px; font-weight: 800; font-size: 15px; border-radius: 999px; }
 .zbtn.whole img { width: 30px; height: 30px; margin: -4px 0; }
 
-.me, .search { border: 0; cursor: pointer; }
-.search { width: 46px; padding: 0; justify-content: center; }
+.me { border: 0; cursor: pointer; }
 /* shortcut to the unfinished story, shown only when its avatar is off-screen */
 .resume { left: calc(var(--edge-x) + env(safe-area-inset-left, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; height: 54px; padding: 4px 16px 4px 4px; border: 0; border-radius: 999px; background: var(--paper); box-shadow: 0 4px 0 #E0A35C; cursor: pointer; font-weight: 800; font-size: 16px; }
 .resume i { width: 46px; height: 46px; padding: 4px; box-sizing: border-box; border-radius: 999px; background: conic-gradient(#5BC236 0 60%, #EFE7DB 60% 100%); }
@@ -250,7 +249,6 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
   <div class="hud top">
     <button type="button" class="pill me" id="me" aria-label="غرفتي: عمر، المستوى 7"><img src="img/avatar.png" alt=""><span class="name">عمر</span><span class="lvl"><img src="img/I-08.png" alt="">مستوى 7</span></button>
     <div class="stats">
-      <button type="button" class="pill search" aria-label="ابحث"><img src="img/I-05.png" alt=""></button>
       <button type="button" class="pill" id="points-pill" title="النقاط" aria-label="نقاطي، 3,240 نقطة"><img src="img/hud/points.png" alt="">3,240</button>
       <button type="button" class="pill" id="streak-pill" title="أيام متتالية" aria-label="أيامي المتتالية، 5 أيام"><img src="img/hud/streak.png" alt="">5</button>
       <button type="button" class="pill" id="badges-pill" title="الشارات" aria-label="شاراتي، 6 شارات"><img src="img/hud/badge.png" alt="">6</button>
