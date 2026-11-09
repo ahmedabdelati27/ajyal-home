@@ -237,28 +237,32 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .grow.play .fan img:nth-child(3) { transform: translateX(-62px) rotate(-10deg); }
 .grow.play .fan img:nth-child(2) { transform: translateY(-8px); z-index: 1; }
 
+#how { background: linear-gradient(var(--page), rgba(255,247,236,.7) 18%, rgba(255,247,236,0) 40%), linear-gradient(to top, #FFF1DE, rgba(255,241,222,0) 10%), url(img/landing/how-meadow.jpg) 50% 100% / cover no-repeat var(--page); }
 /* how it works: a winding path with three stops; Nour walks it as the page scrolls and explains each stop as she reaches it.
    Without the page script, or with reduced motion, the stops stand in a row with their words under them */
 .trail { position: relative; }
 .road { display: none; }
 .stops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 0; padding: 0; list-style: none; }
 .stop { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
-.stop .dot { position: relative; display: grid; place-items: center; width: 84px; height: 84px; border: 5px solid var(--paper); border-radius: 50%; background: var(--c); color: var(--paper); box-shadow: 0 6px 0 rgba(58,35,24,.12); transition: background .4s, transform .4s cubic-bezier(.3,1.5,.6,1); }
-.stop .dot svg { width: 36px; height: 36px; }
-.stop .dot .n { position: absolute; top: -8px; right: -8px; display: grid; place-items: center; width: 30px; height: 30px; border: 3px solid var(--paper); border-radius: 50%; background: var(--ink); font-size: 15px; font-weight: 800; }
-.stop h3 { margin: 0; font-size: 21px; font-weight: 800; }
+.stop .dot { position: relative; display: grid; place-items: center; width: 100px; height: 100px; padding: 8px; border: 5px solid var(--c); border-radius: 50%; background: var(--paper); box-shadow: 0 6px 0 rgba(58,35,24,.12); transition: background .4s, transform .4s cubic-bezier(.3,1.5,.6,1); }
+.stop .dot img { width: 100%; transition: filter .4s; }
+.stop .dot .n { position: absolute; top: -6px; right: -6px; color: var(--paper); display: grid; place-items: center; width: 30px; height: 30px; border: 3px solid var(--paper); border-radius: 50%; background: var(--ink); font-size: 15px; font-weight: 800; }
+.stop h3 { margin: 0; padding: 2px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 20px; font-weight: 800; }
 .stop p { margin: 0; max-width: 32ch; font-size: 16px; font-weight: 600; color: var(--ink-soft); }
 /* the walk: the page script lays the stops on the path and moves Nour along it */
 .trail.live { height: var(--th); }
 .trail.live .road { position: absolute; left: 0; top: var(--pad); display: block; width: 100%; height: auto; overflow: visible; }
 .trail.live.tall .road.wide, .trail.live:not(.tall) .road.tall { display: none; }
 .road path { fill: none; stroke-linecap: round; stroke-width: 12; }
-.road .base { stroke: #E2CCA8; stroke-dasharray: 1 22; }
+.road .base { stroke: rgba(255,255,255,.9); stroke-dasharray: 1 22; }
 .road .done { stroke: #F6B44A; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p, 0)); }
 .trail.live .stops { display: block; }
-.trail.live .stop { position: absolute; left: var(--x); top: var(--y); width: 180px; margin: -42px 0 0 -90px; }
-.trail.live .stop .dot { background: #E2D3BC; }
-.trail.live .stop.on .dot { background: var(--c); transform: scale(1.1); }
+.trail.live .stop { position: absolute; left: var(--x); top: var(--y); width: 180px; margin: -50px 0 0 -90px; }
+/* a stop she has not reached yet is pale; it lights up in its colour as she gets there */
+.trail.live .stop .dot { border-color: #E2D3BC; }
+.trail.live .stop .dot img { filter: grayscale(.9) opacity(.6); }
+.trail.live .stop.on .dot { border-color: var(--c); transform: scale(1.1); }
+.trail.live .stop.on .dot img { filter: none; }
 .trail.live .stop p { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .guide { display: none; }
 .trail.live .guide { position: absolute; z-index: 2; left: var(--gx); top: var(--gy); display: block; width: 0; height: 0; }
@@ -577,9 +581,9 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
         <svg class="road wide" viewBox="0 0 1000 300" aria-hidden="true"><path class="base" d="M950 150 C860 20 700 20 640 130 S470 300 360 190 S140 30 50 150"/><path class="done" d="M950 150 C860 20 700 20 640 130 S470 300 360 190 S140 30 50 150" pathLength="1"/></svg>
         <svg class="road tall" viewBox="0 0 300 700" aria-hidden="true"><path class="base" d="M150 20 C290 120 290 220 150 330 S10 560 150 680"/><path class="done" d="M150 20 C290 120 290 220 150 330 S10 560 150 680" pathLength="1"/></svg>
         <ol class="stops">
-          <li class="stop" style="--c:#3FA83A"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/><path d="M19 7v6M16 10h6"/></svg><span class="n" aria-hidden="true">١</span></span><h3>أنشئ حسابك</h3><p>حساب ولي أمر لأسرتك، أو حساب مؤسسة لمدرستك أو حضانتك، دون اشتراط باقة مدفوعة عند التسجيل.</p></li>
-          <li class="stop" style="--c:#F4823F"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9" r="3"/><path d="M2 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M13 15.4c1-.3 2.2-.4 3.5-.4 3.3 0 5.5 2 5.5 5"/></svg><span class="n" aria-hidden="true">٢</span></span><h3>أضف أطفالك</h3><p>لكل طفل ملف باسمه وتاريخ ميلاده، فيُرتَّب له المحتوى حسب عمره.</p></li>
-          <li class="stop" style="--c:#7B64DA"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M9 16l4-4-4-4"/><path d="M13 12H3"/></svg><span class="n" aria-hidden="true">٣</span></span><h3>اختر ملف طفلك</h3><p>تختار ملفه من حسابك، فيدخل عالمه ويبدأ من حيث توقف.</p></li>
+          <li class="stop" style="--c:#3FA83A"><span class="dot"><img src="img/landing/step-account.webp" alt=""><span class="n" aria-hidden="true">١</span></span><h3>أنشئ حسابك</h3><p>حساب ولي أمر لأسرتك، أو حساب مؤسسة لمدرستك أو حضانتك، دون اشتراط باقة مدفوعة عند التسجيل.</p></li>
+          <li class="stop" style="--c:#F4823F"><span class="dot"><img src="img/landing/step-kids.webp" alt=""><span class="n" aria-hidden="true">٢</span></span><h3>أضف أطفالك</h3><p>لكل طفل ملف باسمه وتاريخ ميلاده، فيُرتَّب له المحتوى حسب عمره.</p></li>
+          <li class="stop" style="--c:#7B64DA"><span class="dot"><img src="img/landing/step-enter.webp" alt=""><span class="n" aria-hidden="true">٣</span></span><h3>اختر ملف طفلك</h3><p>تختار ملفه من حسابك، فيدخل عالمه ويبدأ من حيث توقف.</p></li>
         </ol>
         <div class="guide" aria-hidden="true"><div class="say"><b></b><span></span></div><img src="img/garden/nour-point.png" alt=""></div>
       </div>
@@ -948,11 +952,13 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
   if (reduce || !('IntersectionObserver' in window)) play();
   else new IntersectionObserver((seen) => { if (seen[0].isIntersecting) { if (!loop) cycle(); } else stop(); }, { threshold: 0.35 }).observe(grow);
 
-  // how it works: Nour walks the path as the page scrolls, and explains each stop once she reaches it
+  // how it works: Nour walks the path and explains each stop once she reaches it. On wide screens she waits at the first stop
+  // until the whole path is on screen, then walks it on her own, pausing at each stop; on phones the path is taller than
+  // the screen, so she walks it as the page scrolls, keeping to the middle of the screen
   const trail = $('trail');
   if (!reduce) {
     const stopEls = [...trail.querySelectorAll('.stop')], stopAt = [0.04, 0.5, 0.96], guide = trail.querySelector('.guide'), say = guide.querySelector('.say');
-    let road, path, len, scale, pad, step = -1, walk = 0;
+    let road, path, len, scale, pad, step = -1, walk = 0, fr = stopAt[0], set = false;
     const measure = () => {
       const narrow = matchMedia('(max-width: 860px)').matches;
       trail.classList.add('live'); trail.classList.toggle('tall', narrow);
@@ -964,12 +970,29 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
       say.style.setProperty('--sw', Math.min(300, trail.clientWidth - 24) + 'px');
       move();
     };
+    // she sets off once the whole path is on screen (under the header), or, when it is taller than the screen, once its top reaches the header
+    const ready = () => {
+      const r = trail.getBoundingClientRect(), room = innerHeight - 80;
+      return r.height <= room ? r.top >= 70 && r.bottom <= innerHeight + 10 : r.top <= 100;
+    };
+    // the walk on wide screens: a pause at each stop, then an easy glide to the next one
+    const glide = (to, ms) => new Promise((done) => {
+      const from = fr, t0 = performance.now();
+      const frame = (now) => { const k = Math.min(1, (now - t0) / ms), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; fr = from + (to - from) * e; place(); if (k < 1) requestAnimationFrame(frame); else done(); };
+      requestAnimationFrame(frame);
+    });
+    const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+    const stroll = async () => { set = true; await wait(900); await glide(stopAt[1], 1800); await wait(2600); await glide(stopAt[2], 1800); };
     const move = () => {
       walk = 0;
-      const r = trail.getBoundingClientRect(), vh = innerHeight, narrow = trail.classList.contains('tall');
-      // wide screens: she sets off when the path comes up the screen and arrives as it reaches the top; phones: she keeps to the middle of the screen
-      const p = Math.min(1, Math.max(0, narrow ? (vh * 0.6 - r.top - pad) / (road.viewBox.baseVal.height * scale) : (vh * 0.8 - r.top) / (r.height * 0.9)));
-      const fr = stopAt[0] + p * (stopAt[2] - stopAt[0]), pt = path.getPointAtLength(fr * len), x = pt.x * scale;
+      if (trail.classList.contains('tall')) {
+        const r = trail.getBoundingClientRect(), p = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top - pad) / (road.viewBox.baseVal.height * scale)));
+        fr = stopAt[0] + p * (stopAt[2] - stopAt[0]);
+      } else if (!set && ready()) stroll();
+      place();
+    };
+    const place = () => {
+      const pt = path.getPointAtLength(fr * len), x = pt.x * scale;
       trail.style.setProperty('--p', fr.toFixed(4));
       guide.style.setProperty('--gx', x + 'px'); guide.style.setProperty('--gy', pad + pt.y * scale + 'px');
       // the bubble stays inside the path's box, its tail on Nour
