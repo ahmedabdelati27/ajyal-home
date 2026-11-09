@@ -95,7 +95,11 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 .isl:nth-of-type(even) { margin-inline-start: 38%; }
 .isl .art { position: relative; width: 168px; }
 .isl .art img { width: 100%; filter: drop-shadow(0 12px 10px rgba(20,90,100,.28)); animation: bob 5s ease-in-out infinite; animation-delay: var(--d, 0s); }
-.isl .name { position: relative; z-index: 1; margin-top: -14px; padding: 4px 14px 5px; border-radius: 999px; background: var(--paper); font-size: 15px; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 var(--d2, #E0B000); }
+/* the island's name on its ribbon, as on the world map */
+.isl .name { position: relative; z-index: 1; margin-top: -14px; display: flex; align-items: center; height: 30px; padding: 0 14px 2px; border-radius: 7px; background: var(--c2, #FFD43B); color: var(--ink); font-size: 15px; font-weight: 800; line-height: 1; white-space: nowrap; box-shadow: 0 3px 0 var(--d2, #E0B000); }
+.isl .name::before, .isl .name::after { content: ""; position: absolute; top: 8px; width: 20px; height: 26px; background: var(--d2, #E0B000); z-index: -1; }
+.isl .name::before { right: -12px; clip-path: polygon(0 0, 100% 0, 72% 50%, 100% 100%, 0 100%); }
+.isl .name::after { left: -12px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 28% 50%); }
 .isl .sub { margin-top: 3px; padding: 1px 10px; border-radius: 999px; background: rgba(255,255,255,.85); font-size: 12px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
 /* little marks on an island: suggested for the child, what is left in the workshop */
 .mark { position: absolute; z-index: 2; top: 16px; display: inline-flex; align-items: center; gap: 3px; height: 26px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 800; box-shadow: 0 2px 0 rgba(0,0,0,.12); }
@@ -162,18 +166,18 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 (() => {
   // the islands, as on the map of the web, one under another on the phone
   const ISLANDS = [
-    { id: 'forest', title: 'غابة المعرفة', sub: 'فيديوهات وكتب تعليمية', d: '#3D96D6' },
-    { id: 'beach', title: 'شاطئ الحكايات', sub: 'اقرأ واستمع لقصص ممتعة', d: '#E0607F' },
-    { id: 'garden', title: 'حديقة القيم', sub: 'رحلتك الآن: قيمة التعاون', d: '#3FB396' },
-    { id: 'letters', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', d: '#E0B000' },
-    { id: 'colors', title: 'وادي الألوان', sub: 'ارسم ولوّن', d: '#E58A2B', tip: true },
-    { id: 'games', title: 'كثبان الألعاب', sub: 'ألعاب تعليمية', d: '#7B64DA', tip: true },
-    { id: 'quran', title: 'واحة القرآن', sub: 'جزء عمّ', d: '#5DAA33' },
-    { id: 'ai', title: 'ورشة السحر', sub: 'قصة أو فيديو تُكتب عنك', d: '#7B64DA', left: true },
-    { id: 'peak', title: 'قمة الأبطال', sub: 'شارك في المسابقات', d: '#E0584A' }
+    { id: 'forest', c: '#5CB8F5', title: 'غابة المعرفة', sub: 'فيديوهات وكتب تعليمية', d: '#3D96D6' },
+    { id: 'beach', c: '#FF8FA8', title: 'شاطئ الحكايات', sub: 'اقرأ واستمع لقصص ممتعة', d: '#E0607F' },
+    { id: 'garden', c: '#67CFA9', title: 'حديقة القيم', sub: 'رحلتك الآن: قيمة التعاون', d: '#3FB396' },
+    { id: 'letters', c: '#FFD43B', title: 'واحة الحروف', sub: 'تعلّم الحروف والأرقام', d: '#E0B000' },
+    { id: 'colors', c: '#FFA94D', title: 'وادي الألوان', sub: 'ارسم ولوّن', d: '#E58A2B', tip: true },
+    { id: 'games', c: '#9C86F2', title: 'كثبان الألعاب', sub: 'ألعاب تعليمية', d: '#7B64DA', tip: true },
+    { id: 'quran', c: '#7CCB4C', title: 'واحة القرآن', sub: 'جزء عمّ', d: '#5DAA33' },
+    { id: 'ai', c: '#B9A8F7', title: 'ورشة السحر', sub: 'قصة أو فيديو تُكتب عنك', d: '#7B64DA', left: true },
+    { id: 'peak', c: '#FF7A6B', title: 'قمة الأبطال', sub: 'شارك في المسابقات', d: '#E0584A' }
   ];
   const world = document.getElementById('world');
-  world.innerHTML = ISLANDS.map((i, n) => `<button class="isl" type="button" data-soon style="--d:${-n * 0.6}s;--d2:${i.d}" aria-label="${i.title}، ${i.sub}">
+  world.innerHTML = ISLANDS.map((i, n) => `<button class="isl" type="button" data-soon style="--d:${-n * 0.6}s;--c2:${i.c};--d2:${i.d}" aria-label="${i.title}، ${i.sub}">
       <span class="art"><img src="../img/${i.id}.png" alt="">${i.tip ? '<span class="mark tip">★ مقترح لك</span>' : ''}${i.left ? '<span class="mark left"><img src="../img/I-11.png" alt="">3 <img src="../img/I-14.png" alt="">1</span>' : ''}</span>
       <span class="name">${i.title}</span><span class="sub">${i.sub}</span></button>`).join('');
 

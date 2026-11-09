@@ -223,10 +223,13 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
   .dock a img { width: 28px; height: 28px; }
   .pill { height: 36px; padding: 0 10px; font-size: 15px; }
   .zbtn { width: 42px; height: 42px; }
+  /* a phone zooms with two fingers, so the zoom button gives its room to the map; «الخريطة كلها» still comes back after a closer look */
+  #zin { display: none; }
   .hint { display: none; }
-  .guide, .guide .nour { width: 58px; height: 58px; } .guide .tag { font-size: 11px; padding: 0 8px 1px; bottom: -6px; }
-  .mission { bottom: calc(66px + env(safe-area-inset-bottom, 0px)); gap: 6px; }
-  .mission .bubble { padding: 4px 14px 4px 4px; gap: 10px; } .mission .bubble b { font-size: 15px; } .mission .bubble small { font-size: 11px; } .play { width: 36px; height: 36px; }
+  .guide, .guide .nour { width: 52px; height: 52px; } .guide .tag { font-size: 10px; padding: 0 7px 1px; bottom: -6px; border-width: 2px; }
+  .mission { bottom: calc(66px + env(safe-area-inset-bottom, 0px)); gap: 4px; }
+  .mission .bubble { padding: 3px 10px 3px 3px; gap: 7px; box-shadow: 0 3px 0 #F1C96B; } .mission .bubble b { font-size: 13px; line-height: 1.2; } .mission .bubble small { font-size: 10px; }
+  .mtxt { gap: 1px; } .dashes { gap: 3px; margin-top: 2px; } .dashes i { width: 14px; height: 5px; } .play { width: 28px; height: 28px; box-shadow: 0 3px 0 var(--go-deep); } .play svg { width: 12px; height: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .isl-art, .mark.tip, .mark.count, .here { animation: none; }
