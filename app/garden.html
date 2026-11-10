@@ -62,10 +62,9 @@ h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--
 .say svg { position: absolute; left: -14px; bottom: 12px; }
 @keyframes float { 50% { translate: 0 -7px; } }
 
-/* garden or list */
-.views { position: sticky; z-index: 4; top: 0; display: flex; justify-content: center; padding: 8px var(--side-r) 10px var(--side-l); background: var(--page); }
+/* garden or list: a small switch beside the garden's name, part of the page (it no longer floats over what the child scrolls) */
 .seg { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--mint); }
-.seg button { display: flex; align-items: center; gap: 6px; height: 42px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; font-size: 15px; font-weight: 800; }
+.seg button { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border: 3px solid transparent; border-radius: 999px; font-size: 15px; font-weight: 800; }
 .seg button[aria-pressed="true"] { border-color: #6B3A1E; background: linear-gradient(#F4823F, #D6531E); color: var(--paper); box-shadow: inset 0 3px 0 rgba(255,255,255,.35); }
 
 main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
@@ -88,30 +87,37 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
 /* how much of the garden is in bloom */
 .g-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 20px 0 8px; }
 .g-head b { font-size: 21px; font-weight: 800; }
-.g-head small { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.bloom { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
 .g-hint { margin: 0 0 10px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
-.g-hint .wide { display: none; }
 
-/* the garden: the picture keeps its beds, so it is as tall as a finger needs and slides sideways */
-.field { position: relative; overflow-x: auto; overflow-y: hidden; margin: 0 calc(-1 * var(--side-r)) 0 calc(-1 * var(--side-l)); padding: 0 var(--side-r) 12px var(--side-l); scrollbar-width: none; overscroll-behavior-x: contain; }
-.field::-webkit-scrollbar { display: none; }
-.field[hidden], .vlist[hidden] { display: none; }
-.scene { position: relative; height: var(--gh); aspect-ratio: 2560 / 1429; margin-inline: auto; border: 6px solid var(--paper); border-radius: 28px; overflow: hidden; background: url(../img/garden/garden-scene.jpg) center / cover; box-shadow: 0 6px 0 var(--mint), 0 14px 26px rgba(40,80,20,.15); }
-.bed { position: absolute; z-index: 3; left: var(--x); top: var(--y); width: 0; height: 0; }
-.bed .plant { position: absolute; left: 0; bottom: -12px; width: var(--w); max-width: none; translate: -50% 0; transform-origin: 50% 100%; filter: drop-shadow(0 5px 5px rgba(40,60,10,.25)); }
+/* the garden on a phone: a stone path going down the page, and each value's bed seen through a round window onto the garden picture;
+   the beds take turns on the right and the left, as the islands do on the home */
+.field { position: relative; display: grid; gap: 4px; padding: 18px 10px 24px; border-radius: 28px; background: radial-gradient(circle at 20% 12%, rgba(255,255,255,.7), rgba(255,255,255,0) 40%), linear-gradient(#E6F7D3, #C4E8A6); box-shadow: 0 6px 0 var(--mint), 0 14px 26px rgba(40,80,20,.12); overflow: hidden; }
+.field[hidden], .vlist[hidden], .seg[hidden], .g-hint[hidden] { display: none; }
+.road { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.road .way { fill: none; stroke: #F4E8CC; stroke-width: 30; stroke-linecap: round; }
+.road .stones { fill: none; stroke: #DCC49A; stroke-width: 11; stroke-linecap: round; stroke-dasharray: 1 22; }
+.bed { position: relative; z-index: 1; display: grid; justify-items: center; width: 60%; justify-self: start; color: inherit; text-decoration: none; }
+.bed:nth-of-type(even) { justify-self: end; }
+.bed + .bed { margin-top: -26px; }
+.pit { position: relative; width: 150px; height: 150px; border-radius: 50%; border: 6px solid var(--paper); background: url(../img/garden/garden-scene.jpg) var(--bx) var(--by) / 640px auto no-repeat #CDEBB0; box-shadow: 0 6px 0 rgba(40,80,20,.2), 0 12px 22px rgba(40,80,20,.18); transition: scale .2s; }
+.bed.now .pit { box-shadow: 0 0 0 5px var(--sun), 0 6px 0 rgba(40,80,20,.2), 0 12px 22px rgba(40,80,20,.18); }
+.bed:active .pit { scale: .96; }
+/* the plant grows out of its bed, over the window's edge when it is a tree */
+.bed .plant { position: absolute; z-index: 2; left: 50%; top: 106px; width: var(--w); max-width: none; translate: -50% -100%; transform-origin: 50% 100%; filter: drop-shadow(0 5px 5px rgba(40,60,10,.25)); pointer-events: none; }
 .bed .plant.sway { animation: sway 4s ease-in-out infinite; }
 @keyframes sway { 50% { rotate: 2deg; } }
 .bed .plant.grow { animation: grow 1.4s cubic-bezier(.3, 1.4, .6, 1) .4s both; }
 @keyframes grow { from { scale: .2; opacity: 0; } }
-.bed:active .plant { scale: 1.06; }
-.sign { position: absolute; left: 0; top: 20px; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 12px 6px; border-radius: 14px; background: var(--paper); border-top: 5px solid var(--c); white-space: nowrap; box-shadow: 0 3px 0 rgba(40,60,10,.2); }
-.sign b { font-size: 16px; font-weight: 800; }
+.sign { position: relative; z-index: 3; margin-top: -16px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 14px 6px; border-radius: 14px; background: var(--paper); border-top: 5px solid var(--c); white-space: nowrap; box-shadow: 0 3px 0 rgba(40,60,10,.2); }
+.sign b { font-size: 17px; font-weight: 800; }
 .sign small { font-size: 12px; font-weight: 800; color: var(--ink-soft); }
 .sign small.ok { color: var(--leaf-deep); }
 .bed.now .sign { box-shadow: 0 0 0 3px var(--sun), 0 3px 0 rgba(40,60,10,.2); }
-/* Nour waits by the plant the child is growing now */
-.nour { position: absolute; z-index: 4; width: 72px; max-width: none; pointer-events: none; translate: -50% -100%; animation: hover 3s ease-in-out infinite; }
-@keyframes hover { 50% { translate: -50% calc(-100% - 8px); } }
+/* Nour waits beside the plant the child is growing now, on the side toward the middle of the garden, pointing at it */
+.bed .nour { position: absolute; z-index: 4; top: 34px; left: -18px; width: 70px; max-width: none; scale: -1 1; pointer-events: none; animation: hover 3s ease-in-out infinite; }
+.bed:nth-of-type(even) .nour { left: auto; right: -18px; scale: 1; }
+@keyframes hover { 50% { translate: 0 -8px; } }
 
 /* the list: one card per value */
 .vlist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
@@ -141,12 +147,10 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
   .say { left: calc(var(--safe-left, env(safe-area-inset-left)) + 118px); right: auto; bottom: 30px; max-width: 200px; padding: 7px 12px 8px; font-size: 13px; }
   .bar .pill:not(.time) { display: none; }
   .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
-  .views { padding-top: 4px; padding-bottom: 8px; }
-  .seg button { height: 38px; font-size: 14px; }
+  .seg button { height: 34px; font-size: 14px; }
   main { padding-bottom: calc(var(--bottom) + 70px); }
   .cont { padding: 8px; } .cont .thumb { width: 88px; height: 54px; }
   .g-head { margin-top: 14px; }
-  .g-hint .narrow { display: none; } .g-hint .wide { display: inline; }
   .vlist { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
   .vcard b { font-size: 15px; } .vcard small { font-size: 12px; }
   .tabs { left: 50%; right: auto; translate: -50% 0; gap: 2px; padding: 4px 6px; }
@@ -175,16 +179,14 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
   <p class="say"><span id="say">أهلاً يا عمر! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك</span><svg width="22" height="18" viewBox="0 0 30 24" aria-hidden="true"><path d="M30 0 L0 22 L26 18 z" fill="#FFFFFF"/></svg></p>
 </header>
 
-<div class="views">
-  <div class="seg" role="group" aria-label="طريقة العرض" id="views"><button type="button" data-v="garden" aria-pressed="true">🌳 الحديقة</button><button type="button" data-v="list" aria-pressed="false">☰ قائمة</button></div>
-</div>
-
 <main>
   <a class="cont" id="cont" hidden></a>
-  <div class="g-head"><b>حديقتك</b><small id="bloom"></small></div>
-  <p class="g-hint">🌱 اضغط على أي نبتة لتبدأ رحلتها<span class="narrow">، واسحب لترى الحديقة كلها</span><span class="wide"></span></p>
-  <section class="field" id="field" aria-label="حديقتك"><div class="scene" id="scene"></div></section>
-  <section class="vlist" id="vlist" aria-label="القيم" hidden></section>
+  <div class="g-head"><b>حديقتك</b><div class="seg" role="group" aria-label="طريقة العرض" id="views" hidden><button type="button" data-v="garden" aria-pressed="false">🌳 الحديقة</button><button type="button" data-v="list" aria-pressed="true">☰ قائمة</button></div></div>
+  <p class="bloom" id="bloom"></p>
+  <p class="g-hint" hidden>🌱 اضغط على أي نبتة لتبدأ رحلتها</p>
+  <!-- for now the phone shows the values as cards; the garden path (#field) comes back with its tall picture -->
+  <section class="field" id="field" aria-label="حديقتك" hidden></section>
+  <section class="vlist" id="vlist" aria-label="القيم"></section>
 </main>
 
 <nav class="tabs" aria-label="التنقل">
@@ -197,6 +199,7 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
 
 <script src="../values.js"></script>
 <script src="../garden-data.js"></script>
+<script src="../trail.js"></script>
 <script src="../search.js"></script>
 <script>
 (() => {
@@ -234,31 +237,34 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
     // a value the child just completed grows in front of them, once
     const fresh = all.find((x) => x.s.complete && mine(x.v.id) && !seen.get(x.v.id));
     const status = (s) => (s.complete ? 'أزهرت' : s.n ? `${s.n} من ${s.all}` : 'لم تبدأ بعد');
-    $('scene').innerHTML = all.map(({ v, s, g }) => {
+    // each bed: a window onto its place in the garden picture, the plant growing out of it, and its sign
+    const pic = (v) => { const bw = 640, bh = bw * 1429 / 2560; return `--bx:${75 - (v.plot[0] / 100) * bw}px;--by:${82 - (v.plot[1] / 100) * bh}px`; };
+    $('field').innerHTML = all.map(({ v, s, g }) => {
       const label = s.complete ? '<small class="ok">✓ أزهرت</small>' : s.n ? `<small>${ar(s.n)} من ${ar(s.all)}</small>` : '<small>لم تبدأ بعد</small>';
-      return `<a class="bed ${now && now.v === v ? 'now' : ''}" href="value.html?v=${v.id}" data-id="${v.id}" style="--x:${v.plot[0]}%;--y:${v.plot[1]}%;--c:${v.color};--w:${WIDTH[g]}px" aria-label="${v.name}، ${status(s)}">
+      const here = now && now.v === v;
+      return `<a class="bed ${here ? 'now' : ''}" href="value.html?v=${v.id}" data-id="${v.id}" style="--c:${v.color};--w:${WIDTH[g]}px" aria-label="${v.name}، ${status(s)}">
+        <span class="pit" style="${pic(v)}"></span>
         <img class="plant ${g === 3 ? 'sway' : ''} ${fresh && fresh.v === v ? 'grow' : ''}" src="../img/garden/plant-${g}.png" alt="">
-        <span class="sign"><b>${v.name}</b>${label}</span></a>`;
-    }).join('') + (now ? `<img class="nour" src="../img/garden/nour-point.png" alt="" style="left:calc(${now.v.plot[0]}% + ${now.v.plot[0] > 50 ? 60 : -60}px);top:calc(${now.v.plot[1]}% + 6px);${now.v.plot[0] > 50 ? '' : 'scale:-1 1;'}">` : '');
+        <span class="sign"><b>${v.name}</b>${label}</span>${here ? '<img class="nour" src="../img/garden/nour-point.png" alt="">' : ''}</a>`;
+    }).join('');
+    road();
     $('vlist').innerHTML = all.map(({ v, s }) => `<a class="vcard" href="value.html?v=${v.id}" style="--c:${v.color}" aria-label="${v.name}، ${status(s)}"><img src="../img/garden/v-${v.id}.jpg" alt=""><b>${v.name}</b><small class="${s.complete ? 'ok' : ''}">${s.complete ? '✓ أزهرت' : s.n ? `أكملت ${ar(s.n)} من ${ar(s.all)}` : 'لم تبدأ بعد'}</small></a>`).join('');
     $('say').textContent = bloom ? `أهلاً يا ${kid}! في حديقتك ${ar(bloom)} ${bloom === 1 ? 'شجرة مزهرة' : 'أشجار مزهرة'}، هيا نزرع المزيد` : `أهلاً يا ${kid}! أنا نور. كل قيمة نتعلمها تزرع شجرة في حديقتك`;
     // the garden opens on the plant that matters now: the one that just bloomed, or the one being grown
     const focus = fresh || now;
-    requestAnimationFrame(() => {
-      const bed = focus && $('scene').querySelector(`[data-id="${focus.v.id}"]`), field = $('field');
-      if (!bed || field.hidden) return;
-      const f = field.getBoundingClientRect(), b = bed.getBoundingClientRect();
-      field.scrollLeft += b.left - (f.left + f.width / 2);
-      if (fresh) field.scrollIntoView({ block: 'center' });
-    });
+    if (fresh) requestAnimationFrame(() => $('field').querySelector(`[data-id="${fresh.v.id}"]`)?.scrollIntoView({ block: 'center' }));
     if (fresh) { seen.set(fresh.v.id); setTimeout(() => toast(`أزهرت شجرة ${fresh.v.name} في حديقتك!`, 4500), 900); }
   }
+
+  // the stone path from bed to bed (trail.js), drawn once they are laid out and again when the screen changes
+  const road = () => Trail.road($('field'), '.pit');
+  addEventListener('resize', road);
 
   // garden or list
   $('views').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     $('views').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    $('field').hidden = b.dataset.v !== 'garden'; $('vlist').hidden = b.dataset.v !== 'list';
+    $('field').hidden = b.dataset.v !== 'garden'; $('vlist').hidden = b.dataset.v !== 'list'; road();
     document.querySelectorAll('.g-hint').forEach((x) => { x.hidden = b.dataset.v !== 'garden'; });
   });
 
