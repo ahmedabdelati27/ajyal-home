@@ -31,7 +31,7 @@ h1 { position: relative; margin: 6px 0 0; font-size: 44px; font-weight: 900; lin
   text-shadow: 0 4px 0 #2F7FA8, 2px 0 0 #2F7FA8, -2px 0 0 #2F7FA8, 0 -2px 0 #2F7FA8, 2px 2px 0 #2F7FA8, -2px 2px 0 #2F7FA8, 2px -2px 0 #2F7FA8, -2px -2px 0 #2F7FA8; }
 p { position: relative; margin: 0; padding: 4px 16px 6px; border-radius: 999px; background: rgba(255,255,255,.88); font-size: 17px; font-weight: 800; animation: fade .5s .5s both; }
 @keyframes fade { from { opacity: 0; transform: translateY(10px); } }
-.dots { position: absolute; bottom: calc(max(env(safe-area-inset-bottom), 16px) + 28px); display: flex; gap: 8px; }
+.dots { position: absolute; bottom: calc(max(var(--safe-bottom, env(safe-area-inset-bottom)), 16px) + 28px); display: flex; gap: 8px; }
 .dots i { width: 10px; height: 10px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 0 rgba(30,100,130,.3); animation: dot 1s ease-in-out infinite; }
 .dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
 @keyframes dot { 50% { translate: 0 -7px; } }

@@ -56,7 +56,7 @@ const IslandSearch = (() => {
 
   const css = `
 .isearch { position: fixed; z-index: 8000; inset: 0; display: flex; flex-direction: column; background: #FFFAF2; font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; direction: rtl;
-  padding: max(env(safe-area-inset-top), 12px) calc(14px + env(safe-area-inset-right)) max(env(safe-area-inset-bottom), 12px) calc(14px + env(safe-area-inset-left)); }
+  padding: max(var(--safe-top, env(safe-area-inset-top)), 12px) calc(14px + var(--safe-right, env(safe-area-inset-right))) max(var(--safe-bottom, env(safe-area-inset-bottom)), 12px) calc(14px + var(--safe-left, env(safe-area-inset-left))); }
 .isearch[hidden] { display: none; }
 .isearch * { box-sizing: border-box; }
 .isearch .row { display: flex; align-items: center; gap: 8px; width: min(760px, 100%); margin: 0 auto; }
@@ -91,7 +91,7 @@ const IslandSearch = (() => {
 .isearch .none p { margin: 0 0 12px; font-size: 18px; font-weight: 800; line-height: 1.6; }
 .isearch .none button { height: 48px; padding: 0 22px; border: 0; border-radius: 999px; background: #2E8B2A; color: #FFFFFF; font: 800 17px 'Thmanyah Sans', system-ui, sans-serif; box-shadow: 0 4px 0 #1F6A1C; cursor: pointer; }
 .isearch .tip { width: min(760px, 100%); margin: 18px auto 0; text-align: center; font-size: 16px; font-weight: 700; color: #6B5A48; line-height: 1.7; }
-.isearch .toast { position: fixed; left: 50%; bottom: calc(max(env(safe-area-inset-bottom), 12px) + 12px); translate: -50% 0; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: #FFFFFF; font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.isearch .toast { position: fixed; left: 50%; bottom: calc(max(var(--safe-bottom, env(safe-area-inset-bottom)), 12px) + 12px); translate: -50% 0; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: #FFFFFF; font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
 .isearch .toast.show { opacity: 1; }
 @media (min-width: 700px) { .isearch .list { grid-template-columns: 1fr 1fr; } }
 @media (max-height: 500px) {

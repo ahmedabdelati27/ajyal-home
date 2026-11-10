@@ -23,7 +23,7 @@
 @font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
 @font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
 :root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --go: #3FA83A; --go-deep: #1F6A1C;
-  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 14px);
+  --top: max(var(--safe-top, env(safe-area-inset-top)), 12px); --bottom: max(var(--safe-bottom, env(safe-area-inset-bottom)), 14px);
   /* where the islands sit: a place (x, y) is a share of the screen, a size is a share of its width */
   --off: 0%; --span: 1; --voff: 0%; --vspan: 1; --wu: 1vw; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -72,7 +72,7 @@ img { display: block; -webkit-user-drag: none; }
 @keyframes fade { to { opacity: 0; scale: .2; translate: -50% 10px; } }
 
 /* the words of the place Nour is at */
-.skip { position: fixed; z-index: 3; top: var(--top); left: calc(14px + env(safe-area-inset-left)); height: 40px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 15px; font-weight: 800; color: var(--ink-soft); box-shadow: 0 3px 0 rgba(58,35,24,.1); }
+.skip { position: fixed; z-index: 3; top: var(--top); left: calc(14px + var(--safe-left, env(safe-area-inset-left))); height: 40px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 15px; font-weight: 800; color: var(--ink-soft); box-shadow: 0 3px 0 rgba(58,35,24,.1); }
 .skip[hidden] { display: none; }
 .card { position: fixed; z-index: 3; left: 16px; right: 16px; bottom: calc(var(--bottom) + 96px); padding: 16px 18px 14px; border-radius: 28px; background: rgba(255,255,255,.93); text-align: center; box-shadow: 0 8px 0 rgba(30,110,120,.18), 0 14px 30px rgba(20,90,100,.18); }
 .card.swap { animation: swap .45s ease both; }
@@ -97,12 +97,12 @@ h2 { margin: 0 0 6px; font-size: 26px; font-weight: 900; line-height: 1.25; }
 /* a phone on its side: the words on the left, the islands and Nour on the right */
 @media (max-height: 500px) {
   :root { --off: 42%; --span: .58; --voff: 0%; --vspan: 1.3; --wu: .9vh; }
-  .card { left: calc(20px + env(safe-area-inset-left)); right: auto; top: calc(var(--top) + 52px); bottom: calc(var(--bottom) + 70px); width: 38%; display: grid; align-content: center; text-align: start; }
+  .card { left: calc(20px + var(--safe-left, env(safe-area-inset-left))); right: auto; top: calc(var(--top) + 52px); bottom: calc(var(--bottom) + 70px); width: 38%; display: grid; align-content: center; text-align: start; }
   .card p { margin: 0; }
   h2 { font-size: 22px; }
   .nour { width: min(19vh, 96px); }
   .isl b { height: 26px; padding: 0 10px 2px; font-size: 13px; }
-  .foot { grid-template-columns: auto 260px; justify-content: space-between; align-items: center; left: calc(20px + env(safe-area-inset-left)); right: calc(20px + env(safe-area-inset-right)); }
+  .foot { grid-template-columns: auto 260px; justify-content: space-between; align-items: center; left: calc(20px + var(--safe-left, env(safe-area-inset-left))); right: calc(20px + var(--safe-right, env(safe-area-inset-right))); }
   .next { height: 48px; font-size: 17px; }
 }
 @media (prefers-reduced-motion: reduce) { .isl img, .nour img, .panel.here .isl, .panel.here .stars i, .card.swap { animation: none; } .trail { display: none; } }
@@ -123,8 +123,8 @@ h2 { margin: 0 0 6px; font-size: 26px; font-weight: 900; line-height: 1.25; }
   <div class="layer" id="world">
     <!-- 1: the welcome, two islands of the world -->
     <div class="panel" data-stop="0">
-      <div class="isl" style="--x:66;--y:26;--w:66;--i:0"><img src="../img/forest.png" alt=""></div>
-      <div class="isl" style="--x:32;--y:51;--w:62;--i:1"><img src="../img/beach.png" alt=""></div>
+      <div class="isl" style="--x:66;--y:26;--w:66;--i:0"><img src="../img/forest.png" alt=""><b style="--c2:#5CB8F5;--d2:#3D96D6">غابة المعرفة</b></div>
+      <div class="isl" style="--x:32;--y:51;--w:62;--i:1"><img src="../img/beach.png" alt=""><b style="--c2:#FF8FA8;--d2:#E0607F">شاطئ الحكايات</b></div>
       <div class="stars"><i style="--x:66;--y:22;--dx:-50px;--dy:-40px">✦</i><i style="--x:66;--y:22;--dx:55px;--dy:-30px">✧</i><i style="--x:32;--y:48;--dx:-45px;--dy:-35px;--i:2">✦</i><i style="--x:32;--y:48;--dx:50px;--dy:-45px;--i:3">✧</i></div>
     </div>
     <!-- 2: learning and playing, four islands with their names -->
@@ -137,7 +137,7 @@ h2 { margin: 0 0 6px; font-size: 26px; font-weight: 900; line-height: 1.25; }
     </div>
     <!-- 3: Nour's own garden, where she lands -->
     <div class="panel" data-stop="2">
-      <div class="isl" style="--x:50;--y:45;--w:100;--i:0"><img src="../img/garden.png" alt=""></div>
+      <div class="isl" style="--x:50;--y:45;--w:100;--i:0"><img src="../img/garden.png" alt=""><b style="--c2:#67CFA9;--d2:#3FB396">حديقة القيم</b></div>
       <div class="stars"><i style="--x:50;--y:42;--dx:-90px;--dy:-50px">✦</i><i style="--x:50;--y:42;--dx:90px;--dy:-45px;--i:1">✧</i><i style="--x:50;--y:42;--dx:-80px;--dy:40px;--i:2">✦</i><i style="--x:50;--y:42;--dx:85px;--dy:35px;--i:3">✧</i><i style="--x:50;--y:42;--dx:0px;--dy:-90px;--i:4">✦</i></div>
     </div>
   </div>

@@ -72,7 +72,7 @@
   .art .i2 { width: 70px; bottom: -8px; }
   .art .i3 { width: 54px; }
   /* the way home at the top of the strip, the account's buttons at its foot */
-  .bar { bottom: max(env(safe-area-inset-bottom), 12px); flex-direction: column; align-items: flex-start; }
+  .bar { bottom: max(var(--safe-bottom, env(safe-area-inset-bottom)), 12px); flex-direction: column; align-items: flex-start; }
   .bar .end { margin: auto 0 0; align-self: stretch; flex-direction: column; gap: 8px; }
   .bar .end .pill { width: 100%; }
   .who { margin-bottom: 4px; }

@@ -43,8 +43,8 @@ html.guest .cont, html.guest [aria-labelledby="cont"] { display: none !important
 .visit-bar .out { color: #FFE7A3; padding-inline: 8px; }
 .visit-bar .short { display: none; }
 /* the phone app keeps its own bar at the bottom of the screen: the visitor's note rests just above it */
-body:has(nav.tabs) .visit-bar { bottom: calc(max(env(safe-area-inset-bottom), 10px) + 84px); }
-@media (max-height: 500px) { body:has(nav.tabs) .visit-bar { bottom: calc(max(env(safe-area-inset-bottom), 10px) + 56px); } }
+body:has(nav.tabs) .visit-bar { bottom: calc(max(var(--safe-bottom, env(safe-area-inset-bottom)), 10px) + 84px); }
+@media (max-height: 500px) { body:has(nav.tabs) .visit-bar { bottom: calc(max(var(--safe-bottom, env(safe-area-inset-bottom)), 10px) + 56px); } }
 @media (max-width: 600px) {
   .visit-bar { left: 10px; bottom: 10px; gap: 6px; padding: 5px 6px 5px 10px; font-size: 13px; }
   .visit-bar img { width: 24px; height: 24px; }

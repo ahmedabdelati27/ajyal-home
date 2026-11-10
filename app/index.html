@@ -32,8 +32,8 @@ header b { font-size: 20px; font-weight: 800; }
 /* a device, drawn at its real size in points and scaled down to fit the window */
 .device { position: absolute; left: 50%; top: 50%; padding: var(--bezel); border-radius: var(--outer); background: #1D1A22; box-shadow: inset 0 0 0 2px #3A3644, 0 40px 80px rgba(58,35,24,.28); transform: translate(-50%, -50%) scale(var(--k, 1)); }
 .screen { position: relative; width: var(--w); height: var(--h); overflow: hidden; border-radius: var(--inner); background: #8FD3E8; }
-/* the app sits inside the phone's safe area: below the status bar and the island, above the home bar */
-.screen iframe { position: absolute; top: var(--st); right: var(--sr); bottom: var(--sb); left: var(--sl); width: calc(100% - var(--sr) - var(--sl)); height: calc(100% - var(--st) - var(--sb)); border: 0; }
+/* the app fills the whole screen, under the status bar, the island and the home bar, as on a phone; each page keeps its own content clear of them */
+.screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .status { position: absolute; z-index: 2; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; height: var(--st); padding: 0 var(--sp); direction: ltr; font: 600 var(--sf) / 1 system-ui, -apple-system, sans-serif; color: #111; pointer-events: none; }
 .status .icons { display: flex; gap: 6px; align-items: center; }
 .island { position: absolute; z-index: 3; border-radius: 999px; background: #000; pointer-events: none; }
@@ -68,7 +68,7 @@ header b { font-size: 20px; font-weight: 800; }
 (() => {
   // each device in points, with the parts of its screen the app keeps clear of
   const DEVICES = {
-    'phone-p': { start: '/app/springboard.html', w: 393, h: 852, bezel: 12, outer: 68, inner: 56, st: 54, sb: 21, sl: 0, sr: 0, sp: '32px', sf: '17px', island: { w: 126, h: 37, top: 11 } },
+    'phone-p': { start: '/app/springboard.html', w: 393, h: 852, bezel: 12, outer: 68, inner: 56, st: 54, sb: 34, sl: 0, sr: 0, sp: '32px', sf: '17px', island: { w: 126, h: 37, top: 11 } },
     'phone-l': { w: 852, h: 393, bezel: 12, outer: 68, inner: 56, st: 0, sb: 0, sl: 0, sr: 0, mock: 'phone-l', sp: '0', sf: '0px', island: { w: 37, h: 126, side: 11 } },
     'tablet-p': { w: 820, h: 1180, bezel: 22, outer: 46, inner: 26, st: 24, sb: 20, sl: 0, sr: 0, sp: '24px', sf: '13px' },
     'tablet-l': { w: 1180, h: 820, bezel: 22, outer: 46, inner: 26, st: 24, sb: 20, sl: 0, sr: 0, sp: '24px', sf: '13px' }
@@ -76,7 +76,7 @@ header b { font-size: 20px; font-weight: 800; }
   const dev = document.getElementById('device'), stage = document.getElementById('stage'), island = document.getElementById('island');
   let cur = 'tablet-l';
   const set = (id) => {
-    cur = id; const d = DEVICES[id];
+    cur = id; told = null; const d = DEVICES[id];
     Object.entries({ w: d.w + 'px', h: d.h + 'px', bezel: d.bezel + 'px', outer: d.outer + 'px', inner: d.inner + 'px', st: d.st + 'px', sb: d.sb + 'px', sl: d.sl + 'px', sr: d.sr + 'px', sp: d.sp, sf: d.sf })
       .forEach(([k, v]) => dev.style.setProperty('--' + k, v));
     // the phone starts on its own home screen, where Ajyal's icon opens the app (splash, then the first look); the tablet opens the map
@@ -97,6 +97,23 @@ header b { font-size: 20px; font-weight: 800; }
     const k = Math.min(1, (r.width - 32) / (d.w + d.bezel * 2), (r.height - 24) / (d.h + d.bezel * 2));
     dev.style.setProperty('--k', k.toFixed(3));
   };
+  // each page the app opens is told where the status bar and the home bar are: the pages keep clear of them through
+  // --safe-top and --safe-bottom, which a real phone gives them itself as env(safe-area-inset-*)
+  const frame = document.querySelector('iframe');
+  let told = null;
+  const tell = () => {
+    try {
+      const doc = frame.contentDocument, d = DEVICES[cur];
+      if (doc && doc.documentElement && doc !== told) {
+        told = doc;
+        Object.entries({ top: d.st, bottom: d.sb, left: d.sl, right: d.sr }).forEach(([k, v]) => doc.documentElement.style.setProperty(`--safe-${k}`, v + 'px'));
+      }
+    } catch {}
+  };
+  // watched every frame, so a new page hears it before it is first drawn; and once more when it has loaded
+  const watch = () => { tell(); requestAnimationFrame(watch); };
+  requestAnimationFrame(watch);
+  frame.addEventListener('load', tell);
   document.querySelector('.pick').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) set(b.dataset.d); });
   addEventListener('resize', fitIn);
   let saved = 'tablet-l'; try { saved = localStorage.getItem('ajyal.mock') || saved; } catch {}

@@ -7,8 +7,8 @@
   --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent: #F4823F; --accent-deep: #D6531E;
   --sky: #2F6FA8; --bad: #C0392B; --good: #2D7A26; --go: #3FA83A; --go-deep: #1F6A1C;
   /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
-  --top: max(env(safe-area-inset-top), 14px); --bottom: max(env(safe-area-inset-bottom), 12px);
-  --side-r: calc(16px + env(safe-area-inset-right)); --side-l: calc(16px + env(safe-area-inset-left));
+  --top: max(var(--safe-top, env(safe-area-inset-top)), 14px); --bottom: max(var(--safe-bottom, env(safe-area-inset-bottom)), 12px);
+  --side-r: calc(16px + var(--safe-right, env(safe-area-inset-right))); --side-l: calc(16px + var(--safe-left, env(safe-area-inset-left)));
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 /* an app scrolls without a bar showing */
@@ -153,10 +153,10 @@ dialog .grip { display: block; width: 44px; height: 5px; margin: -10px auto 14px
   .art .i1 { width: 92px; left: 4%; top: 2px; }
   .art .i2 { width: 84px; right: 4%; top: auto; bottom: -6px; }
   .art .i3 { display: block; width: 66px; left: auto; right: 8%; top: 0; }
-  .quote { position: absolute; display: block; right: 12px; left: var(--side-l); bottom: max(env(safe-area-inset-bottom), 12px); padding: 10px 14px; border-radius: 20px; background: rgba(255,255,255,.93); box-shadow: 0 4px 0 rgba(47,111,168,.15); }
+  .quote { position: absolute; display: block; right: 12px; left: var(--side-l); bottom: max(var(--safe-bottom, env(safe-area-inset-bottom)), 12px); padding: 10px 14px; border-radius: 20px; background: rgba(255,255,255,.93); box-shadow: 0 4px 0 rgba(47,111,168,.15); }
   .quote b { display: block; font-size: 16px; font-weight: 800; line-height: 1.35; }
   .quote p { margin: 2px 0 0; font-size: 13px; font-weight: 600; line-height: 1.5; color: var(--ink-soft); }
-  .sheet { min-width: 0; min-height: 100vh; min-height: 100dvh; padding: max(env(safe-area-inset-top), 18px) 20px calc(var(--bottom) + 20px) 24px; padding-right: calc(20px + env(safe-area-inset-right)); border-radius: 0 0 0 0; border-top-left-radius: 30px; border-bottom-left-radius: 30px; box-shadow: -5px 0 0 rgba(255,255,255,.6); }
+  .sheet { min-width: 0; min-height: 100vh; min-height: 100dvh; padding: max(var(--safe-top, env(safe-area-inset-top)), 18px) 20px calc(var(--bottom) + 20px) 24px; padding-right: calc(20px + var(--safe-right, env(safe-area-inset-right))); border-radius: 0 0 0 0; border-top-left-radius: 30px; border-bottom-left-radius: 30px; box-shadow: -5px 0 0 rgba(255,255,255,.6); }
   .sheet .in { max-width: 520px; }
   h1 { font-size: 25px; }
   .lead { margin: 2px 0 14px; font-size: 15px; }

@@ -28,8 +28,8 @@
   --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #F1F8E8; --mint: #D3E6C1;
   --go: #2E8B2A; --go-deep: #1F6A1C; --leaf: #5BC236; --leaf-deep: #2F7A23; --sun: #F7B347;
   /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
-  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
-  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+  --top: max(var(--safe-top, env(safe-area-inset-top)), 12px); --bottom: max(var(--safe-bottom, env(safe-area-inset-bottom)), 10px);
+  --side-r: calc(14px + var(--safe-right, env(safe-area-inset-right))); --side-l: calc(14px + var(--safe-left, env(safe-area-inset-left)));
   /* the garden's height; its width follows the picture */
   --gh: 430px;
 }
@@ -57,8 +57,8 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 h1 { margin: 0; font-size: 40px; font-weight: 800; line-height: 1; color: var(--paper);
   text-shadow: 0 4px 0 var(--leaf-deep), 2px 0 0 var(--leaf-deep), -2px 0 0 var(--leaf-deep), 0 -2px 0 var(--leaf-deep), 2px 2px 0 var(--leaf-deep), -2px 2px 0 var(--leaf-deep), 2px -2px 0 var(--leaf-deep), -2px -2px 0 var(--leaf-deep); }
 .title p { margin: 0; padding: 3px 14px; border-radius: 999px; background: rgba(255,255,255,.9); font-size: 14px; font-weight: 800; }
-.isle { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 2px); bottom: 2px; width: 136px; height: 136px; object-fit: contain; animation: float 4.5s ease-in-out infinite; }
-.say { position: absolute; z-index: 2; left: calc(env(safe-area-inset-left) + 140px); right: var(--side-r); bottom: 40px; max-width: 220px; margin: 0; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 14px; font-weight: 800; line-height: 1.4; box-shadow: 0 4px 0 var(--sun); }
+.isle { position: absolute; z-index: 2; left: calc(var(--safe-left, env(safe-area-inset-left)) + 2px); bottom: 2px; width: 136px; height: 136px; object-fit: contain; animation: float 4.5s ease-in-out infinite; }
+.say { position: absolute; z-index: 2; left: calc(var(--safe-left, env(safe-area-inset-left)) + 140px); right: var(--side-r); bottom: 40px; max-width: 220px; margin: 0; padding: 9px 14px 10px; border-radius: 20px; background: var(--paper); font-size: 14px; font-weight: 800; line-height: 1.4; box-shadow: 0 4px 0 var(--sun); }
 .say svg { position: absolute; left: -14px; bottom: 12px; }
 @keyframes float { 50% { translate: 0 -7px; } }
 
@@ -137,8 +137,8 @@ main { padding: 6px var(--side-r) calc(var(--bottom) + 100px) var(--side-l); }
   .title { top: calc(var(--top) + 6px); right: 70px; left: 300px; }
   h1 { font-size: 32px; }
   .title p { font-size: 13px; }
-  .isle { width: 112px; height: 112px; bottom: 0; left: calc(env(safe-area-inset-left) + 8px); }
-  .say { left: calc(env(safe-area-inset-left) + 118px); right: auto; bottom: 30px; max-width: 200px; padding: 7px 12px 8px; font-size: 13px; }
+  .isle { width: 112px; height: 112px; bottom: 0; left: calc(var(--safe-left, env(safe-area-inset-left)) + 8px); }
+  .say { left: calc(var(--safe-left, env(safe-area-inset-left)) + 118px); right: auto; bottom: 30px; max-width: 200px; padding: 7px 12px 8px; font-size: 13px; }
   .bar .pill:not(.time) { display: none; }
   .bar { pointer-events: none; } .bar > * { pointer-events: auto; }
   .views { padding-top: 4px; padding-bottom: 8px; }

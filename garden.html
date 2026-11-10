@@ -107,7 +107,7 @@ main { position: relative; z-index: 2; margin: -40px 0 0; padding: 0 80px 150px;
 .toast.show { opacity: 1; }
 
 /* dock: the same game bar as the map */
-.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
+.dock { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + var(--safe-bottom, env(safe-area-inset-bottom, 0px))); transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border: 4px solid var(--line); border-radius: 999px;
   background: linear-gradient(#FFD98C, #F7B347 55%, #EE9C2E); box-shadow: inset 0 3px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(166,84,20,.35), 0 5px 0 var(--line), 0 12px 20px rgba(58,35,24,.25); }
 .dock a { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 18px; border: 3px solid transparent; border-radius: 999px; color: #4A2612; text-decoration: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
 .dock a:hover { background: rgba(255,255,255,.25); }

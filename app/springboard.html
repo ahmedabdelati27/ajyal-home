@@ -11,12 +11,12 @@
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; overflow: hidden; background: #0B3C6E; }
 .wall { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; user-select: none; -webkit-user-drag: none; }
-/* the empty spot under «Maps», on the grid of the phone's icons (393 points wide) */
-.app { position: absolute; top: 429.8px; left: 29.33px; width: 62.57px; display: flex; flex-direction: column; align-items: center; gap: 0; border: 0; padding: 0; background: none; cursor: pointer; font: inherit; }
+/* the empty spot under «Maps», on the grid of the phone's icons (393 points wide, the whole screen from its top) */
+.app { position: absolute; top: 483.8px; left: 29.33px; width: 62.57px; display: flex; flex-direction: column; align-items: center; gap: 0; border: 0; padding: 0; background: none; cursor: pointer; font: inherit; }
 .app img { width: 62.57px; height: 62.57px; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .15s; }
 .app:active img { transform: scale(.9); }
 .app span { margin-top: 5px; width: 80px; text-align: center; font: 500 11.5px/1.2 -apple-system, 'SF Pro Text', system-ui, sans-serif; color: #FFFFFF; text-shadow: 0 1px 2px rgba(0,0,0,.35); direction: ltr; white-space: nowrap; }
-.hint { position: absolute; top: 516px; left: 18px; display: flex; align-items: center; gap: 6px; padding: 6px 12px 7px; border-radius: 999px; background: rgba(255,255,255,.92); color: #3A2318; font: 800 13px 'Thmanyah Sans', system-ui, sans-serif; box-shadow: 0 6px 16px rgba(0,0,0,.2); animation: nudge 1.4s ease-in-out infinite; pointer-events: none; }
+.hint { position: absolute; top: 570px; left: 18px; display: flex; align-items: center; gap: 6px; padding: 6px 12px 7px; border-radius: 999px; background: rgba(255,255,255,.92); color: #3A2318; font: 800 13px 'Thmanyah Sans', system-ui, sans-serif; box-shadow: 0 6px 16px rgba(0,0,0,.2); animation: nudge 1.4s ease-in-out infinite; pointer-events: none; }
 .hint::before { content: ""; position: absolute; top: -6px; left: 40px; border: 6px solid transparent; border-top: 0; border-bottom-color: rgba(255,255,255,.92); }
 @keyframes nudge { 50% { translate: 0 -4px; } }
 /* the opening: the icon's square grows from where it sits to the whole screen */

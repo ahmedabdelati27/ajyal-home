@@ -27,8 +27,8 @@
 :root {
   --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --page: #FFF7EC; --edge: #F1DEC2; --accent-deep: #C2551C;
   /* the phone's own edges: the status bar, the home bar and, on its side, the camera */
-  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 10px);
-  --side-r: calc(14px + env(safe-area-inset-right)); --side-l: calc(14px + env(safe-area-inset-left));
+  --top: max(var(--safe-top, env(safe-area-inset-top)), 12px); --bottom: max(var(--safe-bottom, env(safe-area-inset-bottom)), 10px);
+  --side-r: calc(14px + var(--safe-right, env(safe-area-inset-right))); --side-l: calc(14px + var(--safe-left, env(safe-area-inset-left)));
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { overflow-x: clip; scrollbar-width: none; } html::-webkit-scrollbar { display: none; }

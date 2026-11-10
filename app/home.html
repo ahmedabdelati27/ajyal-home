@@ -31,7 +31,7 @@
   --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --edge: #F1DEC2;
   --go: #3FA83A; --go-deep: #1F6A1C; --nour: #F2C94C; --sky: #2F6FA8;
   /* the phone's own edges: under the status bar and the home bar (the mockup leaves them out, a real phone gives them) */
-  --top: max(env(safe-area-inset-top), 14px); --bottom: max(env(safe-area-inset-bottom), 10px);
+  --top: max(var(--safe-top, env(safe-area-inset-top)), 14px); --bottom: max(var(--safe-bottom, env(safe-area-inset-bottom)), 10px);
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 /* an app scrolls without a bar showing */

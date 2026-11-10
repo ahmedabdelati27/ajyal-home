@@ -20,7 +20,7 @@ img { display: block; max-width: none; -webkit-user-drag: none; -webkit-touch-ca
 @media (max-aspect-ratio: 4 / 5) { .bg { background-image: url(img/pictures/viewer-bg-tall.jpg); } }
 
 .app { position: relative; height: 100dvh; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto auto; gap: 14px;
-  padding: calc(var(--edge-y) + env(safe-area-inset-top, 0px)) calc(var(--edge-x) + env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) calc(var(--edge-x) + env(safe-area-inset-left, 0px)); }
+  padding: calc(var(--edge-y) + var(--safe-top, env(safe-area-inset-top, 0px))) calc(var(--edge-x) + var(--safe-right, env(safe-area-inset-right, 0px))) calc(16px + var(--safe-bottom, env(safe-area-inset-bottom, 0px))) calc(var(--edge-x) + var(--safe-left, env(safe-area-inset-left, 0px))); }
 
 /* top bar: back on the right, title and counter in the middle, time on the left */
 .top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
@@ -114,7 +114,7 @@ img { display: block; max-width: none; -webkit-user-drag: none; -webkit-touch-ca
 /* a phone on its side: a slim top bar and actions row, so the picture, the player or the page gets the height */
 @media (max-height: 500px) {
   :root { --edge-x: 16px; --edge-y: 6px; }
-  .app { gap: 6px; padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
+  .app { gap: 6px; padding-bottom: calc(6px + var(--safe-bottom, env(safe-area-inset-bottom, 0px))); }
   .top { gap: 8px; }
   .pill { height: 36px; padding: 0 12px 0 10px; gap: 6px; font-size: 15px; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
   .pill img { width: 24px; height: 24px; }
