@@ -372,7 +372,8 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
     // labels keep a readable size on screen, within limits
     // on a small screen (a phone) the names grow less as the map shrinks, so they keep their ribbons without crowding the islands
     const small = Math.min(view().w, view().h) < 600;
-    world.style.setProperty('--inv', Math.min(small ? 1.25 : 2.2, Math.max(0.55, 1 / cam.s)).toFixed(3));
+    // (on a larger screen the whole world shows its names a little smaller, so the islands don't crowd)
+    world.style.setProperty('--inv', (small ? Math.min(1.25, Math.max(0.55, 1 / cam.s)) : Math.min(1.4, Math.max(0.55, 0.85 / cam.s))).toFixed(3));
     const min = fit(), v = view();
     // the resume shortcut appears only while the child's avatar on the beach is out of sight
     const hx = cam.x + 1115 * cam.s, hy = cam.y + 668 * cam.s;
