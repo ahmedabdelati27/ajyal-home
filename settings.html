@@ -123,7 +123,7 @@
   const $ = (id) => document.getElementById(id);
   const me = Profile.read();
   // the child may change only the name and the picture (in «غرفتي»)
-  $('me-row').innerHTML = `<span class="ic face"><img src="img/avatars/${me.avatar}.png" alt=""></span>
+  $('me-row').innerHTML = `<span class="ic face"><img src="${Profile.face(me)}" alt=""></span>
     <div><b>${me.name}</b><small>اسمك وصورتك</small></div><a class="btn soft" href="index.html?open=room">غيّر اسمك وصورتك</a>`;
 
   // sounds: the same switch as the speaker on the map, remembered on this device

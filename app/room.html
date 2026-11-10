@@ -274,8 +274,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   <label for="name">اسمك</label>
   <input type="text" id="name" maxlength="12" autocomplete="off">
   <p class="err" id="name-err" role="alert"></p>
-  <label id="faces-t">صورتك</label>
-  <div class="faces" role="group" aria-labelledby="faces-t" id="faces"></div>
+  <div id="faces"></div>
   <div class="dbtns"><button class="btn go" type="button" id="edit-ok">احفظ</button><button class="btn soft" type="button" id="edit-no">إلغاء</button></div>
 </dialog>
 <dialog id="work" aria-labelledby="work-t">
@@ -317,7 +316,7 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   // the child the parent chose (or the name and picture changed here)
   let me = Profile.read();
   function card() {
-    $('my-face').src = `${B}img/avatars/${me.avatar}.png`;
+    $('my-face').src = Profile.face(me, B);
     $('my-name').textContent = me.name;
     $('my-sub').textContent = `${ar(me.age)} سنوات · المستوى ${ar(me.level)}`;
   }
@@ -396,21 +395,17 @@ dialog input[type=text]:focus { outline: none; border-color: var(--accent); }
   });
 
   // ---- change the name and the picture (nothing else)
-  let face = me.avatar;
+  let picked = null;
   $('edit-open').addEventListener('click', () => {
-    face = me.avatar; $('name').value = me.name; $('name-err').textContent = '';
-    $('faces').innerHTML = AVATARS.map((a) => `<button type="button" data-a="${a}" aria-pressed="${a === face}" aria-label="صورة ${ar(AVATARS.indexOf(a) + 1)}"><img src="${B}img/avatars/${a}.png" alt=""></button>`).join('');
+    $('name').value = me.name; $('name-err').textContent = '';
+    picked = Profile.pick($('faces'), me, B);
     $('edit').showModal(); $('name').focus();
-  });
-  $('faces').addEventListener('click', (e) => {
-    const b = e.target.closest('[data-a]'); if (!b) return;
-    face = b.dataset.a; $('faces').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
   });
   $('edit-no').addEventListener('click', () => $('edit').close());
   $('edit-ok').addEventListener('click', () => {
     const v = $('name').value.trim();
     if (!Room.okName(v)) { $('name-err').textContent = 'اكتب اسماً من حرفين إلى ١٢ حرفاً، بالحروف فقط'; return $('name').focus(); }
-    me = { ...me, name: v, avatar: face };
+    me = { ...me, name: v, ...picked.get() };
     if (!Profile.save(me)) return say('لم نستطع الحفظ على هذا الجهاز');
     $('edit').close(); card(); say('حُفظ اسمك وصورتك');
   });

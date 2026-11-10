@@ -446,7 +446,7 @@ html.mock-phone-l .mission { margin-bottom: 12px; }
     const me = document.getElementById('me');
     me.querySelector('.name').textContent = kid.name;
     me.setAttribute('aria-label', `غرفتي: ${kid.name}، المستوى 7`);
-    if (kid.avatar) me.querySelector('img').src = `img/avatars/${kid.avatar}.png`;
+    if (kid.photo || kid.avatar) me.querySelector('img').src = kid.photo || `img/avatars/${kid.avatar}.png`;
   }
   document.getElementById('me').addEventListener('click', () => openSheet('room'));
   // the badge count opens every badge and how to earn it

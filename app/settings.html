@@ -149,7 +149,7 @@ main { position: relative; z-index: 2; margin-top: -24px; display: flex; flex-di
       <div class="row">
         <span class="ic round"><img src="../img/nour.webp" alt=""></span>
         <div class="txt"><b>جولة نور</b><small>تعرّف على جزر عالم أجيال مرة أخرى مع نور</small></div>
-        <a class="btn soft" href="../index.html?tour=1">شاهد الجولة</a>
+        <a class="btn soft" href="home.html?tour=1">شاهد الجولة</a>
       </div>
     </section>
 
@@ -189,7 +189,7 @@ main { position: relative; z-index: 2; margin-top: -24px; display: flex; flex-di
   const B = '../';
   const me = Profile.read();
   // the child may change only the name and the picture (in «غرفتي»)
-  $('me-row').innerHTML = `<span class="ic face"><img src="${B}img/avatars/${me.avatar}.png" alt=""></span>
+  $('me-row').innerHTML = `<span class="ic face"><img src="${Profile.face(me, B)}" alt=""></span>
     <div class="txt"><b>${me.name}</b><small>اسمك وصورتك</small></div><a class="btn soft" href="room.html" aria-label="غيّر اسمك وصورتك في غرفتي">غيّر</a>`;
 
   // sounds: on or off for the whole world, remembered on this device (this is the only switch for them)

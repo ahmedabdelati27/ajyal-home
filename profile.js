@@ -9,8 +9,70 @@
   const KEY = 'ajyal.profile';
   const BASE = { name: 'عمر', avatar: 'A-03', age: 8, xp: 3240, level: 7, from: 2800, to: 4000, streak: 5 };
   const read = () => { try { return { ...BASE, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { return { ...BASE }; } };
-  const save = (v) => { try { const { name, avatar } = v; localStorage.setItem(KEY, JSON.stringify({ name, avatar })); return true; } catch { return false; } };
+  const save = (v) => { try { const { name, avatar, photo } = v; localStorage.setItem(KEY, JSON.stringify(photo ? { name, avatar, photo } : { name, avatar })); return true; } catch { return false; } };
   const AVATARS = ['A-01', 'A-02', 'A-03', 'A-04', 'A-05', 'A-06', 'A-07', 'A-08'];
+
+  // the child's picture: a photo of their own if they added one, otherwise the drawn picture (the avatar).
+  // Every child keeps an avatar: it is what other children see on the leaderboard; the photo shows only on the child's own places
+  const face = (me, base = '') => me.photo || `${base}img/avatars/${me.avatar}.png`;
+  // the parent decides whether pictures may be uploaded (for the prototype: ?photos=off, kept for the visit)
+  const photosOk = () => {
+    const q = new URLSearchParams(location.search);
+    try { if (q.has('photos')) sessionStorage.setItem('ajyal.photos', q.get('photos')); return sessionStorage.getItem('ajyal.photos') !== 'off'; } catch { return q.get('photos') !== 'off'; }
+  };
+  // a photo is kept small: its middle square, 240 pixels across
+  const shrink = (file) => new Promise((ok, no) => {
+    const url = URL.createObjectURL(file), i = new Image();
+    i.onload = () => {
+      const s = Math.min(i.naturalWidth, i.naturalHeight), c = document.createElement('canvas'); c.width = c.height = 240;
+      c.getContext('2d').drawImage(i, (i.naturalWidth - s) / 2, (i.naturalHeight - s) / 2, s, s, 0, 0, 240, 240);
+      URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', 0.82));
+    };
+    i.onerror = () => { URL.revokeObjectURL(url); no(); };
+    i.src = url;
+  });
+  const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2.5h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>';
+  const CSS = `.pick .photo { display: flex; align-items: center; gap: 12px; margin: 4px 0 14px; padding: 10px; border-radius: 22px; background: #FFF6E8; }
+.pick .ph { flex-shrink: 0; display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; overflow: hidden; background: #FFFFFF; color: #B07A00; box-shadow: 0 0 0 3px #F1DEC2; }
+.pick .ph.on { box-shadow: 0 0 0 4px var(--accent, #E58A2B); }
+.pick .ph img { width: 100%; height: 100%; object-fit: cover; }
+.pick .ph svg { width: 34px; height: 34px; }
+.pick .photo b { display: block; font-size: 16px; font-weight: 800; }
+.pick small { display: block; font-size: 13px; font-weight: 700; color: #6B5A48; }
+.pick small.lock { margin-top: 4px; color: #8A5A00; }
+.pick .ph-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.pick .ph-btns button { height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: #FFFFFF; font: inherit; font-size: 14px; font-weight: 800; color: #3A2318; box-shadow: 0 0 0 2px #F1DEC2, 0 3px 0 #F1DEC2; cursor: pointer; }
+.pick .ph-btns .drop { color: #A13A2E; }
+.pick .sub { display: block; margin-bottom: 4px; font-size: 15px; font-weight: 800; }
+.pick .sub small { display: inline; margin-inline-start: 4px; }`;
+  // the picture part of «غيّر اسمك وصورتك»: the child's photo (add, change or remove), then the drawn pictures; get() gives what was picked
+  function pick(host, me, base = '') {
+    if (!document.getElementById('pick-css')) document.head.insertAdjacentHTML('beforeend', `<style id="pick-css">${CSS}</style>`);
+    let photo = me.photo || '', avatar = me.avatar;
+    const ok = photosOk();
+    const draw = () => {
+      host.classList.add('pick');
+      host.innerHTML = `<div class="photo"><span class="ph${photo ? ' on' : ''}">${photo ? '<img src="' + photo + '" alt="صورتك">' : CAM}</span>
+        <div><b>صورتك الحقيقية</b><small>تظهر لك ولولي أمرك فقط</small>
+        ${ok ? `<div class="ph-btns"><button type="button" data-ph="add">${photo ? 'غيّر الصورة' : 'أضف صورة'}</button>${photo ? '<button type="button" class="drop" data-ph="drop">احذفها</button>' : ''}</div>`
+          : `<small class="lock">${photo ? 'رفع صورة جديدة يحتاج إذن ولي أمرك أو معلّمك' : 'رفع الصور يحتاج إذن ولي أمرك أو معلّمك'}</small>${photo ? '<div class="ph-btns"><button type="button" class="drop" data-ph="drop">احذفها</button></div>' : ''}`}</div>
+        <input type="file" accept="image/*" hidden></div>
+        <span class="sub">صورتك الرمزية<small>${photo ? 'يراها الأطفال الآخرون في المتصدرين' : 'تظهر لك وللأطفال الآخرين في المتصدرين'}</small></span>
+        <div class="faces" role="group" aria-label="صورتك الرمزية">${AVATARS.map((a, n) => `<button type="button" data-a="${a}" aria-pressed="${a === avatar}" aria-label="صورة رمزية ${ar(n + 1)}"><img src="${base}img/avatars/${a}.png" alt=""></button>`).join('')}</div>`;
+    };
+    host.onclick = (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.a) { avatar = b.dataset.a; host.querySelectorAll('[data-a]').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); }
+      if (b.dataset.ph === 'add') host.querySelector('input[type=file]').click();
+      if (b.dataset.ph === 'drop') { photo = ''; draw(); host.querySelector('[data-ph="add"]')?.focus(); }
+    };
+    host.onchange = (e) => {
+      const f = e.target.files?.[0]; if (!f) return;
+      shrink(f).then((p) => { photo = p; draw(); host.querySelector('[data-ph="add"]')?.focus(); }, () => {});
+    };
+    draw();
+    return { get: () => ({ photo, avatar }) };
+  }
 
   // badges and achievements are one system; the admin sets each one's name, picture and condition
   // about: the admin's short description; how: the condition; prog: how far the child is when it can be counted; go: where to earn it
@@ -52,5 +114,5 @@
     { n: 'اعتماد إبداعك للنشر', xp: 25, img: 'img/colors.png', go: ['index.html?open=room&tab=works', 'إبداعاتي'] }
   ];
 
-  window.Profile = { ar, num, read, save, AVATARS, BADGES, LEADERS, ME_RANK, STREAK, LEVELS, EARN };
+  window.Profile = { ar, num, read, save, AVATARS, face, photosOk, pick, BADGES, LEADERS, ME_RANK, STREAK, LEVELS, EARN };
 })();

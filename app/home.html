@@ -115,6 +115,28 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
 .tabs img { width: 34px; height: 34px; }
 .tabs [aria-current="page"] { background: #FFE9C2; color: var(--ink); }
 
+/* Nour's tour, as on the map of the web: everything dims except the place she is talking about */
+.tour { position: fixed; inset: 0; z-index: 20; }
+.tour[hidden] { display: none; }
+.spot { position: absolute; z-index: 20; left: 50%; top: 40%; width: 0; height: 0; border-radius: 50%; box-shadow: 0 0 0 300vmax rgba(18,40,58,.6); outline: 4px dashed rgba(255,228,140,.95); outline-offset: 6px; transition: left .4s ease, top .4s ease, width .4s ease, height .4s ease, border-radius .4s ease; pointer-events: none; }
+.spot[hidden] { display: none; }
+.spot.off { outline-color: transparent; }
+.tour-card { position: fixed; z-index: 21; left: 12px; right: 12px; bottom: calc(var(--bottom) + 12px); display: grid; grid-template-columns: 60px 1fr; gap: 10px; align-items: start; padding: 12px 14px 14px 12px; border: 4px solid var(--paper); border-radius: 26px; background: #FFF9EE; box-shadow: 0 8px 0 rgba(90,68,184,.25), 0 18px 32px rgba(0,0,0,.25); }
+.tour-card.up { bottom: auto; top: calc(var(--top) + 8px); }
+.tour-card .face { width: 60px; margin-top: 4px; animation: bob 3.2s ease-in-out infinite; }
+.tour-n { font-size: 13px; font-weight: 800; color: #7B64DA; }
+.tour-card h2 { margin: 2px 0 4px; font-size: 20px; font-weight: 800; line-height: 1.25; }
+.tour-card p { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.6; color: var(--ink-soft); }
+.tour-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.tour-btns button { height: 42px; padding: 0 14px; border-radius: 999px; font-size: 15px; font-weight: 800; }
+.tour-btns button[hidden] { display: none; }
+.t-hear { display: inline-flex; align-items: center; gap: 4px; background: #FFF1C9; color: #8A5A00; }
+.t-hear svg { width: 20px; height: 20px; }
+.t-back { background: var(--paper); box-shadow: 0 0 0 2px #EFE3CF; }
+.t-skip { padding: 0 6px !important; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 4px; }
+.t-next { margin-inline-start: auto; background: var(--go); color: var(--paper); box-shadow: 0 4px 0 var(--go-deep); }
+@media (prefers-reduced-motion: reduce) { .spot { transition: none; } .tour-card .face { animation: none; } }
+
 .toast { position: fixed; z-index: 9; left: 50%; bottom: calc(var(--bottom) + 92px); translate: -50% 0; width: max-content; max-width: calc(100% - 32px); padding: 9px 16px; border-radius: 999px; background: rgba(58,35,24,.92); color: var(--paper); font-size: 14px; font-weight: 700; text-align: center; opacity: 0; transition: opacity .25s; pointer-events: none; }
 .toast.show { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .nour-card .face, .isl .art img { animation: none; } }
@@ -163,6 +185,24 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
   <a href="leaders.html"><img src="../img/tabs/leaders.png" alt="">المتصدرون</a>
 </nav>
 <div class="toast" id="toast" role="status"></div>
+<!-- Nour's tour on a child's first visit: the page dims, one place lights at a time, and «تخطَّ الجولة» ends it any time -->
+<div class="spot off" id="spot" hidden aria-hidden="true"></div>
+<div class="tour" id="tour" hidden role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-p">
+  <div class="tour-card" id="tour-card">
+    <img class="face" src="../img/garden/nour-wave.png" alt="">
+    <div>
+      <span class="tour-n" id="tour-n"></span>
+      <h2 id="tour-t"></h2>
+      <p id="tour-p"></p>
+      <div class="tour-btns">
+        <button type="button" class="t-hear" id="tour-hear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>استمع</button>
+        <button type="button" class="t-back" id="tour-back">السابق</button>
+        <button type="button" class="t-skip" id="tour-skip">تخطَّ الجولة</button>
+        <button type="button" class="t-next" id="tour-next">التالي</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="../values.js"></script>
 
 <script>
@@ -209,7 +249,7 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
     const kid = JSON.parse(localStorage.getItem('ajyal.profile') || '{}');
     if (!(window.Guest && Guest.on)) {
       if (kid.name) { document.getElementById('me-name').textContent = kid.name; document.getElementById('me').setAttribute('aria-label', `غرفتي: ${kid.name}، المستوى 7`); }
-      if (kid.avatar) document.getElementById('me-img').src = `../img/avatars/${kid.avatar}.png`;
+      if (kid.photo || kid.avatar) document.getElementById('me-img').src = kid.photo || `../img/avatars/${kid.avatar}.png`;
     }
   } catch {}
 
@@ -223,6 +263,86 @@ main { padding: 2px 14px calc(var(--bottom) + 104px); }
     toast.textContent = 'في النموذج: هذه الشاشة على الجوال تأتي في الخطوات القادمة';
     toast.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => toast.classList.remove('show'), 2200);
   });
+
+  // ---- Nour's tour: on a child's first visit she shows every island, the bar and her journey (?tour=1 shows it again);
+  // the same words as the tour on the map of the web, and the same «seen» on this device
+  const $ = (id) => document.getElementById(id);
+  const tour = $('tour'), spot = $('spot'), card = $('tour-card');
+  const SAY = {
+    ai: 'هنا نصنع معاً قصة أو فيديو يُكتب عنك.',
+    forest: 'هنا فيديوهات وكتب وصور، تتعلم منها أشياء جديدة.',
+    beach: 'هنا قصص تقرؤها أو تستمع إليها، ثم تجيب عن أسئلة صغيرة.',
+    quran: 'هنا تستمع إلى سور جزء عمّ، وتردّدها، ثم تسمّعها.',
+    games: 'هنا ألعاب ممتعة، تتعلم وأنت تلعب.',
+    colors: 'هنا ترسم بحرية، وتلوّن الرسومات الجميلة.',
+    peak: 'هنا المسابقات! أجب عن الأسئلة، أو شارك برسمتك.',
+    letters: 'هنا تتعلم الحروف والأرقام: تراها، وتسمعها، وتكتبها.',
+    garden: 'وهذه حديقتي! هنا نزرع القيم معاً، مثل الصدق والتعاون.'
+  };
+  let who = ''; try { who = JSON.parse(localStorage.getItem('ajyal.profile') || '{}').name || ''; } catch {}
+  const STEPS = [
+    { t: window.Guest && Guest.on ? 'أهلاً بك! أنا نور' : `أهلاً يا ${who || 'عمر'}! أنا نور`, p: 'أنا صديقتك في عالم أجيال. تعال أعرّفك على الجزر، جزيرة بعد جزيرة!' },
+    ...ISLANDS.map((i, n) => ({ isl: n, t: i.title, p: SAY[i.id] })),
+    { el: '.tabs', t: 'الشريط السفلي', p: 'من هنا ترجع إلى الخريطة، وتفتح كل الأقسام، وغرفتك، والمتصدرين.' },
+    { el: '#journey', t: 'رحلتك معي', p: 'اضغط هنا لتكمل معي رحلة القيمة.' },
+    { t: 'أنت جاهز!', p: 'اضغط على أي جزيرة لتبدأ. وأنا معك دائماً.', last: true }
+  ];
+  let step = 0;
+  const seen = () => { try { return localStorage.getItem('ajyal.tour') === 'done'; } catch { return true; } };
+  // the light sits on the page, so it stays on its place; the card moves away from it
+  function lightOn(el, pad, round) {
+    const b = el.getBoundingClientRect(), fixed = getComputedStyle(el).position === 'fixed';
+    spot.classList.remove('off');
+    Object.assign(spot.style, { position: fixed ? 'fixed' : 'absolute', left: `${b.left - pad + (fixed ? 0 : scrollX)}px`, top: `${b.top - pad + (fixed ? 0 : scrollY)}px`,
+      width: `${b.width + pad * 2}px`, height: `${b.height + pad * 2}px`, borderRadius: round ? '50%' : '28px' });
+    card.classList.toggle('up', b.top + b.height / 2 > innerHeight * 0.5);
+  }
+  function lightOff() { spot.classList.add('off'); Object.assign(spot.style, { position: 'fixed', left: '50%', top: '40%', width: '0px', height: '0px' }); card.classList.remove('up'); }
+  function show(n) {
+    step = n; const S = STEPS[n];
+    $('tour-n').textContent = n === 0 || S.last ? 'جولة مع نور' : `${n} من ${STEPS.length - 2}`;
+    $('tour-t').textContent = S.t; $('tour-p').textContent = S.p;
+    $('tour-back').hidden = n === 0;
+    $('tour-next').textContent = n === 0 ? 'هيا بنا' : S.last ? 'لنبدأ!' : 'التالي';
+    $('tour-skip').hidden = !!S.last;
+    quiet();
+    if (S.isl !== undefined) {
+      // the island comes up to the top part of the screen, above the card, then the light lands on it
+      // (the light glides from island to island; the page itself jumps, so the light always lands where the island is)
+      const isl = world.querySelectorAll('.isl')[S.isl];
+      scrollTo({ top: isl.getBoundingClientRect().top + scrollY - innerHeight * 0.2, behavior: 'instant' });
+      lightOn(isl, 6, false);
+    } else if (S.el) {
+      if (S.el === '#journey') scrollTo({ top: 0, behavior: 'instant' });
+      lightOn(document.querySelector(S.el), 8, false);
+    } else { scrollTo({ top: 0, behavior: 'instant' }); lightOff(); }
+    $('tour-next').focus({ preventScroll: true });
+  }
+  function startTour() {
+    document.documentElement.style.overflow = 'hidden';
+    spot.hidden = false; tour.hidden = false; show(0);
+  }
+  function endTour() {
+    quiet(); tour.hidden = true; spot.hidden = true; lightOff();
+    document.documentElement.style.overflow = '';
+    try { localStorage.setItem('ajyal.tour', 'done'); } catch {}
+    scrollTo({ top: 0, behavior: 'instant' });
+    if (new URLSearchParams(location.search).has('tour')) history.replaceState(null, '', location.pathname);
+  }
+  $('tour-next').addEventListener('click', () => (STEPS[step].last ? endTour() : show(step + 1)));
+  $('tour-back').addEventListener('click', () => step > 0 && show(step - 1));
+  $('tour-skip').addEventListener('click', endTour);
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !tour.hidden) endTour(); });
+  // read aloud for children who do not read yet (in the product: Nour's recorded voice)
+  const synth = window.speechSynthesis; synth?.getVoices();
+  const quiet = () => { if (synth?.speaking) synth.cancel(); };
+  $('tour-hear').addEventListener('click', () => {
+    const v = synth?.getVoices().find((x) => x.lang?.startsWith('ar')); if (!v) return;
+    quiet();
+    const u = new SpeechSynthesisUtterance(`${STEPS[step].t}. ${STEPS[step].p}`); u.voice = v; u.lang = v.lang; u.rate = 0.9; synth.speak(u);
+  });
+  addEventListener('resize', () => { if (!tour.hidden) show(step); });
+  if (new URLSearchParams(location.search).get('tour') === '1' || !seen()) addEventListener('load', () => setTimeout(startTour, 500));
 })();
 </script>
 </body>

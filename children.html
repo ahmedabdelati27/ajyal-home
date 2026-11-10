@@ -146,7 +146,7 @@ dialog .x { float: left; width: 40px; height: 40px; border: 0; border-radius: 50
       $('busy-p').textContent = `ملف ${k.name} مفتوح الآن على جهاز آخر. أغلقه من هناك، ثم حاول مرة أخرى.`;
       return $('busy').showModal();
     }
-    try { localStorage.setItem('ajyal.profile', JSON.stringify({ name: k.name, avatar: k.avatar || (k.gender === 'girl' ? 'A-06' : 'A-03') })); } catch {}
+    try { localStorage.setItem('ajyal.profile', JSON.stringify({ name: k.name, avatar: k.avatar || (k.gender === 'girl' ? 'A-06' : 'A-03'), ...(k.photo ? { photo: k.photo } : {}) })); } catch {}
     Clouds.go('index.html');
   });
 
