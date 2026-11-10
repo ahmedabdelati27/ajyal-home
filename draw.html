@@ -43,6 +43,43 @@
 .size i { display: block; width: var(--d); height: var(--d); border-radius: 50%; background: #3A2318; }
 .size[aria-pressed="true"] { background: #EDE9FF; box-shadow: 0 0 0 3px #7B6CF0; }
 .tool.save { height: 68px; background: var(--go); color: #FFFFFF; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); }
+/* «سحر نور»: Nour the witch says what the drawing looks like and draws it again in a style the child picks */
+.tool.magic { height: 64px; padding-inline-start: 4px; background: linear-gradient(#9B7BF5, #6A4FD8); color: #FFFFFF; font-size: 19px; box-shadow: 0 6px 0 #4B3F93; }
+.tool.magic img { width: 58px; height: 58px; margin-block: -10px -4px; filter: drop-shadow(0 2px 2px rgba(40,20,90,.35)); }
+
+.spell { align-items: safe center; overflow-y: auto; padding-top: 100px; background: rgba(40,28,90,.62); }
+.spell .card { width: min(720px, 100%); padding: 104px 30px 26px; background: linear-gradient(#FBF8FF, #F1ECFF); }
+.spell .owl { width: 200px; height: 200px; top: -96px; }
+.spell.busy .owl { animation: cast 1s ease-in-out infinite; }
+@keyframes cast { 25% { rotate: -8deg; } 75% { rotate: 8deg; } }
+.spell h2 { color: #5A3FC0; }
+.spell .x { position: absolute; top: 14px; left: 14px; width: 48px; height: 48px; border: 0; border-radius: 50%; background: #FFFFFF; box-shadow: 0 3px 0 rgba(75,63,147,.2); display: grid; place-items: center; }
+.spell .x svg { width: 22px; height: 22px; }
+.spell [data-step][hidden] { display: none; }
+.spell .left { display: inline-block; margin-top: 14px; padding: 4px 14px; border-radius: 999px; background: #EDE9FF; color: #4B3F93; font-size: 16px; }
+.styles { display: flex; justify-content: center; gap: 18px; margin-top: 18px; }
+.styles button { width: 180px; padding: 10px 10px 12px; border: 0; border-radius: 26px; background: #FFFFFF; box-shadow: 0 6px 0 rgba(75,63,147,.18); font-size: 22px; font-weight: 800; transition: transform .15s; }
+.styles button:hover { transform: translateY(-3px); }
+.styles img { width: 100%; aspect-ratio: 1; border-radius: 18px; margin-bottom: 8px; }
+/* the drawing and what Nour made of it, side by side */
+.pair { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 16px; }
+.pair figure { margin: 0; width: 220px; }
+.pair figure img { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 5px #FFFFFF, 0 8px 18px rgba(75,63,147,.2); }
+.pair figure.made img { object-fit: cover; animation: appear .6s cubic-bezier(.2,.9,.3,1.3) both; }
+@keyframes appear { from { opacity: 0; transform: scale(.6) rotate(-6deg); filter: blur(6px); } }
+.pair figcaption { margin-top: 10px; font-size: 17px; font-weight: 800; color: #6B5A48; }
+.pair .wand { font-size: 34px; color: #F7B347; }
+.think .pair figure { width: 200px; position: relative; }
+.think .pair figure::after { content: '✦ ✧ ✦'; position: absolute; inset: 0; display: grid; place-items: center; font-size: 46px; color: #F7B347; text-shadow: 0 0 12px #FFFFFF; animation: twinkle 1s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .25; transform: scale(1.15) rotate(10deg); } }
+.others { margin-top: 14px; }
+.others p { margin: 0 0 8px !important; font-size: 18px !important; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.chips button { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: #FFFFFF; font-size: 18px; font-weight: 800; box-shadow: 0 0 0 2px #DCD3FF, 0 4px 0 #DCD3FF; }
+.chips button[aria-pressed="true"] { background: #6A4FD8; color: #FFFFFF; box-shadow: 0 4px 0 #4B3F93; }
+.chips.all { margin-top: 10px; }
+.chips.all[hidden] { display: none; }
+.spell .btn.magic { background: #6A4FD8; color: #FFFFFF; box-shadow: 0 5px 0 #4B3F93; }
 
 /* saved: private first, and the child may send it for publishing */
 .saved .card img.work { width: 260px; aspect-ratio: 4 / 3; height: auto; border-radius: 20px; object-fit: cover; box-shadow: 0 0 0 6px #FFFFFF, 0 8px 20px rgba(0,0,0,.15); margin: 0 auto 6px; }
@@ -62,6 +99,18 @@
   .sizes { grid-column: span 2; height: 48px; }
   .size { width: 40px; height: 40px; }
   .tool.save { grid-column: span 2; height: 48px; font-size: 17px; }
+  .tool.magic { grid-column: span 2; height: 48px; font-size: 17px; }
+  .tool.magic span { display: inline; }
+  .tool.magic img { width: 46px; height: 46px; margin-block: -8px -2px; }
+  .spell { align-items: safe center; overflow-y: auto; padding: 76px 14px 14px; }
+  .spell .card { padding: 84px 18px 18px; border-radius: 28px; }
+  .spell .owl { width: 150px; height: 150px; top: -74px; }
+  .spell h2 { font-size: 28px; } .spell p { font-size: 16px; }
+  .spell .btns { margin-top: 14px; gap: 8px; } .spell .btn { height: 48px; padding: 0 20px; font-size: 17px; }
+  .styles { gap: 12px; } .styles button { width: 140px; font-size: 18px; }
+  .pair { gap: 8px; } .pair figure, .think .pair figure { width: 150px; } .pair .wand { font-size: 24px; }
+  .pair figcaption { font-size: 15px; margin-top: 8px; }
+  .chips button { height: 40px; padding: 0 14px; font-size: 16px; }
 }
 /* a phone upright: every color in two rows, nothing hidden off to the side */
 @media (max-width: 600px) and (min-height: 501px) {
@@ -83,6 +132,16 @@
   .saved .card img.work { width: 150px; border-radius: 14px; }
   .saved .card { padding-top: 16px; }
   .saved .note { font-size: 13px; }
+  .tool.magic { grid-column: span 2; height: 44px; font-size: 15px; }
+  .tool.magic img { width: 40px; height: 40px; }
+  /* sideways the sheet is low: Nour sits beside the card's title instead of above it */
+  .spell { padding: 12px; }
+  .spell .card { padding: 14px 18px 14px; }
+  .spell .owl { width: 84px; height: 84px; top: 6px; left: auto; right: 10px; transform: none; }
+  .spell h2 { padding-inline: 70px; }
+  .styles button { width: 118px; padding: 6px 6px 8px; font-size: 16px; } .styles img { margin-bottom: 4px; border-radius: 12px; }
+  .pair { margin-top: 8px; } .pair figure, .think .pair figure { width: 118px; } .pair figure img { border-radius: 14px; }
+  .others { margin-top: 8px; } .chips button { height: 36px; }
 }
 </style>
 </head>
@@ -115,6 +174,7 @@
         <button class="tool" type="button" id="redo" disabled aria-label="إعادة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7h6.5a4.5 4.5 0 0 1 0 9H7"/><path d="M12 3L8.5 7 12 11"/></svg></button>
       </div>
       <button class="tool" type="button" id="clear" aria-label="امسح اللوحة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="13" height="15" rx="2" fill="#FFFFFF"/><path d="M19 3l.8 1.7 1.7.8-1.7.8L19 8l-.8-1.7-1.7-.8 1.7-.8z" fill="#F7B347" stroke="none"/></svg><span>امسح اللوحة</span></button>
+      <button class="tool magic" type="button" id="magic"><img src="img/magic/nour-witch.png" alt=""><span>سحر نور</span></button>
       <button class="tool save" type="button" id="save">احفظ رسمتي</button>
     </div>
     <div class="board" id="board" role="img" aria-label="لوحة الرسم">
@@ -139,9 +199,46 @@
   </div>
 </div>
 
+<div class="done spell" id="spell" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="spell-t">
+    <img class="owl" src="img/magic/nour-witch.png" alt="">
+    <button class="x" type="button" id="spell-x" aria-label="أغلق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2 id="spell-t"></h2>
+    <p id="spell-p"></p>
+    <!-- the child picks how Nour draws it; there is nothing to write -->
+    <div data-step="pick">
+      <div class="styles" id="styles"></div>
+      <span class="left" id="spell-left"></span>
+    </div>
+    <div data-step="think" class="think">
+      <div class="pair"><figure><img class="mine" alt="رسمتك"></figure></div>
+    </div>
+    <div data-step="show">
+      <div class="pair">
+        <figure><img class="mine" alt=""><figcaption>رسمتك</figcaption></figure>
+        <span class="wand" aria-hidden="true">✦</span>
+        <figure class="made"><img id="made" alt=""><figcaption>بسحر نور</figcaption></figure>
+      </div>
+      <div class="others">
+        <p>أم هي…؟</p>
+        <div class="chips" id="others"></div>
+        <div class="chips all" id="all" hidden></div>
+      </div>
+      <div class="btns">
+        <button class="btn magic" type="button" id="keep">احفظها في إبداعاتي</button>
+        <button class="btn soft" type="button" id="back">ارجع إلى رسمتي</button>
+      </div>
+    </div>
+    <div data-step="none">
+      <div class="btns"><button class="btn soft" type="button" id="none-back">ارجع إلى رسمتي</button></div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status"></div>
 
 <script src="valley.js"></script>
+<script src="magic.js"></script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
@@ -151,6 +248,10 @@
   // every stroke is kept, so undo and redo simply draw the sheet again
   let strokes = [], redo = [], base = null, now = null;
   let tool = 'pen', size = 18, color = 7, work = null;
+  // the work the drawing on the sheet was saved as, so saving it again after coming back updates it instead of adding a copy
+  const MINE = 'ajyal.draw.work';
+  try { const id = localStorage.getItem(MINE); work = id && works.read().find((w) => w.id === id && w.state === 'private') || null; } catch {}
+  const own = (w) => { try { w ? localStorage.setItem(MINE, w.id) : localStorage.removeItem(MINE); } catch {} };
 
   $('colors').innerHTML = PALETTE.filter((p) => p.c !== '#FFFFFF').map((p) => `<button class="sw" type="button" data-c="${p.c}" style="--c:${p.c}" aria-label="${p.n}" aria-pressed="${PALETTE.indexOf(p) === color}"></button>`).join('')
     + '<span class="picked" id="picked"></span>';
@@ -230,7 +331,7 @@
   $('save').addEventListener('click', () => {
     if (!strokes.length && !base) return toast('ارسم شيئاً أولاً ثم احفظه');
     const img = $('art').toDataURL('image/jpeg', 0.85);
-    work = { id: work?.id || `draw-${Date.now()}`, kind: 'draw', name: 'رسمتي', img, state: 'private', at: Date.now() };
+    work = { id: work?.id || `draw-${Date.now()}`, kind: 'draw', name: 'رسمتي', img, state: 'private', at: Date.now() }; own(work);
     if (!works.save(work)) return toast('لم نستطع الحفظ على هذا الجهاز');
     $('saved-img').src = img;
     $('saved-t').textContent = 'رسمة رائعة يا عمر!';
@@ -241,7 +342,7 @@
   });
   $('publish').addEventListener('click', () => {
     work.state = 'review'; works.save(work);
-    try { localStorage.removeItem(DRAFT); } catch {}
+    try { localStorage.removeItem(DRAFT); } catch {} own(null);
     $('saved-t').textContent = 'أرسلنا رسمتك للمراجعة';
     $('saved-p').textContent = 'سيراجعها فريق أجيال، ونخبرك بالنتيجة';
     $('saved-note').hidden = true; $('publish').hidden = true;
@@ -249,9 +350,79 @@
   });
   $('again').addEventListener('click', () => {
     strokes = []; redo = []; base = null; work = null;
-    try { localStorage.removeItem(DRAFT); } catch {}
+    try { localStorage.removeItem(DRAFT); } catch {} own(null);
     redraw(); $('saved').hidden = true;
   });
+
+  // «سحر نور»: Nour says what the drawing looks like and draws it again in the style the child picks (magic.js)
+  const { STYLES } = Magic;
+  let style = 'cartoon', guesses = [], shown = null, kept = '', wait = null;
+  $('styles').innerHTML = STYLES.map((s) => `<button type="button" data-style="${s.id}"><img src="${Magic.picture(Magic.SHAPES[8], s.id)}" alt="">${s.n}</button>`).join('');
+  // one step of the sheet at a time; what Nour says is also spoken, for a child who does not read yet
+  const step = (s, t, p = '') => {
+    document.querySelectorAll('#spell [data-step]').forEach((x) => { x.hidden = x.dataset.step !== s; });
+    $('spell-t').textContent = t; $('spell-p').textContent = p;
+    $('spell').classList.toggle('busy', s === 'think');
+    say(t);
+  };
+  const closeSpell = () => { clearTimeout(wait); $('spell').hidden = true; $('spell').classList.remove('busy'); $('magic').focus(); };
+  $('magic').addEventListener('click', () => {
+    if (!strokes.length && !base) return toast('ارسم شيئاً أولاً، ثم نادِ نور');
+    $('spell').hidden = false;
+    // the feature is open when the package has it and the parent left it on; the child is never told about prices or packages
+    if (!Magic.open()) return step('none', 'سحر نور غير متاح الآن', 'يمكن لولي أمرك أو معلّمك أن يفتحه لك. وتستطيع متابعة الرسم.');
+    if (!Magic.left()) return step('none', 'انتهت مرات السحر الآن', 'اطلب من ولي أمرك أو معلّمك مرات جديدة. وتستطيع متابعة الرسم.');
+    // Nour works on a saved drawing: it is kept in «إبداعاتي», private, as «احفظ رسمتي» keeps it
+    const img = $('art').toDataURL('image/jpeg', 0.85);
+    if (work?.img !== img) {
+      work = { id: work?.id || `draw-${Date.now()}`, kind: 'draw', name: 'رسمتي', img, state: 'private', at: Date.now() }; own(work);
+      works.save(work);
+    }
+    document.querySelectorAll('#spell .mine').forEach((i) => { i.src = img; });
+    step('pick', 'أنا نور الساحرة!', 'اختر كيف أرسم رسمتك من جديد');
+    $('spell-left').textContent = Magic.count();
+    $('styles').querySelector('button').focus();
+  });
+  $('styles').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-style]'); if (!b) return;
+    style = b.dataset.style;
+    step('think', 'نور تنظر إلى رسمتك…', 'لحظة، العصا السحرية تعمل!');
+    wait = setTimeout(() => {
+      guesses = Magic.guess($('art'));
+      // too little to see: nothing is spent, and the child draws a little more
+      if (!guesses) return step('none', 'لم أرَ رسمتك جيداً', 'ارسم خطوطاً أوضح قليلاً، ثم نادِني من جديد');
+      Magic.spend(); kept = '';
+      show(guesses[0], true);
+      window.Sfx?.play('win');
+    }, 1800);
+  });
+  // Nour's first guess, and the next two she thought of, so the child can say which it is; or any shape she knows
+  function show(shape, first) {
+    shown = shape;
+    const made = $('made'); made.style.animation = 'none'; made.offsetWidth; made.style.animation = '';
+    made.src = Magic.picture(shape, style); made.alt = `${shape.n} مرسومة بسحر نور`;
+    step('show', first ? `أظنها ${shape.n}!` : `إذن هي ${shape.n}!`, first ? 'هكذا رسمتُها لك' : 'رسمتُها لك من جديد');
+    if (first) $('all').hidden = true;
+    const chip = (s) => `<button type="button" data-shape="${s.id}" aria-pressed="${s === shape}">${s.n}</button>`;
+    $('others').innerHTML = guesses.slice(0, 3).map(chip).join('') + `<button type="button" id="more" aria-expanded="${!$('all').hidden}">شيء آخر</button>`;
+    $('all').innerHTML = guesses.slice(3).map(chip).join('');
+  }
+  $('spell').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-shape]');
+    if (b && b.getAttribute('aria-pressed') !== 'true') { kept = ''; show(Magic.SHAPES.find((s) => s.id === b.dataset.shape), false); }
+    if (e.target.closest('#more')) { $('all').hidden = !$('all').hidden; e.target.closest('#more').setAttribute('aria-expanded', String(!$('all').hidden)); }
+    if (e.target === $('spell') && !$('spell').classList.contains('busy')) closeSpell();
+  });
+  // what Nour made is the child's too: private in «إبداعاتي», next to the drawing it came from
+  $('keep').addEventListener('click', () => {
+    const key = `${shown.id}-${style}`;
+    if (kept === key) return toast('حفظتها من قبل في «إبداعاتي»');
+    works.save({ id: `ai-draw-${Date.now()}`, kind: 'ai-draw', name: `${shown.n} بسحر نور`, img: '/' + Magic.picture(shown, style), from: work?.id, style, state: 'private', at: Date.now() });
+    kept = key;
+    toast('حفظناها في «إبداعاتي»، وهي خاصة بك');
+  });
+  ['spell-x', 'back', 'none-back'].forEach((id) => $(id).addEventListener('click', closeSpell));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('spell').hidden) closeSpell(); });
 
   const toast = (s) => { const el = $('toast'); el.textContent = s; el.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('show'), 2400); };
 })();

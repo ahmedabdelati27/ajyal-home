@@ -119,7 +119,7 @@ body:has(nav.tabs) .visit-bar { bottom: calc(max(env(safe-area-inset-bottom), 10
     document.addEventListener('click', (e) => {
       const t = e.target.closest('a, button');
       if (!t || t.closest('.visit-gate, .visit-bar')) return;
-      if (t.matches('#me, #points-pill, #badges-pill, #streak-pill, #bell, #gear, #save, #publish, #like')) return ask(e);
+      if (t.matches('#me, #points-pill, #badges-pill, #streak-pill, #bell, #gear, #save, #publish, #like, #magic')) return ask(e);
       if (t.classList.contains('visit-locked')) return ask(e, 'content');
       const href = t.getAttribute('href') || '';
       const m = href.match(/[?&]open=([a-z]+)/);

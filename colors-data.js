@@ -4,7 +4,7 @@
 const Colors = (() => {
   // a few more words a child may use for each kind of picture
   const MORE = { shapes: ['شكل', 'أشكال'], animals: ['حيوان'], nature: ['طبيعة', 'نبات', 'ورد'], things: ['أشياء', 'حولنا'] };
-  const KIND = { draw: 'رسمة حرة', color: 'تلوين' };
+  const KIND = { draw: 'رسمة حرة', color: 'تلوين', 'ai-draw': 'سحر نور' };
   // «بيت الأشكال» is drawn on a canvas, so its little picture is made once and kept
   const thumbs = {};
   const thumb = (p) => thumbs[p.id] || (thumbs[p.id] = Valley.thumb(p));

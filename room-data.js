@@ -19,15 +19,15 @@ const Room = (() => {
   }
 
   // «إبداعاتي»: everything the child made, by kind
-  const KINDS = [['all', 'الكل'], ['draw', 'رسوماتي'], ['color', 'تلويني'], ['ai-story', 'قصصي'], ['ai-video', 'فيديوهاتي'], ['hero', 'أنت بطل القصة']];
-  const KIND_N = { draw: 'رسمة', color: 'تلوين', 'ai-story': 'قصة مصورة', 'ai-video': 'فيديو', hero: 'أنت بطل القصة' };
+  const KINDS = [['all', 'الكل'], ['draw', 'رسوماتي'], ['color', 'تلويني'], ['ai-story', 'قصصي'], ['ai-video', 'فيديوهاتي'], ['hero', 'أنت بطل القصة'], ['ai-draw', 'سحر نور']];
+  const KIND_N = { draw: 'رسمة', color: 'تلوين', 'ai-story': 'قصة مصورة', 'ai-video': 'فيديو', hero: 'أنت بطل القصة', 'ai-draw': 'رسمة بسحر نور' };
   const works = (kind = 'all') => Valley.works.read().filter((w) => KIND_N[w.kind] && (kind === 'all' || w.kind === kind));
   const find = (id) => Valley.works.read().find((w) => w.id === id);
   const pic = (w, base = '') => at(base, w.img);
   const open = (w, base = '', own = []) => at(base, w.href || (w.kind === 'color' ? `color.html?pic=${w.pic}` : ''), own);
 
   // colorings are only kept, and «أنت بطل القصة» copies are not published (Q-105); only what is not under review or published can be deleted
-  const SENDABLE = ['draw', 'ai-story', 'ai-video'];
+  const SENDABLE = ['draw', 'ai-story', 'ai-video', 'ai-draw'];
   const SAYS = { private: 'خاصة بك، لا يراها أحد غيرك.', review: 'أرسلتها للنشر، وسيراجعها فريق أجيال، ونخبرك بالنتيجة.', published: 'منشورة، يراها أطفال أجيال. المنشور يبقى في المنصة.', rejected: 'لم تُعتمد للنشر، وتبقى خاصة بك.' };
   const canSend = (w) => w.state === 'private' && SENDABLE.includes(w.kind);
   const canDelete = (w) => w.state === 'private' || w.state === 'rejected';
