@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الشاشة الرئيسية · تطبيق أجيال</title>
+<link rel="icon" href="../img/app-icon/icon-192.png">
+<style>
+/* the phone's own home screen, for the app mockup (app/index.html): Ajyal's icon among the apps; tapping it opens the app
+   the way a phone does, the icon growing to fill the screen, then the splash (start.html) */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #0B3C6E; }
+.wall { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; user-select: none; -webkit-user-drag: none; }
+/* the empty spot under «Maps», on the grid of the phone's icons (393 points wide) */
+.app { position: absolute; top: 429.8px; left: 29.33px; width: 62.57px; display: flex; flex-direction: column; align-items: center; gap: 0; border: 0; padding: 0; background: none; cursor: pointer; font: inherit; }
+.app img { width: 62.57px; height: 62.57px; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .15s; }
+.app:active img { transform: scale(.9); }
+.app span { margin-top: 5px; width: 80px; text-align: center; font: 500 11.5px/1.2 -apple-system, 'SF Pro Text', system-ui, sans-serif; color: #FFFFFF; text-shadow: 0 1px 2px rgba(0,0,0,.35); direction: ltr; white-space: nowrap; }
+.hint { position: absolute; top: 516px; left: 18px; display: flex; align-items: center; gap: 6px; padding: 6px 12px 7px; border-radius: 999px; background: rgba(255,255,255,.92); color: #3A2318; font: 800 13px 'Thmanyah Sans', system-ui, sans-serif; box-shadow: 0 6px 16px rgba(0,0,0,.2); animation: nudge 1.4s ease-in-out infinite; pointer-events: none; }
+.hint::before { content: ""; position: absolute; top: -6px; left: 40px; border: 6px solid transparent; border-top: 0; border-bottom-color: rgba(255,255,255,.92); }
+@keyframes nudge { 50% { translate: 0 -4px; } }
+/* the opening: the icon's square grows from where it sits to the whole screen */
+.open { position: absolute; z-index: 5; border-radius: 14px; background: url(../img/app-icon/icon-512.png) center / cover, #7FD3E6; transition: all .38s cubic-bezier(.3,.7,.2,1); }
+.open.full { inset: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0; background: linear-gradient(#BFEFF7, #46C1D9); }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+@media (prefers-reduced-motion: reduce) { .hint { animation: none; } .open { transition: none; } }
+</style>
+</head>
+<body>
+<img class="wall" src="../img/app-start/springboard.jpg" alt="الشاشة الرئيسية للجوال">
+<button class="app" type="button" id="app" aria-label="افتح تطبيق أجيال"><img src="../img/app-icon/icon-512.png" alt=""><span>أجيال</span></button>
+<p class="hint" aria-hidden="true">اضغط لتفتح التطبيق</p>
+<script>
+  document.getElementById('app').addEventListener('click', (e) => {
+    const r = e.currentTarget.querySelector('img').getBoundingClientRect(), o = document.createElement('div');
+    o.className = 'open'; Object.assign(o.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
+    document.body.append(o);
+    requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add('full')));
+    // in the mockup the app opens as on a first launch every time, so the first look can be shown again
+    setTimeout(() => location.href = 'start.html?intro', 400);
+  });
+</script>
+</body>
+</html>

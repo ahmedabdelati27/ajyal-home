@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the first look at the app, made for a phone; a tablet or a computer goes on to the web
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../landing.html');
+</script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#BFEFF7">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>مرحباً · تطبيق أجيال</title>
+<link rel="icon" href="../img/app-icon/icon-192.png">
+<script src="../sfx.js"></script>
+<script>Sfx.taps();</script>
+<style>
+@view-transition { navigation: auto; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+:root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --go: #3FA83A; --go-deep: #1F6A1C;
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 14px); }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: linear-gradient(#BFEFF7, #9EE3DA 60%); }
+.sea { position: fixed; inset: 0; z-index: -1; background: url(../img/landing/app-sea.jpg) 50% 100% / cover no-repeat; opacity: .55; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+img { display: block; }
+:focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
+
+/* the slides run sideways, one screen each; the bar at the top skips, the bar at the bottom moves on */
+.skip { position: fixed; z-index: 3; top: var(--top); left: calc(14px + env(safe-area-inset-left)); height: 40px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 15px; font-weight: 800; color: var(--ink-soft); box-shadow: 0 3px 0 rgba(58,35,24,.1); }
+.skip[hidden] { display: none; }
+.track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.track::-webkit-scrollbar { display: none; }
+.slide { flex: 0 0 100%; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: grid; grid-template-rows: 1fr auto; padding: calc(var(--top) + 52px) 22px calc(var(--bottom) + 108px); }
+.art { position: relative; display: grid; place-items: center; min-height: 0; }
+.art::before { content: ""; position: absolute; width: min(310px, 78vw); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.9), rgba(255,255,255,0) 70%); }
+.text { text-align: center; }
+/* «اقرأ لي»: the slide read aloud for a child who does not read yet (the device's Arabic voice in the prototype) */
+.hear { display: inline-flex; align-items: center; gap: 6px; height: 36px; margin-top: 12px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 14px; font-weight: 800; color: #2F6FA8; box-shadow: 0 3px 0 rgba(58,35,24,.1); }
+.hear svg { width: 18px; height: 18px; }
+.hear[hidden] { display: none; }
+h2 { margin: 0 0 8px; font-size: 28px; font-weight: 900; line-height: 1.25; }
+.text p { margin: 0 auto; max-width: 30ch; font-size: 17px; font-weight: 600; line-height: 1.65; color: var(--ink-soft); }
+
+/* each picture */
+.isles { position: relative; width: min(330px, 86vw); aspect-ratio: 1.1; }
+.isles img { position: absolute; filter: drop-shadow(0 12px 10px rgba(20,90,100,.28)); animation: bob 4.5s ease-in-out infinite; }
+.isles .i1 { width: 54%; left: 23%; top: 2%; }
+.isles .i2 { width: 46%; right: -2%; top: 44%; animation-delay: -1.5s; }
+.isles .i3 { width: 46%; left: -2%; top: 46%; animation-delay: -3s; }
+.grid4 { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; width: min(320px, 84vw); }
+.grid4 figure { margin: 0; display: grid; justify-items: center; gap: 2px; }
+.grid4 img { width: 100%; filter: drop-shadow(0 10px 8px rgba(20,90,100,.25)); animation: bob 4.5s ease-in-out infinite; }
+.grid4 figure:nth-child(2) img { animation-delay: -1s; } .grid4 figure:nth-child(3) img { animation-delay: -2s; } .grid4 figure:nth-child(4) img { animation-delay: -3s; }
+.grid4 figcaption { margin-top: -10px; padding: 2px 12px 4px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 13px; font-weight: 800; }
+.nour { position: relative; width: min(220px, 56vw); filter: drop-shadow(0 16px 14px rgba(20,90,110,.28)); animation: bob 3s ease-in-out infinite; }
+.say { position: absolute; top: 4%; left: 50%; translate: -50% 0; padding: 8px 16px 10px; border-radius: 20px; background: var(--paper); font-size: 16px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 #F2C94C; }
+.safe { position: relative; width: min(300px, 78vw); aspect-ratio: 1; border-radius: 40px; overflow: hidden; border: 6px solid var(--paper); box-shadow: 0 10px 0 rgba(58,35,24,.12); }
+.safe img { width: 100%; height: 100%; object-fit: cover; }
+.safe span { position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 14px; font-weight: 800; color: #2E7D32; }
+@keyframes bob { 50% { translate: 0 -7px; } }
+
+/* the bottom: where the child is, and the button on */
+.foot { position: fixed; z-index: 3; left: 22px; right: 22px; bottom: var(--bottom); display: grid; gap: 14px; justify-items: center; }
+.dots { display: flex; gap: 8px; }
+.dots i { width: 9px; height: 9px; border-radius: 999px; background: rgba(58,35,24,.2); transition: width .25s, background .25s; }
+.dots i.on { width: 26px; background: #F4823F; }
+.next { width: 100%; max-width: 420px; height: 56px; border-radius: 999px; background: linear-gradient(#45B33F, #2E8B2A); color: var(--paper); font-size: 19px; font-weight: 900; box-shadow: 0 5px 0 var(--go-deep); }
+.next:active { translate: 0 3px; box-shadow: 0 2px 0 var(--go-deep); }
+
+/* a phone on its side: the picture beside the words */
+@media (max-height: 500px) {
+  .slide { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; align-items: center; gap: 20px; padding: calc(var(--top) + 8px) calc(28px + env(safe-area-inset-right)) calc(var(--bottom) + 72px) calc(28px + env(safe-area-inset-left)); }
+  .art::before { width: 240px; }
+  .isles { width: 250px; } .grid4 { width: 240px; gap: 2px 8px; } .grid4 figcaption { font-size: 12px; } .nour { width: 150px; } .safe { width: 200px; border-radius: 30px; }
+  .text { text-align: start; } .text p { margin: 0; }
+  h2 { font-size: 24px; }
+  .foot { grid-template-columns: auto 260px; justify-content: space-between; align-items: center; left: calc(28px + env(safe-area-inset-left)); right: calc(28px + env(safe-area-inset-right)); }
+  .next { height: 50px; font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { .isles img, .grid4 img, .nour { animation: none; } .track { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="sea" aria-hidden="true"></div>
+<button class="skip" type="button" id="skip">تخطَّ</button>
+
+<main class="track" id="track" aria-roledescription="شرائح" aria-label="تعرّف على أجيال">
+  <section class="slide" aria-label="١ من ٤">
+    <div class="art"><div class="isles"><img class="i1" src="../img/forest.png" alt=""><img class="i2" src="../img/beach.png" alt=""><img class="i3" src="../img/garden.png" alt=""></div></div>
+    <div class="text"><h2>أهلاً بك في عالم أجيال</h2><p>جزر ملوّنة تتعلّم فيها وتلعب، وتكتشف أشياء جديدة.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
+  </section>
+  <section class="slide" aria-label="٢ من ٤">
+    <div class="art"><div class="grid4">
+      <figure><img src="../img/letters.png" alt=""><figcaption>الحروف</figcaption></figure>
+      <figure><img src="../img/quran.png" alt=""><figcaption>القرآن</figcaption></figure>
+      <figure><img src="../img/games.png" alt=""><figcaption>الألعاب</figcaption></figure>
+      <figure><img src="../img/colors.png" alt=""><figcaption>الرسم</figcaption></figure></div></div>
+    <div class="text"><h2>تعلّم والعب بطريقتك</h2><p>قصص وفيديوهات، حروف وأرقام، القرآن الكريم وألعاب ورسم، وكلها في مكان واحد.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
+  </section>
+  <section class="slide" aria-label="٣ من ٤">
+    <div class="art"><img class="nour" src="../img/garden/nour-wave.png" alt=""><span class="say">أنا نور، سأرشدك في رحلة القيم!</span></div>
+    <div class="text"><h2>نور ترافقك في رحلة القيم</h2><p>تعرّفك نور على القيم الجميلة خطوة بخطوة، وتشجّعك في كل محطة.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
+  </section>
+  <section class="slide" aria-label="٤ من ٤">
+    <div class="art"><div class="safe"><img src="../img/landing/s-safe.jpg" alt=""><span>✓ بإشراف ولي أمرك أو معلّمك</span></div></div>
+    <div class="text"><h2>عالم آمن لك</h2><p>ولي أمرك أو معلّمك يختار المزايا المتاحة لك، ويمكنه تحديد وقتك كل يوم.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
+  </section>
+</main>
+
+<div class="foot">
+  <div class="dots" id="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+  <button class="next" type="button" id="next">التالي</button>
+</div>
+
+<script>
+(() => {
+  // the slides scroll right to left: slide n sits n screens to the left (scrollLeft goes negative)
+  const track = document.getElementById('track'), slides = [...track.children], dots = [...document.querySelectorAll('#dots i')];
+  const next = document.getElementById('next'), skip = document.getElementById('skip');
+  const at = () => Math.round(Math.abs(track.scrollLeft) / track.clientWidth);
+  const show = () => {
+    const n = at(), last = n === slides.length - 1;
+    dots.forEach((d, k) => d.classList.toggle('on', k === n));
+    next.textContent = last ? 'لنبدأ' : 'التالي';
+    skip.hidden = last;
+  };
+  // seen once: the app opens straight on next time; then the splash's routing takes over (sign-in, a child, or the world)
+  const done = () => { try { localStorage.setItem('ajyal.onboarded', '1'); } catch {} location.replace('start.html?go'); };
+  // read a slide aloud (shown only where the device has a voice); moving on stops it
+  const say = window.speechSynthesis;
+  document.querySelectorAll('.hear').forEach((b) => {
+    b.hidden = !say;
+    b.addEventListener('click', () => {
+      const s = b.closest('.slide'), u = new SpeechSynthesisUtterance(s.querySelector('h2').textContent + '. ' + s.querySelector('.text p').textContent);
+      u.lang = 'ar-SA'; u.rate = .9; say.cancel(); if (window.Sfx) Sfx.hush(true); u.onend = () => window.Sfx && Sfx.hush(false); say.speak(u);
+    });
+  });
+  track.addEventListener('scroll', () => { if (say) say.cancel(); }, { passive: true });
+  track.addEventListener('scroll', show, { passive: true });
+  next.addEventListener('click', () => {
+    const n = at();
+    if (n === slides.length - 1) return done();
+    track.scrollTo({ left: -(n + 1) * track.clientWidth, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
+  skip.addEventListener('click', done);
+  addEventListener('resize', () => track.scrollTo({ left: -at() * track.clientWidth }));
+  show();
+})();
+</script>
+</body>
+</html>

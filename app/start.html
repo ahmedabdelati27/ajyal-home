@@ -4,39 +4,64 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#FFF7EC">
+<meta name="theme-color" content="#7FD3E6">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="أجيال">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>تطبيق أجيال</title>
-<link rel="icon" href="../img/garden/nour-cheer.png">
+<link rel="icon" href="../img/app-icon/icon-192.png">
 <style>
-/* where the app opens from the home screen: Nour for a moment, then the right place */
+/* the splash: where the app opens from its icon; the sky and the sea, Nour, the name, then on to the right place */
 @view-transition { navigation: auto; }
 @font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
-html, body { margin: 0; height: 100%; }
-body { display: grid; place-items: center; align-content: center; gap: 14px; font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; background: url(../img/landing/app-sea.jpg) 50% 50% / cover no-repeat #9EE3DA; }
-img { width: 150px; filter: drop-shadow(0 12px 10px rgba(20,90,100,.28)); animation: bob 1.6s ease-in-out infinite; }
-b { padding: 4px 20px 6px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 24px; font-weight: 800; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318;
+  background: linear-gradient(#BFEFF7 0%, #8FDCEB 45%, #46C1D9 100%); }
+.sea { position: absolute; inset: auto 0 0; height: 34%; background: url(../img/landing/app-sea.jpg) 50% 0 / cover no-repeat; -webkit-mask-image: linear-gradient(transparent, #000 40%); mask-image: linear-gradient(transparent, #000 40%); }
+.cloud { position: absolute; width: 150px; opacity: .95; animation: drift 9s ease-in-out infinite alternate; }
+.cloud.a { top: 11%; right: -30px; } .cloud.b { top: 22%; left: -40px; width: 120px; animation-delay: -4s; } .cloud.c { top: 4%; left: 30%; width: 90px; opacity: .7; animation-delay: -2s; }
+@keyframes drift { to { translate: 24px 0; } }
+.nour { position: relative; width: 168px; filter: drop-shadow(0 16px 14px rgba(20,90,110,.28)); animation: rise .7s cubic-bezier(.2,.9,.3,1.3) both, bob 2.2s ease-in-out .7s infinite; }
+@keyframes rise { from { opacity: 0; transform: translateY(40px) scale(.7); } }
 @keyframes bob { 50% { translate: 0 -8px; } }
-@media (prefers-reduced-motion: reduce) { img { animation: none; } }
+h1 { position: relative; margin: 6px 0 0; font-size: 44px; font-weight: 900; line-height: 1.1; color: #FFFFFF; animation: fade .5s .35s both;
+  text-shadow: 0 4px 0 #2F7FA8, 2px 0 0 #2F7FA8, -2px 0 0 #2F7FA8, 0 -2px 0 #2F7FA8, 2px 2px 0 #2F7FA8, -2px 2px 0 #2F7FA8, 2px -2px 0 #2F7FA8, -2px -2px 0 #2F7FA8; }
+p { position: relative; margin: 0; padding: 4px 16px 6px; border-radius: 999px; background: rgba(255,255,255,.88); font-size: 17px; font-weight: 800; animation: fade .5s .5s both; }
+@keyframes fade { from { opacity: 0; transform: translateY(10px); } }
+.dots { position: absolute; bottom: calc(max(env(safe-area-inset-bottom), 16px) + 28px); display: flex; gap: 8px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 0 rgba(30,100,130,.3); animation: dot 1s ease-in-out infinite; }
+.dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 50% { translate: 0 -7px; } }
+@media (max-height: 500px) { .nour { width: 120px; } h1 { font-size: 36px; } .sea { height: 26%; } .dots { bottom: 18px; } }
+@media (prefers-reduced-motion: reduce) { .cloud, .nour, h1, p, .dots i { animation: none; } }
 </style>
 </head>
 <body>
-<img src="../img/garden/nour-wave.png" alt="">
-<b>أجيال الصالحية</b>
+<img class="cloud a" src="../img/landing/cloud-1.webp" alt="">
+<img class="cloud b" src="../img/landing/cloud-2.webp" alt="">
+<img class="cloud c" src="../img/landing/cloud-3.webp" alt="">
+<div class="sea" aria-hidden="true"></div>
+<img class="nour" src="../img/garden/nour-wave.png" alt="">
+<h1>أجيال الصالحية</h1>
+<p>عالم آمن للتعلّم واللعب</p>
+<div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
 <script src="../auth.js"></script>
 <script>
-  // no one signed in on this device: the sign-in; signed in but no child chosen yet: choosing a child; a child chosen: the child's world.
-  // The chosen child is the profile children.html keeps (ajyal.profile).
-  // A phone gets the app's pages; a tablet or a computer the web's (the app's pages would send it there anyway)
+  // the first time on this device: the onboarding; after that no one signed in: the sign-in; signed in but no child chosen yet:
+  // choosing a child; a child chosen: the child's world. The chosen child is the profile children.html keeps (ajyal.profile).
+  // A phone gets the app's pages; a tablet or a computer the web's (the app's pages would send it there anyway).
+  // Coming back from the onboarding (?go) it moves on at once.
   (() => {
     const phone = matchMedia('(max-width: 600px), (max-height: 500px)').matches;
-    let kid = null; try { kid = JSON.parse(localStorage.getItem('ajyal.profile')); } catch {}
-    const to = !Auth.signedIn() ? 'login.html' : !(kid && kid.name) ? 'children.html' : phone ? 'home.html' : 'index.html';
-    setTimeout(() => location.replace((phone ? '' : '../') + to), 700);
+    let kid = null, seen = true; try { kid = JSON.parse(localStorage.getItem('ajyal.profile')); seen = localStorage.getItem('ajyal.onboarded') === '1'; } catch {}
+    // (?intro: opened from the mockup's home screen, which always shows the first look)
+    if (new URLSearchParams(location.search).has('intro')) seen = false;
+    const to = phone && !seen ? 'onboarding.html' : !Auth.signedIn() ? 'login.html' : !(kid && kid.name) ? 'children.html' : phone ? 'home.html' : 'index.html';
+    const go = new URLSearchParams(location.search).has('go');
+    setTimeout(() => location.replace((phone ? '' : '../') + to), go ? 0 : 1900);
   })();
 </script>
 </body>
