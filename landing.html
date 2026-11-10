@@ -125,6 +125,13 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
 .sec-head.reveal .kicker, .sec-head.reveal p, .sec-head.reveal h2 .w { opacity: 0; }
 .sec-head.reveal h2 .w { display: inline-block; }
 .sec-head.reveal.in .kicker, .sec-head.reveal.in p, .sec-head.reveal.in h2 .w { opacity: 1; animation: rise .8s cubic-bezier(.2,.8,.2,1) var(--d, 0s) backwards; }
+/* the cards under a heading come in the same way the first time each shows: it rises and settles, one after another along the row,
+   and a bento card's words follow a beat later (the page script adds .arrive, then .in, as each card reaches the screen) */
+.arrive { opacity: 0; }
+.arrive.in { opacity: 1; animation: arrive-in .75s cubic-bezier(.2,.9,.3,1.12) calc(var(--n, 0) * .1s) backwards; }
+@keyframes arrive-in { from { opacity: 0; translate: 0 40px; scale: .94; } }
+.g-card.arrive.in .txt { animation: arrive-txt .6s cubic-bezier(.2,.8,.2,1) calc(var(--n, 0) * .1s + .3s) backwards; }
+@keyframes arrive-txt { from { opacity: 0; translate: 0 16px; } }
 .sec-head p { margin: 0; font-size: 19px; font-weight: 600; color: var(--ink-soft); }
 .ticks { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; font-size: 17px; font-weight: 700; }
 .ticks li { display: flex; align-items: flex-start; gap: 10px; }
@@ -984,6 +991,18 @@ h2 { margin: 0; font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; line-heig
     new IntersectionObserver((seen, io) => { if (seen[0].isIntersecting) { io.disconnect(); head.classList.add('in'); } }, { threshold: 0.5 }).observe(head);
   };
   reveal(document.querySelector('#grow .sec-head'));
+  reveal(document.querySelector('#plans .sec-head'));
+  reveal(document.querySelector('#faq .sec-head'));
+
+  // the cards come in the first time each reaches the screen; the ones that arrive together come one after another
+  const arrive = (els) => {
+    if (reduce || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((seen) => {
+      seen.filter((e) => e.isIntersecting).forEach((e, n) => { e.target.style.setProperty('--n', n); e.target.classList.add('in'); io.unobserve(e.target); });
+    }, { threshold: 0.2, rootMargin: '0px 0px -6% 0px' });
+    els.forEach((el) => { el.classList.add('arrive'); io.observe(el); });
+  };
+  arrive([...document.querySelectorAll('#grow-cards > .g-card, #safe-cards > .g-card, #plans .price-card, #plans .period, #app .go-card, #faq details, #start .go-card')]);
 
   // the progress cards play out while the section is on screen, over and over: Omar finishes a story, his points count up
   // and he reaches a new level, he moves up the board; then everything settles back and it starts again
