@@ -37,12 +37,14 @@
 .tool { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 12px; border: 0; border-radius: 999px; background: #FFFFFF; font-size: 17px; font-weight: 800; box-shadow: 0 5px 0 rgba(75,63,147,.18); }
 .tool svg { width: 24px; height: 24px; flex-shrink: 0; }
 .tool:disabled { opacity: .45; cursor: default; }
+/* a tool on its own line keeps its height (flex: 1 is for sharing a row) */
+.tools > .tool { flex: none; }
 .tool[aria-pressed="true"] { background: #EDE9FF; color: #4B3F93; box-shadow: 0 0 0 3px #7B6CF0, 0 5px 0 rgba(75,63,147,.18); }
 .sizes { display: flex; justify-content: space-around; align-items: center; height: 64px; padding: 0 8px; border-radius: 999px; background: #FFFFFF; box-shadow: 0 5px 0 rgba(75,63,147,.18); }
 .size { width: 48px; height: 48px; border: 0; border-radius: 50%; background: none; display: grid; place-items: center; }
 .size i { display: block; width: var(--d); height: var(--d); border-radius: 50%; background: #3A2318; }
 .size[aria-pressed="true"] { background: #EDE9FF; box-shadow: 0 0 0 3px #7B6CF0; }
-.tool.save { height: 68px; background: var(--go); color: #FFFFFF; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); }
+.tool.save { height: 64px; background: var(--go); color: #FFFFFF; font-size: 22px; box-shadow: 0 6px 0 var(--go-deep); }
 /* «سحر نور»: Nour the witch says what the drawing looks like and draws it again in a style the child picks */
 .tool.magic { height: 64px; padding-inline-start: 4px; background: linear-gradient(#9B7BF5, #6A4FD8); color: #FFFFFF; font-size: 19px; box-shadow: 0 6px 0 #4B3F93; }
 .tool.magic img { width: 58px; height: 58px; margin-block: -10px -4px; filter: drop-shadow(0 2px 2px rgba(40,20,90,.35)); }
@@ -94,6 +96,8 @@
   .picked { display: none; }
   .tools { order: 3; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .row { display: contents; }
+  /* in rows: the pens and clearing, the sizes with undo and redo, then Nour's magic beside saving */
+  #clear { order: 1; } .sizes { order: 2; } #undo, #redo { order: 3; } .tool.magic, .tool.save { order: 4; }
   .tool { height: 48px; font-size: 15px; padding: 0 8px; }
   .tool span { display: none; }
   .sizes { grid-column: span 2; height: 48px; }
@@ -116,7 +120,7 @@
 @media (max-width: 600px) and (min-height: 501px) {
   .colors { grid-auto-flow: row; grid-template-columns: repeat(6, 46px); grid-template-rows: none; overflow: visible; padding: 10px; gap: 10px 8px; }
   .sw { width: 46px; height: 46px; }
-  .tool, .sizes, .tool.save { height: 52px; }
+  .tool, .sizes, .tool.save, .tool.magic { height: 52px; }
   .saved .card h2 { font-size: 28px; }
 }
 /* a phone on its side: tools on the right, the sheet as big as the height allows, the colors in a block on the left */
@@ -132,7 +136,7 @@
   .saved .card img.work { width: 150px; border-radius: 14px; }
   .saved .card { padding-top: 16px; }
   .saved .note { font-size: 13px; }
-  .tool.magic { grid-column: span 2; height: 44px; font-size: 15px; }
+  .tool.magic { grid-column: span 2; height: 48px; font-size: 15px; }
   .tool.magic img { width: 40px; height: 40px; }
   /* sideways the sheet is low: Nour sits beside the card's title instead of above it */
   .spell { padding: 12px; }
