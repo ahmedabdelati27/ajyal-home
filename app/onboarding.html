@@ -23,135 +23,270 @@
 @font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Medium.woff2) format('woff2'); font-weight: 400 500; font-display: swap; }
 @font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
 :root { --ink: #3A2318; --ink-soft: #6B5A48; --paper: #FFFFFF; --go: #3FA83A; --go-deep: #1F6A1C;
-  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 14px); }
+  --top: max(env(safe-area-inset-top), 12px); --bottom: max(env(safe-area-inset-bottom), 14px);
+  /* where the islands sit: a place (x, y) is a share of the screen, a size is a share of its width */
+  --off: 0%; --span: 1; --voff: 0%; --vspan: 1; --wu: 1vw; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; overflow: hidden; }
-body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: linear-gradient(#BFEFF7, #9EE3DA 60%); }
-.sea { position: fixed; inset: 0; z-index: -1; background: url(../img/landing/app-sea.jpg) 50% 100% / cover no-repeat; opacity: .55; }
+body { font-family: 'Thmanyah Sans', system-ui, sans-serif; color: var(--ink); background: #9EE3DA; -webkit-user-select: none; user-select: none; }
 button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
-img { display: block; }
+img { display: block; -webkit-user-drag: none; }
 :focus-visible { outline: 3px solid #D6531E; outline-offset: 3px; }
 
-/* the slides run sideways, one screen each; the bar at the top skips, the bar at the bottom moves on */
+/* one sea, and Nour flying over it from island to island: the child swipes, the islands and clouds pass by at their own speeds */
+.sea { position: fixed; inset: 0; background: url(../img/landing/app-sea.jpg) 50% 50% / cover no-repeat, linear-gradient(#BFEFF7, #9EE3DA); }
+.scene { position: fixed; inset: 0; overflow: hidden; touch-action: pan-y; cursor: grab; }
+.scene.drag { cursor: grabbing; }
+.layer { position: absolute; top: 0; left: 0; height: 100%; width: 300vw; will-change: transform; }
+.panel { position: absolute; top: 0; width: 100vw; height: 100%; }
+.cloud { position: absolute; top: calc(var(--y) * 1%); width: calc(var(--w) * 1vw); opacity: .9; }
+
+/* the islands: each bobs on the sea; when Nour arrives they jump up to greet her */
+.isl { position: absolute; left: calc(var(--off) + var(--x) * var(--span) * 1%); top: calc(var(--voff) + var(--y) * var(--vspan) * 1%); width: calc(var(--w) * var(--wu));
+  translate: -50% -50%; display: grid; justify-items: center; }
+.isl img { width: 100%; filter: drop-shadow(0 12px 10px rgba(20,90,100,.28)); animation: bob 4.5s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.1s); }
+.isl b { margin-top: -24%; padding: 2px 12px 4px; border-radius: 999px; background: rgba(255,255,255,.94); font-size: 14px; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 rgba(58,35,24,.12); opacity: 0; translate: 0 8px; transition: opacity .35s, translate .35s; transition-delay: calc(var(--i, 0) * .12s + .2s); }
+.panel.here .isl b { opacity: 1; translate: 0 0; }
+.panel.here .isl { animation: hop .7s cubic-bezier(.3,1.6,.5,1) both; animation-delay: calc(var(--i, 0) * .12s); }
+@keyframes hop { 0% { scale: 1; } 35% { scale: 1.1; translate: -50% -58%; } 100% { scale: 1; } }
+@keyframes bob { 50% { translate: 0 -7px; } }
+/* little stars that burst around an island Nour just reached */
+.panel .stars { position: absolute; inset: 0; pointer-events: none; }
+.panel .stars i { position: absolute; left: calc(var(--off) + var(--x) * var(--span) * 1%); top: calc(var(--voff) + var(--y) * var(--vspan) * 1%); font-style: normal; font-size: 22px; color: #FFD54A; text-shadow: 0 0 8px #FFFFFF; opacity: 0; }
+.panel.here .stars i { animation: burst 1s ease-out both; animation-delay: calc(var(--i, 0) * .08s); }
+@keyframes burst { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.3); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.1) rotate(40deg); } }
+
+/* Nour: her place moves with the swipe; she leans the way she flies and leaves sparkles behind */
+.nour { position: fixed; z-index: 2; left: 0; top: 0; width: min(31vw, 132px); pointer-events: none; will-change: transform; }
+.nour .in { translate: -50% -50%; }
+.nour img { width: 100%; filter: drop-shadow(0 16px 14px rgba(20,90,110,.3)); animation: bob 2.6s ease-in-out infinite; }
+.say { position: fixed; z-index: 2; left: 0; top: 0; translate: -50% calc(-100% - 12px); padding: 8px 14px 10px; border-radius: 18px; background: var(--paper); font-size: 15px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 #F2C94C; opacity: 0; scale: .6; transition: opacity .3s, scale .35s cubic-bezier(.3,1.6,.5,1); }
+.say::after { content: ""; position: absolute; top: 100%; left: 50%; translate: -50% -1px; border: 8px solid transparent; border-top-color: var(--paper); }
+.say.on { opacity: 1; scale: 1; }
+.trail { position: fixed; z-index: 1; font-style: normal; font-size: 18px; color: #FFE27A; text-shadow: 0 0 10px #FFFFFF; pointer-events: none; translate: -50% -50%; animation: fade .8s ease-out forwards; }
+@keyframes fade { to { opacity: 0; scale: .2; translate: -50% 10px; } }
+
+/* the words of the place Nour is at */
 .skip { position: fixed; z-index: 3; top: var(--top); left: calc(14px + env(safe-area-inset-left)); height: 40px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 15px; font-weight: 800; color: var(--ink-soft); box-shadow: 0 3px 0 rgba(58,35,24,.1); }
 .skip[hidden] { display: none; }
-.track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
-.track::-webkit-scrollbar { display: none; }
-.slide { flex: 0 0 100%; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: grid; grid-template-rows: 1fr auto; padding: calc(var(--top) + 52px) 22px calc(var(--bottom) + 108px); }
-.art { position: relative; display: grid; place-items: center; min-height: 0; }
-.art::before { content: ""; position: absolute; width: min(310px, 78vw); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.9), rgba(255,255,255,0) 70%); }
-.text { text-align: center; }
-/* «اقرأ لي»: the slide read aloud for a child who does not read yet (the device's Arabic voice in the prototype) */
-.hear { display: inline-flex; align-items: center; gap: 6px; height: 36px; margin-top: 12px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 14px; font-weight: 800; color: #2F6FA8; box-shadow: 0 3px 0 rgba(58,35,24,.1); }
+.card { position: fixed; z-index: 3; left: 16px; right: 16px; bottom: calc(var(--bottom) + 96px); padding: 16px 18px 14px; border-radius: 28px; background: rgba(255,255,255,.93); text-align: center; box-shadow: 0 8px 0 rgba(30,110,120,.18), 0 14px 30px rgba(20,90,100,.18); }
+.card.swap { animation: swap .45s ease both; }
+@keyframes swap { from { opacity: 0; translate: 0 12px; } }
+h2 { margin: 0 0 6px; font-size: 26px; font-weight: 900; line-height: 1.25; }
+.card p { margin: 0 auto; max-width: 30ch; font-size: 16px; font-weight: 600; line-height: 1.65; color: var(--ink-soft); }
+/* «اقرأ لي»: the words read aloud for a child who does not read yet (the device's Arabic voice in the prototype) */
+.hear { display: inline-flex; align-items: center; gap: 6px; height: 34px; margin-top: 10px; padding: 0 14px; border-radius: 999px; background: #EAF5FB; font-size: 14px; font-weight: 800; color: #2F6FA8; }
 .hear svg { width: 18px; height: 18px; }
 .hear[hidden] { display: none; }
-h2 { margin: 0 0 8px; font-size: 28px; font-weight: 900; line-height: 1.25; }
-.text p { margin: 0 auto; max-width: 30ch; font-size: 17px; font-weight: 600; line-height: 1.65; color: var(--ink-soft); }
 
-/* each picture */
-.isles { position: relative; width: min(330px, 86vw); aspect-ratio: 1.1; }
-.isles img { position: absolute; filter: drop-shadow(0 12px 10px rgba(20,90,100,.28)); animation: bob 4.5s ease-in-out infinite; }
-.isles .i1 { width: 54%; left: 23%; top: 2%; }
-.isles .i2 { width: 46%; right: -2%; top: 44%; animation-delay: -1.5s; }
-.isles .i3 { width: 46%; left: -2%; top: 46%; animation-delay: -3s; }
-.grid4 { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; width: min(320px, 84vw); }
-.grid4 figure { margin: 0; display: grid; justify-items: center; gap: 2px; }
-.grid4 img { width: 100%; filter: drop-shadow(0 10px 8px rgba(20,90,100,.25)); animation: bob 4.5s ease-in-out infinite; }
-.grid4 figure:nth-child(2) img { animation-delay: -1s; } .grid4 figure:nth-child(3) img { animation-delay: -2s; } .grid4 figure:nth-child(4) img { animation-delay: -3s; }
-.grid4 figcaption { margin-top: -10px; padding: 2px 12px 4px; border-radius: 999px; background: rgba(255,255,255,.92); font-size: 13px; font-weight: 800; }
-.nour { position: relative; width: min(220px, 56vw); filter: drop-shadow(0 16px 14px rgba(20,90,110,.28)); animation: bob 3s ease-in-out infinite; }
-.say { position: absolute; top: 4%; left: 50%; translate: -50% 0; padding: 8px 16px 10px; border-radius: 20px; background: var(--paper); font-size: 16px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 0 #F2C94C; }
-.safe { position: relative; width: min(300px, 78vw); aspect-ratio: 1; border-radius: 40px; overflow: hidden; border: 6px solid var(--paper); box-shadow: 0 10px 0 rgba(58,35,24,.12); }
-.safe img { width: 100%; height: 100%; object-fit: cover; }
-.safe span { position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 14px; font-weight: 800; color: #2E7D32; }
-@keyframes bob { 50% { translate: 0 -7px; } }
-
-/* the bottom: where the child is, and the button on */
+/* the bottom: where the child is on the journey, and the button on */
 .foot { position: fixed; z-index: 3; left: 22px; right: 22px; bottom: var(--bottom); display: grid; gap: 14px; justify-items: center; }
 .dots { display: flex; gap: 8px; }
-.dots i { width: 9px; height: 9px; border-radius: 999px; background: rgba(58,35,24,.2); transition: width .25s, background .25s; }
+.dots i { width: 9px; height: 9px; border-radius: 999px; background: rgba(58,35,24,.22); transition: width .25s, background .25s; }
 .dots i.on { width: 26px; background: #F4823F; }
 .next { width: 100%; max-width: 420px; height: 56px; border-radius: 999px; background: linear-gradient(#45B33F, #2E8B2A); color: var(--paper); font-size: 19px; font-weight: 900; box-shadow: 0 5px 0 var(--go-deep); }
 .next:active { translate: 0 3px; box-shadow: 0 2px 0 var(--go-deep); }
 
-/* a phone on its side: the picture beside the words */
+/* a short phone: everything a little smaller */
+@media (max-height: 700px) and (min-height: 501px) { h2 { font-size: 22px; } .card p { font-size: 15px; } .card { padding: 12px 14px; } }
+/* a phone on its side: the words on the left, the islands and Nour on the right */
 @media (max-height: 500px) {
-  .slide { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; align-items: center; gap: 20px; padding: calc(var(--top) + 8px) calc(28px + env(safe-area-inset-right)) calc(var(--bottom) + 72px) calc(28px + env(safe-area-inset-left)); }
-  .art::before { width: 240px; }
-  .isles { width: 250px; } .grid4 { width: 240px; gap: 2px 8px; } .grid4 figcaption { font-size: 12px; } .nour { width: 150px; } .safe { width: 200px; border-radius: 30px; }
-  .text { text-align: start; } .text p { margin: 0; }
-  h2 { font-size: 24px; }
-  .foot { grid-template-columns: auto 260px; justify-content: space-between; align-items: center; left: calc(28px + env(safe-area-inset-left)); right: calc(28px + env(safe-area-inset-right)); }
-  .next { height: 50px; font-size: 17px; }
+  :root { --off: 42%; --span: .58; --voff: 0%; --vspan: 1.3; --wu: .9vh; }
+  .card { left: calc(20px + env(safe-area-inset-left)); right: auto; top: calc(var(--top) + 52px); bottom: calc(var(--bottom) + 70px); width: 38%; display: grid; align-content: center; text-align: start; }
+  .card p { margin: 0; }
+  h2 { font-size: 22px; }
+  .nour { width: min(19vh, 96px); }
+  .isl b { font-size: 12px; }
+  .foot { grid-template-columns: auto 260px; justify-content: space-between; align-items: center; left: calc(20px + env(safe-area-inset-left)); right: calc(20px + env(safe-area-inset-right)); }
+  .next { height: 48px; font-size: 17px; }
 }
-@media (prefers-reduced-motion: reduce) { .isles img, .grid4 img, .nour { animation: none; } .track { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { .isl img, .nour img, .panel.here .isl, .panel.here .stars i, .card.swap { animation: none; } .trail { display: none; } }
 </style>
 </head>
 <body>
 <div class="sea" aria-hidden="true"></div>
-<button class="skip" type="button" id="skip">تخطَّ</button>
 
-<main class="track" id="track" aria-roledescription="شرائح" aria-label="تعرّف على أجيال">
-  <section class="slide" aria-label="١ من ٤">
-    <div class="art"><div class="isles"><img class="i1" src="../img/forest.png" alt=""><img class="i2" src="../img/beach.png" alt=""><img class="i3" src="../img/garden.png" alt=""></div></div>
-    <div class="text"><h2>أهلاً بك في عالم أجيال</h2><p>جزر ملوّنة تتعلّم فيها وتلعب، وتكتشف أشياء جديدة.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
-  </section>
-  <section class="slide" aria-label="٢ من ٤">
-    <div class="art"><div class="grid4">
-      <figure><img src="../img/letters.png" alt=""><figcaption>الحروف</figcaption></figure>
-      <figure><img src="../img/quran.png" alt=""><figcaption>القرآن</figcaption></figure>
-      <figure><img src="../img/games.png" alt=""><figcaption>الألعاب</figcaption></figure>
-      <figure><img src="../img/colors.png" alt=""><figcaption>الرسم</figcaption></figure></div></div>
-    <div class="text"><h2>تعلّم والعب بطريقتك</h2><p>قصص وفيديوهات، حروف وأرقام، القرآن الكريم وألعاب ورسم، وكلها في مكان واحد.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
-  </section>
-  <section class="slide" aria-label="٣ من ٤">
-    <div class="art"><img class="nour" src="../img/garden/nour-wave.png" alt=""><span class="say">أنا نور، سأرشدك في رحلة القيم!</span></div>
-    <div class="text"><h2>نور ترافقك في رحلة القيم</h2><p>تعرّفك نور على القيم الجميلة خطوة بخطوة، وتشجّعك في كل محطة.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
-  </section>
-  <section class="slide" aria-label="٤ من ٤">
-    <div class="art"><div class="safe"><img src="../img/landing/s-safe.jpg" alt=""><span>✓ بإشراف ولي أمرك أو معلّمك</span></div></div>
-    <div class="text"><h2>عالم آمن لك</h2><p>ولي أمرك أو معلّمك يختار المزايا المتاحة لك، ويمكنه تحديد وقتك كل يوم.</p><button class="hear" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button></div>
-  </section>
+<div class="scene" id="scene" aria-hidden="true">
+  <div class="layer" id="clouds">
+    <img class="cloud" src="../img/landing/cloud-1.webp" alt="" style="--x:94;--y:4;--w:34">
+    <img class="cloud" src="../img/landing/cloud-2.webp" alt="" style="--x:76;--y:12;--w:22">
+    <img class="cloud" src="../img/landing/cloud-3.webp" alt="" style="--x:58;--y:3;--w:28">
+    <img class="cloud" src="../img/landing/cloud-1.webp" alt="" style="--x:40;--y:9;--w:30">
+    <img class="cloud" src="../img/landing/cloud-2.webp" alt="" style="--x:22;--y:2;--w:24">
+    <img class="cloud" src="../img/landing/cloud-3.webp" alt="" style="--x:4;--y:11;--w:26">
+  </div>
+  <div class="layer" id="world">
+    <!-- 1: the welcome, two islands of the world -->
+    <div class="panel" data-stop="0">
+      <div class="isl" style="--x:66;--y:26;--w:66;--i:0"><img src="../img/forest.png" alt=""></div>
+      <div class="isl" style="--x:32;--y:51;--w:62;--i:1"><img src="../img/beach.png" alt=""></div>
+      <div class="stars"><i style="--x:66;--y:22;--dx:-50px;--dy:-40px">✦</i><i style="--x:66;--y:22;--dx:55px;--dy:-30px">✧</i><i style="--x:32;--y:48;--dx:-45px;--dy:-35px;--i:2">✦</i><i style="--x:32;--y:48;--dx:50px;--dy:-45px;--i:3">✧</i></div>
+    </div>
+    <!-- 2: learning and playing, four islands with their names -->
+    <div class="panel" data-stop="1">
+      <div class="isl" style="--x:74;--y:22;--w:54;--i:0"><img src="../img/letters.png" alt=""><b>الحروف</b></div>
+      <div class="isl" style="--x:26;--y:22;--w:54;--i:1"><img src="../img/quran.png" alt=""><b>القرآن</b></div>
+      <div class="isl" style="--x:74;--y:49;--w:54;--i:2"><img src="../img/games.png" alt=""><b>الألعاب</b></div>
+      <div class="isl" style="--x:26;--y:49;--w:54;--i:3"><img src="../img/colors.png" alt=""><b>الرسم</b></div>
+      <div class="stars"><i style="--x:50;--y:35;--dx:-70px;--dy:-60px">✦</i><i style="--x:50;--y:35;--dx:70px;--dy:-55px;--i:1">✧</i><i style="--x:50;--y:35;--dx:-60px;--dy:60px;--i:2">✦</i><i style="--x:50;--y:35;--dx:65px;--dy:55px;--i:3">✧</i></div>
+    </div>
+    <!-- 3: Nour's own garden, where she lands -->
+    <div class="panel" data-stop="2">
+      <div class="isl" style="--x:50;--y:45;--w:100;--i:0"><img src="../img/garden.png" alt=""></div>
+      <div class="stars"><i style="--x:50;--y:42;--dx:-90px;--dy:-50px">✦</i><i style="--x:50;--y:42;--dx:90px;--dy:-45px;--i:1">✧</i><i style="--x:50;--y:42;--dx:-80px;--dy:40px;--i:2">✦</i><i style="--x:50;--y:42;--dx:85px;--dy:35px;--i:3">✧</i><i style="--x:50;--y:42;--dx:0px;--dy:-90px;--i:4">✦</i></div>
+    </div>
+  </div>
+</div>
+
+<div class="nour" id="nour" aria-hidden="true"><div class="in"><img src="../img/garden/nour-wave.png" alt=""></div></div>
+<span class="say" id="say" aria-hidden="true">أنا نور، سأرشدك في رحلة القيم!</span>
+
+<button class="skip" type="button" id="skip">تخطَّ</button>
+<main class="card" id="card" aria-live="polite">
+  <h2 id="t"></h2>
+  <p id="p"></p>
+  <button class="hear" type="button" id="hear" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>اقرأ لي</button>
 </main>
 
 <div class="foot">
-  <div class="dots" id="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+  <div class="dots" id="dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
   <button class="next" type="button" id="next">التالي</button>
 </div>
 
 <script>
 (() => {
-  // the slides scroll right to left: slide n sits n screens to the left (scrollLeft goes negative)
-  const track = document.getElementById('track'), slides = [...track.children], dots = [...document.querySelectorAll('#dots i')];
-  const next = document.getElementById('next'), skip = document.getElementById('skip');
-  const at = () => Math.round(Math.abs(track.scrollLeft) / track.clientWidth);
-  const show = () => {
-    const n = at(), last = n === slides.length - 1;
-    dots.forEach((d, k) => d.classList.toggle('on', k === n));
-    next.textContent = last ? 'لنبدأ' : 'التالي';
-    skip.hidden = last;
+  const $ = (id) => document.getElementById(id);
+  // the three places of the journey: their words, and where Nour hovers on the screen (x, y as shares of it);
+  // at the last she lands in her garden, on the Nour already there watering it
+  const STOPS = [
+    { t: 'أهلاً بك في عالم أجيال', p: 'جزر ملوّنة تتعلّم فيها وتلعب، وتكتشف أشياء جديدة.', nour: [27, 21] },
+    { t: 'تعلّم والعب بطريقتك', p: 'قصص وفيديوهات، حروف وأرقام، القرآن الكريم وألعاب ورسم، وكلها في مكان واحد.', nour: [50, 35] },
+    { t: 'نور ترافقك في رحلة القيم', p: 'تعرّفك نور على القيم الجميلة خطوة بخطوة، وتشجّعك في كل محطة.', nour: null }
+  ];
+  const N = STOPS.length, last = N - 1;
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const side = matchMedia('(max-height: 500px)');
+  const world = $('world'), clouds = $('clouds'), nour = $('nour'), panels = [...world.children];
+  // the places sit right to left, as the child reads: place k is k screens to the left of the first
+  panels.forEach((el, k) => { el.style.left = `${(last - k) * 100}vw`; });
+  [...clouds.children].forEach((c) => { c.style.left = `${c.style.getPropertyValue('--x') * 3}vw`; });
+
+  // p: how far along the journey (0 at the first place, 1 at the second...); everything is drawn from it
+  let p = 0, here = -1, lastX = null;
+  const W = () => innerWidth, H = () => innerHeight;
+  // a place on the screen, as the islands are laid out (on its side, the islands keep to the right part of the screen)
+  const at = ([x, y]) => (side.matches ? [W() * (0.42 + x / 100 * 0.58), H() * (y / 100 * 1.3)] : [W() * x / 100, H() * y / 100]);
+  // where the garden's own Nour stands when the garden is in place: her middle, and the size she is drawn at
+  const NOUR_IN_GARDEN = [0.43, 0.475], NOUR_SHARE = 0.27;
+  function home() {
+    const r = panels[last].querySelector('img').getBoundingClientRect(), left = r.left + (last - p) * W();
+    return [left + r.width * NOUR_IN_GARDEN[0], r.top + r.height * NOUR_IN_GARDEN[1], r.width * NOUR_SHARE];
+  }
+  function draw() {
+    world.style.transform = `translateX(${-(last - p) * W()}px)`;
+    clouds.style.transform = `translateX(${-(last - p) * W() * 0.45}px)`;
+    // Nour flies from one place to the next on a little arc, leaning the way she goes
+    const k = Math.min(Math.max(Math.floor(p), 0), last - 1), f = Math.min(Math.max(p - k, 0), 1);
+    const landing = k + 1 === last, spot = landing && home();
+    const a = at(STOPS[k].nour), b = landing ? spot : at(STOPS[k + 1].nour), lift = Math.sin(f * Math.PI);
+    const x = a[0] + (b[0] - a[0]) * f, y = a[1] + (b[1] - a[1]) * f - lift * H() * 0.07;
+    const lean = lastX === null ? 0 : Math.sign(x - lastX) * lift * 12;
+    // on the last stretch she shrinks to the size of the garden's Nour and melts into her
+    const size = landing ? 1 + (spot[2] / nour.offsetWidth - 1) * f : 1;
+    nour.style.transform = `translate(${x}px, ${y}px) rotate(${lean}deg) scale(${size * (1 + lift * 0.12)})`;
+    nour.style.opacity = landing ? String(Math.min(1, Math.max(0, (1 - f) / 0.2))) : '1';
+    if (landing) Object.assign($('say').style, { left: `${spot[0]}px`, top: `${spot[1] - spot[2] * 0.55}px` });
+    if (lastX !== null && Math.abs(x - lastX) > 1.5 && !still.matches) sparkle(x, y);
+    lastX = x;
+    arrive();
+  }
+  // a trail of little stars behind her while she flies
+  let lastSpark = 0;
+  function sparkle(x, y) {
+    const now = performance.now(); if (now - lastSpark < 55) return; lastSpark = now;
+    const s = document.createElement('i'); s.className = 'trail'; s.setAttribute('aria-hidden', 'true'); s.textContent = Math.random() < 0.5 ? '✦' : '✧';
+    s.style.left = `${x + (Math.random() - 0.5) * 30}px`; s.style.top = `${y + 20 + (Math.random() - 0.5) * 20}px`;
+    s.addEventListener('animationend', () => s.remove()); document.body.append(s);
+  }
+  // reaching a place: its islands greet Nour, its words show, the dots and the button follow
+  function arrive() {
+    const k = Math.min(Math.max(Math.round(p), 0), last), there = Math.abs(p - k) < 0.08;
+    panels.forEach((el, i) => el.classList.toggle('here', there && i === k));
+    $('say').classList.toggle('on', there && k === last);
+    if (k === here) return;
+    here = k;
+    $('t').textContent = STOPS[k].t; $('p').textContent = STOPS[k].p;
+    const card = $('card'); card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+    [...$('dots').children].forEach((d, i) => d.classList.toggle('on', i === k));
+    $('next').textContent = k === last ? 'لنبدأ' : 'التالي';
+    $('skip').hidden = k === last;
+    quiet();
+  }
+
+  // moving to a place: a gentle glide (or a jump, for a child who prefers less movement)
+  let anim = null;
+  function go(to) {
+    to = Math.min(Math.max(to, 0), last);
+    cancelAnimationFrame(anim);
+    if (still.matches) { p = to; return draw(); }
+    const from = p, start = performance.now(), dur = 520 + Math.abs(to - from) * 380;
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+    const step = (now) => {
+      const t = Math.min((now - start) / dur, 1); p = from + (to - from) * ease(t); draw();
+      if (t < 1) anim = requestAnimationFrame(step); else if (Math.round(to) !== Math.round(from)) Sfx.play('bubble');
+    };
+    anim = requestAnimationFrame(step);
+  }
+
+  // the swipe: the world follows the finger (to the right is on, as the child reads), then settles on a place
+  const scene = $('scene');
+  let drag = null;
+  scene.addEventListener('pointerdown', (e) => {
+    cancelAnimationFrame(anim);
+    drag = { x: e.clientX, p, t: performance.now(), moved: false };
+    scene.setPointerCapture(e.pointerId);
+  });
+  scene.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) < 6) return;
+    drag.moved = true; scene.classList.add('drag');
+    let q = drag.p + dx / W();
+    // a little give past the first and last places
+    if (q < 0) q *= 0.3; if (q > last) q = last + (q - last) * 0.3;
+    p = q; draw();
+  });
+  const release = (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, fast = Math.abs(dx) / (performance.now() - drag.t) > 0.45;
+    scene.classList.remove('drag');
+    const from = Math.round(drag.p);
+    go(drag.moved && (Math.abs(dx) > W() * 0.18 || fast) ? from + Math.sign(dx) : from);
+    drag = null;
   };
+  scene.addEventListener('pointerup', release);
+  scene.addEventListener('pointercancel', release);
+  addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') go(Math.round(p) + 1);
+    if (e.key === 'ArrowRight') go(Math.round(p) - 1);
+  });
+
   // seen once: the app opens straight on next time; then the splash's routing takes over (sign-in, a child, or the world)
   const done = () => { try { localStorage.setItem('ajyal.onboarded', '1'); } catch {} location.replace('start.html?go'); };
-  // read a slide aloud (shown only where the device has a voice); moving on stops it
-  const say = window.speechSynthesis;
-  document.querySelectorAll('.hear').forEach((b) => {
-    b.hidden = !say;
-    b.addEventListener('click', () => {
-      const s = b.closest('.slide'), u = new SpeechSynthesisUtterance(s.querySelector('h2').textContent + '. ' + s.querySelector('.text p').textContent);
-      u.lang = 'ar-SA'; u.rate = .9; say.cancel(); if (window.Sfx) Sfx.hush(true); u.onend = () => window.Sfx && Sfx.hush(false); say.speak(u);
-    });
+  $('next').addEventListener('click', () => (Math.round(p) === last ? done() : go(Math.round(p) + 1)));
+  $('skip').addEventListener('click', done);
+
+  // read the place's words aloud (shown only where the device has a voice); moving on stops it
+  const voice = window.speechSynthesis;
+  const quiet = () => { if (voice?.speaking) { voice.cancel(); Sfx.hush(false); } };
+  $('hear').hidden = !voice;
+  $('hear').addEventListener('click', () => {
+    const u = new SpeechSynthesisUtterance(`${$('t').textContent}. ${$('p').textContent}`);
+    u.lang = 'ar-SA'; u.rate = 0.9; voice.cancel(); Sfx.hush(true); u.onend = () => Sfx.hush(false); voice.speak(u);
   });
-  track.addEventListener('scroll', () => { if (say) say.cancel(); }, { passive: true });
-  track.addEventListener('scroll', show, { passive: true });
-  next.addEventListener('click', () => {
-    const n = at();
-    if (n === slides.length - 1) return done();
-    track.scrollTo({ left: -(n + 1) * track.clientWidth, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-  });
-  skip.addEventListener('click', done);
-  addEventListener('resize', () => track.scrollTo({ left: -at() * track.clientWidth }));
-  show();
+
+  addEventListener('resize', () => { lastX = null; draw(); });
+  draw();
 })();
 </script>
 </body>
