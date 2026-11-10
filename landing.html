@@ -97,7 +97,9 @@ h1 .w { display: inline-block; animation: rise .8s cubic-bezier(.2,.8,.2,1) both
 /* the islands: four on each side of the words, each pops in and then floats on its own beat; a tap leads down to what is on it */
 /* on wider screens they draw in toward the words, never onto them */
 @keyframes pop { from { opacity: 0; scale: .6; } }
-.isles { position: absolute; z-index: 5; inset: 0 clamp(0px, (100vw - 1200px) * .25, 150px); }
+/* the layer spans the hero over the words, so only the islands themselves take a tap; «انضم الآن» and «تصفّح كزائر» under it stay reachable */
+.isles { position: absolute; z-index: 5; inset: 0 clamp(0px, (100vw - 1200px) * .25, 150px); pointer-events: none; }
+.isles .isle { pointer-events: auto; }
 /* scrolling down, each island flies down to the middle island of the row below and melts into it (the numbers come from the page script) */
 .isle { position: absolute; left: var(--x); top: var(--y); width: min(var(--w), 200px); transform: translate(var(--fx, 0px), var(--fy, 0px)) rotate(var(--fr, 0deg)) scale(var(--fs, 1)); filter: opacity(var(--fo, 1)); animation: pop .8s cubic-bezier(.3,1.4,.6,1) both, bob 5s ease-in-out infinite; animation-delay: var(--p), var(--d); }
 .hero.home .isle { transition: filter .6s ease; }
