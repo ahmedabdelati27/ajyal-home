@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the app's own page (app/children.html)
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/children.html' + location.search + location.hash);
+  // Child Mode: once a child is playing on this device, choosing another one asks the parent first
+  else { try { if (localStorage.getItem('ajyal.profile') && new URLSearchParams(location.search).get('check') !== '1') location.replace(location.pathname + '?check=1' + location.hash); } catch {} }
+</script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">

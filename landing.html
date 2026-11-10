@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <script>
-  // opened from the home screen, the app starts in the child's world, not on this page (an iPhone opens the page it was saved from);
+  // opened from the home screen, the app starts at app/start.html (sign-in, choosing a child, or the child's world), not on this page (an iPhone opens the page it was saved from);
   // once the app is open, this page stays reachable (the visitor's «خروج» comes back here)
   (() => {
     const app = navigator.standalone || ['standalone', 'fullscreen', 'minimal-ui'].some((m) => matchMedia('(display-mode: ' + m + ')').matches);
     let first = true; try { first = !sessionStorage.getItem('ajyal.launched'); sessionStorage.setItem('ajyal.launched', '1'); } catch {}
-    if (app && first) location.replace('index.html');
+    if (app && first) location.replace('app/start.html');
   })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

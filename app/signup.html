@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the sign-up made for a phone, upright or on its side; a tablet and a computer get the web's page
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../signup.html' + location.search + location.hash);
+</script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>إنشاء حساب · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<link rel="stylesheet" href="sign.css">
+<style>
+/* the details: on its side, two fields to a row */
+@media (max-height: 500px) {
+  #f-up { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: start; }
+  #f-up > .alert, #f-up > [data-for="school"], #f-up > .field:has(.check), #f-up > .btn { grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body>
+<div class="sea" aria-hidden="true"></div>
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="../landing.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>الصفحة الرئيسية</a>
+  </div>
+  <div class="art" aria-hidden="true">
+    <img class="i1" src="../img/garden.png" alt="">
+    <img class="i2" src="../img/letters.png" alt="">
+    <img class="i3" src="../img/peak.png" alt="">
+    <img class="nour" src="../img/garden/nour-cheer.png" alt="">
+  </div>
+  <div class="quote" aria-hidden="true"><b>خطوتان، ويبدأ طفلك رحلته</b><p>أنت تُنشئ الحساب وتضيف أطفالك، ولا يحتاج طفلك اسم مستخدم ولا كلمة مرور.</p></div>
+</header>
+
+<main class="sheet">
+  <div class="in">
+    <ol class="steps" aria-label="خطوات إنشاء الحساب"><li id="st-1" class="on">نوع الحساب</li><li id="st-2">بياناتك</li><li id="st-3">طفلك</li></ol>
+
+    <!-- 1. which kind of account -->
+    <section class="step" id="s-type" aria-labelledby="ty-t">
+      <h1 id="ty-t">أنشئ حسابك</h1>
+      <p class="lead">من أنت؟ نجهّز لك الحساب المناسب.</p>
+      <div class="types" role="group" aria-labelledby="ty-t">
+        <button class="type" type="button" data-type="parent" aria-pressed="false"><img src="../img/landing/s-parent.jpg" alt=""><span><b>ولي أمر / فرد</b><br><small>لأطفال أسرتك، تضيفهم وتتابعهم من حسابك</small></span></button>
+        <button class="type" type="button" data-type="school" aria-pressed="false"><img src="../img/landing/s-school.jpg" alt=""><span><b>مؤسسة تعليمية</b><br><small>لمدرسة أو حضانة، وتضيف الأطفال دفعة واحدة</small></span></button>
+      </div>
+      <p class="hint" style="margin-top:12px">لا يمكن تغيير نوع الحساب بعد إنشائه.</p>
+      <p class="foot-note">لديك حساب؟ <a href="login.html">ادخل</a> · أو <a href="../index.html?guest=1">تصفّح كزائر</a></p>
+    </section>
+
+    <!-- 2. the details the platform needs -->
+    <section class="step" id="s-form" aria-labelledby="fm-t" hidden>
+      <h1 id="fm-t">بياناتك</h1>
+      <p class="lead" id="fm-lead"></p>
+      <form class="form" id="f-up" novalidate>
+        <div class="alert bad" id="up-taken" role="alert" hidden></div>
+        <div class="field" data-for="school"><label for="up-org">اسم المؤسسة</label><div class="input"><input id="up-org" autocomplete="organization" maxlength="60" enterkeyhint="next"></div><p class="err"></p></div>
+        <div class="field"><label for="up-name" id="up-name-l">الاسم الكامل</label><div class="input"><input id="up-name" autocomplete="name" maxlength="60" enterkeyhint="next"></div><p class="err"></p></div>
+        <div class="field"><label for="up-phone">رقم الجوال</label><div class="input"><input id="up-phone" type="tel" dir="ltr" inputmode="tel" autocomplete="tel-national" placeholder="05XXXXXXXX" maxlength="14" enterkeyhint="next"></div><p class="err"></p></div>
+        <div class="field"><label for="up-email">البريد الإلكتروني</label><div class="input"><input id="up-email" dir="ltr" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="name@example.com" enterkeyhint="next"></div><p class="err"></p></div>
+        <div class="field"><label for="up-pw">كلمة المرور</label><div class="input"><input id="up-pw" type="password" dir="ltr" autocomplete="new-password" enterkeyhint="next"><button class="eye" type="button" aria-label="إظهار كلمة المرور" aria-pressed="false"></button></div><p class="hint">٨ أحرف على الأقل</p><p class="err"></p></div>
+        <div class="field"><label for="up-pw2">تأكيد كلمة المرور</label><div class="input"><input id="up-pw2" type="password" dir="ltr" autocomplete="new-password" enterkeyhint="done"><button class="eye" type="button" aria-label="إظهار كلمة المرور" aria-pressed="false"></button></div><p class="err"></p></div>
+        <div class="field"><label class="check"><input type="checkbox" id="up-terms"><span>أوافق على <a href="#" data-soon>الشروط والأحكام</a> و<a href="#" data-soon>سياسة الخصوصية</a></span></label><p class="err"></p></div>
+        <button class="btn main" type="submit">أنشئ الحساب</button>
+        <button class="btn link" type="button" id="re-type">غيّر نوع الحساب</button>
+      </form>
+    </section>
+
+    <!-- 3. the account is ready: the first child -->
+    <section class="step" id="s-kid" aria-labelledby="kd-t" hidden>
+      <span class="done-mark"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#2D7A26" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <h1 id="kd-t">تم إنشاء حسابك</h1>
+      <p class="lead">يمكنك البدء بالمزايا المجانية المتاحة لك. أضف طفلك الأول ليدخل عالمه.</p>
+      <div class="alert info" id="kd-bulk" hidden><span>عندك أطفال كثيرون؟ <button class="btn link" type="button" id="bulk" style="display:inline;min-height:0;padding:0;font-size:inherit">أضفهم دفعة واحدة من ملف Excel</button></span></div>
+      <div class="kid-form" id="kid-form" style="margin-top:14px"></div>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  // auth.js writes the children's pictures as img/…, from the site's main folder; this page sits one folder down
+  (() => {
+    const d = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    Object.defineProperty(Element.prototype, 'innerHTML', { ...d, set(v) { d.set.call(this, String(v).replace(/(src=")img\//g, '$1../img/')); } });
+  })();
+</script>
+<script src="../auth.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  document.querySelectorAll('.eye').forEach((b) => { b.innerHTML = Auth.EYE; });
+  Auth.eyes();
+  let type = '';
+
+  function step(n) {
+    ['s-type', 's-form', 's-kid'].forEach((id, k) => { $(id).hidden = k !== n - 1; });
+    [1, 2, 3].forEach((k) => { $('st-' + k).className = k === n ? 'on' : k < n ? 'done' : ''; });
+    // the first field that is showing (the institution's name is hidden for a parent)
+    const first = [...document.querySelectorAll(`#${['s-type', 's-form', 's-kid'][n - 1]} :is(input:not([type=checkbox]), button)`)].find((x) => x.offsetParent);
+    first?.focus({ preventScroll: true }); scrollTo(0, 0);
+  }
+  // the keyboard's «next» key moves to the next field that is showing instead of sending the form
+  document.addEventListener('keydown', (e) => {
+    const i = e.target; if (e.key !== 'Enter' || i.getAttribute?.('enterkeyhint') !== 'next' || !i.form) return;
+    const all = [...i.form.querySelectorAll('input:not([type=checkbox]):not([type=file])')].filter((x) => x.offsetParent), n = all[all.indexOf(i) + 1];
+    if (n) { e.preventDefault(); n.focus(); }
+  });
+
+  // 1. the type sets which fields come next
+  function pick(t) {
+    type = t;
+    document.querySelectorAll('.type').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.type === t)));
+    const school = t === 'school';
+    document.querySelectorAll('[data-for="school"]').forEach((f) => { f.hidden = !school; });
+    $('up-name-l').textContent = school ? 'اسم المسؤول' : 'الاسم الكامل';
+    $('fm-lead').textContent = school ? 'بيانات المؤسسة والمسؤول عن الحساب.' : 'بياناتك أنت، وتضيف أطفالك بعدها.';
+    step(2);
+  }
+  document.querySelectorAll('.type').forEach((b) => b.addEventListener('click', () => pick(b.dataset.type)));
+  $('re-type').addEventListener('click', () => step(1));
+  // the landing page's «أنشئ حساب مؤسسة» opens on the institution's form
+  const pre = new URLSearchParams(location.search).get('type');
+  if (pre === 'school' || pre === 'parent') pick(pre);
+
+  // 2. every field checked as it is left, all of them again on submit
+  const v = {
+    'up-org': (x) => (type === 'school' && x.trim().length < 2 ? 'اكتب اسم المؤسسة' : ''),
+    'up-name': (x) => (x.trim().split(/\s+/).length < 2 ? (type === 'school' ? 'اكتب الاسم الكامل للمسؤول' : 'اكتب اسمك الكامل، الاسم الأول واسم العائلة') : ''),
+    'up-phone': (x) => (!Auth.isPhone(x) ? 'اكتب رقم جوال يبدأ بـ 05 ومن ١٠ أرقام' : ''),
+    'up-email': (x) => (!Auth.isEmail(x) ? 'اكتب بريداً إلكترونياً صحيحاً' : ''),
+    'up-pw': (x) => (x.length < 8 ? 'كلمة المرور ٨ أحرف على الأقل' : ''),
+    'up-pw2': (x) => (x !== $('up-pw').value ? 'كلمتا المرور غير متطابقتين' : ''),
+  };
+  Object.keys(v).forEach((id) => $(id).addEventListener('blur', () => { if ($(id).value) Auth.mark($(id), v[id]($(id).value)); }));
+  $('up-terms').addEventListener('change', () => Auth.mark($('up-terms'), ''));
+  $('f-up').addEventListener('submit', (e) => {
+    e.preventDefault();
+    $('up-taken').hidden = true;
+    const ok = Object.keys(v).map((id) => Auth.mark($(id), v[id]($(id).value))).concat(Auth.mark($('up-terms'), $('up-terms').checked ? '' : 'وافق على الشروط وسياسة الخصوصية لتكمل')).every(Boolean);
+    if (!ok) return document.querySelector('#f-up [aria-invalid="true"]').focus();
+    // one account for each mobile number and each email
+    const t = [$('up-phone').value, $('up-email').value].find(Auth.taken);
+    if (t) {
+      $('up-taken').innerHTML = `${Auth.isPhone(t) ? 'رقم الجوال' : 'البريد الإلكتروني'} مسجّل في حساب آخر. <a href="login.html">ادخل بحسابك</a> أو استخدم ${Auth.isPhone(t) ? 'رقماً' : 'بريداً'} آخر.`;
+      $('up-taken').hidden = false; $('up-taken').scrollIntoView({ block: 'nearest' }); return;
+    }
+    Auth.register({ type, name: $('up-name').value.trim(), org: $('up-org').value.trim(), phone: Auth.norm($('up-phone').value), email: $('up-email').value.trim() });
+    // a new account has no child chosen yet, so the app's start (start.html) brings the parent back to choosing until one is
+    try { localStorage.removeItem('ajyal.profile'); } catch {}
+    $('kd-bulk').hidden = type !== 'school';
+    step(3);
+    Auth.kidForm($('kid-form'), { later: true, onDone: (k) => { if (k) Auth.addKid(k); location.href = 'children.html'; } });
+    $('k-name').setAttribute('enterkeyhint', 'next');
+    $('k-name').setAttribute('autocapitalize', 'words');
+  });
+  $('bulk').addEventListener('click', () => Auth.toast('في النموذج: رفع ملف Excel يأتي في لوحة المؤسسة'));
+  document.addEventListener('click', (e) => { if (e.target.closest('[data-soon]')) { e.preventDefault(); Auth.toast('في النموذج: صفحات الشروط والخصوصية تأتي لاحقاً'); } });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<style>
+/* where the app opens from the home screen: Nour for a moment, then the right place */
+@view-transition { navigation: auto; }
+@font-face { font-family: 'Thmanyah Sans'; src: url(../fonts/thmanyahsans-Bold.woff2) format('woff2'); font-weight: 600 900; font-display: swap; }
+html, body { margin: 0; height: 100%; }
+body { display: grid; place-items: center; align-content: center; gap: 14px; font-family: 'Thmanyah Sans', system-ui, sans-serif; color: #3A2318; background: url(../img/landing/app-sea.jpg) 50% 50% / cover no-repeat #9EE3DA; }
+img { width: 150px; filter: drop-shadow(0 12px 10px rgba(20,90,100,.28)); animation: bob 1.6s ease-in-out infinite; }
+b { padding: 4px 20px 6px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 24px; font-weight: 800; }
+@keyframes bob { 50% { translate: 0 -8px; } }
+@media (prefers-reduced-motion: reduce) { img { animation: none; } }
+</style>
+</head>
+<body>
+<img src="../img/garden/nour-wave.png" alt="">
+<b>أجيال الصالحية</b>
+<script src="../auth.js"></script>
+<script>
+  // no one signed in on this device: the sign-in; signed in but no child chosen yet: choosing a child; a child chosen: the child's world.
+  // The chosen child is the profile children.html keeps (ajyal.profile).
+  // A phone gets the app's pages; a tablet or a computer the web's (the app's pages would send it there anyway)
+  (() => {
+    const phone = matchMedia('(max-width: 600px), (max-height: 500px)').matches;
+    let kid = null; try { kid = JSON.parse(localStorage.getItem('ajyal.profile')); } catch {}
+    const to = !Auth.signedIn() ? 'login.html' : !(kid && kid.name) ? 'children.html' : phone ? 'home.html' : 'index.html';
+    setTimeout(() => location.replace((phone ? '' : '../') + to), 700);
+  })();
+</script>
+</body>
+</html>

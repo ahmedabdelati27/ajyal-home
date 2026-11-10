@@ -44,7 +44,8 @@ const Auth = (() => {
     const list = [...kids(), { id: 'k' + Date.now(), ...k }], all = get('ajyal.kids', {});
     all[signedIn().email] = list; set('ajyal.kids', all); return list;
   }
-  const signOut = () => del('ajyal.signed');
+  // signing out also forgets the child chosen on this device, so the next account starts by choosing its own
+  const signOut = () => { del('ajyal.signed'); del('ajyal.profile'); };
 
   // a field's message under it; returns whether the field is fine
   function mark(field, msg) {

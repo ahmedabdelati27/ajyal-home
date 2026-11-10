@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // choosing a child made for a phone, upright or on its side; a tablet and a computer get the web's page (?check=1 goes along)
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../children.html' + location.search + location.hash);
+  // Child Mode: once a child is playing on this device, choosing another one asks the parent first
+  else { try { if (localStorage.getItem('ajyal.profile') && new URLSearchParams(location.search).get('check') !== '1') location.replace(location.pathname + '?check=1' + location.hash); } catch {} }
+</script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>اختر الطفل · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<link rel="stylesheet" href="sign.css">
+<style>
+.hero { height: calc(var(--top) + 150px); }
+.art { inset: calc(var(--top) + 50px) 0 10px; }
+.art .nour { width: 104px; left: calc(50% - 52px); }
+.art .i1 { width: 92px; top: 10px; }
+.art .i2 { width: 84px; top: 16px; }
+.bar .end .pill { padding: 0 14px; }
+/* who is signed in, above the title */
+.who { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; margin: 0 0 8px; padding: 2px 12px 2px 14px; border-radius: 999px; background: #F3E7D5; font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.who span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.who svg { flex-shrink: 0; }
+
+.sheet { text-align: center; }
+.sheet .in { max-width: 560px; }
+.search { margin: 0 0 16px; }
+.search input { padding-right: 46px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%236B5A48' stroke-width='2.6' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-4-4'/%3E%3C/svg%3E") calc(100% - 14px) 50% no-repeat var(--paper); }
+/* the children: two to a row upright, a big face to tap */
+.kids { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.kid { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; padding: 16px 8px 14px; border: 3px solid transparent; border-radius: 28px; background: var(--paper); box-shadow: 0 6px 0 var(--edge); transition: transform .12s; }
+.kid:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--edge); }
+.kid img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 5px var(--paper), 0 0 0 8px var(--edge); }
+.kid b { margin-top: 8px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 20px; font-weight: 800; line-height: 1.3; }
+.kid small { font-size: 15px; font-weight: 700; color: var(--ink-soft); line-height: 1.4; }
+.kid.busy img { filter: grayscale(.6); opacity: .7; }
+.kid .tag { margin-top: 2px; padding: 2px 10px; border-radius: 999px; background: #FFF0D6; color: #8A5A00; font-size: 13px; font-weight: 800; line-height: 1.5; }
+.kid.add { justify-content: center; border: 3px dashed #E2CDAF; background: rgba(255,255,255,.65); box-shadow: none; color: var(--ink-soft); }
+.kid.add .plus { display: grid; place-items: center; width: 96px; height: 96px; border-radius: 50%; background: var(--page); color: var(--accent-deep); }
+.kid.add:disabled { cursor: default; transform: none; opacity: .75; }
+.kids > .lead { grid-column: 1 / -1; }
+.empty { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; padding: 22px 18px; border-radius: 28px; background: var(--paper); box-shadow: 0 6px 0 var(--edge); }
+.empty img { width: 120px; margin-bottom: 6px; }
+.empty p { margin: 6px 0 18px; font-size: 16px; font-weight: 600; color: var(--ink-soft); }
+.note { margin: 22px auto 0; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+#busy .btn.main, #check .btn.main { margin-top: 4px; }
+#check .btn.link { width: 100%; }
+
+/* choosing a child: their face grows on the sea, then the world opens */
+.going { position: fixed; z-index: 50; inset: 0; display: grid; place-items: center; align-content: center; gap: 12px; background: url(../img/landing/app-sea.jpg) 50% 50% / cover no-repeat #9EE3DA; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.going.on { opacity: 1; pointer-events: auto; }
+.going img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 7px var(--paper), 0 12px 30px rgba(20,90,100,.3); transform: scale(.7); transition: transform .35s cubic-bezier(.2, 1.4, .4, 1); }
+.going.on img { transform: none; }
+.going b { padding: 4px 18px 6px; border-radius: 999px; background: rgba(255,255,255,.95); font-size: 22px; font-weight: 800; }
+
+@media (hover: hover) { .kid:not(:disabled):hover { transform: translateY(-4px); } }
+/* on its side: Nour on a narrow strip, the children three to a row */
+@media (max-height: 500px) {
+  .hero { width: 28%; height: 100vh; height: 100dvh; }
+  .art { inset: 50px 0 112px; }
+  .art .nour { width: 96px; left: calc(50% - 48px); top: calc(50% - 50px); }
+  .art .i1 { width: 76px; top: 0; }
+  .art .i2 { width: 70px; bottom: -8px; }
+  .art .i3 { width: 54px; }
+  /* the way home at the top of the strip, the account's buttons at its foot */
+  .bar { bottom: max(env(safe-area-inset-bottom), 12px); flex-direction: column; align-items: flex-start; }
+  .bar .end { margin: auto 0 0; align-self: stretch; flex-direction: column; gap: 8px; }
+  .bar .end .pill { width: 100%; }
+  .who { margin-bottom: 4px; }
+  .sheet .in { max-width: 640px; }
+  .kids { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .kid { padding: 12px 6px 10px; border-radius: 24px; }
+  .kid img, .kid.add .plus { width: 76px; height: 76px; }
+  .kid b { margin-top: 4px; font-size: 18px; }
+  .kid small { font-size: 14px; }
+  .note { margin-top: 16px; }
+  .empty { flex-direction: row; gap: 14px; text-align: start; }
+  .empty img { width: 96px; margin: 0; }
+  .empty p { margin: 2px 0 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .kid, .going, .going img { transition: none; } }
+</style>
+</head>
+<body>
+<div class="sea" aria-hidden="true"></div>
+<header class="hero">
+  <div class="bar">
+    <a class="pill icon" href="../landing.html" aria-label="أجيال الصالحية: الصفحة الرئيسية"><img src="../img/garden/nour-cheer.png" alt=""></a>
+    <div class="end"><button class="pill" type="button" id="board">لوحة التحكم</button><button class="pill" type="button" id="out">تسجيل الخروج</button></div>
+  </div>
+  <div class="art" aria-hidden="true">
+    <img class="i1" src="../img/quran.png" alt="">
+    <img class="i2" src="../img/games.png" alt="">
+    <img class="i3" src="../img/beach.png" alt="">
+    <img class="nour" src="../img/garden/nour-wave.png" alt="">
+  </div>
+</header>
+
+<main class="sheet">
+  <div class="in">
+    <p class="who"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span id="who"></span></p>
+    <h1 id="title">من سيدخل عالم أجيال الآن؟</h1>
+    <p class="lead" id="lead">اختر ملف طفلك، فيدخل عالمه ويكمل من حيث توقف.</p>
+    <div class="search field" id="search-box" hidden><div class="input"><input id="search" type="search" placeholder="ابحث باسم الطفل" aria-label="ابحث باسم الطفل" autocomplete="off" enterkeyhint="search"></div></div>
+    <div class="kids" id="kids"></div>
+    <p class="note" id="note">لإيقاف وضع الطفل أو تبديل الطفل لاحقاً، يدخل ولي الأمر أو المؤسسة بالحساب.</p>
+  </div>
+</main>
+
+<dialog id="add" aria-labelledby="add-t">
+  <span class="grip" aria-hidden="true"></span>
+  <button class="x" type="button" data-close aria-label="إغلاق">×</button>
+  <h2 id="add-t">أضف طفلاً</h2>
+  <p class="lead">يُحسب عمره تلقائياً من تاريخ الميلاد.</p>
+  <div class="kid-form" id="add-form"></div>
+</dialog>
+<dialog id="busy" aria-labelledby="busy-t">
+  <span class="grip" aria-hidden="true"></span>
+  <button class="x" type="button" data-close aria-label="إغلاق">×</button>
+  <h2 id="busy-t">الملف مفتوح على جهاز آخر</h2>
+  <p class="lead" id="busy-p"></p>
+  <button class="btn main" type="button" data-close>حسناً</button>
+</dialog>
+<dialog id="check" aria-labelledby="check-t">
+  <h2 id="check-t" style="padding:0">تأكيد ولي الأمر</h2>
+  <p class="lead">للخروج من عالم الطفل أو اختيار طفل آخر، أدخل كلمة مرور حسابك.</p>
+  <form class="form" id="check-form" novalidate>
+    <div class="field"><label for="check-pw">كلمة المرور</label><div class="input"><input id="check-pw" type="password" dir="ltr" autocomplete="current-password" enterkeyhint="go" required><button class="eye" type="button" aria-label="إظهار كلمة المرور" aria-pressed="false"></button></div><p class="err" id="check-err"></p></div>
+    <button class="btn main" type="submit">تأكيد</button>
+    <a class="btn link" href="home.html">رجوع إلى عالم الطفل</a>
+  </form>
+</dialog>
+<div class="going" id="going" aria-hidden="true"><img id="going-img" src="../img/avatars/A-03.png" alt=""><b id="going-name"></b></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  // auth.js writes the children's pictures as img/…, from the site's main folder; this page sits one folder down
+  (() => {
+    const d = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    Object.defineProperty(Element.prototype, 'innerHTML', { ...d, set(v) { d.set.call(this, String(v).replace(/(src=")img\//g, '$1../img/')); } });
+  })();
+</script>
+<script src="../auth.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const me = Auth.signedIn();
+  // only a signed-in parent or institution chooses a child
+  if (!me) { location.replace('login.html'); return; }
+  $('who').textContent = me.type === 'school' ? (me.org || me.name) : me.name;
+  document.querySelectorAll('.eye').forEach((b) => { b.innerHTML = Auth.EYE; });
+  Auth.eyes();
+
+  const pic = (k) => (k.photo || `../img/avatars/${k.avatar || (k.gender === 'girl' ? 'A-06' : 'A-03')}.png`);
+  function draw() {
+    const all = Auth.kids(), q = $('search').value.trim();
+    // many children: a search by name, for a family or an institution
+    $('search-box').hidden = !all.length || !(me.type === 'school' || all.length > 6);
+    if (!all.length) {
+      $('title').textContent = 'أضف طفلك الأول';
+      $('lead').textContent = 'بعد أن تضيفه، يظهر ملفه هنا وتختاره ليدخل عالمه.';
+      $('note').hidden = true;
+      $('kids').innerHTML = `<div class="empty"><img src="../img/garden/nour-wave.png" alt=""><div><b style="font-size:21px">لا يوجد أطفال في حسابك بعد</b><p>لكل طفل ملف باسمه وعمره، وتقدّمه محفوظ له وحده.</p><button class="btn main" type="button" data-add>أضف طفلاً</button></div></div>`;
+      return;
+    }
+    $('title').textContent = 'من سيدخل عالم أجيال الآن؟'; $('lead').textContent = 'اختر ملف طفلك، فيدخل عالمه ويكمل من حيث توقف.'; $('note').hidden = false;
+    const list = all.filter((k) => !q || k.name.includes(q));
+    const full = all.length >= Auth.LIMIT;
+    $('kids').innerHTML = list.map((k) => {
+      const y = Auth.age(k.birth);
+      return `<button class="kid ${k.busy ? 'busy' : ''}" type="button" data-id="${k.id}" aria-label="${k.name}، ${Auth.years(y)}${k.busy ? '، مفتوح على جهاز آخر' : ''}">
+        <img src="${pic(k)}" alt=""><b>${k.name}</b><small>${Auth.years(y)}</small>${k.busy ? '<span class="tag">مفتوح على جهاز آخر</span>' : ''}</button>`;
+    }).join('') + (q ? '' : `<button class="kid add" type="button" data-add ${full ? 'disabled' : ''}><span class="plus"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><b>أضف طفلاً</b>${full ? '<small>وصلت إلى الحد المسموح في باقتك الحالية</small>' : ''}</button>`)
+      + (q && !list.length ? `<p class="lead">لا يوجد طفل بهذا الاسم.</p>` : '');
+  }
+  $('search').addEventListener('input', draw);
+  draw();
+
+  // a tap on a child: their name and picture go with them into the world (the app's home)
+  $('kids').addEventListener('click', (e) => {
+    if (e.target.closest('[data-add]')) return openAdd();
+    const b = e.target.closest('.kid[data-id]'); if (!b) return;
+    const k = Auth.kids().find((x) => x.id === b.dataset.id);
+    if (k.busy) {
+      $('busy-p').textContent = `ملف ${k.name} مفتوح الآن على جهاز آخر. أغلقه من هناك، ثم حاول مرة أخرى.`;
+      return $('busy').showModal();
+    }
+    try { localStorage.setItem('ajyal.profile', JSON.stringify({ name: k.name, avatar: k.avatar || (k.gender === 'girl' ? 'A-06' : 'A-03') })); } catch {}
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { location.href = 'home.html'; return; }
+    $('going-img').src = pic(k); $('going-name').textContent = k.name;
+    document.body.inert = true; $('going').classList.add('on');
+    setTimeout(() => { location.href = 'home.html'; }, 650);
+  });
+  // coming back to this page with the back button shows the children again, not the curtain
+  addEventListener('pageshow', (e) => { if (e.persisted) { $('going').classList.remove('on'); document.body.inert = false; } });
+
+  function openAdd() {
+    Auth.kidForm($('add-form'), { onDone: (k) => { Auth.addKid(k); $('add').close(); draw(); Auth.toast(`أُضيف ${k.name}`); } });
+    $('k-name').setAttribute('enterkeyhint', 'next');
+    $('add').showModal();
+  }
+  document.querySelectorAll('dialog:not(#check)').forEach((d) => d.addEventListener('click', (e) => { if (e.target.closest('[data-close]') || e.target === d) d.close(); }));
+
+  $('board').addEventListener('click', () => Auth.toast('في النموذج: لوحة تحكم ولي الأمر والمؤسسة تأتي لاحقاً'));
+  $('out').addEventListener('click', () => { Auth.signOut(); location.href = '../landing.html'; });
+
+  // coming out of the child's world (settings → «خروج وتبديل الطفل»): the parent's password first, nothing else until then.
+  // In the prototype any password of 8 or more characters is right, as on the sign-in page
+  if (new URLSearchParams(location.search).get('check') === '1') {
+    const d = $('check'), pw = $('check-pw'), err = $('check-err');
+    d.addEventListener('cancel', (e) => e.preventDefault());
+    $('check-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (pw.value.length < 8) { err.textContent = 'كلمة المرور غير صحيحة'; pw.closest('.field').classList.add('bad'); pw.focus(); return; }
+      history.replaceState(null, '', 'children.html'); d.close();
+    });
+    pw.addEventListener('input', () => { err.textContent = ''; pw.closest('.field').classList.remove('bad'); });
+    d.showModal();
+  }
+})();
+</script>
+</body>
+</html>

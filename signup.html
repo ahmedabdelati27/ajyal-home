@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // a phone, upright or on its side, gets the app's own page (app/signup.html)
+  if (matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('app/signup.html' + location.search + location.hash);
+</script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFF7EC">
 <link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // the sign-in made for a phone, upright or on its side; a tablet and a computer get the web's page
+  if (!matchMedia('(max-width: 600px), (max-height: 500px)').matches) location.replace('../login.html' + location.search + location.hash);
+</script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="apple-touch-icon" href="/img/app-icon/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="أجيال">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>الدخول · تطبيق أجيال</title>
+<link rel="icon" href="../img/garden/nour-cheer.png">
+<link rel="stylesheet" href="sign.css">
+</head>
+<body>
+<div class="sea" aria-hidden="true"></div>
+<header class="hero">
+  <div class="bar">
+    <a class="pill back" href="../landing.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>الصفحة الرئيسية</a>
+  </div>
+  <div class="art" aria-hidden="true">
+    <img class="i1" src="../img/forest.png" alt="">
+    <img class="i2" src="../img/beach.png" alt="">
+    <img class="i3" src="../img/colors.png" alt="">
+    <img class="nour" src="../img/garden/nour-wave.png" alt="">
+  </div>
+  <div class="quote" aria-hidden="true"><b>عالم طفلك في انتظاره</b><p>ادخل بحسابك، واختر ملف طفلك، فيكمل رحلته من حيث توقف.</p></div>
+</header>
+
+<main class="sheet">
+  <div class="in">
+    <!-- 1. sign in -->
+    <section class="step" id="s-in" aria-labelledby="in-t">
+      <h1 id="in-t">أهلاً بعودتك</h1>
+      <p class="lead">دخول ولي الأمر أو المؤسسة، ثم تختار ملف طفلك. لا يحتاج طفلك إلى حساب أو كلمة مرور.</p>
+      <form class="form" id="f-in" novalidate>
+        <div class="alert bad" id="in-bad" role="alert" hidden>البريد الإلكتروني أو رقم الجوال أو كلمة المرور غير صحيحة.</div>
+        <div class="pair">
+          <div class="field"><label for="in-id">البريد الإلكتروني أو رقم الجوال</label><div class="input"><input id="in-id" dir="ltr" autocomplete="username" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" required></div><p class="err"></p></div>
+          <div class="field"><label for="in-pw">كلمة المرور</label><div class="input"><input id="in-pw" type="password" dir="ltr" autocomplete="current-password" enterkeyhint="go" required><button class="eye" type="button" aria-label="إظهار كلمة المرور" aria-pressed="false"></button></div><p class="err"></p></div>
+        </div>
+        <div class="between"><span></span><button class="btn link" type="button" data-to="s-forgot">نسيت كلمة المرور؟</button></div>
+        <button class="btn main" type="submit">دخول</button>
+      </form>
+      <p class="foot-note">ليس لديك حساب؟ <a href="signup.html">أنشئ حساباً</a></p>
+      <div class="or">أو</div>
+      <a class="btn soft" href="../index.html?guest=1">تصفّح كزائر</a>
+      <p class="demo">في النموذج: ادخل بـ <b>ahmed@example.com</b> أو <b>0551234567</b> وأي كلمة مرور من ٨ أحرف أو أكثر، أو بالحساب الذي تُنشئه.</p>
+    </section>
+
+    <!-- 2. forgot: who are you -->
+    <section class="step" id="s-forgot" aria-labelledby="fg-t" hidden>
+      <h1 id="fg-t">نسيت كلمة المرور؟</h1>
+      <p class="lead">اكتب بريدك الإلكتروني أو رقم جوالك، ونرسل إليك رمز تحقق.</p>
+      <form class="form" id="f-forgot" novalidate>
+        <div class="field"><label for="fg-id">البريد الإلكتروني أو رقم الجوال</label><div class="input"><input id="fg-id" dir="ltr" autocomplete="username" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" required></div><p class="err"></p></div>
+        <button class="btn main" type="submit">أرسل الرمز</button>
+        <button class="btn link" type="button" data-to="s-in">العودة إلى الدخول</button>
+      </form>
+    </section>
+
+    <!-- 3. forgot: the code -->
+    <section class="step" id="s-code" aria-labelledby="cd-t" hidden>
+      <h1 id="cd-t">اكتب رمز التحقق</h1>
+      <p class="lead" id="cd-lead">إذا كان الحساب مسجلاً، سيصلك رمز من ٦ أرقام.</p>
+      <form class="form" id="f-code" novalidate>
+        <div class="field"><div class="code" id="code" role="group" aria-label="رمز التحقق">
+          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الرقم ١" autocomplete="one-time-code" enterkeyhint="next"><input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الرقم ٢" autocomplete="off" enterkeyhint="next"><input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الرقم ٣" autocomplete="off" enterkeyhint="next"><input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الرقم ٤" autocomplete="off" enterkeyhint="next"><input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الرقم ٥" autocomplete="off" enterkeyhint="next"><input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الرقم ٦" autocomplete="off" enterkeyhint="done">
+        </div><p class="err" id="cd-err" style="text-align:center"></p></div>
+        <button class="btn main" type="submit">تحقّق</button>
+        <p class="hint" style="text-align:center">لم يصلك الرمز؟ <button class="btn link" type="button" id="resend" disabled>أعد الإرسال</button> <span id="wait"></span></p>
+        <button class="btn link" type="button" data-to="s-forgot">غيّر البريد أو الرقم</button>
+      </form>
+      <p class="demo">في النموذج: أي ٦ أرقام تكفي.</p>
+    </section>
+
+    <!-- 4. forgot: the new password -->
+    <section class="step" id="s-new" aria-labelledby="nw-t" hidden>
+      <h1 id="nw-t">كلمة مرور جديدة</h1>
+      <p class="lead">اختر كلمة مرور من ٨ أحرف على الأقل.</p>
+      <form class="form" id="f-new" novalidate>
+        <div class="pair">
+          <div class="field"><label for="nw-pw">كلمة المرور الجديدة</label><div class="input"><input id="nw-pw" type="password" dir="ltr" autocomplete="new-password" enterkeyhint="next" required><button class="eye" type="button" aria-label="إظهار كلمة المرور" aria-pressed="false"></button></div><p class="err"></p></div>
+          <div class="field"><label for="nw-pw2">تأكيد كلمة المرور</label><div class="input"><input id="nw-pw2" type="password" dir="ltr" autocomplete="new-password" enterkeyhint="done" required><button class="eye" type="button" aria-label="إظهار كلمة المرور" aria-pressed="false"></button></div><p class="err"></p></div>
+        </div>
+        <button class="btn main" type="submit">احفظ كلمة المرور</button>
+      </form>
+    </section>
+
+    <!-- 5. forgot: done -->
+    <section class="step" id="s-done" aria-labelledby="dn-t" hidden>
+      <span class="done-mark"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#2D7A26" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <h1 id="dn-t">تم تغيير كلمة المرور</h1>
+      <p class="lead">ادخل الآن بكلمة المرور الجديدة.</p>
+      <button class="btn main" type="button" data-to="s-in">إلى الدخول</button>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../auth.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  // already signed in on this device: straight to choosing a child
+  if (Auth.signedIn()) { location.replace('children.html'); return; }
+  document.querySelectorAll('.eye').forEach((b) => { b.innerHTML = Auth.EYE; });
+  Auth.eyes();
+
+  // one step on screen at a time; the first field of the new step takes the focus
+  function show(id) {
+    document.querySelectorAll('.step').forEach((s) => { s.hidden = s.id !== id; });
+    ($(id).querySelector('input') || $(id).querySelector('button')).focus({ preventScroll: true });
+    scrollTo(0, 0);
+  }
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-to]'); if (b) show(b.dataset.to); });
+  // the keyboard's «next» key moves to the next field instead of sending the form
+  document.addEventListener('keydown', (e) => {
+    const i = e.target; if (e.key !== 'Enter' || i.getAttribute?.('enterkeyhint') !== 'next' || i.closest('#code')) return;
+    const all = [...i.form.querySelectorAll('input:not([type=hidden])')], n = all[all.indexOf(i) + 1];
+    if (n) { e.preventDefault(); n.focus(); }
+  });
+
+  const idMsg = (v) => (!v.trim() ? 'اكتب بريدك الإلكتروني أو رقم جوالك' : !Auth.isEmail(v) && !Auth.isPhone(v) ? 'اكتب بريداً إلكترونياً صحيحاً، أو رقم جوال يبدأ بـ 05 ومن ١٠ أرقام' : '');
+
+  // 1. sign in
+  $('f-in').addEventListener('submit', (e) => {
+    e.preventDefault();
+    $('in-bad').hidden = true;
+    const id = $('in-id').value, pw = $('in-pw').value;
+    const ok = [Auth.mark($('in-id'), idMsg(id)), Auth.mark($('in-pw'), !pw ? 'اكتب كلمة المرور' : '')].every(Boolean);
+    if (!ok) return document.querySelector('#f-in [aria-invalid="true"]').focus();
+    if (pw.length < 8 || !Auth.signIn(id)) { $('in-bad').hidden = false; $('in-pw').value = ''; $('in-pw').focus(); return; }
+    // a new sign-in has no child chosen yet, so the app's start (start.html) brings the parent back to choosing until one is
+    try { localStorage.removeItem('ajyal.profile'); } catch {}
+    location.href = 'children.html';
+  });
+
+  // 2–5. a new password through a code
+  let where = '';
+  $('f-forgot').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = $('fg-id').value;
+    if (!Auth.mark($('fg-id'), idMsg(v))) return $('fg-id').focus();
+    where = v.trim();
+    $('cd-lead').textContent = Auth.isPhone(v) ? `إذا كان الحساب مسجلاً، سيصلك رمز من ٦ أرقام في رسالة نصية إلى ${Auth.ar(Auth.norm(v))}.` : `إذا كان الحساب مسجلاً، سيصلك رمز من ٦ أرقام على ${where}.`;
+    document.querySelectorAll('#code input').forEach((i) => { i.value = ''; });
+    $('cd-err').textContent = '';
+    show('s-code'); countdown();
+  });
+  // the code boxes: one digit each, the cursor moves on by itself, and a pasted code (or one the phone fills in from a message) fills them all
+  const boxes = [...document.querySelectorAll('#code input')];
+  const fill = (d) => { d.split('').forEach((c, k) => { boxes[k].value = c; }); boxes[Math.min(d.length, 5)].focus(); };
+  boxes.forEach((b, n) => {
+    b.addEventListener('input', () => {
+      const d = Auth.norm(b.value).replace(/\D/g, '');
+      if (d.length > 1 && n === 0) return fill(d.slice(0, 6));
+      b.value = d.slice(-1); if (b.value && boxes[n + 1]) boxes[n + 1].focus();
+    });
+    b.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !b.value && boxes[n - 1]) boxes[n - 1].focus(); });
+    b.addEventListener('paste', (e) => { e.preventDefault(); fill(Auth.norm(e.clipboardData.getData('text')).replace(/\D/g, '').slice(0, 6)); });
+  });
+  // the one-time code the phone offers lands in the first box whole, so it may hold six digits
+  boxes[0].removeAttribute('maxlength');
+  let tick = 0;
+  function countdown() {
+    clearInterval(tick); let s = 30; $('resend').disabled = true; $('wait').textContent = `بعد ${Auth.ar(s)} ثانية`;
+    tick = setInterval(() => { s--; $('wait').textContent = s > 0 ? `بعد ${Auth.ar(s)} ثانية` : ''; if (s <= 0) { clearInterval(tick); $('resend').disabled = false; } }, 1000);
+  }
+  $('resend').addEventListener('click', () => { Auth.toast('أرسلنا رمزاً جديداً'); countdown(); });
+  $('f-code').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const code = boxes.map((b) => b.value).join('');
+    if (code.length < 6) { $('cd-err').textContent = 'اكتب الأرقام الستة كلها'; boxes.find((b) => !b.value).focus(); return; }
+    clearInterval(tick); show('s-new');
+  });
+  $('f-new').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const a = $('nw-pw').value, b = $('nw-pw2').value;
+    const ok = [Auth.mark($('nw-pw'), a.length < 8 ? 'كلمة المرور ٨ أحرف على الأقل' : ''), Auth.mark($('nw-pw2'), b !== a ? 'كلمتا المرور غير متطابقتين' : '')].every(Boolean);
+    if (!ok) return document.querySelector('#f-new [aria-invalid="true"]').focus();
+    $('in-id').value = where; show('s-done');
+  });
+})();
+</script>
+</body>
+</html>
